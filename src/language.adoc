@@ -1,0 +1,32 @@
+=== First contact
+
+_ClojureScript_ is a clojure language that targets javascript and can work in different
+execution enviroments like browser, nodejs, iojs, nashhorn, and much others.
+
+Unlike other languages that intends to _compile_ to javascript (like typescript,
+funscript or coffeescript) is designed to use the javascript like a bytecode. It embrases the
+functional programming approach with very safe and consistent defaults.
+
+An other big difference and in my opinion a big advantage over other languages, is that the clojure
+language is designed to be guest. Is designed as language without own virtual machine that
+can be easy adaptated to the host differences.
+
+
+[comment]
+But, that it means? It means that _ClojureScript_ does not conserve the semantics of host language
+and imposes the own one. The result of compilation clojure (unlike happens with other "transpillers")
+is not always has direct translation of the compiled code to your code. Maybe you are thinking that
+this will dificult on debugging tasks, but in in modern environments, sourcemaps works very well and
+them practically hides the needs to inspect the real compiled code.
+
+
+=== The base data types.
+
+The ClojureScript language has a rich set of data types like most programmig languages. It provides
+scalar datatypes that will be very familiar for you such as numbers, strings, floats. But, also
+provides a great amount of others that maybe are not well known such as symbols, keywords, regex,
+vars, atoms, volatiles...
+
+==== Numbers
+
+_ClojureScript_ embrases the host languagage
