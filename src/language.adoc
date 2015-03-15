@@ -27,6 +27,5 @@ scalar datatypes that will be very familiar for you such as numbers, strings, fl
 provides a great amount of others that maybe are not well known such as symbols, keywords, regex,
 vars, atoms, volatiles...
 
-==== Numbers
-
-_ClojureScript_ embrases the host languagage
+_ClojureScript_ embrases the host language, and as possible it uses the host provided types. In this
+case: numbers and strings are used as is and them behaves in same way as in javascript.
