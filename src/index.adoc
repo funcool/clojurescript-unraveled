@@ -8,19 +8,20 @@ v1.0
 
 == Language introduction
 
-This chapter will cover a little introduction to the language without supositions of additional
-knowledge of clojure language, providing a quick tour over all the things you will need to know
-or understand for the rest of this book.
+This chapter will be a little introduction to ClojureScript without assumptions about previous
+knowledge of the Clojure language, providing a quick tour over all the things you will need to know
+in order to understand the rest of this book.
 
-This is a incomplete list of themes that will be touched in this chapter:
+This is an incomplete list of topics that will be covered in this chapter:
 
+* Syntax
 * The base types
 * Collections
 * Functions
 * Loops & Blocks
 * Destructuring
 * Namespaces
-* Data Types
+* Custom Data Types
 * Polymorphic constructions
 * Interoperability with host
 
@@ -28,8 +29,8 @@ include::language.adoc[]
 
 == Tooling & Compiler
 
-This chapter will cover a little introduction to existing tooling for make things easy in time
-of developing using clojurescript. And it will cover:
+This chapter will cover a little introduction to existing tooling for making things easy when
+developing using ClojureScript. It will cover:
 
 * Leiningen and cljsbuild
 * Google Closure Library
@@ -41,12 +42,10 @@ of developing using clojurescript. And it will cover:
 
 == Mixed Bag
 
-This chapter will covert all other themes that are not classified in previos ones. This is a "catchall"
-section and will touch a big bunch of heterogeneus themes like:
+This chapter will cover miscelaneous topics that are not classified in the previous ones. This is a "catchall"
+section and will touch a bunch of heterogeneus topics like:
 
-* Async primitives using _clore.async_ library.
-* Pattern martching with _core.match_ library.
+* Async primitives using _core.async_ library.
+* Pattern matching with _core.match_ library.
 * Error handling using _cats_ library.
 * Web development using Om library.
-
-
