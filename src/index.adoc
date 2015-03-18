@@ -1,4 +1,4 @@
-= The ClojureScript Book
+= ClojureScript Unraveled
 Andrey Antukh & Alejandro Gomez
 v1.0
 :toc: left
