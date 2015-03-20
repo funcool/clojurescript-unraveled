@@ -24,6 +24,7 @@ This is an incomplete list of topics that will be covered in this chapter:
 * Custom Data Types
 * Polymorphic constructions
 * Interoperability with host
+* Macros
 
 include::language.adoc[]
 
