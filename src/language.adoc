@@ -61,4 +61,37 @@ below.
 ;; => :foo
 ----
 
+==== Strings
 
+Nothing new we can explain about strings that you do not known. In _ClojureScript_ them
+are work like in any other language. Them are immutable.
+
+And in this concrete case are the same as in javascript:
+
+[source, clojure]
+----
+"A example of a string"
+----
+
+The pecularity of Strings on _ClojureScript_ is due to lisp syntax, and is that you don't need
+additional syntax for multiline strings:
+
+[source, clojure]
+----
+"This is a multiline
+      string in ClojureScript."
+----
+
+==== Characters
+
+_ClojureScript_ also has a representation for one character and it has a literal syntax for represent
+them.
+
+[source, clojure]
+----
+\a        ; The lowercase a character
+\newline  ; The new line character
+----
+
+As its host does not a clear representation for character type, in _ClojureScript_ behind the scenes
+one character is a simple string with one character.
