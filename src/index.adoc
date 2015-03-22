@@ -28,11 +28,12 @@ This is an incomplete list of topics that will be covered in this chapter:
 
 * Syntax
 * The base types
-* Collections
 * Functions
 * Loops & Blocks
+* Collection types
 * Destructuring
 * Namespaces
+* Collection abstractions
 * Custom Data Types
 * Polymorphic constructions
 * Interoperability with host
