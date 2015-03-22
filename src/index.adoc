@@ -33,7 +33,6 @@ This is an incomplete list of topics that will be covered in this chapter:
 * Collection types
 * Destructuring
 * Namespaces
-* Collection abstractions
 * Custom Data Types
 * Polymorphic constructions
 * Interoperability with host
