@@ -116,3 +116,30 @@ them.
 
 As its host does not a clear representation for character type, in _ClojureScript_ behind the scenes
 one character is a simple string with one character.
+
+
+==== Collections
+
+As usual, the second big step on explaining one language, is explain its collections and collection
+abstractions. The _ClojureScript_ is not an exception in this rule.
+
+_ClojureScript_ comes with great bunch of different collections. The main difference of _ClojureScript_
+collections with other languages is that them are persistent and immutable.
+
+//^ TODO: add link and documentation for persistence and immutability.
+
+===== Lists
+
+TBD
+
+===== Vectors
+
+TBD
+
+===== Maps
+
+TBD
+
+===== Sets
+
+TBD
