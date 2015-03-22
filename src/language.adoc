@@ -126,7 +126,6 @@ abstractions. The _ClojureScript_ is not an exception in this rule.
 _ClojureScript_ comes with great bunch of different collections. The main difference of _ClojureScript_
 collections with other languages is that them are persistent and immutable.
 
-//^ TODO: add link and documentation for persistence and immutability.
 
 ===== Lists
 
@@ -141,5 +140,52 @@ TBD
 TBD
 
 ===== Sets
+
+TBD
+
+
+=== Functions
+
+TBD
+
+
+=== Loops and blocks
+
+TBD
+
+
+=== Collection types.
+
+TBD
+
+//^ All about collection types, immutability, persistence, seq abstraction...
+
+
+=== Destructuring
+
+TBD
+
+
+=== Namespaces
+
+TBD
+
+
+=== Data types
+
+TBD
+
+
+=== Polimorphism & Polymorphic constructions
+
+TBD
+
+
+=== Host interoperability
+
+TBD
+
+
+=== A little overview of macros
 
 TBD
