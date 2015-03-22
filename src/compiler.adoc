@@ -1,0 +1,51 @@
+=== Getting started with Compiler
+
+TBD
+
+=== Build & Dependency management tools
+
+==== Getting started with leiningen.
+
+TBD
+
+==== Getting started with boot.
+
+TBD
+
+
+=== The Closure Library
+
+TBD
+
+
+=== Browser based development
+
+TBD
+
+//^ A little guide and notes about implications of developing for web
+//^ environments (optimizations, third party libraries, modularization, ...)
+
+==== Using third party javascript libraryes
+
+TBD
+
+
+====  Modularizing your code
+
+//^ Mainly related to google closure modules and slightly related to web based development
+//^ Maybe this is not the chapter for this section.
+
+TBD
+
+
+
+=== Developing a library
+
+//^ A little guide and implications of developing a library for clojurescript.
+
+TBD
+
+
+=== Unit testing
+
+TBD
