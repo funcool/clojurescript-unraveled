@@ -176,7 +176,7 @@ TBD
 TBD
 
 
-=== Polimorphism & Polymorphic constructions
+=== Polymorphism & Polymorphic constructions
 
 TBD
 
