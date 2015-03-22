@@ -1,0 +1,25 @@
+=== Async primitives using core.async.
+
+TBD
+
+=== Error handling using monads and Cats.
+
+TBD
+
+
+=== Pattern matching using core.match.
+
+TBD
+
+
+=== Web development with Om and React.
+
+TBD
+
+
+=== Writing libraries that shares code betwen Clojure and ClojureScript.
+
+TBD
+
+//^ This chapter can grow as we like with different dispare themes ;)
+
