@@ -53,6 +53,12 @@ developing using ClojureScript. It will cover:
 * Browser based development
 * Server based development
 
+Unlike the previos chapter, this chapter intends to tell different histories not all related
+to each other.
+
+include::compiler.adoc[]
+
+
 == Mixed Bag
 
 This chapter will cover miscelaneous topics that are not classified in the previous ones. This is a "catchall"
@@ -63,3 +69,6 @@ section and will touch a bunch of heterogeneus topics like:
 * Error handling using _cats_ library.
 * Web development using Om library.
 * Share code betwen clojure and clojurescript.
+
+
+include::mixedbag.adoc[]
