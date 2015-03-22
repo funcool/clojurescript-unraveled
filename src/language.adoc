@@ -1,23 +1,6 @@
-=== First contact
+=== First steps with lisp syntax
 
-_ClojureScript_ is a clojure language that targets javascript and can work in different
-execution enviroments like browser, nodejs, iojs, nashhorn, and much others.
-
-Unlike other languages that intends to _compile_ to javascript (like typescript,
-funscript or coffeescript) is designed to use the javascript like a bytecode. It embrases the
-functional programming approach with very safe and consistent defaults.
-
-An other big difference and in my opinion a big advantage over other languages, is that the clojure
-language is designed to be guest. Is designed as language without own virtual machine that
-can be easy adaptated to the host differences.
-
-
-[comment]
-But, that it means? It means that _ClojureScript_ does not conserve the semantics of host language
-and imposes the own one. The result of compilation clojure (unlike happens with other "transpillers")
-is not always has direct translation of the compiled code to your code. Maybe you are thinking that
-this will dificult on debugging tasks, but in in modern environments, sourcemaps works very well and
-them practically hides the needs to inspect the real compiled code.
+TBD
 
 
 === The base data types.
@@ -29,3 +12,53 @@ vars, atoms, volatiles...
 
 _ClojureScript_ embrases the host language, and as possible it uses the host provided types. In this
 case: numbers and strings are used as is and them behaves in same way as in javascript.
+
+
+==== Numbers
+
+In _ClojureScript_ the numbers includes both: integers and floating points. But, knowing that
+_ClojureScript_ is a guest language that compiles to javascript, having integers is an ilusion.
+Because the javascript language treats all numbers as floating points values.
+
+Like in any other languages, the numbers in _ClojureScript_ are represented in following way:
+
+[source, clojure]
+----
+23
++23
+-100
+1.7
+-2
+33e8
+12e-14
+3.2e-4
+----
+
+
+==== Keywords
+
+Keywords in _ClojureScript_ are objecs that always evaluate to themselves. Them are usually
+used in map data structures for reprensent in a most efficient way to the keys.
+
+[source, clojure]
+----
+:foobar
+:2
+:?
+:foo/bar
+----
+
+As you can see, the keyword are all prefixed with `:`, but this char is only part
+of literal syntax and is not part of the name of the object.
+
+You also can create a keyword calling a function `keyword`. Do not worry if you do not understand
+or something is not clear in the following example, the functions are discussed some chapters
+below.
+
+[source, clojure]
+----
+(keyword "foo")
+;; => :foo
+----
+
+
