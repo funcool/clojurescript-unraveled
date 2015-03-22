@@ -3,10 +3,22 @@ Andrey Antukh & Alejandro Gomez
 v1.0
 :toc: left
 :doctype: book
-:source-highlighter: coderay
-:listing-caption: Listing
+:numbered:
+:source-highlighter: pygments
+:pygments-style: friendly
+:sectlinks:
+//^:source-highlighter: coderay
+//^:listing-caption: Listing
 
-== Language introduction
+== Introduction
+
+This chapter will be a first introduction to the clojure ecosystem, and intends to explain
+the philosophy behind of it.
+
+include::philosophy.adoc[]
+
+
+== The language.
 
 This chapter will be a little introduction to ClojureScript without assumptions about previous
 knowledge of the Clojure language, providing a quick tour over all the things you will need to know
@@ -50,3 +62,4 @@ section and will touch a bunch of heterogeneus topics like:
 * Pattern matching with _core.match_ library.
 * Error handling using _cats_ library.
 * Web development using Om library.
+* Share code betwen clojure and clojurescript.
