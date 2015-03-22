@@ -126,22 +126,97 @@ abstractions. The _ClojureScript_ is not an exception in this rule.
 _ClojureScript_ comes with great bunch of different collections. The main difference of _ClojureScript_
 collections with other languages is that them are persistent and immutable.
 
+But before venture of all these (maybe) unknown concepts, we'll go to make a high level overview
+of existing collection types in _ClojureScript_.
+
 
 ===== Lists
 
-TBD
+This is a clasic collection type in lisp languages. _ClojureScript_ is not an exception. List is the
+simplest collection data structure in _ClojureScript_. Lists can contain items of any type, including
+other collections.
+
+Lists in _ClojureScript_ are repsesented with parentheses as its literal syntax:
+
+[source, clojure]
+----
+'(1 2 3 4 5)
+'(:foo :bar 2)
+----
+
+As you can observe, all list examples are prefixed with `'` char. This is because lists in lisp like
+languages are often used for express expressions forms such as function or macro calls. In that case
+the first item should be a symbol that will evaluate to a something callable and the rest of list
+elemenents will be a function parameters.
+
+[source, clojure]
+----
+(inc 1)
+;; => 2
+
+'(inc 1)
+;; => (inc 1)
+----
+
+As you see, if you will evaluate the `(inc 1)` without prefixing it with `'` char, it will resolve
+the `inc` symbol to the *inc* function and will execute it with `1` as first parameter. Resulting
+in a `2` as return value.
+
+Lists have the pecularity that they are very efficient if you access to it in a sequence mode or
+access to its first elements but are not very good option if you need random (index) acces to its
+elements.
+
 
 ===== Vectors
 
-TBD
+Like lists, *Vectors*  store a series of values, but in this case with very efficient index access
+to its elements and its elements in difference with list are evaluated in order. Do not worry, in
+below chapters we'll go depth in details but at this moment is more that enough.
+
+Vectors uses square brakets for the literal syntax, let see some examples:
+
+[source, clojure]
+----
+[:foo :bar]
+[3 4 5 nil]
+----
+
+Like lists, vectors can contain objects of any type, as you can observe the previos example.
+
 
 ===== Maps
 
-TBD
+Maps is a collection abstraction that allows store unique keys associated with one value. In other
+languages are commonly known as hash-maps or dicts. Maps in _ClojureScript_ uses a
+curly braces as literal syntax.
+
+[source, clojure]
+----
+{:foo "bar", :baz 2}
+{:foobar [:a :b :c]}
+----
+
+NOTE: Commas are frequently used for separate a key value pair but are completelly optional. In
+_ClojureScript_ syntax, comas are treated like spaces.
+
+Like Vectors, every item in a map literal is evaluated before the result is stored in a map, but
+the order of evaluation is not guaranteed.
+
 
 ===== Sets
 
-TBD
+And finally, *Sets*.
+
+Sets stores in an unordered way zero or more unique items of any type. They,
+like maps, uses curly braces for its literal syntax with difference that uses a `#` as leading
+character:
+
+[source, clojure]
+----
+#{1 2 3 :foo :bar}
+----
+
+In below chapters we'll go depth in sets and other collection types explained in this chapter.
 
 
 === Functions
