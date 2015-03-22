@@ -61,6 +61,27 @@ below.
 ;; => :foo
 ----
 
+
+==== Symbols
+
+The symbols in _ClojureScript_ are very very similar to now known *Keywords*. But them
+instead of evaluating to themselves, are evalutated to something that them refers, that
+can be function, variables, ...
+
+Them are represented with something that not star with a number
+
+[source, clojure]
+----
+sample-symbol
+othersymbol
+f1
+----
+
+Do not worry if you do not understand clearly this part, symbols are used un almost
+all examples and you will have the oportunity to undesarstand them in a practical way,
+with examples.
+
+
 ==== Strings
 
 Nothing new we can explain about strings that you do not known. In _ClojureScript_ them
