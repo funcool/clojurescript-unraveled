@@ -285,7 +285,7 @@ at the namespace level.
 
 === Functions
 
-==== A little introduction
+==== The first contact
 
 It's time of make things happen. In _ClojureScript_, a function are first-class type. It behaves
 like any other type, you can pass it as parameter, you can return it as value, always respecting
@@ -416,9 +416,189 @@ are functions that will be able accept arbitrary number of arguments:
 The way to denone a variadic function is using the `&` simbol prefix on its arguments vector.
 
 
-=== Loops and blocks
+==== Short syntax for anonymous functions
 
-TBD
+_ClojureScript_ provides a shorter syntax for define anonymos (and almost always one liner) functions
+using the `#()` reader macro. Reader macros are "special" expressions that in compile time will be
+transformed to the apropiate language form. In this case to some expression that uses `fn` special
+form.
+
+[source, clojure]
+----
+(def my-set #(set %1 %2))
+
+(my-set 1 2)
+;; => #{1 2}
+----
+
+The `%1`, `%2`, `%N` are simple markers for parameter positions that are implicitly declared when
+the reader macro will be interpreted and converted to `fn` expression.
+
+Also, if a function only accepts one argument, you can ommit the number after `%` symbol, the
+function `#(set %1)` can be written `++#++(set %)`.
+
+Additionaly, this syntax also supports the variadic form with `%&` symbol:
+
+[source, clojure]
+----
+(def my-variadic-set #(set %&))
+
+(my-variadic-set 1 2 2)
+;; => #{1 2}
+----
+
+=== Flow control
+
+_ClojureScript_ has a great different approaches for flow control.
+
+==== Branching with `if`
+
+Let start with a basic one: `if`. In _ClojureScript_ the `if` is an expression and not an
+statement, and it has three parametes: first one the condition expression, the second one
+a expression that will evalute if a condition expression will evalute in a logical true,
+and the third one will evaluated otherwise.
+
+[source, clojure]
+----
+(defn mypos?
+  [x]
+  (if (pos? x)
+    "positive"
+    "negative"))
+
+(mypos? 1)
+;; => "positive"
+
+(mypos? -1)
+;; => "negative"
+----
+
+If you want do more that one thing in one of two expressions, you can use block expression `do`, that
+is will explained in next section.
+
+
+==== Branching with `cond`
+
+Sometimes, the `if` expression can be slightly limited because it does not have the "else if" part
+for add more that one condition. The cond comes to the rescue.
+
+With `cond` expression, you can define multiple conditions:
+
+[source, clojure]
+----
+(defn mypos?
+  [x]
+  (cond
+    (> x 0) "positive"
+    (< x 0) "negative"
+    :else "zero"))
+
+(mypos? 0)
+;; => "zero"
+
+(mypos? -2)
+;; => "negative"
+----
+
+Also, cond has an other form, called `condp`, that works very similar to the simple `cond`
+but looks more cleaner when a predicate is always the same for all conditions:
+
+[source, clojure]
+----
+(defn translate-lang-code
+  [code]
+  (condp = (keyword code)
+    :es "Spanish"
+    :en "English"
+    "Unknown"))
+
+(translate-lang-code "en")
+;; => "English"
+
+(translate-lang-code "fr")
+;; => "Unknown"
+----
+
+
+==== Branching with `case`
+
+The `case` branching expression has very similar use case that our previous example with
+`condp`. The main difference is that, case always uses the `=` predicate/function and its
+branching values are evaluated at compile time. This results in a more prerformant form
+that `cond` or `condp` but has the disadvantage of that the condition value should be
+a static value.
+
+Let see the same example as previous one but using `case`:
+
+[source, clojure]
+----
+(defn translate-lang-code
+  [code]
+  (case code
+    "es" "Spanish"
+    "es" "English"
+    "Unknown"))
+
+(translate-lang-code "en")
+;; => "English"
+
+(translate-lang-code "fr")
+;; => "Unknown"
+----
+
+
+=== Locals, Blocks and Loops
+
+==== Locals
+
+_ClojureScript_ does not has the variables concepts, but it does have locals. Locals as per
+usual, are immutable and if you try mutate them, the compiller will throw an error.
+
+The locals are defined with `let` expression. It starts with a vector as first parameter
+followed by arbitrary number of expresions. The first parameter should contain a arbitrary
+number of pairs that starts with a binding form followed of an expression whose value will
+be bound to this new local for the remainer of the let expression.
+
+[source, clojure]
+----
+(let [x (inc 1)
+      y (+ x 1)]
+  (println "Simple message from body of let")
+  (* x y))
+;; => 6
+----
+
+==== Blocks
+
+The blocks in _ClojureScript_ can be done using the `do` expression and is ususally used
+for side effects, like printing something in console or write a log in a logger. Something
+for that the return value is not necesary.
+
+The `do` expression accept as parameter an arbitrary number of other expressions but return
+the return value only from the last one:
+
+[source, clojure]
+----
+(do
+   (println "hello world")
+   (println "hola mundo")
+   (+ 1 2))
+;; => 3
+----
+
+The `let` expression, explained just in previous section, the body is very similar to the
+`do` expression. In fact, it is called that is has an implicit `do`.
+
+
+==== Loops
+
+The functional approach of _ClojureScript_, this causes that it does not have standard,
+well known statements based loops. The loops in clojurescript are handler using recursion.
+
+The recursion sometimes requires additional thinking about how model your problem in
+a slightly different way than imperative languages.
+
+TODO
 
 
 === Collection types.
