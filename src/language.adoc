@@ -265,9 +265,155 @@ character:
 In below chapters we'll go depth in sets and other collection types explained in this chapter.
 
 
+=== Vars
+
+_ClojureScript_ is a mostly functional language and focused in immutability. Becuase of that, it does
+not has the concept of variables. The most closest analogy to variables are *vars*. The vars are
+represented by symbols and stores a single value together with metadata.
+
+You can define a var using a `def` special form:
+
+[source, clojure]
+----
+(def x 22)
+(def y [1 2 3])
+----
+
+The vars are always top level in the namespace. If you use `def` in a function call, the var will be defined
+at the namespace level.
+
+
 === Functions
 
-TBD
+==== A little introduction
+
+It's time of make things happen. In _ClojureScript_, a function are first-class type. It behaves
+like any other type, you can pass it as parameter, you can return it as value, always respecting
+the lexical scope. _ClojureScript_ also has some features from dynamic scope but this will be discused
+in other section.
+
+If you want know more about scopes, this link:http://en.wikipedia.org/wiki/Scope_%28computer_science[wikipedia article]
+is ver extensive and explain very well different types of scope.
+
+As _ClojureScript_ is a lisp dialect, it uses the prefix notation for calling a function:
+
+[source, clojure]
+----
+(inc 1)
+;; => 2
+----
+
+The `inc` is a function and is part of _ClojureScript_ runtime, and `1` is a first positional
+argument for the `inc` function.
+
+[source, clojure]
+----
+(+ 1 2 3)
+;; => 6
+----
+
+The `+` symbol represents a `add` function, in ALGOL type of languages is an operator and only
+allows two parameters.
+
+The prefix notation has huge advantages, some of them not alwats obvious. _ClojureScript_ does not
+has distinction between a function and operator, everything is a function. The inmediate advantage
+is that the prefix notation allows an arbitrary number of arguments per "operator". Also, it eliminates
+per complete the problem of operator precedence.
+
+==== Defining own functions
+
+The function can be defined with `fn` special form. This is aspect of function definition:
+
+[source, clojure]
+----
+(fn [param1 param2]
+  (+ (inc param1) (inc param2)))
+----
+
+You can define a function and call it in same time (in a single expression):
+
+[source, clojure]
+----
+((fn [x] (inc x)) 1)
+;; => 2
+----
+
+Let start creating named functions. But that is means named function really? Is very simple,
+as in _ClojureScript_ functions are fist-class and behaves like any other value, naming a function
+is just store it in a var:
+
+[source, clojure]
+----
+(def myinc (fn [x] (+ x 1)))
+
+(myinc 1)
+;; => 2
+----
+
+_ClojureScript_ also offers the `defn` macro as a little sugar syntax for make function definition
+more idiomatic:
+
+[source, clojure]
+----
+(defn myinc
+  "Self defined version of `inc`."
+  [x]
+  (+ x 1))
+----
+
+==== Function with multiple arities
+
+_ClojureScript_ also comes with ability to define functions with arbitrary number of arities. The
+syntax is almost the same as define standard function with the difference that it has more that
+one body.
+
+Let see an example, surelly it will explain it much better:
+
+[source, clojure]
+----
+(defn myinc
+  "Self dined version of parametrized `inc`."
+  ([x] (myinc x 1))
+  ([x increment]
+   (+ x increment)))
+----
+
+And there some examples using the previously defined multi arity function. I can observe that
+if you call a function with wrong number of parameters the compiler will emit an error about that:
+
+[source, clojure]
+----
+(myinc 1)
+;; => 1
+
+(myinc 1 3)
+;; => 4
+
+(myinc 1 3 3)
+;; Compiler error
+----
+
+[NOTE]
+Explaining the "arity" is out of scope of this book, however you can read about that in this
+link:http://en.wikipedia.org/wiki/Arity[wikipedia article].
+
+
+==== Variadic functions
+
+An other way to accept multiple parameters is defining variadic functions. Variadic functions
+are functions that will be able accept arbitrary number of arguments:
+
+[source, clojure]
+----
+(defn my-variadic-set
+  [& params]
+  (set params))
+
+(my-variadic-set 1 2 3 1)
+;; => #{1 2 3}
+----
+
+The way to denone a variadic function is using the `&` simbol prefix on its arguments vector.
 
 
 === Loops and blocks
