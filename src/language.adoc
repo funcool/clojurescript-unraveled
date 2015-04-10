@@ -593,13 +593,59 @@ The `let` expression, explained just in previous section, the body is very simil
 ==== Loops
 
 The functional approach of _ClojureScript_, this causes that it does not have standard,
-well known statements based loops. The loops in clojurescript are handler using recursion.
-
+well known statements based loops. The loops in clojurescript are handled using recursion.
 The recursion sometimes requires additional thinking about how model your problem in
 a slightly different way than imperative languages.
 
-TODO
+Also, many of the common patterns for which `for` is used in other languages are achieved
+through higher-order functions.
 
+===== Looping with loop/recur
+
+Let's take a look at how to express loops using recursions with the `loop` and `recur` forms.
+`loop` defines a possibly empty list of bindings (notice the symmetry with `let`) and `recur`
+jumps execution after the looping point with new values for those bindings.
+
+Let's see an example:
+
+[source, clojure]
+----
+(loop [x 0]
+   (println "Looping with " x)
+   (if (= x 2)
+     (println "Done looping!")
+     (recur (inc x))))
+;; => "Looping with 0"
+;; => "Looping with 1"
+;; => "Looping with 2"
+;; => "Done looping!"
+----
+
+In the above snippet, we bind the name `x` to the value `0` and execute the body. Since the
+condition is not met the first time is run we `recur`, incrementing the binding value with
+the `inc` function. We do this once more until the condition is met and, since there aren't
+more `recur` calls, exit the loop.
+
+Note that `loop` isn't the only point we can `recur` too, using `recur` inside a function
+executes the body of the function recursively with the new bindings:
+
+[source, clojure]
+----
+(defn recursive-function [x]
+   (if (= x 2)
+     (println "Done looping!")
+     (recur (inc x))))
+
+(recursive-function 0)
+;; => "Looping with 0"
+;; => "Looping with 1"
+;; => "Looping with 2"
+;; => "Done looping!"
+----
+
+===== Replacing for loops with `map`, `filter` and `reduce`
+
+TODO
 
 === Collection types.
 
