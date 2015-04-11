@@ -632,6 +632,7 @@ executes the body of the function recursively with the new bindings:
 [source, clojure]
 ----
 (defn recursive-function [x]
+   (println "Looping with" x)
    (if (= x 2)
      (println "Done looping!")
      (recur (inc x))))
@@ -643,7 +644,7 @@ executes the body of the function recursively with the new bindings:
 ;; => "Done looping!"
 ----
 
-===== Replacing for loops with `map`, `filter` and `reduce`
+===== Replacing for loops with higher-order functions
 
 TODO
 
