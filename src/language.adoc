@@ -787,9 +787,63 @@ discarding the resulting values and returns `nil`.
 ;; => nil
 ----
 
-=== Collection types.
+=== Collection types
 
-TBD
+==== Immutable and persistent
+
+We mentioned before that ClojureScript collections are persistent and immutable but didn't explain what
+we meant.
+
+An immutable data structure, as its name suggest, is a data structure that can not be changed. In-place
+updates are not allowed in immutable data structures.
+
+A persistent data structure is a data structure that returns a new version of itself when transforming
+it, leaving the original unmodified. ClojureScript makes this memory and time efficient using an
+implementation technique called structural sharing, where most of the data shared between two versions
+of a value is shared and transformations of a value are implemented by copying the minimal amount of data
+required.
+
+Let's see an example of appending values to a vector using the `conj` (for "conjoin") operation:
+
+[source, clojure]
+----
+(let [xs [1 2 3]
+      ys (conj xs 4)]
+  (println "xs:" xs)
+  (println "ys:" ys))
+;; => xs: [1 2 3]
+;; => ys: [1 2 3 4]
+;; => nil
+----
+
+As you can see, we derived a new version of the `xs` vector appending an element to it and got a new
+vector `ys` with the element added.
+
+For illustrating the structural sharing of ClojureScript data structures, let's compare whether some parts
+of the old and new versions of a data structure are actually the same object with the `identical?` predicate.
+We'll use the list data type for this purpose:
+
+[source, clojure]
+----
+(let [xs (list 1 2 3)
+      ys (cons 0 xs)]
+  (println "xs:" xs)
+  (println "ys:" ys)
+  (println "(rest ys):" (rest ys))
+  (identical? xs (rest ys)))
+;; => xs: (1 2 3)
+;; => ys: (0 1 2 3)
+;; => (rest ys): (1 2 3)
+;; => true
+----
+
+As you can see in the example, we used `cons` (construct) to prepend a value to the `xs` list and we got
+a new list `ys` with the element added. The `rest` of the `ys` list (all the values but the first)
+are the same object in memory that the `xs` list, thus `xs` and `ys` share structure.
+
+
+==== The sequence abstraction
+
 
 //^ All about collection types, immutability, persistence, seq abstraction...
 
