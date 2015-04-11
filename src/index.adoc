@@ -36,6 +36,8 @@ This is an incomplete list of topics that will be covered in this chapter:
 * Custom Data Types
 * Polymorphic constructions
 * Interoperability with host
+* State management
+* Mutability
 * Macros
 
 include::language.adoc[]
