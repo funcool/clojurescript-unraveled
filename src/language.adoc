@@ -848,6 +848,13 @@ are the same object in memory that the `xs` list, thus `xs` and `ys` share struc
 //^ All about collection types, immutability, persistence, seq abstraction...
 
 
+==== Collections in depth
+
+===== Lists
+===== Vectors
+===== Maps
+===== Sets
+
 === Destructuring
 
 TBD
