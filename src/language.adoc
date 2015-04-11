@@ -686,11 +686,106 @@ and a collection:
 ;; => 10
 ----
 
-===== for comprehensions
+===== `for` sequence comprehensions
 
-although in ClojureScript the `for` construct is used for generating sequences.
+In ClojureScript the `for` construct isn't used for iteration but for generating sequences, an operation
+also known as "sequence comprehension". It offers a small domain specific language for declaratively
+building lazy sequences.
 
-doseq
+It takes a vector of bindings and a expression and generates a sequence of the result of evaluating the
+expression, let's take a look at an example:
+
+[source, clojure]
+----
+(for [x [1 2 3]]
+  [x x])
+;; => ([1 1] [2 2] [3 3])
+----
+
+It supports multiple bindings, which will cause the collections to be iterated in a nested fashion, much
+like nesting `for` loops in imperative languages:
+
+[source, clojure]
+----
+(for [x [1 2 3]
+      y [4 5]]
+  [x y])
+;; => ([1 4] [1 5] [2 4] [2 5] [3 4] [3 5])
+----
+
+We can also follow the bindings with three modifiers: `:let` for creating local bindings, `:while` for
+breaking out of the sequence generation and `:when` for filtering out values.
+
+Here's an example of local bindings using the `:let` modifier, note that the bindings defined with it
+will be available in the expression:
+
+[source, clojure]
+----
+(for [x [1 2 3]
+      y [4 5]
+      :let [z (+ x y)]]
+  z)
+;; => (5 6 6 7 7 8)
+----
+
+We can use the `:while` modifier for expressing a condition that, when it is no longer met, will stop
+the sequence generation. Here's an example:
+
+[source, clojure]
+----
+(for [x [1 2 3]
+      y [4 5]
+      :while (= y 4)]
+  [x y])
+;; => ([1 4] [2 4] [3 4])
+----
+
+For filtering out generated values we use the `:when` modifier like in the following example:
+
+[source, clojure]
+----
+(for [x [1 2 3]
+      y [4 5]
+      :when (= (+ x y) 6)]
+  [x y])
+;; => ([1 5] [2 4])
+----
+
+We can combine the modifiers shown above for expressing complex sequence generations or
+more clearly expressing the intent of our comprehension:
+
+[source, clojure]
+----
+(for [x [1 2 3]
+      y [4 5]
+      :let [z (+ x y)]
+      :when (= z 6)]
+  [x y])
+;; => ([1 5] [2 4])
+----
+
+When we outlined the most common usages of the `for` construct in imperative programming languages
+we mentioned that sometimes we want to run a computation for every value in a sequence, not caring
+about the result. Presumably we do this for achieving some sort of side-effect with the values of
+the sequence.
+
+ClojureScript provides the `doseq` construct, which is analogous to `for` but executes the expression
+discarding the resulting values and returns `nil`.
+
+[source, clojure]
+----
+(doseq [x [1 2 3]
+        y [4 5]
+       :let [z (+ x y)]]
+  (println x "+" y "=" z))
+;; => "1 + 4 = 5"
+;; => "1 + 5 = 6"
+;; => "2 + 4 = 6"
+;; => "2 + 5 = 7"
+;; => "3 + 4 = 7"
+;; => "3 + 5 = 8"
+;; => nil
+----
 
 === Collection types.
 
