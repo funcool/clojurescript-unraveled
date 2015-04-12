@@ -320,6 +320,7 @@ has distinction between a function and operator, everything is a function. The i
 is that the prefix notation allows an arbitrary number of arguments per "operator". Also, it eliminates
 per complete the problem of operator precedence.
 
+
 ==== Defining own functions
 
 The function can be defined with `fn` special form. This is aspect of function definition:
@@ -360,6 +361,7 @@ more idiomatic:
   [x]
   (+ x 1))
 ----
+
 
 ==== Function with multiple arities
 
@@ -447,9 +449,11 @@ Additionaly, this syntax also supports the variadic form with `%&` symbol:
 ;; => #{1 2}
 ----
 
+
 === Flow control
 
 _ClojureScript_ has a great different approaches for flow control.
+
 
 ==== Branching with `if`
 
@@ -600,6 +604,7 @@ a slightly different way than imperative languages.
 Also, many of the common patterns for which `for` is used in other languages are achieved
 through higher-order functions.
 
+
 ===== Looping with loop/recur
 
 Let's take a look at how to express loops using recursions with the `loop` and `recur` forms.
@@ -644,6 +649,7 @@ executes the body of the function recursively with the new bindings:
 ;; => "Done looping!"
 ----
 
+
 ===== Replacing for loops with higher-order functions
 
 In imperative programming languages is common to use `for` loops for iterating over data and
@@ -685,6 +691,7 @@ and a collection:
 (reduce + 0 [1 2 3 4])
 ;; => 10
 ----
+
 
 ===== `for` sequence comprehensions
 
@@ -787,7 +794,9 @@ discarding the resulting values and returns `nil`.
 ;; => nil
 ----
 
+
 === Collection types
+
 
 ==== Immutable and persistent
 
