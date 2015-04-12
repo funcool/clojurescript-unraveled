@@ -75,5 +75,4 @@ This chapter will cover miscelaneous topics that are not classified in the previ
 * Web development using Om library.
 * Share code betwen clojure and clojurescript.
 
-
 include::mixedbag.adoc[]

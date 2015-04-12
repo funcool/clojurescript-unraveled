@@ -970,13 +970,157 @@ Observe the following:
 The `ns` macro also has other directives for loading host clases (`:import`) and macros
 (`:refer-macros`), but them are explained in posterior sections.
 
-
-=== Data types
+=== Abstractions and Polymorphism
 
 TBD
 
 
-=== Polymorphism & Polymorphic constructions
+=== Data types
+
+Until, now, we have used maps, sets, lists and vectors for represent our data. And in most cases is a
+really great aproach for do it. But some times we need define our own types and in this book we will
+call them *datatypes*.
+
+A datatype provides the following:
+
+* A unique host backed type, either named or anonymous.
+* Explicitly declared structure using fields or closures.
+* Implement concrete abstractions.
+* Map like behavior (via records, see below).
+
+
+==== Deftype
+
+The most low level construction in _ClojureScript_ for create own types, is the `deftype` macro. For
+demostration we will define a type called `User`:
+
+[source, clojure]
+----
+(deftype User [firstname lastname])
+----
+
+Once the type has beed defined, we can create an instance of our `User`:
+
+[source, clojure]
+----
+(def user (User. "Triss" "Merigold"))
+----
+
+And its fields can be accesset using the prefix-dot notation:
+
+[source, clojure]
+----
+(.-firstname user)
+;; => "Triss"
+----
+
+Types defined with deftype (and posteriory with defrecord) creates a host backed class like object
+associated to the current namespace. But it has some peculiarities when we intend to use or import
+it from other namespace. The types in _ClojureScript_ should be imported with `:import` directive
+of `ns` macro:
+
+[source, clojure]
+----
+(ns myns.core
+  (:import otherns.User))
+
+(User. "Cirilla" "Fiona")
+----
+
+For convenience, _ClojureScript_ also defines a constructor function caled `->User` that can be imported
+with the common way using `:require` directive.
+
+We personally do not like this type of functions, and we prefer define own constructors, with more
+idiomatic names:
+
+[source, clojure]
+----
+(defn user
+  [firstname lastname]
+  (User. firstname lastname))
+----
+
+And use it in our code instead of `->User`.
+
+==== Defrecord
+
+The record is a slightly higher level abstraction for define types in _ClojureScript_ and should be
+prefered way to do it.
+
+As we know, _ClojureScript_ tends to use plain data types how are the maps but in most cases we need
+have a named type for represent the entities of our application. Here come the records.
+
+A record is a datatype that implements a map protocols and therefore can be used like any other map.
+And since records are also proper types, they support type-based polymorphism through protocols.
+
+In summary: with records, we have the best of both worlds, maps that can play in in different
+abstractions.
+
+Let start defining the `User` type but using records:
+
+[source, clojure]
+----
+(defrecord User [firstname lastname])
+----
+
+It looks really similar to deftype syntax, in fact, it uses deftype behind the scenes as low level
+primitive for defining types.
+
+Now, look the difference with raw types for access to its fields:
+
+[source, clojure]
+----
+(def user (User. "Yennefer" "of Vengerberg"))
+
+(:username user)
+;; => "Yennefer"
+
+(get user :username)
+;; => "Yennefer"
+----
+
+As we mention previously, records are maps and acts like tham:
+
+[source, clojure]
+----
+(map? user)
+;; => true
+----
+
+And like maps, tham support extra fields that are not initially defined:
+
+[source, clojure]
+----
+(def user2 (assoc user :age 92))
+
+(:age user2)
+;; => 92
+----
+
+As we can see, the `assoc` function works as is expected and return a new instance of the same
+type but with new key value pair. But take care with `dissoc`, its behavior with records is slightly
+different that with maps; it will return a new record if the field being dissociated is an optional
+field, but it will return a plain map if you dissociate the mandatory field.
+
+An other difference with maps is that records does not acts like functions:
+
+[source, clojure]
+----
+(def plain-user {:username "Yennefer", :lastname "of Vengerberg"})
+
+(plain-user :username)
+;; => "Yennefer"
+
+(user :username)
+;; => user.User does not implements IFn protocol.
+----
+
+==== Implement protocols
+
+TBD
+
+
+==== Reify
 
 TBD
 
