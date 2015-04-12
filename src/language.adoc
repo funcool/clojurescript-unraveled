@@ -970,6 +970,7 @@ Observe the following:
 The `ns` macro also has other directives for loading host clases (`:import`) and macros
 (`:refer-macros`), but them are explained in posterior sections.
 
+
 === Abstractions and Polymorphism
 
 TBD
@@ -1115,14 +1116,51 @@ An other difference with maps is that records does not acts like functions:
 ;; => user.User does not implements IFn protocol.
 ----
 
+
+The `defrecord` macro like the `deftype`, for convenience esposes `->User` function, but with additional
+one `map->User` constructor function. We have the same opionon about that constructors that with
+deftype defined ones: we recommend define own instead of use that ones. But as they exists, let see
+how they can be used:
+
+[source, clojure]
+----
+(def cirilla (->User "Cirilla" "Fiona"))
+(def yen (map->User {:firstname "Yennefer"
+                     :lastname "of Vengerberg"}))
+----
+
+
 ==== Implement protocols
 
-TBD
+Both type definition primitives that we have seen until now allows inline implementations for protocols
+(explained in previous section). Let start define one for example purposes:
 
+[source, clojure]
+----
+(defprotocol IUser
+  "A common abstraction for work with user types."
+  (full-name [_] "Get the full name of the user."))
+----
 
-==== Reify
+NOTE: the "I" prefix is very common for make clear separation of protocols and types. In clojute
+comunity it there many dispare optionions about the "I" prefix. In our opinion is an acceptable
+solution for avoid name clashing and confusions. (TODO: move this note to the previous section)
 
-TBD
+Now, you can define a type with inline implementation for an abstraction, in our case the `IUser`:
+
+[source, clojure]
+----
+(defrecord User [firstname lastname]
+  IUser
+  (full-name [_]
+    (str firstname " " lastname)))
+
+;; Create an instance.
+(def user (User. "Yennefer" "of Vengerberg"))
+
+(full-name user)
+;; => "Yennefer of Vengerberg"
+----
 
 
 === Host interoperability
