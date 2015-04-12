@@ -39,6 +39,7 @@ This is an incomplete list of topics that will be covered in this chapter:
 * State management
 * Mutability
 * Macros
+* Truthiness
 
 include::language.adoc[]
 
@@ -47,6 +48,7 @@ include::language.adoc[]
 This chapter will cover a little introduction to existing tooling for making things easy when
 developing using ClojureScript. It will cover:
 
+* Using the repl
 * Leiningen and cljsbuild
 * Google Closure Library
 * Modules
@@ -63,8 +65,8 @@ include::compiler.adoc[]
 
 == Mixed Bag
 
-This chapter will cover miscelaneous topics that are not classified in the previous ones. This is a "catchall"
-section and will touch a bunch of heterogeneus topics like:
+This chapter will cover miscelaneous topics that are not classified in the previous ones. This is a 
+"catchall" section and will touch a bunch of heterogeneus topics like:
 
 * Async primitives using _core.async_ library.
 * Working with promises.
