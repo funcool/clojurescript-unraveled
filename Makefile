@@ -5,10 +5,14 @@ html:
 	mkdir -p dist/
 	asciidoctor -b xhtml -a stylesheet=../assets/stylesheet.css -a numbered  src/index.adoc -o dist/index.html
 
+git:
+	git submodule init
+	git submodule update
+
 docbook:
 	mkdir -p dist/
 	asciidoctor -b docbook45 -a stylesheet=../assets/stylesheet.css -a numbered  src/index.adoc -o dist/index.xml
 
 
-pdf: docbook
+pdf: docbook git
 	./asciidoctor-fopub/fopub -t docbook-xsl dist/index.xml
