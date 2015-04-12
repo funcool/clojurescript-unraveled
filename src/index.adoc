@@ -67,8 +67,9 @@ This chapter will cover miscelaneous topics that are not classified in the previ
 section and will touch a bunch of heterogeneus topics like:
 
 * Async primitives using _core.async_ library.
-* Pattern matching with _core.match_ library.
+* Working with promises.
 * Error handling using _cats_ library.
+* Pattern matching with _core.match_ library.
 * Web development using Om library.
 * Share code betwen clojure and clojurescript.
 
