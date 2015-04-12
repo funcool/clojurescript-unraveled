@@ -973,14 +973,81 @@ The `ns` macro also has other directives for loading host clases (`:import`) and
 
 === Abstractions and Polymorphism
 
-==== Multimethods
+I'm sure that in more that in one time you have found in this situation: you have defined a great
+abstraction (using interfaces or something similar) for your "bussines logic" and you have found
+the need to deal with an other module over which you have absolutelly no control, and you probably
+was thinking in create adapters, proxies and other approaches that will implies a great amount
+of additional complexity.
 
-TBD
+Some dynamic languages allows "monkey-patching", languages where the classes are open and any
+method can be defined and redefined at any time. Also, is very known that this technique is a very
+bad practice.
+
+We can not trust languages that allows that when importing third party libraries, can silently overwrite
+methods that you are using and expecting a concrete behavior.
+
+This symptoms denotes a commonly named: "Expression problem".
+
+TODO: add link to expression problem description
 
 
 ==== Protocols
 
+The _ClojureScript_ primitive for define "interfaces" are called Protocols. A protocol consists in
+a name and set of functions. All functions have at least one argument corresponding to the
+`this` in javascript or `self` in Python.
+
+Protocols provides a type based polymorphism, and the dispatch is always done by the first argument
+previously mentioned as `this`.
+
+A protocol looks like this:
+
+[source, clojure]
+----
+(ns myapp.foobar)
+
+(defprotocol IUser
+  "A common abstraction for an User type."
+  (full-name [x] "Get a full name of the user."))
+----
+
+NOTE: the "I" prefix is very common for make clear separation of protocols and types. In clojute
+comunity it there many dispare optionions about the use of the "I" prefix. In our opinion is an
+acceptable solution for avoid name clashing and confusions.
+
+From the user perspective, protocol functions are simple and plain functions defined in the namespace
+where the protocol is defined. As you can intuit, this makes protocols completelly namespaces and
+avoid any accidental clashing between implemented protocols for same type.
+
+NOTE: Inside the clojure community the convention for protocol functions is treat them as private api
+and not expose them to the general public api.
+
+
+===== Extending to existing types
+
 TBD
+
+
+===== Protocols introspection
+
+TBD
+
+
+===== Edge cases
+
+TBD
+
+
+===== Participate in ClojureScript abstractions
+
+TBD
+
+
+
+==== Multimethods
+
+TBD
+
 
 
 === Data types
@@ -1148,10 +1215,6 @@ Both type definition primitives that we have seen until now allows inline implem
   "A common abstraction for work with user types."
   (full-name [_] "Get the full name of the user."))
 ----
-
-NOTE: the "I" prefix is very common for make clear separation of protocols and types. In clojute
-comunity it there many dispare optionions about the "I" prefix. In our opinion is an acceptable
-solution for avoid name clashing and confusions. (TODO: move this note to the previous section)
 
 Now, you can define a type with inline implementation for an abstraction, in our case the `IUser`:
 
