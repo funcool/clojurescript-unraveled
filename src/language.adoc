@@ -871,7 +871,104 @@ TBD
 
 === Namespaces
 
-TBD
+==== Defining a namespace
+
+Namespaces is a clojurescript's fundamental unit of code modularity. Are analogous to Java packages or
+Ruby and Python modules, and can be defined with `ns` macro. Maybe if you are touched a little bit of
+clojurescript source you have seen something like this at begining of the file:
+
+[source, clojure]
+----
+(ns myapp.core
+  "Some docstring for the namespace.")
+
+(def x "hello")
+----
+
+Namespaces are dynamic and you can create one in any time, but the convention is having one namespace
+per file. So, the namespace definition usually is at begining of the file followed with optional
+docstring.
+
+Previously we have explained the vars and symbols. Every var that you are defines will be associated
+with one namespace. If you do not define a concrete namespace, the default one called "user" will be
+used:
+
+[source, clojure]
+----
+(def x "hello")
+;; => #'user/x
+----
+
+==== Loading other namespaces
+
+It's ok, definining a namespace and vars in it is really easy, but it is not very usefull if we can't
+use them from other namespaces. For this purpose, the `ns` macro also offers a simple way to load other
+namespaces.
+
+Observe the following:
+
+[source, clojure]
+----
+(ns myapp.main
+  (:require myapp.core
+            clojure.string))
+
+(clojure.string/upper-case myapp.core/x)
+;; => "HELLO"
+----
+
+As you can observe, we are using fully qualified names (namespace + var name) for access to vars and
+functions from different namespaces.
+
+It is ok, we not can access to other namespaces but is very boring always write the complete namespace
+name for access to its vars and functions. It will be specially uncomfortable if a namespace name
+is very large. For solve that, you can use the `:as` directive for create an additional (usually
+more shorter) alias to the namespace. Let see the how it can be done:
+
+[source, clojure]
+----
+(ns myapp.main
+  (:require [myapp.core :as core]
+            [clojure.string :as str]))
+
+(str/upper-case core/x)
+;; => "HELLO"
+----
+
+Additionaly, _ClojureScript_ offers a simple way to refer specific vars or functions from concrete namespace using the `:refer` directive.
+
+The `:refer` directive has two possible arguments: `:all` keyword or a vector of symbols that will
+refer to vars in the namespace. With `:all` we are indicating that we want refer all public vars from the
+namespace and with vector we can specify the concrete subset of vars that we want.
+
+[source, clojure]
+----
+(ns myapp.main
+  (:require [myapp.core :refer :all]
+            [clojure.string :refer [upper-case]]))
+----
+
+And finally, we should know that everything that located in the `cljs.core` namespace is automatically
+loaded and you should not require it explicitly. But sometimes you want declare vars that will clash
+with some other defined in `cljs.core` namespace. For it, the `ns` macro offers an other directive that
+allows exclude concrete symbols and prevet them to be automaticaly loaded.
+
+Observe the following:
+
+[source, clojure]
+----
+(ns myapp.main
+  (:refer-clojure :exclude [min]))
+
+(defn min
+  [x y]
+  (if (> x y)
+    y
+    x))
+----
+
+The `ns` macro also has other directives for loading host clases (`:import`) and macros
+(`:refer-macros`), but them are explained in posterior sections.
 
 
 === Data types
