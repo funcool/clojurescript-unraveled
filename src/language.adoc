@@ -973,6 +973,13 @@ The `ns` macro also has other directives for loading host clases (`:import`) and
 
 === Abstractions and Polymorphism
 
+==== Multimethods
+
+TBD
+
+
+==== Protocols
+
 TBD
 
 
@@ -1042,6 +1049,7 @@ idiomatic names:
 ----
 
 And use it in our code instead of `->User`.
+
 
 ==== Defrecord
 
@@ -1116,7 +1124,6 @@ An other difference with maps is that records does not acts like functions:
 ;; => user.User does not implements IFn protocol.
 ----
 
-
 The `defrecord` macro like the `deftype`, for convenience esposes `->User` function, but with additional
 one `map->User` constructor function. We have the same opionon about that constructors that with
 deftype defined ones: we recommend define own instead of use that ones. But as they exists, let see
@@ -1161,6 +1168,31 @@ Now, you can define a type with inline implementation for an abstraction, in our
 (full-name user)
 ;; => "Yennefer of Vengerberg"
 ----
+
+
+==== Reify
+
+The `reify` macro lets you create an anonymous types that implement protocols. In difference with
+deftype and defrecord, it does not has accessible fields.
+
+This is a way how we can emulate an instance of user type and that plays well in `IUser` abstraction:
+
+[source, clojure]
+----
+(defn user
+  [firstname lastname]
+  (reify
+    IUser
+    (full-name [_]
+      (str firstname " " lastname))))
+
+(def yen (user "Yennefer" "of Vengerberg"))
+(full-name user)
+;; => "Yennefer of Vengerberg"
+----
+
+The real purpose of reify is create anonymous types that plains in a concrete abstractions but
+you do not want a type in self.
 
 
 === Host interoperability
