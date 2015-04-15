@@ -853,9 +853,87 @@ are the same object in memory that the `xs` list, thus `xs` and `ys` share struc
 
 ==== The sequence abstraction
 
+One of the central ClojureScript abstractions is the Sequence, which can be though as a list and can be derived
+from any of the collection types. It is persistent and immutable like all collection types and many of the
+core ClojureScript functions return sequences.
 
-//^ All about collection types, immutability, persistence, seq abstraction...
+The types that can be used to generate a sequence are called "seqables", we can call `seq` on them and get
+a sequence back. Sequences support two basic operations: `first` and `rest`. They both call `seq` on the
+argument we provide them:
 
+[source, clojure]
+----
+(first [1 2 3])
+;; => 1
+
+(rest [1 2 3])
+;; => (2 3)
+----
+
+Calling `seq` on a seqable can yield different results if the seqable is empty or not, it will return `nil`
+when empty and a sequence otherwise:
+
+[source, clojure]
+----
+(seq [])
+;; => nil
+
+(seq [1 2 3])
+;; => (1 2 3)
+----
+
+
+===== nil-punning
+
+The above behaviour of `seq` coupled with the falsey nature of `nil` in boolean contexts make an idiom for checking
+the emptyness of a sequence in ClojureScript, which is often referred to as nil-punning.
+
+[source, clojure]
+----
+(defn print-coll
+  [coll]
+  (when (seq coll)
+    (println "Saw " (first coll))
+    (recur (rest coll))))
+
+(print-coll [1 2 3])
+;; => Saw 1
+;; => Saw 2
+;; => Saw 3
+;; => nil
+
+(print-coll #{1 2 3})
+;; => Saw 1
+;; => Saw 3
+;; => Saw 2
+;; => nil
+----
+
+`nil` is also both a seqable and a sequence, and thus it supports all the functions we saw so far:
+
+[source, clojure]
+----
+(seq nil)
+;; => nil
+
+(first nil)
+;; => nil
+
+(rest nil)
+;; => ()
+----
+
+
+===== Functions that work on sequences
+
+Many of the ClojureScript core functions that work on collections call `seq` on their arguments, thus being
+implemented in terms of generic sequence operations.
+
+TODO
+
+===== Lazyness
+
+TODO
 
 ==== Collections in depth
 
