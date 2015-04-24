@@ -374,7 +374,7 @@ Let see an example, surelly it will explain it much better:
 [source, clojure]
 ----
 (defn myinc
-  "Self dined version of parametrized `inc`."
+  "Self defined version of parametrized `inc`."
   ([x] (myinc x 1))
   ([x increment]
    (+ x increment)))
@@ -567,8 +567,9 @@ be bound to this new local for the remainer of the let expression.
 ----
 (let [x (inc 1)
       y (+ x 1)]
-  (println "Simple message from body of let")
+  (println "Simple message from the body of a let")
   (* x y))
+;; Simple messages from the body of a let
 ;; => 6
 ----
 
@@ -587,6 +588,8 @@ the return value only from the last one:
    (println "hello world")
    (println "hola mundo")
    (+ 1 2))
+;; hello world
+;; hola mundo
 ;; => 3
 ----
 
@@ -620,10 +623,11 @@ Let's see an example:
    (if (= x 2)
      (println "Done looping!")
      (recur (inc x))))
-;; => "Looping with 0"
-;; => "Looping with 1"
-;; => "Looping with 2"
-;; => "Done looping!"
+;; Looping with 0
+;; Looping with 1
+;; Looping with 2
+;; Done looping!
+;; => nil
 ----
 
 In the above snippet, we bind the name `x` to the value `0` and execute the body. Since the
@@ -643,10 +647,11 @@ executes the body of the function recursively with the new bindings:
      (recur (inc x))))
 
 (recursive-function 0)
-;; => "Looping with 0"
-;; => "Looping with 1"
-;; => "Looping with 2"
-;; => "Done looping!"
+;; Looping with 0
+;; Looping with 1
+;; Looping with 2
+;; Done looping!
+;; => nil
 ----
 
 
@@ -785,12 +790,12 @@ discarding the resulting values and returns `nil`.
         y [4 5]
        :let [z (+ x y)]]
   (println x "+" y "=" z))
-;; => "1 + 4 = 5"
-;; => "1 + 5 = 6"
-;; => "2 + 4 = 6"
-;; => "2 + 5 = 7"
-;; => "3 + 4 = 7"
-;; => "3 + 5 = 8"
+;; 1 + 4 = 5
+;; 1 + 5 = 6
+;; 2 + 4 = 6
+;; 2 + 5 = 7
+;; 3 + 4 = 7
+;; 3 + 5 = 8
 ;; => nil
 ----
 
@@ -820,8 +825,8 @@ Let's see an example of appending values to a vector using the `conj` (for "conj
       ys (conj xs 4)]
   (println "xs:" xs)
   (println "ys:" ys))
-;; => xs: [1 2 3]
-;; => ys: [1 2 3 4]
+;; xs: [1 2 3]
+;; ys: [1 2 3 4]
 ;; => nil
 ----
 
@@ -840,9 +845,9 @@ We'll use the list data type for this purpose:
   (println "ys:" ys)
   (println "(rest ys):" (rest ys))
   (identical? xs (rest ys)))
-;; => xs: (1 2 3)
-;; => ys: (0 1 2 3)
-;; => (rest ys): (1 2 3)
+;; xs: (1 2 3)
+;; ys: (0 1 2 3)
+;; (rest ys): (1 2 3)
 ;; => true
 ----
 
@@ -882,7 +887,6 @@ when empty and a sequence otherwise:
 ;; => (1 2 3)
 ----
 
-
 ===== nil-punning
 
 The above behaviour of `seq` coupled with the falsey nature of `nil` in boolean contexts make an idiom for checking
@@ -897,15 +901,15 @@ the emptyness of a sequence in ClojureScript, which is often referred to as nil-
     (recur (rest coll))))
 
 (print-coll [1 2 3])
-;; => Saw 1
-;; => Saw 2
-;; => Saw 3
+;; Saw 1
+;; Saw 2
+;; Saw 3
 ;; => nil
 
 (print-coll #{1 2 3})
-;; => Saw 1
-;; => Saw 3
-;; => Saw 2
+;; Saw 1
+;; Saw 3
+;; Saw 2
 ;; => nil
 ----
 
