@@ -887,6 +887,26 @@ when empty and a sequence otherwise:
 ;; => (1 2 3)
 ----
 
+`next` is a similar sequence operation to `rest`, but it differs from the latter in that it yields a `nil` value
+when called with a sequence with one or zero elements. Note that, when given one of the aforementioned sequences,
+the empty sequence returned by `rest` will evaluate as a boolean true whereas the `nil` value returned by `next`
+will evaluate as false:
+
+[source, clojure]
+----
+(rest [])
+;; => ()
+
+(next [])
+;; => nil
+
+(rest [1 2 3])
+;; => (2 3)
+
+(next [1 2 3])
+;; => (2 3)
+----
+
 ===== nil-punning
 
 The above behaviour of `seq` coupled with the falsey nature of `nil` in boolean contexts make an idiom for checking
@@ -930,10 +950,121 @@ the emptyness of a sequence in ClojureScript, which is often referred to as nil-
 
 ===== Functions that work on sequences
 
-Many of the ClojureScript core functions that work on collections call `seq` on their arguments, thus being
-implemented in terms of generic sequence operations.
+The ClojureScript core functions that work on collections call `seq` on their arguments, thus being
+implemented in terms of generic sequence operations. This also makes them short-circuit when encountering empty
+collections and being `nil`-safe.
 
-TODO
+We already saw examples with the usual suspects like `map`, `filter` and `reduce` but ClojureScript offers a
+plethora of generic sequence operations in its core namespace. Note that many of the operations we'll learn about
+either work with seqables or are extensible to user defined types.
+
+We can query a value to know wheter it's a collection type with the `coll?` predicate:
+[source, clojure]
+----
+(coll? nil)
+;; => false
+
+(coll? [1 2 3])
+;; => true
+
+(coll? {:language "ClojureScript" :file-extension "cljs"})
+;; => true
+
+(coll? "ClojureScript")
+;; => false
+----
+
+Similar predicates exist for checking if a value is sequence (`seq?`) or a seqable (`seqable?`):
+[source, clojure]
+----
+(seq? nil)
+;; => false
+(seqable? nil)
+;; => false
+
+(seq? [])
+;; => false
+(seqable? [])
+;; => true
+
+(seq? #{1 2 3})
+;; => false
+(seqable? #{1 2 3})
+;; => true
+
+(seq? "ClojureScript")
+;; => false
+(seqable? "ClojureScript")
+;; => false
+----
+
+For collections that can be counted in constant time, we can use the `count` operation:
+[source, clojure]
+----
+(count nil)
+;; => 0
+
+(count [1 2 3])
+;; => 3
+
+(count {:language "ClojureScript" :file-extension "cljs"})
+;; => 2
+
+(count "ClojureScript")
+;; => 13
+----
+
+We can also get an empty variant of a given collection with the `empty` function:
+[source, clojure]
+----
+(empty nil)
+;; => nil
+
+(empty [1 2 3])
+;; => []
+
+(empty #{1 2 3})
+;; => #{}
+----
+
+The `empty?` predicate returns true if the given collection is empty:
+[source, clojure]
+----
+(empty? nil)
+;; => true
+
+(empty? [])
+;; => true
+
+(empty? #{1 2 3})
+;; => false
+----
+
+The `conj` operation adds elements to collections and may add them in different "places" depending
+on the collection. It adds them where it makes more sense for the given collection performance-wise,
+but note that not every collection has a defined order.
+
+We can pass as many elements we want to add to `conj`, let's see it in action:
+[source, clojure]
+----
+(conj nil 42)
+;; => (42)
+
+(conj [1 2] 3)
+;; => [1 2 3]
+
+(conj [1 2] 3 4 5)
+;; => [1 2 3 4 5]
+
+(conj '(1 2) 0)
+;; => (0 1 2)
+
+(conj #{1 2 3} 4)
+;; => #{1 3 2 4}
+
+(conj {:language "ClojureScript"} [:file-extension "cljs"])
+;; => {:language "ClojureScript", :file-extension "cljs"}
+----
 
 ===== Lazyness
 
