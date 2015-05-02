@@ -1,11 +1,14 @@
-=== Working with the REPL
-
-TBD
-
 
 === Getting started with Compiler
 
 TBD
+
+
+
+=== Working with the REPL
+
+TBD
+
 
 === Build & Dependency management tools
 

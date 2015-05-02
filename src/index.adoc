@@ -25,24 +25,8 @@ This chapter will be a little introduction to ClojureScript without assumptions 
 knowledge of the Clojure language, providing a quick tour over all the things you will need to know
 in order to understand the rest of this book.
 
-This is an incomplete list of topics that will be covered in this chapter:
-
-* Syntax
-* The base types
-* Functions
-* Loops & Blocks
-* Collection types
-* Destructuring
-* Namespaces
-* Custom Data Types
-* Polymorphic constructions
-* Interoperability with host
-* State management
-* Mutability
-* Macros
-* Truthiness
-
 include::language.adoc[]
+
 
 == Tooling & Compiler
 
@@ -58,8 +42,8 @@ developing using ClojureScript. It will cover:
 * Browser based development
 * Server based development
 
-Unlike the previos chapter, this chapter intends to tell different histories not all related
-to each other.
+Unlike the previos chapter, this chapter intends to tell different stories not mandatory that
+all related to each other.
 
 include::compiler.adoc[]
 

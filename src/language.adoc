@@ -1994,7 +1994,7 @@ TBD
 
 This is the aspect where the each language has its own semantics, the majority of languages
 treats empty collections, the 0 integer and other things like this are considered false.
-In _ClojureScript_ unlike in other languages only two values are considered as false: `nil` 
+In _ClojureScript_ unlike in other languages only two values are considered as false: `nil`
 and `false`, Everything except them, are treated as `true`.
 
 So, thanks to it, sets can be considered also predicates, so if them return a value so it exists
@@ -2015,4 +2015,3 @@ and if it return `nil` so the value does not exists:
 === A little overview of macros
 
 TBD
-
