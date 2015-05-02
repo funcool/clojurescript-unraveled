@@ -1279,6 +1279,9 @@ given a protocol, add implementation for it to multiple types:
 It there other ways to extend a type with a protocol implementation but them will be covered
 in other section of this book.
 
+
+===== Participate in ClojureScript abstractions
+
 ClojureScript it self is built up on abstractions defined as protocols, so almost all behavior
 in the _ClojureScript_ language can be adopted for third party libraries. Let's go to see an
 real life example.
@@ -1297,24 +1300,6 @@ will use the *Set*'s. See this snipped of code:
 But, that it happens where? In this case, the set type implements the _ClojureScript_ internal
 `IFn` protocol that represents an abstraction for functions or any thing callable. So it can be
 used like a callable predicate in filter.
-
-===== Protocols introspection
-
-_ClojureScript_ comes with a usefull function that allows runtime introspection: `satisfies?`. The
-purpose of this function is know in runtime if some object (instance of some type) satisfies the
-concrete protocol.
-
-So, with previous examples, if we check if a set instance satisfies a *IFn* protocol, it should
-return `true`:
-
-[source, clojure]
-----
-(satisfies IFn #{1})
-;; => true
-----
-
-
-===== Participate in ClojureScript abstractions
 
 Ok, but what it happens if we want use a regular expression as predicate function for filter
 a collection of strings:
@@ -1346,10 +1331,227 @@ Now, you will be able use the regex instances as predicates in filter operation:
 ----
 
 
+===== Protocols introspection
+
+_ClojureScript_ comes with a usefull function that allows runtime introspection: `satisfies?`. The
+purpose of this function is know in runtime if some object (instance of some type) satisfies the
+concrete protocol.
+
+So, with previous examples, if we check if a set instance satisfies a *IFn* protocol, it should
+return `true`:
+
+[source, clojure]
+----
+(satisfies IFn #{1})
+;; => true
+----
+
+
 ==== Multimethods
 
-TBD
+We have previously talked about protocols, that solves a very common use case of polymorphism:
+dispatch by type. But in some circumstances the protocol's approach it can be limiting. And
+here *multimethods* comes to the rescue.
 
+The *multimethods* are not limited to type dispatch only, instead, them also offers dispatch
+by types of multiple arguments, by value and allows ad-hoc hierarchies to be defined. Also,
+like protocols, is a "Open System" so you or any third parties can extend a multimethod for
+new types.
+
+The basic consturctions of *multimethods* consists in `defmulti` and `defmethod` forms. The
+`defmulti` form is used for create the multimethod with initial dispatch function. This is
+a common look and feel of it:
+
+[source, clojure]
+----
+(defmulti say-hello
+  "A polymorphic function that return a greetings message
+  depending on the language key with default lang as `:en`"
+  (fn [param] (:locale param))
+  :default :en)
+----
+
+The anonymous function defined within the `defmulti` form is a dispatch function. It will
+be called in every call to `say-hello` function and should return some kind of mark object
+that will be used for dispatch. In our example it returns the contents of `:locale` key
+of the first argument.
+
+And finally, we should add implementations. That is done with `defmethod` form:
+
+[source, clojure]
+----
+(defmethod say-hello :en
+  [person]
+  (str "Hello " (:name person "Anonymous")))
+
+(defmethod say-hello :es
+  [person]
+  (str "Hola " (:name person "Anonimo")))
+----
+
+So, if you execute that function over a hash map containing the `:locale` and optionally
+the `:name` key, the multimethod firstly will call the dispatch function for determine the
+dispatch value, secondly it will search an implementation for that value, if it is found,
+it will execute it, in case contrary it will search the default implementation (if it 
+specified) and execute it.
+
+[source, clojure]
+----
+(say-hello {:locale :es})
+;; => "Hola Anonymo"
+
+(say-hello {:locale :en :name "Ciri"})
+;; => "Hello Ciri"
+
+(say-hello {:locale :fr})
+;; => "Hello Anonymous"
+----
+
+If the default implementation is not specified, an exception will be raised notifying about
+that some value does not have a implementation for that multimethod.
+
+
+==== Hierarchies
+
+Hierarchies is a way that _ClojureScript_ offers you build a whatever relations that your
+domain may require. The hierarchies are difined in term of relations betwen named objects,
+such as symbols, keywords or types.
+
+The hierarchies can be defined globally or locally, depending on your needs. Like multimethods,
+hierarchies are not limited to single namespace. You can extend a hierarchy from any namespace,
+not necesary the one which they are defined.
+
+The global namespace is more limited, for good reasons. Not namespaced keywords or symbols can
+not be used in the global hierarcy. That behavior helps prevent unexpected situations when
+two or more third party libraries uses the same symbol for different semantics.
+
+===== Defining a hierarchy
+
+The hierarchy relations should be established using `derive` function:
+
+[source, clojure]
+----
+(derive ::circle ::shape)
+(derive ::box ::shape)
+----
+
+We have just defined a set of relationships between namespaced keywords, in this case the
+`::circle` is a child of `::shape` and `::box` is also a child of `::shape`.
+
+TIP: The `::circle` keyword syntax is a shortland for `:current.ns/circle`. So if you are executing
+it in a repl, sureally that `::circle` will be evaluated to `:cljs.user/circe`.
+
+
+===== Hierarchies introspection
+
+_ClojureScript_ comes with little toolset of functions that allow runtime introspection
+of the global or local defined hierarchies. These toolset consists on thre functions:
+`isa?`, `anscestors`, and `descendants`.
+
+Let see an example on how it can be used with hierarchy defined in previous example:
+
+[source, clojure]
+----
+(ancestors ::box)
+;; => #{:cljs.user/shape}
+
+(descendants ::shape)
+;; => #{:cljs.user/circle :cljs.user/box}
+
+(isa? ::box ::shape)
+;; => true
+
+(isa? ::rect ::shape)
+;; => false
+----
+
+
+===== Local defined hierarchies
+
+As we mentioned previously, in _ClojureScript_ you also can define local hierarchies. This can be
+done with `make-hierarchy` function. And this is the aspect of how you can replicate the previous
+example but using the local hierarchy:
+
+[source, clojure]
+----
+(def h (-> (make-hierarchy)
+           (derive :box :shape)
+           (derive :circle :shape)))
+----
+
+Now, if you can use the same introspection functions with that, locally defined hierarchy:
+
+[source, clojure]
+----
+(isa? h :box :shape)
+;; => true
+
+(isa? :box :shape)
+;; => false
+----
+
+As you can observe, in local hierarchies we can use normal (not namespace qualified) keywords
+and if we execute the `isa?` without passing the local hierarchy parameter, its as expected
+return false.
+
+
+===== Hierarchies in multimethods
+
+One of the big advantages of hierarchies, is that they works very well together with multimethods.
+Because, multimethods by default uses the `isa?` function for the last step of dispatching. 
+
+Let see an example for clearly understand that it means. Firstly define the multimethod with 
+`defmulti` form:
+
+[source, clojure]
+----
+(defmulti stringify-shape
+  "A function that prints a human readable representation
+  of a shape keyword."
+  identity
+  :hierarchy h)
+----
+
+With `:hierarchy` keyword parameter we indicate to the multimethod that hierarchy we want to use,
+if it is not specified, the global hierarchi will be used.
+
+Secondly, define a implementation for our multimethod using the `defmethod` form:
+
+[source, clojure]
+----
+(defmethod stringify-shape :box
+  [_]
+  "A box shape")
+
+(defmethod stringify-shape :shape
+  [_]
+  "A generic shape")
+
+(defmethod stringify-shape :default
+  [_]
+  "Unexpected object")
+----
+
+Now, let see what is happens if we execute that function with a box:
+
+[source, clojure]
+----
+(stringify-shape :box)
+;; => "A box shape"
+----
+
+Now everything works as expected, the multimethod executes the direct matching implementation
+for the given parameter. But that is happens if we execute the same function but with `:circle`
+keyword as parameter, that does not have the direct matching dispatch value:
+
+[source, clojure]
+----
+(stringify-shape :circle)
+;; => "A generic shape"
+----
+
+The multimethod automatically resolves it using the provided hierarchy, and that `:circle` is
+a descendat of `:shape`, so the `:shape` implementation is executed.
 
 
 === Data types
