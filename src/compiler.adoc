@@ -1,8 +1,115 @@
-
 === Getting started with Compiler
 
-TBD
+The _ClojureScript_ compiler is implemented like it brother _Clojure_ in java, and for use it, you 
+should have jdk8 installed. _ClojureScript_ itself only requires jdk7, but the standalone compiller
+that we going to use in this chapter  requires jdk8.
 
+Additionally, for avoid constantly have a browser for execute our compiled code, in examples of this
+section we will use nodejs or iojs, so you shuld have to be installed. Nodejs is not a dependency
+of _ClojureScript_, is just one of possible execution enviroments and it will used for execute our
+examples.
+
+You can test the *iojs* installed in your system with this command:
+
+[source, shell]
+----
+$ iojs --version
+v1.7.1
+----
+
+The usage of the _ClojureScript_ compiler as it will be explained in this section, is for understand
+how it works behind the scenes and for use it in circumstances where you do not have o do not want
+other kind of tooling.
+
+Surelly that in the real world projects, you will use other more high level tools how leiningen+cljsbuld
+or boot (explained in following sections).
+
+
+==== Download the jar
+
+In recent versions of _ClojureScript_, now we have the compiler as standalone java
+dependency, packaged in one unique executable jar file.
+
+You can download it using wget:
+
+[source, bash]
+----
+wget https://github.com/clojure/clojurescript/releases/download/r3211/cljs.jar
+----
+
+
+==== First compilation
+
+===== Create the example application
+
+For this step we need some clojurescript code for our examples. So start creating
+the directory tree structure for our "hello world" application:
+
+[source, bash]
+----
+mkdir -p src/myapp
+touch src/myapp/core.cljs
+----
+
+And secondly, write the following code into the previously created `src/myapp/core.cljs`
+file:
+
+[source, clojure]
+----
+(ns myapp.core
+  (:require [cljs.nodejs :as nodejs]))
+
+(nodejs/enable-util-print!)
+
+(defn -main [& args]
+  (println "Hello world!"))
+
+(set! *main-cli-fn* -main)
+----
+
+Is very important that the declared namespace in the file match exactly the directory
+structure. Is the way how _ClojureScript_ structures its source code.
+
+
+===== Compile the example application
+
+Now, in order to compile that source code, we need a simple build script that
+instructs the _ClojureScript_ compiler the source directory and the output file. The
+_ClojureScript_ has a lot of other options but at this momen we can ignore that.
+
+Let create the _build.clj_ file with the following content:
+
+[source, clojure]
+----
+(require 'cljs.closure)
+
+(cljs.closure/build "src"
+ {:output-to "main.js"
+  :main myapp.core
+  :target :nodejs})
+----
+
+The `:output-to` parameter indicates to the compiler the destination of the compiled code, in this
+case to the "main.js" file. The `:main` propety indicates to the compiler the namespace that will
+acts as the entry point of your application when it's executed. And finally the `:target` property
+indicates the platform when you want execute the compiled code. In this case we are going to use
+*iojs* (formerly nodejs). If you ommit this parameter the source will be compiled for run in the
+browser environment.
+
+For run the compilation, just execute the following command:
+
+[source, bash]
+----
+java -cp cljs.jar:src clojure.main build.clj
+----
+
+And when it finishes, execute the compiled file using *iojs*:
+
+[source, shell]
+----
+$ iojs main.js
+"Hello world"
+----
 
 
 === Working with the REPL

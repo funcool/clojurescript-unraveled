@@ -50,7 +50,7 @@ include::compiler.adoc[]
 
 == Mixed Bag
 
-This chapter will cover miscelaneous topics that are not classified in the previous ones. This is a 
+This chapter will cover miscelaneous topics that are not classified in the previous ones. This is a
 "catchall" section and will touch a bunch of heterogeneus topics like:
 
 * Async primitives using _core.async_ library.
