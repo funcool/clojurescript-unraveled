@@ -3,7 +3,7 @@ build: html
 
 html:
 	mkdir -p dist/
-	asciidoctor -b xhtml -a stylesheet=../assets/stylesheet.css -a numbered  src/index.adoc -o dist/index.html
+	asciidoctor -b xhtml -a docinfo -a stylesheet=../assets/stylesheet2.css  src/index.adoc -o dist/index.html
 
 git:
 	git submodule init
@@ -11,7 +11,7 @@ git:
 
 docbook:
 	mkdir -p dist/
-	asciidoctor -b docbook45 -a stylesheet=../assets/stylesheet.css -a numbered  src/index.adoc -o dist/index.xml
+	asciidoctor -b docbook45 -a numbered  src/index.adoc -o dist/index.xml
 
 
 pdf: docbook git

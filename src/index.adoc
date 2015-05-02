@@ -2,6 +2,7 @@
 Andrey Antukh & Alejandro Gomez
 v1.0
 :toc: left
+:toclevels: 3
 :doctype: book
 :numbered:
 :source-highlighter: pygments
