@@ -1764,7 +1764,139 @@ you do not want a type in self.
 
 === Host interoperability
 
-TBD
+_ClojureScript_ in the same way as it brother Clojure, is designed to be a "Guest" language. It means
+that the design of the language fits very well to work on to of existing ecosystem such as javascript
+for _ClojureScript_ and jvm for _Clojure_.
+
+
+==== The types.
+
+_ClojureScript_ unlike expected, try takes advantage of every type that the platform provides. This
+is a maybe incomplete list of things that _ClojureScript_ inherits and reuse from the underlying
+platform:
+
+* _ClojureScript_ strings are javascript *Strings*.
+* _ClojureScript_ numbers are javascript *Numbers*.
+* _ClojureScript_ `nil` is a javascript *null*.
+* _ClojureScript_ regular expressions are javascript `RegExp` instances.
+* _ClojureScript_ is not interpreted, is always compiled town to the javascript.
+* _ClojureScript_ allows easy call platform apis with the same semantics.
+* _ClojureScript_ data types internally compiles to objects in javascript.
+
+On top of it, _ClojureScript_ buid own abstractions and types that are does not exists in the
+platform, such as Vectors, Maps, Sets, and others that are explained in previous chapters.
+
+
+==== Interacting with platform types
+
+_ClojureScript_ comes with a little set of special forms that allows interact with platform
+types such as calling object methods, creating new instances and accessing to object
+properties.
+
+
+===== Access to the platform
+
+_ClojureScript_ has a special syntax for access to the all platform environment through the
+`js/` special namespace. This is the aspect of the expression for execute the javascript's
+builtin `parseInt` function:
+
+[source, clojure]
+----
+(js/parseInt "222")
+;; => 222
+----
+
+
+===== Creating new instances
+
+_ClojureScript_ has two ways to create instances:
+
+.Using the `new` special form
+[source, clojure]
+----
+(new js/Regex "^foo$")
+----
+
+Using the `.` special form
+[source, clojure]
+----
+(js/Regex. "^foo$")
+----
+
+The last one is the recommended way to do that operation. We do not aware of real differences
+between the two forms, but in the clojurescript comunity the last one is the most adopted.
+
+
+===== Invoke instance methods
+
+For invoke methods of some object instance, in contrary to how it used in javascript (eg:
+`obj.method()`, the method name comes first like any other standard function in lisp languages
+but with little variation: the function name starts with special form `.`.
+
+Let see how we can call the `.test()` method of regexp instance:
+
+[source, clojure]
+----
+(def re (js/RegExp "^foo"))
+
+(.test re "foobar")
+;; => true
+----
+
+
+===== Access to object properties
+
+Access to the object properties is really very similar to call a method, the difference is that
+instead of using the `.` we should use the `.-`. Let see an example:
+
+[source, clojure]
+----
+(.-multiline re)
+;; => false
+----
+
+
+===== Creating javascrpt objects
+
+_ClojureScript_ has different ways for create plain javascript objects, each one has its own
+purpose. The basic one is the `js-obj` function. It accepts a variable length of pairs of key
+values and return a javascript object:
+
+[source, clojure]
+----
+(js-obj "foo" "bar")
+;; => #js {:foo "bar"}
+----
+
+The return value can be passed to some kind of third party library that accepts a plain 
+javascript objects. But you can observe the repl representation of the return value of this
+function. It is exactly the other form for do the same thing. 
+
+Using the reader macro `#js` consists of prepend it to the clojure map or vector and the
+result will be transformed to plain javascript:
+
+[source, clojure]
+----
+(def myobj #js {:foo "bar"})
+----
+
+The translation of that to plain javascript is similar to this:
+
+[source, javascript]
+----
+var myobj = {foo: "bar"};
+----
+
+The inconvenience of that forms, is that they does not make recursive transformatios, so
+if you have nested objects, the nested objects do not will be converted. For solve that
+use cases, _ClojureScript_ comes with `clj->js` and `js->clj` functions that transforms
+clojure collection types into javascript and in reverse order:
+
+[source, clojure]
+----
+(clj->js {:foo {:bar "baz"}})
+;; => #js {:foo #js {:bar "baz"}}
+----
 
 
 === State management
@@ -1777,11 +1909,12 @@ TBD
 TBD
 
 
+=== Truthiness
+
+TBD
+
+
 === A little overview of macros
 
 TBD
 
-
-=== Truthiness
-
-TBD
