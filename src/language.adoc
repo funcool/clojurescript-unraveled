@@ -1098,7 +1098,7 @@ list. The prepend operation is performed using the `cons` (construct) function.
 ;; => (0 1 2)
 ----
 
-We use the literal `()` to represent the empty list. Since it doesn't contain any symbol is not treated
+We used the literal `()` to represent the empty list. Since it doesn't contain any symbol is not treated
 as a function call. However, when using list literals that contain elements we need to quote them to
 prevent ClojureScript from evaluating them as a function call:
 
@@ -1145,8 +1145,17 @@ the stack.
 ;; => cljs.core/List
 ----
 
+One thing that lists are not particularly good at is random indexed access. Since they are stored in a single linked list
+like structure in memory, random access to a given index requires a linear traversal in order to either retrieve the requested
+item or throw an index our of bounds error. Non-indexed ordered collections like lazy sequences also suffer from this limitation.
+
 
 ===== Vectors
+
+Vectors are one of the most common data structures in ClojureScript. They are used as a syntactic construct in many
+places where more traditional lisps use lists, for example in function argument declarations and `let` bindings.
+
+TODO: indexed acces
 
 
 ===== Maps
