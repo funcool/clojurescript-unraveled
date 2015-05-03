@@ -286,7 +286,7 @@ The very inacurate overview of the compilation process is:
 The final output dependens strictly on the optimization level.
 
 
-===== _none_
+===== none
 
 Implies that closure compiler is noop, just writes the files as is, without any additional
 optiomization applied to the source code. This optimization level is manadatory if you are targeting
