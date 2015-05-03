@@ -1066,16 +1066,97 @@ We can pass as many elements we want to add to `conj`, let's see it in action:
 ;; => {:language "ClojureScript", :file-extension "cljs"}
 ----
 
+
 ===== Lazyness
+
+Most of ClojureScript sequence-returning functions generate lazy sequences instead of eagerly creating
+a whole new sequence. Lazy sequences generate their contents as they are requested, usually when iterating
+over them. Lazyness ensures that we don't do more work that we need to and gives us the possibility to
+treat potentially infinite sequence as regular ones.
 
 TODO
 
 ==== Collections in depth
 
+Now that we're acquainted with ClojureScript's sequence abstraction and some of the generic sequence manipulating
+functions it's time to dive into the concrete collection types and the operations they support.
+
+
 ===== Lists
+
+In ClojureScript lists are mostly used as a data structure for grouping symbols together into programs. Unlike in other
+lisps, many of the syntactic constructs of ClojureScript use data structures different from the list (vectors and maps).
+This makes code less uniform but the gains in readability are well worth the price.
+
+You can think of ClojureScript lists as singly linked lists, where each node contains a value and a pointer to the rest of the list.
+This makes natural (and fast!) to add items to the front of the list since adding to the end would require to traverse the entire
+list. The prepend operation is performed using the `cons` (construct) function.
+
+[source, clojure]
+----
+(cons 0 (cons 1 (cons 2 ())))
+;; => (0 1 2)
+----
+
+We use the literal `()` to represent the empty list. Since it doesn't contain any symbol is not treated
+as a function call. However, when using list literals that contain elements we need to quote them to
+prevent ClojureScript from evaluating them as a function call:
+
+[source, clojure]
+----
+(cons 0 '(1 2))
+;; => (0 1 2)
+----
+
+Since the head is the position that has constant time addition in the list collection, the `conj` operation
+on lists naturally adds item in the front:
+
+[source, clojure]
+----
+(conj '(1 2) 0)
+;; => (0 1 2)
+----
+
+Lists and other ClojureScript data structures can be used as stacks using the `peek`, `pop` and `conj` functions.
+Note that the top of the stack will be the "place" where `conj` adds elements to, making `conj` equivalent to the
+stack's push operation. In the case of lists, `conj` adds element to the front of the list, `peek` returns the first
+element of the list and `pop` returns a list with all the elements but the first one.
+
+Note that the two operations that return a stack (`conj` and `pop`) don't change the type of the collection used for
+the stack.
+
+[source, clojure]
+----
+(def list-stack '(0 1 2))
+
+(peek list-stack)
+;; => 0
+
+(pop list-stack)
+;; => (1 2)
+
+(type (pop list-stack))
+;; => cljs.core/List
+
+(conj list-stack -1)
+;; => (-1 0 1 2)
+
+(type (conj list-stack -1))
+;; => cljs.core/List
+----
+
+
 ===== Vectors
+
+
 ===== Maps
+
+
 ===== Sets
+
+
+===== Queues
+
 
 === Destructuring
 
@@ -1930,7 +2011,7 @@ In case of arrays, it there a specialized function `into-array` that behaves as 
 
 ===== Arrays
 
-In previous example we have seen how we can create an array from existing _ClojureScript_ 
+In previous example we have seen how we can create an array from existing _ClojureScript_
 collection. But it there other function for create arrays: `make-array`.
 
 .Creating a preallocated array with length 10
