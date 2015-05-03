@@ -1155,7 +1155,103 @@ item or throw an index our of bounds error. Non-indexed ordered collections like
 Vectors are one of the most common data structures in ClojureScript. They are used as a syntactic construct in many
 places where more traditional lisps use lists, for example in function argument declarations and `let` bindings.
 
-TODO: indexed acces
+ClojureScript vectors have enclosing brackets `[]` in their syntax literals, they can be created with `vector` and from
+another collection with `vec`:
+
+[source,clojure]
+----
+(vector? [0 1 2])
+;; => true
+
+(vector 0 1 2)
+;; => [0 1 2]
+
+(vec '(0 1 2))
+;; => [0 1 2]
+----
+
+Vectors are, like lists, ordered collections of heterogeneous values. Unlike lists, vectors grow naturally from the tail
+so the `conj` operation appends items to the rear of a vector. Insertion on the end of a vector is effectively constant
+time:
+
+[source,clojure]
+----
+(conj [0 1] 2)
+;; => [0 1 2]
+----
+
+Another thing that differentiates lists and vectors is that vectors are indexed collections and as such support efficient
+random index access and non-destructive updates. We can use the familiar `nth` function to retrieve values given an index:
+
+[source, clojure]
+----
+(nth [0 1 2] 0)
+;; => 0
+----
+
+Since vectors associate sequential numeric keys (indexes) to values we can treat them as an associative data structure. ClojureScript
+provides the `assoc` function that, given an associative data structure and a set of key-value pairs, yields a new data structure with
+the values corresponding to the keys modified.
+
+[source, clojure]
+----
+(assoc [0 1 1] 2 2)
+;; => [0 1 2]
+----
+
+Note that we can only `assoc` to a key that is either contained in the vector already or if it's the last position in a vector:
+
+
+[source, clojure]
+----
+(assoc [0 1 2] 3 3)
+;; => [0 1 2 3]
+
+(assoc [0 1 2] 4 4)
+;; Error: Index 4 out of bounds [0,3]
+----
+
+Like with lists, vectors can be also used as stack with the `peek`, `pop` and `conj` functions. Note, however, that vectors grow
+from the opposite end of the collection as lists:
+
+[source, clojure]
+----
+(def vector-stack [0 1 2])
+
+(peek vector-stack)
+;; => 2
+
+(pop vector-stack)
+;; => [0 1]
+
+(type (pop vector-stack))
+;; => cljs.core/PersistentVector
+
+(conj vector-stack 3)
+;; => [0 1 2 3]
+
+(type (conj vector-stack 3))
+;; => cljs.core/PersistentVector
+----
+
+Since `map` and `filter` return lazy sequences but is common to need a fully realized sequence after performing those operations,
+vector-returning counterparts of such functions are available as `mapv` and `filterv`. They have the advantage of being faster
+than building a vector from a lazy sequence and making your intent more explicit:
+
+[source, clojure]
+----
+(map inc [0 1 2])
+;; => (1 2 3)
+
+(type (map inc [0 1 2]))
+;; => cljs.core/LazySeq
+
+(mapv inc [0 1 2])
+;; => [1 2 3]
+
+(type (mapv inc [0 1 2]))
+;; => cljs.core/PersistentVector
+----
 
 
 ===== Maps
