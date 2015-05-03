@@ -40,13 +40,6 @@ The _ClojureScript_ compiler is packages in a standalone executable jar file, so
 file and jdk8 that you need for compile the _ClojureScript_ source code to javascript.
 
 
-
-For avoid constantly have a browser for execute our compiled code, in examples of this
-section we will use nodejs or iojs, so you shuld have to be installed. Nodejs is not a dependency
-of _ClojureScript_, is just one of possible execution enviroments and it will used for execute our
-examples.
-
-
 ==== Compile for nodejs/iojs
 
 Let start with a practical example compiling code that will target to execute in *nodejs*/*iojs*. For
