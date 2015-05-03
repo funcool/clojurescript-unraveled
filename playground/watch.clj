@@ -1,6 +1,6 @@
 (require 'cljs.closure)
 
-(cljs.closure/build "src"
+(cljs.closure/watch "src"
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"

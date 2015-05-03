@@ -178,7 +178,7 @@ the _build.clj_ file with the following content:
   :output-dir "out/"
   :source-map "main.js.map"
   :main 'myapp.core
-  :optimizations :whitespace})
+  :optimizations :none})
 ----
 
 This is a brew explanation of the used compiler options:
@@ -228,7 +228,46 @@ browser and take a look in a development tools console. There should appear the 
 
 ==== Watch process
 
-TBD
+Surelly, that you already have experimented the slow statup of _ClojureScript_ compiler. For solve this,
+the _ClojureScript_ standalone compiler also comes with tools for start a process for watch changes
+in some directory and perform a incrmenetal compilation.
+
+Start creating an other build script, but in this case name it _watch.clj_:
+
+[source, clojure]
+----
+(require 'cljs.closure)
+
+(cljs.closure/watch "src"
+ {:output-to "main.js"
+  :output-dir "out/"
+  :source-map "main.js.map"
+  :main 'myapp.core
+  :optimizations :none})
+----
+
+Now, execute that script like any other that you have executed in previos sections:
+
+[source, bash]
+----
+$ java -cp cljs.jar:src clojure.main build.clj
+Building ...
+Reading analysis cache for jar:file:/home/niwi/cljsbook/playground/cljs.jar!/cljs/core.cljs
+Compiling out/cljs/core.cljs
+Using cached cljs.core out/cljs/core.cljs
+... done. Elapsed 0.8354759 seconds
+Watching paths: /home/niwi/cljsbook/playground/src
+
+Change detected, recompiling ...
+Compiling src/myapp/core.cljs
+Compiling out/cljs/core.cljs
+Using cached cljs.core out/cljs/core.cljs
+... done. Elapsed 0.191963443 seconds
+----
+
+You can observe that in second compilation, the time is drastically reduced. An other advantage
+of this method is that it is a little bit verbose.
+
 
 ==== Optimization levels
 
