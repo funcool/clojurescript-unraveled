@@ -271,10 +271,50 @@ of this method is that it is a little bit verbose.
 
 ==== Optimization levels
 
+The _ClojureScript_ compiler has different level of optimizations. Behind the scenes, that compilation
+levels are coming from Google Closure Compiler.
+
+The very inacurate overview of the compilation process is:
+
+1. The reader reads the code and makes some analisys. This process can raise some warnings
+   during its phase.
+2. Then, the _ClojureScript_ compiler emits javascript code. The result of that is a one javascript
+   file for each cljs file.
+3. The generated files pases throught the Closure Compiler that depending of the optimization level,
+   and other options (sourcemaps, output dir output to, ...) generates the final output.
+
+The final output dependens strictly on the optimization level.
+
+
+===== _none_
+
+Implies that closure compiler is noop, just writes the files as is, without any additional
+optiomization applied to the source code. This optimization level is manadatory if you are targeting
+*nodejs* or *iojs*, and the appropiate in development mode when you code is targets to the browser.
+
+
+===== whitespace
+
+This optimization level consists in a concatenation of the compiled files in a apropiate order, remove
+line breaks, line breaks and other whitespaces and generate the output as one unique file.
+
+It also has some compilation speed penality, resulting in a slower compilations. In any case is not
+very very slow and is completelly usable in small/medium applications.
+
+
+===== simple
+
+The simple compilation level implies (includes) all transformations from whitespace optimization and
+additionally performs optimizations within expressions and functions, including renaming local variables
+and function parameters to shorter names.
+
+Compilation with `:simple` optimization always preserves the functionality of syntactically valid
+JavaScript, so it does not interfere with the interaction between the compiled _ClojureScript_ and
+other JavaScript.
+
+===== advanced
+
 TBD
-
-
-
 
 
 === Working with the REPL
