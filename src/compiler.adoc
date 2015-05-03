@@ -205,7 +205,7 @@ app in the browser. Create the _index.html_ file with the following content:
 <!DOCTYPE html>
 <html>
   <header>
-    <meta charset="urf-8" />
+    <meta charset="utf-8" />
     <title>Hello World from ClojureScript</title>
   </header>
   <body>
