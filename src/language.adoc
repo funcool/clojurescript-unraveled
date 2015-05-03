@@ -2197,6 +2197,10 @@ and if it return `nil` so the value does not exists:
 ;; => nil
 ----
 
+=== Transducers
+
+TBD
+
 
 === A little overview of macros
 
