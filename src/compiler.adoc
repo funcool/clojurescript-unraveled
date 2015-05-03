@@ -1,13 +1,60 @@
-=== Getting started with Compiler
+=== Getting Started with ClojureScript compiler
 
-The _ClojureScript_ compiler is implemented like it brother _Clojure_ in java, and for use it, you 
-should have jdk8 installed. _ClojureScript_ itself only requires jdk7, but the standalone compiller
-that we going to use in this chapter  requires jdk8.
+At this point, surelly you are very borred with constantly teoric explication about the language
+itself and want to write and execute some code. The goal of this section is make a little practical
+introduction to the _ClojureScript_ compiler.
 
-Additionally, for avoid constantly have a browser for execute our compiled code, in examples of this
+The _ClojureScript_ compiler takes the source code splited in directories and namespaces and
+compiles it down to the javascript. Today, javascript has very great a mount of different environments
+where it can be executed with their own pecularities.
+
+This chapter intends to explain how to use the _ClojureScript_ without any additional tooling. This
+will help you understand how the compiler works and how you can use it when other tooling are not
+available (such as leiningen+cljsbuld or boot).
+
+
+==== Execution environments
+
+What is a execution environment? An execution environment is a engine, where javascript can be
+executed. For example, the most popular execution environment is a Browser (Chrome, Firefox, ...)
+followed by the second most popular is the nodejs/iojs.
+
+It there others, such as Rhino (jdk6+), Nashorn (jdk8), QtQuick (QT),... but all them does not have
+significant differences from the first two. So, the _ClojureScript_ at this moment may compile
+the code for run in browser or in nodejs/iojs like environments out of the box.
+
+==== Download te compiler
+
+The _ClojureScript_ compiler is implemented in java, and for use it, you should have jdk8 installed.
+_ClojureScript_ itself only requires jdk7, but the standalone compiller that we going to use in this
+chapter requires jdk8.
+
+You can download it using wget:
+
+[source, bash]
+----
+wget https://github.com/clojure/clojurescript/releases/download/r3211/cljs.jar
+----
+
+The _ClojureScript_ compiler is packages in a standalone executable jar file, so this is the unique
+file and jdk8 that you need for compile the _ClojureScript_ source code to javascript.
+
+
+
+For avoid constantly have a browser for execute our compiled code, in examples of this
 section we will use nodejs or iojs, so you shuld have to be installed. Nodejs is not a dependency
 of _ClojureScript_, is just one of possible execution enviroments and it will used for execute our
 examples.
+
+
+==== Compile for nodejs/iojs
+
+Let start with a practical example compiling code that will target to execute in *nodejs*/*iojs*. For
+it you should have installed the nodejs or iojs (recommended).
+
+It there different ways to install iojs, but the most recommended way is using the nvm (node version
+manager). You can read the instructions for install and use on its
+link:https://github.com/creationix/nvm[home page].
 
 You can test the *iojs* installed in your system with this command:
 
@@ -17,33 +64,12 @@ $ iojs --version
 v1.7.1
 ----
 
-The usage of the _ClojureScript_ compiler as it will be explained in this section, is for understand
-how it works behind the scenes and for use it in circumstances where you do not have o do not want
-other kind of tooling.
-
-Surelly that in the real world projects, you will use other more high level tools how leiningen+cljsbuld
-or boot (explained in following sections).
-
-
-==== Download the jar
-
-In recent versions of _ClojureScript_, now we have the compiler as standalone java
-dependency, packaged in one unique executable jar file.
-
-You can download it using wget:
-
-[source, bash]
-----
-wget https://github.com/clojure/clojurescript/releases/download/r3211/cljs.jar
-----
-
-
-==== First compilation
-
 ===== Create the example application
 
-For this step we need some clojurescript code for our examples. So start creating
-the directory tree structure for our "hello world" application:
+As first step of our practical example, we should create our application directory structure
+and populate it with example code.
+
+So start creating the directory tree structure for our "hello world" application:
 
 [source, bash]
 ----
@@ -51,8 +77,7 @@ mkdir -p src/myapp
 touch src/myapp/core.cljs
 ----
 
-And secondly, write the following code into the previously created `src/myapp/core.cljs`
-file:
+Secondly, write the example code into the previously created `src/myapp/core.cljs` file:
 
 [source, clojure]
 ----
@@ -67,15 +92,15 @@ file:
 (set! *main-cli-fn* -main)
 ----
 
-Is very important that the declared namespace in the file match exactly the directory
+NOTE: Is very important that the declared namespace in the file match exactly the directory
 structure. Is the way how _ClojureScript_ structures its source code.
 
 
 ===== Compile the example application
 
-Now, in order to compile that source code, we need a simple build script that
-instructs the _ClojureScript_ compiler the source directory and the output file. The
-_ClojureScript_ has a lot of other options but at this momen we can ignore that.
+In order to compile that source code, we need a simple build script that instructs the
+_ClojureScript_ compiler the source directory and the output file. The _ClojureScript_ has a
+lot of other options but at this momen we can ignore that.
 
 Let create the _build.clj_ file with the following content:
 
@@ -89,12 +114,15 @@ Let create the _build.clj_ file with the following content:
   :target :nodejs})
 ----
 
-The `:output-to` parameter indicates to the compiler the destination of the compiled code, in this
-case to the "main.js" file. The `:main` propety indicates to the compiler the namespace that will
-acts as the entry point of your application when it's executed. And finally the `:target` property
-indicates the platform when you want execute the compiled code. In this case we are going to use
-*iojs* (formerly nodejs). If you ommit this parameter the source will be compiled for run in the
-browser environment.
+This is a brew explanation of the used compiler options:
+
+* The `:output-to` parameter indicates to the compiler the destination of the compiled code, in this
+  case to the "main.js" file.
+* The `:main` propety indicates to the compiler the namespace that will acts as the entry point of
+  your application when it's executed.
+* The `:target` property indicates the platform when you want execute the compiled code. In this case
+  we are going to use *iojs* (formerly nodejs). If you ommit this parameter the source will be
+  compiled for run in the browser environment.
 
 For run the compilation, just execute the following command:
 
