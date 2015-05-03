@@ -45,9 +45,9 @@ example of the usage of a vector (enclosed in brackets) for defining local bindi
 ----
 
 This is practically all the syntax we need to know for using not only ClojureScript, but any Lisp. Being
-written in its own data structures (often referred to as homoiconicity) is a great property since the syntax
-is uniform and simple; also, code generation via macros is easier than in any language, giving us
-plenty of power for extending the language to our needs.
+written in its own data structures (often referred to as homoiconicity) is a great property since the
+syntax is uniform and simple; also, code generation via macros is easier than in any language, giving
+us plenty of power for extending the language to our needs.
 
 === The base data types.
 
@@ -114,7 +114,7 @@ The symbols in _ClojureScript_ are very very similar to now known *Keywords*. Bu
 instead of evaluating to themselves, are evalutated to something that them refers, that
 can be function, variables, ...
 
-Them are represented with something that not star with a number
+Them are represented with something that not start with a number
 
 [source, clojure]
 ----
