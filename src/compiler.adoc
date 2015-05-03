@@ -110,7 +110,7 @@ Let create the _build.clj_ file with the following content:
 
 (cljs.closure/build "src"
  {:output-to "main.js"
-  :main myapp.core
+  :main 'myapp.core
   :target :nodejs})
 ----
 
@@ -138,6 +138,104 @@ And when it finishes, execute the compiled file using *iojs*:
 $ iojs main.js
 "Hello world"
 ----
+
+
+==== Compile for the Browser
+
+In this section we are going to create a similar "hello world" example aplication from the
+previous section for run in the browser environent. The minimal requirement for do it, it
+is just have a browser that can execute javascript.
+
+The process is almost the same, the directory structure is the same. The only things that
+changes is the entry point of the application and the build script.
+
+Start writing a new content to the src/myapp/core.cljs` file:
+
+[source, clojure]
+----
+(ns myapp.core)
+
+(enable-console-print!)
+
+(println "Hello world!")
+----
+
+In the browser environments we do not need a specific entry point for the application,
+so the entry point is the entire namespace.
+
+
+===== Compile the example application
+
+In order to compile that source code the previous code for run properly in a browser, overwrite
+the _build.clj_ file with the following content:
+
+[source, clojure]
+----
+(require 'cljs.closure)
+
+(cljs.closure/build "src"
+ {:output-to "main.js"
+  :output-dir "out/"
+  :source-map "main.js.map"
+  :main 'myapp.core
+  :optimizations :whitespace})
+----
+
+This is a brew explanation of the used compiler options:
+
+* The `:output-to` parameter indicates to the compiler the destination of the compiled code, in this
+  case to the "main.js" file.
+* The `:main` propety indicates to the compiler the namespace that will acts as the entry point of
+  your application when it's executed.
+* The `:source-map` indicates the destination of the source map.
+* The `:output-dir` indicates the destination directory for all files sources used in a compilation. Is
+  just for make source maps works properly with the rest of code, not only your source.
+* The `:optimizations` indicates the compilation optimizacion. It there different values for this option
+  but that will covered in following sections in more details.
+
+For run the compilation, just execute the following command:
+
+[source, bash]
+----
+java -cp cljs.jar:src clojure.main build.clj
+----
+
+This process can take some time, so do not worry, wait a little bit. The jvm bootstrap with clojure
+compiler is slightly slow. In following sections we will explain how start a watch process for avoid
+constant start and stop the slow process.
+
+While waiting the compilation, let's go creating a dummy html file for make easy execute our example
+app in the browser. Create the _index.html_ file with the following content:
+
+[source, html]
+----
+<!DOCTYPE html>
+<html>
+  <header>
+    <meta charset="urf-8" />
+    <title>Hello World from ClojureScript</title>
+  </header>
+  <body>
+    <script src="main.js"></script>
+  </body>
+</html>
+----
+
+
+Now, when compilation are completed and you have the basic html file, just open it with your favorite
+browser and take a look in a development tools console. There should appear the "hello world" message.
+
+
+==== Watch process
+
+TBD
+
+==== Optimization levels
+
+TBD
+
+
+
 
 
 === Working with the REPL

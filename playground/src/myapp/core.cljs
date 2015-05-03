@@ -1,9 +1,6 @@
-(ns myapp.core
-  (:require [cljs.nodejs :as nodejs]))
+(ns myapp.core)
 
-(nodejs/enable-util-print!)
+(enable-console-print!)
 
-(defn -main [& args]
-  (println "Hello world!"))
+(println "Hello world!")
 
-(set! *main-cli-fn* -main)
