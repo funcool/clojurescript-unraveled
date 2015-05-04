@@ -23,8 +23,8 @@ allows many unusual characters like `?` or `-` in symbol names which makes it ea
 ;; => true
 ----
 
-For distinguishing function calls and lists, we can quote lists for turning off evaluation. The quoted
-lists will be treat as data instead of as a function call:
+For distinguishing function calls and lists, we can quote lists to keep them from being evaluated. The quoted
+lists will be treated as data instead of as a function call:
 
 [source, clojure]
 ----
@@ -47,26 +47,26 @@ example of the usage of a vector (enclosed in brackets) for defining local bindi
 This is practically all the syntax we need to know for using not only ClojureScript, but any Lisp. Being
 written in its own data structures (often referred to as homoiconicity) is a great property since the
 syntax is uniform and simple; also, code generation via macros is easier than in any language, giving
-us plenty of power for extending the language to our needs.
+us plenty of power for extending the language to suit our needs.
 
 === The base data types.
 
 The ClojureScript language has a rich set of data types like most programmig languages. It provides
-scalar datatypes that will be very familiar for you such as numbers, strings, floats. But, also
-provides a great amount of others that maybe are not well known such as symbols, keywords, regex,
+scalar datatypes that will be very familiar for you such as numbers, strings, floats. Beyond these it also
+provides a great amount of others that might be less familiar such as symbols, keywords, regex,
 vars, atoms, volatiles...
 
-_ClojureScript_ embrases the host language, and as possible it uses the host provided types. In this
-case: numbers and strings are used as is and them behaves in same way as in javascript.
+_ClojureScript_ embrases the host language, and where possible it uses the hosts provided types. In this
+case: numbers and strings are used as is and they behave in same way as in javascript.
 
 
 ==== Numbers
 
-In _ClojureScript_ the numbers includes both: integers and floating points. But, knowing that
-_ClojureScript_ is a guest language that compiles to javascript, having integers is an ilusion.
-Because the javascript language treats all numbers as floating points values.
+In _ClojureScript_  numbers include both integers and floating points. Keeping in mind that
+_ClojureScript_ is a guest language that compiles to javascript, integers are actually javascripts native
+floating points under the hood.
 
-Like in any other languages, the numbers in _ClojureScript_ are represented in following way:
+Like in any other language, numbers in _ClojureScript_ are represented in following way:
 
 [source, clojure]
 ----
@@ -83,8 +83,8 @@ Like in any other languages, the numbers in _ClojureScript_ are represented in f
 
 ==== Keywords
 
-Keywords in _ClojureScript_ are objecs that always evaluate to themselves. Them are usually
-used in map data structures for reprensent in a most efficient way to the keys.
+Keywords in _ClojureScript_ are objects that always evaluate to themselves. They are usually
+used in map data structures to efficiently reprensent the keys.
 
 [source, clojure]
 ----
@@ -94,12 +94,11 @@ used in map data structures for reprensent in a most efficient way to the keys.
 :foo/bar
 ----
 
-As you can see, the keyword are all prefixed with `:`, but this char is only part
-of literal syntax and is not part of the name of the object.
+As you can see, the keywords are all prefixed with `:`, but this char is only part
+of the literal syntax and is not part of the name of the object.
 
-You also can create a keyword calling a function `keyword`. Do not worry if you do not understand
-or something is not clear in the following example, the functions are discussed some chapters
-below.
+You can also create a keyword by calling a function `keyword`. Do not worry if you don't understand
+or are unclear about anything in the following example, the functions are discussed in later chapters.
 
 [source, clojure]
 ----
@@ -110,7 +109,7 @@ below.
 
 ==== Symbols
 
-The symbols in _ClojureScript_ are very very similar to now known *Keywords*. But them
+Symbols in _ClojureScript_ are very very similar to now known *Keywords*. But them
 instead of evaluating to themselves, are evalutated to something that them refers, that
 can be function, variables, ...
 
@@ -123,25 +122,24 @@ othersymbol
 f1
 ----
 
-Do not worry if you do not understand clearly this part, symbols are used un almost
-all examples and you will have the oportunity to undesarstand them in a practical way,
-with examples.
+Don't worry if you don't understand right away, symbols are used in almost
+all our examples which will give you the opportunity to learn more as we go on.
 
 
 ==== Strings
 
-Nothing new we can explain about strings that you do not known. In _ClojureScript_ them
-are work like in any other language. Them are immutable.
+Nothing new we can explain about strings that you don't already know. In _ClojureScript_ they
+ work the same as in any other language. One point of interest however is that they are immutable.
 
-And in this concrete case are the same as in javascript:
+In this case they are the same as in javascript:
 
 [source, clojure]
 ----
 "A example of a string"
 ----
 
-The pecularity of Strings on _ClojureScript_ is due to lisp syntax, and is that you don't need
-additional syntax for multiline strings:
+The pecularity of Strings in _ClojureScript_ is due to it's lisp syntax, single and multiline strings
+have the same syntax:
 
 [source, clojure]
 ----
@@ -151,8 +149,7 @@ additional syntax for multiline strings:
 
 ==== Characters
 
-_ClojureScript_ also has a representation for one character and it has a literal syntax for represent
-them.
+_ClojureScript_ also lets you write single characters using Clojure's character literal syntax.
 
 [source, clojure]
 ----
@@ -160,29 +157,29 @@ them.
 \newline  ; The new line character
 ----
 
-As its host does not a clear representation for character type, in _ClojureScript_ behind the scenes
-one character is a simple string with one character.
+Since the host language doesn't contain character literals, _ClojureScript_ characters are transformed
+behind the scenes into single character strings.
 
 
 ==== Collections
 
-As usual, the second big step on explaining one language, is explain its collections and collection
-abstractions. The _ClojureScript_ is not an exception in this rule.
+Another big step in explaining a language, is to explain it's collections and collection
+abstractions. _ClojureScript_ is not an exception in this rule.
 
-_ClojureScript_ comes with great bunch of different collections. The main difference of _ClojureScript_
-collections with other languages is that them are persistent and immutable.
+_ClojureScript_ comes with many types of different collections. The main difference between _ClojureScript_
+collections and collections in other languages is that they are persistent and immutable.
 
-But before venture of all these (maybe) unknown concepts, we'll go to make a high level overview
+Before moving on to all of these (possibly) unknown concepts, we'll present a high level overview
 of existing collection types in _ClojureScript_.
 
 
 ===== Lists
 
-This is a clasic collection type in lisp languages. _ClojureScript_ is not an exception. List is the
-simplest collection data structure in _ClojureScript_. Lists can contain items of any type, including
+This is a clasic collection type in languages based on lisp. Lists are the
+simplest type of collection in _ClojureScript_. Lists can contain items of any type, including
 other collections.
 
-Lists in _ClojureScript_ are repsesented with parentheses as its literal syntax:
+Lists in _ClojureScript_ are repsesented by items enclosed between parenthesis:
 
 [source, clojure]
 ----
@@ -190,10 +187,10 @@ Lists in _ClojureScript_ are repsesented with parentheses as its literal syntax:
 '(:foo :bar 2)
 ----
 
-As you can observe, all list examples are prefixed with `'` char. This is because lists in lisp like
-languages are often used for express expressions forms such as function or macro calls. In that case
-the first item should be a symbol that will evaluate to a something callable and the rest of list
-elemenents will be a function parameters.
+As you can observe, all list examples are prefixed with the `'` char. This is because lists in lisp like
+languages are often used to express things like function or macro calls. In that case
+the first item should be a symbol that will evaluate to a something callable and the rest of the list
+elemenents will be function parameters.
 
 [source, clojure]
 ----
