@@ -40,7 +40,7 @@ example of the usage of a vector (enclosed in brackets) for defining local bindi
 (let [x 1
       y 2
       z 3]
-  (+ x y x))
+  (+ x y z))
 ;; => 6
 ----
 
@@ -1293,6 +1293,21 @@ Note that we can only `assoc` to a key that is either contained in the vector al
 ;; Error: Index 4 out of bounds [0,3]
 ----
 
+Perhaps surprisingly, associative data structures can also be used as functions. They are functions of their keys to the values they
+are associated with. In the case of vectors, if the given key is not present an exception is thrown:
+
+[source, clojure]
+----
+(["cero" "uno" "dos"] 0)
+;; => "cero"
+
+(["cero" "uno" "dos"] 2)
+;; => "dos"
+
+(["cero" "uno" "dos"] 3)
+;; Error: Not item 3 in vector of length 3
+----
+
 As with lists, vectors can be also used as stack with the `peek`, `pop` and `conj` functions. Note, however, that vectors grow
 from the opposite end of the collection as lists:
 
@@ -1335,9 +1350,91 @@ than building a vector from a lazy sequence and making your intent more explicit
 ;; => cljs.core/PersistentVector
 ----
 
-
 ===== Maps
 
+Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a syntactic construct for attaching metadata to
+vars. Any ClojureScript data structure can be used as a key in a map, although it's common to use keywords since can also
+be called as functions.
+
+ClojureScript maps are written literally as key-value pairs enclosed in braces `{}`. Alternatively, they can be created
+with the `hash-map` function:
+
+[source,clojure]
+----
+(map? {:name "Cirilla"})
+;; => true
+
+(hash-map :name "Cirilla")
+;; => {:name "Cirilla"}
+
+(hash-map :name "Cirilla" :surname "Fiona")
+;; => {:name "Cirilla" :surname "Fiona"}
+----
+
+Since regular maps don't have a specific order, the `conj` operation just adds one or more key-value pairs to a map. `conj`
+for maps expects one or more sequences of key-value pairs as its last arguments:
+
+[source,clojure]
+----
+(def ciri {:name "Cirilla"})
+
+(conj ciri [:surname "Fiona"])
+;; => {:name "Cirilla", :surname "Fiona"}
+
+(conj ciri [:surname "Fiona"] [:ocupation "Wizard"])
+;; => {:name "Cirilla", :surname "Fiona", :ocupation "Wizard"}
+----
+
+Maps associate keys to values and, as such, are an associative data structure. They support adding associations with `assoc` and,
+unlike vectors, removing them with `dissoc`. Let's explore these functions:
+
+[source,clojure]
+----
+(assoc {:name "Cirilla"} :surname "Fiona")
+;; => {:name "Cirilla", :surname "Fiona"}
+
+(dissoc {:name "Cirilla"} :name)
+;; => {}
+----
+
+Maps are also functions of their keys, returning the values related to the given key. Unlike vectors, they return `nil` if we supply
+a key that is not present in the map:
+
+[source,clojure]
+----
+({:name "Cirilla"} :name)
+;; => "Cirilla"
+
+({:name "Cirilla"} :surname)
+;; => nil
+----
+
+ClojureScript also offers sorted hash maps which behave like their unsorted versions but preserve order when iterating over them. We
+can create a sorted map with default ordering with `sorted-map`:
+
+[source,clojure]
+----
+(def sm (sorted-map :c 2 :b 1 :a 0))
+;; => {:a 0, :b 1, :c 2}
+
+(keys sm)
+;; => (:a :b :c)
+----
+
+If we need a custom ordering we can provide a comparator function to `sorted-map-by`, let's see an example inverting the value
+returned by the built-in `compare` function. Comparator functions take two elements to compare and returns -1 (less than), 0 (equal)
+or 1 (greater than):
+
+[source,clojure]
+----
+(def reverse-compare (comp - compare))
+
+(def sm (sorted-map-by reverse-compare :a 0 :b 1 :c 2))
+;; => {:c 2, :b 1, :a 0}
+
+(keys sm)
+;; => (:c :b :a)
+----
 
 ===== Sets
 
@@ -2293,6 +2390,9 @@ and if it return `nil` so the value does not exists:
 
 TBD
 
+=== Metadata
+
+TBD
 
 === A little overview of macros
 
