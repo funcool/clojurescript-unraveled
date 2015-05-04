@@ -1063,8 +1063,8 @@ allows many unusual characters like <code>?</code> or <code>-</code> in symbol n
 </div>
 </div>
 <div class="paragraph">
-<p>For distinguishing function calls and lists, we can quote lists for turning off evaluation. The quoted
-lists will be treat as data instead of as a function call:</p>
+<p>For distinguishing function calls and lists, we can quote lists to keep them from being evaluated. The quoted
+lists will be treated as data instead of as a function call:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1089,30 +1089,30 @@ example of the usage of a vector (enclosed in brackets) for defining local bindi
 <p>This is practically all the syntax we need to know for using not only ClojureScript, but any Lisp. Being
 written in its own data structures (often referred to as homoiconicity) is a great property since the
 syntax is uniform and simple; also, code generation via macros is easier than in any language, giving
-us plenty of power for extending the language to our needs.</p>
+us plenty of power for extending the language to suit our needs.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="the-base-data-types"><a class="link" href="#the-base-data-types">2.2. The base data types.</a></h3>
 <div class="paragraph">
 <p>The ClojureScript language has a rich set of data types like most programmig languages. It provides
-scalar datatypes that will be very familiar for you such as numbers, strings, floats. But, also
-provides a great amount of others that maybe are not well known such as symbols, keywords, regex,
+scalar datatypes that will be very familiar for you such as numbers, strings, floats. Beyond these it also
+provides a great amount of others that might be less familiar such as symbols, keywords, regex,
 vars, atoms, volatiles&#8230;&#8203;</p>
 </div>
 <div class="paragraph">
-<p><em>ClojureScript</em> embrases the host language, and as possible it uses the host provided types. In this
-case: numbers and strings are used as is and them behaves in same way as in javascript.</p>
+<p><em>ClojureScript</em> embrases the host language, and where possible it uses the hosts provided types. In this
+case: numbers and strings are used as is and they behave in same way as in javascript.</p>
 </div>
 <div class="sect3">
 <h4 id="numbers"><a class="link" href="#numbers">2.2.1. Numbers</a></h4>
 <div class="paragraph">
-<p>In <em>ClojureScript</em> the numbers includes both: integers and floating points. But, knowing that
-<em>ClojureScript</em> is a guest language that compiles to javascript, having integers is an ilusion.
-Because the javascript language treats all numbers as floating points values.</p>
+<p>In <em>ClojureScript</em>  numbers include both integers and floating points. Keeping in mind that
+<em>ClojureScript</em> is a guest language that compiles to javascript, integers are actually javascripts native
+floating points under the hood.</p>
 </div>
 <div class="paragraph">
-<p>Like in any other languages, the numbers in <em>ClojureScript</em> are represented in following way:</p>
+<p>Like in any other language, numbers in <em>ClojureScript</em> are represented in following way:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1130,8 +1130,8 @@ Because the javascript language treats all numbers as floating points values.</p
 <div class="sect3">
 <h4 id="keywords"><a class="link" href="#keywords">2.2.2. Keywords</a></h4>
 <div class="paragraph">
-<p>Keywords in <em>ClojureScript</em> are objecs that always evaluate to themselves. Them are usually
-used in map data structures for reprensent in a most efficient way to the keys.</p>
+<p>Keywords in <em>ClojureScript</em> are objects that always evaluate to themselves. They are usually
+used in map data structures to efficiently reprensent the keys.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1142,13 +1142,12 @@ used in map data structures for reprensent in a most efficient way to the keys.<
 </div>
 </div>
 <div class="paragraph">
-<p>As you can see, the keyword are all prefixed with <code>:</code>, but this char is only part
-of literal syntax and is not part of the name of the object.</p>
+<p>As you can see, the keywords are all prefixed with <code>:</code>, but this char is only part
+of the literal syntax and is not part of the name of the object.</p>
 </div>
 <div class="paragraph">
-<p>You also can create a keyword calling a function <code>keyword</code>. Do not worry if you do not understand
-or something is not clear in the following example, the functions are discussed some chapters
-below.</p>
+<p>You can also create a keyword by calling a function <code>keyword</code>. Do not worry if you don&#8217;t understand
+or are unclear about anything in the following example, the functions are discussed in later chapters.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1160,7 +1159,7 @@ below.</p>
 <div class="sect3">
 <h4 id="symbols"><a class="link" href="#symbols">2.2.3. Symbols</a></h4>
 <div class="paragraph">
-<p>The symbols in <em>ClojureScript</em> are very very similar to now known <strong>Keywords</strong>. But them
+<p>Symbols in <em>ClojureScript</em> are very very similar to now known <strong>Keywords</strong>. But them
 instead of evaluating to themselves, are evalutated to something that them refers, that
 can be function, variables, &#8230;&#8203;</p>
 </div>
@@ -1175,19 +1174,18 @@ can be function, variables, &#8230;&#8203;</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Do not worry if you do not understand clearly this part, symbols are used un almost
-all examples and you will have the oportunity to undesarstand them in a practical way,
-with examples.</p>
+<p>Don&#8217;t worry if you don&#8217;t understand right away, symbols are used in almost
+all our examples which will give you the opportunity to learn more as we go on.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="strings"><a class="link" href="#strings">2.2.4. Strings</a></h4>
 <div class="paragraph">
-<p>Nothing new we can explain about strings that you do not known. In <em>ClojureScript</em> them
-are work like in any other language. Them are immutable.</p>
+<p>Nothing new we can explain about strings that you don&#8217;t already know. In <em>ClojureScript</em> they
+ work the same as in any other language. One point of interest however is that they are immutable.</p>
 </div>
 <div class="paragraph">
-<p>And in this concrete case are the same as in javascript:</p>
+<p>In this case they are the same as in javascript:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1195,8 +1193,8 @@ are work like in any other language. Them are immutable.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The pecularity of Strings on <em>ClojureScript</em> is due to lisp syntax, and is that you don&#8217;t need
-additional syntax for multiline strings:</p>
+<p>The pecularity of Strings in <em>ClojureScript</em> is due to it&#8217;s lisp syntax, single and multiline strings
+have the same syntax:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1208,8 +1206,7 @@ additional syntax for multiline strings:</p>
 <div class="sect3">
 <h4 id="characters"><a class="link" href="#characters">2.2.5. Characters</a></h4>
 <div class="paragraph">
-<p><em>ClojureScript</em> also has a representation for one character and it has a literal syntax for represent
-them.</p>
+<p><em>ClojureScript</em> also lets you write single characters using Clojure&#8217;s character literal syntax.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1218,33 +1215,33 @@ them.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>As its host does not a clear representation for character type, in <em>ClojureScript</em> behind the scenes
-one character is a simple string with one character.</p>
+<p>Since the host language doesn&#8217;t contain character literals, <em>ClojureScript</em> characters are transformed
+behind the scenes into single character strings.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="collections"><a class="link" href="#collections">2.2.6. Collections</a></h4>
 <div class="paragraph">
-<p>As usual, the second big step on explaining one language, is explain its collections and collection
-abstractions. The <em>ClojureScript</em> is not an exception in this rule.</p>
+<p>Another big step in explaining a language, is to explain it&#8217;s collections and collection
+abstractions. <em>ClojureScript</em> is not an exception in this rule.</p>
 </div>
 <div class="paragraph">
-<p><em>ClojureScript</em> comes with great bunch of different collections. The main difference of <em>ClojureScript</em>
-collections with other languages is that them are persistent and immutable.</p>
+<p><em>ClojureScript</em> comes with many types of different collections. The main difference between <em>ClojureScript</em>
+collections and collections in other languages is that they are persistent and immutable.</p>
 </div>
 <div class="paragraph">
-<p>But before venture of all these (maybe) unknown concepts, we&#8217;ll go to make a high level overview
+<p>Before moving on to all of these (possibly) unknown concepts, we&#8217;ll present a high level overview
 of existing collection types in <em>ClojureScript</em>.</p>
 </div>
 <div class="sect4">
 <h5 id="lists"><a class="link" href="#lists">Lists</a></h5>
 <div class="paragraph">
-<p>This is a clasic collection type in lisp languages. <em>ClojureScript</em> is not an exception. List is the
-simplest collection data structure in <em>ClojureScript</em>. Lists can contain items of any type, including
+<p>This is a clasic collection type in languages based on lisp. Lists are the
+simplest type of collection in <em>ClojureScript</em>. Lists can contain items of any type, including
 other collections.</p>
 </div>
 <div class="paragraph">
-<p>Lists in <em>ClojureScript</em> are repsesented with parentheses as its literal syntax:</p>
+<p>Lists in <em>ClojureScript</em> are repsesented by items enclosed between parenthesis:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1253,10 +1250,10 @@ other collections.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>As you can observe, all list examples are prefixed with <code>'</code> char. This is because lists in lisp like
-languages are often used for express expressions forms such as function or macro calls. In that case
-the first item should be a symbol that will evaluate to a something callable and the rest of list
-elemenents will be a function parameters.</p>
+<p>As you can observe, all list examples are prefixed with the <code>'</code> char. This is because lists in lisp like
+languages are often used to express things like function or macro calls. In that case
+the first item should be a symbol that will evaluate to a something callable and the rest of the list
+elemenents will be function parameters.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3624,8 +3621,7 @@ developing using ClojureScript. It will cover:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Unlike the previos chapter, this chapter intends to tell different stories not mandatory that
-all related to each other.</p>
+<p>Unlike the previous chapter, this chapter intends to tell different stories each independent of each other.</p>
 </div>
 <div class="sect2">
 <h3 id="getting-started-with-clojurescript-compiler"><a class="link" href="#getting-started-with-clojurescript-compiler">3.1. Getting Started with ClojureScript compiler</a></h3>
@@ -4086,25 +4082,25 @@ other JavaScript.</p>
 <h2 id="mixed-bag"><a class="link" href="#mixed-bag">4. Mixed Bag</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter will cover miscelaneous topics that are not classified in the previous ones. This is a
+<p>This chapter will cover miscellaneous topics that are not classified in the previous ones. This is a
 "catchall" section and will touch a bunch of heterogeneus topics like:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Async primitives using <em>core.async</em> library.</p>
+<p>Async primitives using the <em>core.async</em> library.</p>
 </li>
 <li>
 <p>Working with promises.</p>
 </li>
 <li>
-<p>Error handling using <em>cats</em> library.</p>
+<p>Error handling using the <em>cats</em> library.</p>
 </li>
 <li>
-<p>Pattern matching with <em>core.match</em> library.</p>
+<p>Pattern matching with the <em>core.match</em> library.</p>
 </li>
 <li>
-<p>Web development using Om library.</p>
+<p>Web development using the Om library.</p>
 </li>
 <li>
 <p>Share code betwen clojure and clojurescript.</p>
@@ -4153,7 +4149,7 @@ other JavaScript.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1<br/>
-Last updated 2015-05-04 22:27:10 CEST
+Last updated 2015-05-05 01:02:17 CEST
 </div>
 </div>
 </body>

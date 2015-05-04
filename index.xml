@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<?asciidoc-toc maxdepth="3"?>
+<?asciidoc-toc?>
 <?asciidoc-numbered?>
 <book lang="en">
 <bookinfo>
@@ -41,6 +41,51 @@ can be easy adaptated to the host differences.</simpara>
 <simpara>This chapter will be a little introduction to ClojureScript without assumptions about previous
 knowledge of the Clojure language, providing a quick tour over all the things you will need to know
 in order to understand the rest of this book.</simpara>
+<simpara>This is an incomplete list of topics that will be covered in this chapter:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Syntax</simpara>
+</listitem>
+<listitem>
+<simpara>The base types</simpara>
+</listitem>
+<listitem>
+<simpara>Functions</simpara>
+</listitem>
+<listitem>
+<simpara>Loops &amp; Blocks</simpara>
+</listitem>
+<listitem>
+<simpara>Collection types</simpara>
+</listitem>
+<listitem>
+<simpara>Destructuring</simpara>
+</listitem>
+<listitem>
+<simpara>Namespaces</simpara>
+</listitem>
+<listitem>
+<simpara>Custom Data Types</simpara>
+</listitem>
+<listitem>
+<simpara>Polymorphic constructions</simpara>
+</listitem>
+<listitem>
+<simpara>Interoperability with host</simpara>
+</listitem>
+<listitem>
+<simpara>State management</simpara>
+</listitem>
+<listitem>
+<simpara>Mutability</simpara>
+</listitem>
+<listitem>
+<simpara>Macros</simpara>
+</listitem>
+<listitem>
+<simpara>Truthiness</simpara>
+</listitem>
+</itemizedlist>
 <section id="_first_steps_with_lisp_syntax">
 <title>First steps with lisp syntax</title>
 <simpara>Invented by John McCarthy in 1958, Lisp is one of the oldest programming languages that is still
@@ -274,7 +319,7 @@ syntax is almost the same as define standard function with the difference that i
 one body.</simpara>
 <simpara>Let see an example, surelly it will explain it much better:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn myinc
-  "Self defined version of parametrized `inc`."
+  "Self dined version of parametrized `inc`."
   ([x] (myinc x 1))
   ([x increment]
    (+ x increment)))</programlisting>
@@ -415,9 +460,8 @@ number of pairs that starts with a binding form followed of an expression whose 
 be bound to this new local for the remainer of the let expression.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(let [x (inc 1)
       y (+ x 1)]
-  (println "Simple message from the body of a let")
+  (println "Simple message from body of let")
   (* x y))
-;; Simple messages from the body of a let
 ;; =&gt; 6</programlisting>
 </section>
 <section id="_blocks">
@@ -431,8 +475,6 @@ the return value only from the last one:</simpara>
    (println "hello world")
    (println "hola mundo")
    (+ 1 2))
-;; hello world
-;; hola mundo
 ;; =&gt; 3</programlisting>
 <simpara>The <literal>let</literal> expression, explained just in previous section, the body is very similar to the
 <literal>do</literal> expression. In fact, it is called that is has an implicit <literal>do</literal>.</simpara>
@@ -456,11 +498,10 @@ jumps execution after the looping point with new values for those bindings.</sim
    (if (= x 2)
      (println "Done looping!")
      (recur (inc x))))
-;; Looping with 0
-;; Looping with 1
-;; Looping with 2
-;; Done looping!
-;; =&gt; nil</programlisting>
+;; =&gt; "Looping with 0"
+;; =&gt; "Looping with 1"
+;; =&gt; "Looping with 2"
+;; =&gt; "Done looping!"</programlisting>
 <simpara>In the above snippet, we bind the name <literal>x</literal> to the value <literal>0</literal> and execute the body. Since the
 condition is not met the first time is run we <literal>recur</literal>, incrementing the binding value with
 the <literal>inc</literal> function. We do this once more until the condition is met and, since there aren&#8217;t
@@ -474,11 +515,10 @@ executes the body of the function recursively with the new bindings:</simpara>
      (recur (inc x))))
 
 (recursive-function 0)
-;; Looping with 0
-;; Looping with 1
-;; Looping with 2
-;; Done looping!
-;; =&gt; nil</programlisting>
+;; =&gt; "Looping with 0"
+;; =&gt; "Looping with 1"
+;; =&gt; "Looping with 2"
+;; =&gt; "Done looping!"</programlisting>
 </section>
 <section id="_replacing_for_loops_with_higher_order_functions">
 <title>Replacing for loops with higher-order functions</title>
@@ -571,12 +611,12 @@ discarding the resulting values and returns <literal>nil</literal>.</simpara>
         y [4 5]
        :let [z (+ x y)]]
   (println x "+" y "=" z))
-;; 1 + 4 = 5
-;; 1 + 5 = 6
-;; 2 + 4 = 6
-;; 2 + 5 = 7
-;; 3 + 4 = 7
-;; 3 + 5 = 8
+;; =&gt; "1 + 4 = 5"
+;; =&gt; "1 + 5 = 6"
+;; =&gt; "2 + 4 = 6"
+;; =&gt; "2 + 5 = 7"
+;; =&gt; "3 + 4 = 7"
+;; =&gt; "3 + 5 = 8"
 ;; =&gt; nil</programlisting>
 </section>
 </section>
@@ -599,8 +639,8 @@ required.</simpara>
       ys (conj xs 4)]
   (println "xs:" xs)
   (println "ys:" ys))
-;; xs: [1 2 3]
-;; ys: [1 2 3 4]
+;; =&gt; xs: [1 2 3]
+;; =&gt; ys: [1 2 3 4]
 ;; =&gt; nil</programlisting>
 <simpara>As you can see, we derived a new version of the <literal>xs</literal> vector appending an element to it and got a new
 vector <literal>ys</literal> with the element added.</simpara>
@@ -613,9 +653,9 @@ We&#8217;ll use the list data type for this purpose:</simpara>
   (println "ys:" ys)
   (println "(rest ys):" (rest ys))
   (identical? xs (rest ys)))
-;; xs: (1 2 3)
-;; ys: (0 1 2 3)
-;; (rest ys): (1 2 3)
+;; =&gt; xs: (1 2 3)
+;; =&gt; ys: (0 1 2 3)
+;; =&gt; (rest ys): (1 2 3)
 ;; =&gt; true</programlisting>
 <simpara>As you can see in the example, we used <literal>cons</literal> (construct) to prepend a value to the <literal>xs</literal> list and we got
 a new list <literal>ys</literal> with the element added. The <literal>rest</literal> of the <literal>ys</literal> list (all the values but the first)
@@ -623,166 +663,7 @@ are the same object in memory that the <literal>xs</literal> list, thus <literal
 </section>
 <section id="_the_sequence_abstraction">
 <title>The sequence abstraction</title>
-<simpara>One of the central ClojureScript abstractions is the Sequence, which can be though as a list and can be derived
-from any of the collection types. It is persistent and immutable like all collection types and many of the
-core ClojureScript functions return sequences.</simpara>
-<simpara>The types that can be used to generate a sequence are called "seqables", we can call <literal>seq</literal> on them and get
-a sequence back. Sequences support two basic operations: <literal>first</literal> and <literal>rest</literal>. They both call <literal>seq</literal> on the
-argument we provide them:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(first [1 2 3])
-;; =&gt; 1
 
-(rest [1 2 3])
-;; =&gt; (2 3)</programlisting>
-<simpara>Calling <literal>seq</literal> on a seqable can yield different results if the seqable is empty or not, it will return <literal>nil</literal>
-when empty and a sequence otherwise:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(seq [])
-;; =&gt; nil
-
-(seq [1 2 3])
-;; =&gt; (1 2 3)</programlisting>
-<simpara><literal>next</literal> is a similar sequence operation to <literal>rest</literal>, but it differs from the latter in that it yields a <literal>nil</literal> value
-when called with a sequence with one or zero elements. Note that, when given one of the aforementioned sequences,
-the empty sequence returned by <literal>rest</literal> will evaluate as a boolean true whereas the <literal>nil</literal> value returned by <literal>next</literal>
-will evaluate as false:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(rest [])
-;; =&gt; ()
-
-(next [])
-;; =&gt; nil
-
-(rest [1 2 3])
-;; =&gt; (2 3)
-
-(next [1 2 3])
-;; =&gt; (2 3)</programlisting>
-<section id="_nil_punning">
-<title>nil-punning</title>
-<simpara>The above behaviour of <literal>seq</literal> coupled with the falsey nature of <literal>nil</literal> in boolean contexts make an idiom for checking
-the emptyness of a sequence in ClojureScript, which is often referred to as nil-punning.</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(defn print-coll
-  [coll]
-  (when (seq coll)
-    (println "Saw " (first coll))
-    (recur (rest coll))))
-
-(print-coll [1 2 3])
-;; Saw 1
-;; Saw 2
-;; Saw 3
-;; =&gt; nil
-
-(print-coll #{1 2 3})
-;; Saw 1
-;; Saw 3
-;; Saw 2
-;; =&gt; nil</programlisting>
-<simpara><literal>nil</literal> is also both a seqable and a sequence, and thus it supports all the functions we saw so far:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(seq nil)
-;; =&gt; nil
-
-(first nil)
-;; =&gt; nil
-
-(rest nil)
-;; =&gt; ()</programlisting>
-</section>
-<section id="_functions_that_work_on_sequences">
-<title>Functions that work on sequences</title>
-<simpara>The ClojureScript core functions that work on collections call <literal>seq</literal> on their arguments, thus being
-implemented in terms of generic sequence operations. This also makes them short-circuit when encountering empty
-collections and being <literal>nil</literal>-safe.</simpara>
-<simpara>We already saw examples with the usual suspects like <literal>map</literal>, <literal>filter</literal> and <literal>reduce</literal> but ClojureScript offers a
-plethora of generic sequence operations in its core namespace. Note that many of the operations we&#8217;ll learn about
-either work with seqables or are extensible to user defined types.</simpara>
-<simpara>We can query a value to know wheter it&#8217;s a collection type with the <literal>coll?</literal> predicate:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(coll? nil)
-;; =&gt; false
-
-(coll? [1 2 3])
-;; =&gt; true
-
-(coll? {:language "ClojureScript" :file-extension "cljs"})
-;; =&gt; true
-
-(coll? "ClojureScript")
-;; =&gt; false</programlisting>
-<simpara>Similar predicates exist for checking if a value is sequence (<literal>seq?</literal>) or a seqable (<literal>seqable?</literal>):</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(seq? nil)
-;; =&gt; false
-(seqable? nil)
-;; =&gt; false
-
-(seq? [])
-;; =&gt; false
-(seqable? [])
-;; =&gt; true
-
-(seq? #{1 2 3})
-;; =&gt; false
-(seqable? #{1 2 3})
-;; =&gt; true
-
-(seq? "ClojureScript")
-;; =&gt; false
-(seqable? "ClojureScript")
-;; =&gt; false</programlisting>
-<simpara>For collections that can be counted in constant time, we can use the <literal>count</literal> operation:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(count nil)
-;; =&gt; 0
-
-(count [1 2 3])
-;; =&gt; 3
-
-(count {:language "ClojureScript" :file-extension "cljs"})
-;; =&gt; 2
-
-(count "ClojureScript")
-;; =&gt; 13</programlisting>
-<simpara>We can also get an empty variant of a given collection with the <literal>empty</literal> function:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(empty nil)
-;; =&gt; nil
-
-(empty [1 2 3])
-;; =&gt; []
-
-(empty #{1 2 3})
-;; =&gt; #{}</programlisting>
-<simpara>The <literal>empty?</literal> predicate returns true if the given collection is empty:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(empty? nil)
-;; =&gt; true
-
-(empty? [])
-;; =&gt; true
-
-(empty? #{1 2 3})
-;; =&gt; false</programlisting>
-<simpara>The <literal>conj</literal> operation adds elements to collections and may add them in different "places" depending
-on the collection. It adds them where it makes more sense for the given collection performance-wise,
-but note that not every collection has a defined order.</simpara>
-<simpara>We can pass as many elements we want to add to <literal>conj</literal>, let&#8217;s see it in action:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(conj nil 42)
-;; =&gt; (42)
-
-(conj [1 2] 3)
-;; =&gt; [1 2 3]
-
-(conj [1 2] 3 4 5)
-;; =&gt; [1 2 3 4 5]
-
-(conj '(1 2) 0)
-;; =&gt; (0 1 2)
-
-(conj #{1 2 3} 4)
-;; =&gt; #{1 3 2 4}
-
-(conj {:language "ClojureScript"} [:file-extension "cljs"])
-;; =&gt; {:language "ClojureScript", :file-extension "cljs"}</programlisting>
-</section>
-<section id="_lazyness">
-<title>Lazyness</title>
-<simpara>TODO</simpara>
-</section>
 </section>
 <section id="_collections_in_depth">
 <title>Collections in depth</title>
@@ -895,14 +776,14 @@ methods that you are using and expecting a concrete behavior.</simpara>
 <simpara>The <emphasis>ClojureScript</emphasis> primitive for define "interfaces" are called Protocols. A protocol consists in
 a name and set of functions. All functions have at least one argument corresponding to the
 <literal>this</literal> in javascript or <literal>self</literal> in Python.</simpara>
-<simpara>Protocols provides a type based polymorphism, and the dispatch is always done by the
-first argument previously mentioned as <literal>this</literal>.</simpara>
+<simpara>Protocols provides a type based polymorphism, and the dispatch is always done by the first argument
+previously mentioned as <literal>this</literal>.</simpara>
 <simpara>A protocol looks like this:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(ns myapp.foobar)
 
-(defprotocol IProtocolName
-  "A docstring describing the protocol."
-  (sample-method [this] "A doc string of the function associated with the protocol."))</programlisting>
+(defprotocol IUser
+  "A common abstraction for an User type."
+  (full-name [x] "Get a full name of the user."))</programlisting>
 <note>
 <simpara>the "I" prefix is very common for make clear separation of protocols and types. In clojute
 comunity it there many dispare optionions about the use of the "I" prefix. In our opinion is an
@@ -911,221 +792,30 @@ acceptable solution for avoid name clashing and confusions.</simpara>
 <simpara>From the user perspective, protocol functions are simple and plain functions defined in the namespace
 where the protocol is defined. As you can intuit, this makes protocols completelly namespaces and
 avoid any accidental clashing between implemented protocols for same type.</simpara>
+<note>
+<simpara>Inside the clojure community the convention for protocol functions is treat them as private api
+and not expose them to the general public api.</simpara>
+</note>
 <section id="_extending_to_existing_types">
 <title>Extending to existing types</title>
-<simpara>On of the big strengths of protocols is the ability to extend existing and maybe third party types
-and this operation can be done in different ways. The majority of time you will be tend to use
-the <emphasis role="strong">extend-protocol</emphasis> or the <emphasis role="strong">extend-type</emphasis> macros.</simpara>
-<simpara>This is the aspect on how <emphasis role="strong">extend-type</emphasis> macro can be used:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(extend-type TypeA
-  ProtocolA
-  (function-from-protocol-a [this]
-    ;; implementation here
-    )
-
-  ProtocolB
-  (function-from-protocol-b-1 [this parameter1]
-    ;; implementation here
-    )
-  (function-from-protocol-b-2 [this parameter1 parameter2]
-    ;; implementation here
-    ))</programlisting>
-<simpara>You can observe that with <emphasis role="strong">extend-type</emphasis> you are extending one type with different protocols
-in one expression. In difference to that, <emphasis role="strong">extend-protocol</emphasis> do just the inverse operation. It,
-given a protocol, add implementation for it to multiple types:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(extend-protocol ProtocolA
-  TypeA
-  (function-from-protocol-a [this]
-    ;; implementation here
-    )
-
-  TypeB
-  (function-from-protocol-a [this]
-    ;; implementation here
-    ))</programlisting>
-<simpara>It there other ways to extend a type with a protocol implementation but them will be covered
-in other section of this book.</simpara>
-</section>
-<section id="_participate_in_clojurescript_abstractions">
-<title>Participate in ClojureScript abstractions</title>
-<simpara>ClojureScript it self is built up on abstractions defined as protocols, so almost all behavior
-in the <emphasis>ClojureScript</emphasis> language can be adopted for third party libraries. Let&#8217;s go to see an
-real life example.</simpara>
-<simpara>In previous sections we have explained different kind of builtin collections, in this case we
-will use the <emphasis role="strong">Set</emphasis>'s. See this snipped of code:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def mynums #{1 2})
-
-(filter mynums [1 2 4 5 1 3 4 5])
-;; =&gt; (1 2 1)</programlisting>
-<simpara>But, that it happens where? In this case, the set type implements the <emphasis>ClojureScript</emphasis> internal
-<literal>IFn</literal> protocol that represents an abstraction for functions or any thing callable. So it can be
-used like a callable predicate in filter.</simpara>
-<simpara>Ok, but what it happens if we want use a regular expression as predicate function for filter
-a collection of strings:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(filter #"^foo" ["haha" "foobar" "baz" "foobaz"])
-;; TypeError: Cannot call undefined</programlisting>
-<simpara>Obviosly, this exception is raised because the RegExp type does not implements the <literal>IFn</literal> protocol
-so it can not behave like a callable. But it can be easy fixed:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(extend-type js/RegExp
-  IFn
-  (-invoke
-   ([this a]
-     (re-find this a))))</programlisting>
-<simpara>Now, you will be able use the regex instances as predicates in filter operation:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(filter #"^foo" ["haha" "foobar" "baz" "foobaz"])
-;; =&gt; ("foobar" "foobaz")</programlisting>
+<simpara>TBD</simpara>
 </section>
 <section id="_protocols_introspection">
 <title>Protocols introspection</title>
-<simpara><emphasis>ClojureScript</emphasis> comes with a usefull function that allows runtime introspection: <literal>satisfies?</literal>. The
-purpose of this function is know in runtime if some object (instance of some type) satisfies the
-concrete protocol.</simpara>
-<simpara>So, with previous examples, if we check if a set instance satisfies a <emphasis role="strong">IFn</emphasis> protocol, it should
-return <literal>true</literal>:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(satisfies IFn #{1})
-;; =&gt; true</programlisting>
+<simpara>TBD</simpara>
+</section>
+<section id="_edge_cases">
+<title>Edge cases</title>
+<simpara>TBD</simpara>
+</section>
+<section id="_participate_in_clojurescript_abstractions">
+<title>Participate in ClojureScript abstractions</title>
+<simpara>TBD</simpara>
 </section>
 </section>
 <section id="_multimethods">
 <title>Multimethods</title>
-<simpara>We have previously talked about protocols, that solves a very common use case of polymorphism:
-dispatch by type. But in some circumstances the protocol&#8217;s approach it can be limiting. And
-here <emphasis role="strong">multimethods</emphasis> comes to the rescue.</simpara>
-<simpara>The <emphasis role="strong">multimethods</emphasis> are not limited to type dispatch only, instead, them also offers dispatch
-by types of multiple arguments, by value and allows ad-hoc hierarchies to be defined. Also,
-like protocols, is a "Open System" so you or any third parties can extend a multimethod for
-new types.</simpara>
-<simpara>The basic consturctions of <emphasis role="strong">multimethods</emphasis> consists in <literal>defmulti</literal> and <literal>defmethod</literal> forms. The
-<literal>defmulti</literal> form is used for create the multimethod with initial dispatch function. This is
-a common look and feel of it:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(defmulti say-hello
-  "A polymorphic function that return a greetings message
-  depending on the language key with default lang as `:en`"
-  (fn [param] (:locale param))
-  :default :en)</programlisting>
-<simpara>The anonymous function defined within the <literal>defmulti</literal> form is a dispatch function. It will
-be called in every call to <literal>say-hello</literal> function and should return some kind of mark object
-that will be used for dispatch. In our example it returns the contents of <literal>:locale</literal> key
-of the first argument.</simpara>
-<simpara>And finally, we should add implementations. That is done with <literal>defmethod</literal> form:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(defmethod say-hello :en
-  [person]
-  (str "Hello " (:name person "Anonymous")))
-
-(defmethod say-hello :es
-  [person]
-  (str "Hola " (:name person "Anonimo")))</programlisting>
-<simpara>So, if you execute that function over a hash map containing the <literal>:locale</literal> and optionally
-the <literal>:name</literal> key, the multimethod firstly will call the dispatch function for determine the
-dispatch value, secondly it will search an implementation for that value, if it is found,
-it will execute it, in case contrary it will search the default implementation (if it
-specified) and execute it.</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(say-hello {:locale :es})
-;; =&gt; "Hola Anonymo"
-
-(say-hello {:locale :en :name "Ciri"})
-;; =&gt; "Hello Ciri"
-
-(say-hello {:locale :fr})
-;; =&gt; "Hello Anonymous"</programlisting>
-<simpara>If the default implementation is not specified, an exception will be raised notifying about
-that some value does not have a implementation for that multimethod.</simpara>
-</section>
-<section id="_hierarchies">
-<title>Hierarchies</title>
-<simpara>Hierarchies is a way that <emphasis>ClojureScript</emphasis> offers you build a whatever relations that your
-domain may require. The hierarchies are difined in term of relations betwen named objects,
-such as symbols, keywords or types.</simpara>
-<simpara>The hierarchies can be defined globally or locally, depending on your needs. Like multimethods,
-hierarchies are not limited to single namespace. You can extend a hierarchy from any namespace,
-not necesary the one which they are defined.</simpara>
-<simpara>The global namespace is more limited, for good reasons. Not namespaced keywords or symbols can
-not be used in the global hierarcy. That behavior helps prevent unexpected situations when
-two or more third party libraries uses the same symbol for different semantics.</simpara>
-<section id="_defining_a_hierarchy">
-<title>Defining a hierarchy</title>
-<simpara>The hierarchy relations should be established using <literal>derive</literal> function:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(derive ::circle ::shape)
-(derive ::box ::shape)</programlisting>
-<simpara>We have just defined a set of relationships between namespaced keywords, in this case the
-<literal>::circle</literal> is a child of <literal>::shape</literal> and <literal>::box</literal> is also a child of <literal>::shape</literal>.</simpara>
-<tip>
-<simpara>The <literal>::circle</literal> keyword syntax is a shortland for <literal>:current.ns/circle</literal>. So if you are executing
-it in a repl, sureally that <literal>::circle</literal> will be evaluated to <literal>:cljs.user/circe</literal>.</simpara>
-</tip>
-</section>
-<section id="_hierarchies_introspection">
-<title>Hierarchies introspection</title>
-<simpara><emphasis>ClojureScript</emphasis> comes with little toolset of functions that allow runtime introspection
-of the global or local defined hierarchies. These toolset consists on thre functions:
-<literal>isa?</literal>, <literal>anscestors</literal>, and <literal>descendants</literal>.</simpara>
-<simpara>Let see an example on how it can be used with hierarchy defined in previous example:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(ancestors ::box)
-;; =&gt; #{:cljs.user/shape}
-
-(descendants ::shape)
-;; =&gt; #{:cljs.user/circle :cljs.user/box}
-
-(isa? ::box ::shape)
-;; =&gt; true
-
-(isa? ::rect ::shape)
-;; =&gt; false</programlisting>
-</section>
-<section id="_local_defined_hierarchies">
-<title>Local defined hierarchies</title>
-<simpara>As we mentioned previously, in <emphasis>ClojureScript</emphasis> you also can define local hierarchies. This can be
-done with <literal>make-hierarchy</literal> function. And this is the aspect of how you can replicate the previous
-example but using the local hierarchy:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def h (-&gt; (make-hierarchy)
-           (derive :box :shape)
-           (derive :circle :shape)))</programlisting>
-<simpara>Now, if you can use the same introspection functions with that, locally defined hierarchy:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(isa? h :box :shape)
-;; =&gt; true
-
-(isa? :box :shape)
-;; =&gt; false</programlisting>
-<simpara>As you can observe, in local hierarchies we can use normal (not namespace qualified) keywords
-and if we execute the <literal>isa?</literal> without passing the local hierarchy parameter, its as expected
-return false.</simpara>
-</section>
-<section id="_hierarchies_in_multimethods">
-<title>Hierarchies in multimethods</title>
-<simpara>One of the big advantages of hierarchies, is that they works very well together with multimethods.
-Because, multimethods by default uses the <literal>isa?</literal> function for the last step of dispatching.</simpara>
-<simpara>Let see an example for clearly understand that it means. Firstly define the multimethod with
-<literal>defmulti</literal> form:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(defmulti stringify-shape
-  "A function that prints a human readable representation
-  of a shape keyword."
-  identity
-  :hierarchy h)</programlisting>
-<simpara>With <literal>:hierarchy</literal> keyword parameter we indicate to the multimethod that hierarchy we want to use,
-if it is not specified, the global hierarchi will be used.</simpara>
-<simpara>Secondly, define a implementation for our multimethod using the <literal>defmethod</literal> form:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(defmethod stringify-shape :box
-  [_]
-  "A box shape")
-
-(defmethod stringify-shape :shape
-  [_]
-  "A generic shape")
-
-(defmethod stringify-shape :default
-  [_]
-  "Unexpected object")</programlisting>
-<simpara>Now, let see what is happens if we execute that function with a box:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(stringify-shape :box)
-;; =&gt; "A box shape"</programlisting>
-<simpara>Now everything works as expected, the multimethod executes the direct matching implementation
-for the given parameter. But that is happens if we execute the same function but with <literal>:circle</literal>
-keyword as parameter, that does not have the direct matching dispatch value:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(stringify-shape :circle)
-;; =&gt; "A generic shape"</programlisting>
-<simpara>The multimethod automatically resolves it using the provided hierarchy, and that <literal>:circle</literal> is
-a descendat of <literal>:shape</literal>, so the <literal>:shape</literal> implementation is executed.</simpara>
-</section>
+<simpara>TBD</simpara>
 </section>
 </section>
 <section id="_data_types">
@@ -1265,180 +955,22 @@ you do not want a type in self.</simpara>
 </section>
 <section id="_host_interoperability">
 <title>Host interoperability</title>
-<simpara><emphasis>ClojureScript</emphasis> in the same way as it brother Clojure, is designed to be a "Guest" language. It means
-that the design of the language fits very well to work on to of existing ecosystem such as javascript
-for <emphasis>ClojureScript</emphasis> and jvm for <emphasis>Clojure</emphasis>.</simpara>
-<section id="_the_types">
-<title>The types.</title>
-<simpara><emphasis>ClojureScript</emphasis> unlike expected, try takes advantage of every type that the platform provides. This
-is a maybe incomplete list of things that <emphasis>ClojureScript</emphasis> inherits and reuse from the underlying
-platform:</simpara>
-<itemizedlist>
-<listitem>
-<simpara><emphasis>ClojureScript</emphasis> strings are javascript <emphasis role="strong">Strings</emphasis>.</simpara>
-</listitem>
-<listitem>
-<simpara><emphasis>ClojureScript</emphasis> numbers are javascript <emphasis role="strong">Numbers</emphasis>.</simpara>
-</listitem>
-<listitem>
-<simpara><emphasis>ClojureScript</emphasis> <literal>nil</literal> is a javascript <emphasis role="strong">null</emphasis>.</simpara>
-</listitem>
-<listitem>
-<simpara><emphasis>ClojureScript</emphasis> regular expressions are javascript <literal>RegExp</literal> instances.</simpara>
-</listitem>
-<listitem>
-<simpara><emphasis>ClojureScript</emphasis> is not interpreted, is always compiled town to the javascript.</simpara>
-</listitem>
-<listitem>
-<simpara><emphasis>ClojureScript</emphasis> allows easy call platform apis with the same semantics.</simpara>
-</listitem>
-<listitem>
-<simpara><emphasis>ClojureScript</emphasis> data types internally compiles to objects in javascript.</simpara>
-</listitem>
-</itemizedlist>
-<simpara>On top of it, <emphasis>ClojureScript</emphasis> buid own abstractions and types that are does not exists in the
-platform, such as Vectors, Maps, Sets, and others that are explained in previous chapters.</simpara>
-</section>
-<section id="_interacting_with_platform_types">
-<title>Interacting with platform types</title>
-<simpara><emphasis>ClojureScript</emphasis> comes with a little set of special forms that allows interact with platform
-types such as calling object methods, creating new instances and accessing to object
-properties.</simpara>
-<section id="_access_to_the_platform">
-<title>Access to the platform</title>
-<simpara><emphasis>ClojureScript</emphasis> has a special syntax for access to the all platform environment through the
-<literal>js/</literal> special namespace. This is the aspect of the expression for execute the javascript&#8217;s
-builtin <literal>parseInt</literal> function:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(js/parseInt "222")
-;; =&gt; 222</programlisting>
-</section>
-<section id="_creating_new_instances">
-<title>Creating new instances</title>
-<simpara><emphasis>ClojureScript</emphasis> has two ways to create instances:</simpara>
-<formalpara>
-<title>Using the <literal>new</literal> special form</title>
-<para>
-<programlisting language="clojure" linenumbering="unnumbered">(new js/Regex "^foo$")</programlisting>
-</para>
-</formalpara>
-<simpara>Using the <literal>.</literal> special form</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(js/Regex. "^foo$")</programlisting>
-<simpara>The last one is the recommended way to do that operation. We do not aware of real differences
-between the two forms, but in the clojurescript comunity the last one is the most adopted.</simpara>
-</section>
-<section id="_invoke_instance_methods">
-<title>Invoke instance methods</title>
-<simpara>For invoke methods of some object instance, in contrary to how it used in javascript (eg:
-<literal>obj.method()</literal>, the method name comes first like any other standard function in lisp languages
-but with little variation: the function name starts with special form <literal>.</literal>.</simpara>
-<simpara>Let see how we can call the <literal>.test()</literal> method of regexp instance:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def re (js/RegExp "^foo"))
-
-(.test re "foobar")
-;; =&gt; true</programlisting>
-</section>
-<section id="_access_to_object_properties">
-<title>Access to object properties</title>
-<simpara>Access to the object properties is really very similar to call a method, the difference is that
-instead of using the <literal>.</literal> we should use the <literal>.-</literal>. Let see an example:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(.-multiline re)
-;; =&gt; false</programlisting>
-</section>
-<section id="_javascrpt_objects">
-<title>Javascrpt objects</title>
-<simpara><emphasis>ClojureScript</emphasis> has different ways for create plain javascript objects, each one has its own
-purpose. The basic one is the <literal>js-obj</literal> function. It accepts a variable length of pairs of key
-values and return a javascript object:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(js-obj "foo" "bar")
-;; =&gt; #js {:foo "bar"}</programlisting>
-<simpara>The return value can be passed to some kind of third party library that accepts a plain
-javascript objects. But you can observe the repl representation of the return value of this
-function. It is exactly the other form for do the same thing.</simpara>
-<simpara>Using the reader macro <literal>#js</literal> consists of prepend it to the clojure map or vector and the
-result will be transformed to plain javascript:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def myobj #js {:foo "bar"})</programlisting>
-<simpara>The translation of that to plain javascript is similar to this:</simpara>
-<programlisting language="javascript" linenumbering="unnumbered">var myobj = {foo: "bar"};</programlisting>
-<simpara>As explained in previous section, you also can access to the plain object properties using
-the <literal>.-</literal> syntax:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(.-foo myobj)
-;; =&gt; "bar"</programlisting>
-<simpara>And as javascript objects are mutable, you can set a new value to some property using
-the <literal>set!</literal> function:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(set! (.-foo myobj) "baz")</programlisting>
-</section>
-<section id="_conversions">
-<title>Conversions</title>
-<simpara>The inconvenience of previously explained forms, is that they does not make recursive
-transformatios, so if you have nested objects, the nested objects do not will be converted.
-For solve that use cases, <emphasis>ClojureScript</emphasis> comes with <literal>clj&#8594;js</literal> and <literal>js&#8594;clj</literal> functions
-that transforms clojure collection types into javascript and in reverse order:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(clj-&gt;js {:foo {:bar "baz"}})
-;; =&gt; #js {:foo #js {:bar "baz"}}</programlisting>
-<simpara>In case of arrays, it there a specialized function <literal>into-array</literal> that behaves as it expected:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(into-array ["foo"])
-;; =&gt; #js ["foo"]</programlisting>
-</section>
-<section id="_arrays">
-<title>Arrays</title>
-<simpara>In previous example we have seen how we can create an array from existing <emphasis>ClojureScript</emphasis>
-collection. But it there other function for create arrays: <literal>make-array</literal>.</simpara>
-<formalpara>
-<title>Creating a preallocated array with length 10</title>
-<para>
-<programlisting language="clojure" linenumbering="unnumbered">(def a (make-array 10))
-;; =&gt; #js [nil nil nil nil nil nil nil nil nil nil]</programlisting>
-</para>
-</formalpara>
-<simpara>In <emphasis>ClojureScript</emphasis> arrays are also play well in sequence abstraction so you can iterate
-over it or simple get the number of elements with <literal>count</literal> function:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(count a)
-;; =&gt; 10</programlisting>
-<simpara>As arrays are platform mutable collection type, you can acces to a concrete index and set
-value to on that position:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(aset a 0 2)
-;; =&gt; 2</programlisting>
-<simpara>Or access in a indexed way to it values:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(aget a 0)
-;; =&gt; 2</programlisting>
-<simpara>In javascript, the objects are also arrays, so you can use the same functions for interacting
-with plain objects:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def b #js {:foo "bar"})
-;; =&gt; #js {:foo "bar"}
-
-(aget b "foo")
-;; =&gt; "bar"
-
-(aset b "baz" "bar")
-;; =&gt; "bar"
-
-b
-;; =&gt; #js {:foo "bar", :baz "bar"}</programlisting>
-</section>
-</section>
+<simpara>TBD</simpara>
 </section>
 <section id="_state_management">
 <title>State management</title>
 <simpara>TBD</simpara>
 </section>
-<section id="_truthiness">
-<title>Truthiness</title>
-<simpara>This is the aspect where the each language has its own semantics, the majority of languages
-treats empty collections, the 0 integer and other things like this are considered false.
-In <emphasis>ClojureScript</emphasis> unlike in other languages only two values are considered as false: <literal>nil</literal>
-and <literal>false</literal>, Everything except them, are treated as <literal>true</literal>.</simpara>
-<simpara>So, thanks to it, sets can be considered also predicates, so if them return a value so it exists
-and if it return <literal>nil</literal> so the value does not exists:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def s #{1 2})
-
-(s 1)
-;; =&gt; 1
-
-(s 3)
-;; =&gt; nil</programlisting>
+<section id="_mutability">
+<title>Mutability</title>
+<simpara>TBD</simpara>
 </section>
 <section id="_a_little_overview_of_macros">
 <title>A little overview of macros</title>
+<simpara>TBD</simpara>
+</section>
+<section id="_truthiness">
+<title>Truthiness</title>
 <simpara>TBD</simpara>
 </section>
 </chapter>
@@ -1472,82 +1004,14 @@ developing using ClojureScript. It will cover:</simpara>
 <simpara>Server based development</simpara>
 </listitem>
 </itemizedlist>
-<simpara>Unlike the previos chapter, this chapter intends to tell different stories not mandatory that
-all related to each other.</simpara>
-<section id="_getting_started_with_compiler">
-<title>Getting started with Compiler</title>
-<simpara>The <emphasis>ClojureScript</emphasis> compiler is implemented like it brother <emphasis>Clojure</emphasis> in java, and for use it, you
-should have jdk8 installed. <emphasis>ClojureScript</emphasis> itself only requires jdk7, but the standalone compiller
-that we going to use in this chapter  requires jdk8.</simpara>
-<simpara>Additionally, for avoid constantly have a browser for execute our compiled code, in examples of this
-section we will use nodejs or iojs, so you shuld have to be installed. Nodejs is not a dependency
-of <emphasis>ClojureScript</emphasis>, is just one of possible execution enviroments and it will used for execute our
-examples.</simpara>
-<simpara>You can test the <emphasis role="strong">iojs</emphasis> installed in your system with this command:</simpara>
-<programlisting language="shell" linenumbering="unnumbered">$ iojs --version
-v1.7.1</programlisting>
-<simpara>The usage of the <emphasis>ClojureScript</emphasis> compiler as it will be explained in this section, is for understand
-how it works behind the scenes and for use it in circumstances where you do not have o do not want
-other kind of tooling.</simpara>
-<simpara>Surelly that in the real world projects, you will use other more high level tools how leiningen+cljsbuld
-or boot (explained in following sections).</simpara>
-<section id="_download_the_jar">
-<title>Download the jar</title>
-<simpara>In recent versions of <emphasis>ClojureScript</emphasis>, now we have the compiler as standalone java
-dependency, packaged in one unique executable jar file.</simpara>
-<simpara>You can download it using wget:</simpara>
-<programlisting language="bash" linenumbering="unnumbered">wget https://github.com/clojure/clojurescript/releases/download/r3211/cljs.jar</programlisting>
-</section>
-<section id="_first_compilation">
-<title>First compilation</title>
-<section id="_create_the_example_application">
-<title>Create the example application</title>
-<simpara>For this step we need some clojurescript code for our examples. So start creating
-the directory tree structure for our "hello world" application:</simpara>
-<programlisting language="bash" linenumbering="unnumbered">mkdir -p src/myapp
-touch src/myapp/core.cljs</programlisting>
-<simpara>And secondly, write the following code into the previously created <literal>src/myapp/core.cljs</literal>
-file:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(ns myapp.core
-  (:require [cljs.nodejs :as nodejs]))
-
-(nodejs/enable-util-print!)
-
-(defn -main [&amp; args]
-  (println "Hello world!"))
-
-(set! *main-cli-fn* -main)</programlisting>
-<simpara>Is very important that the declared namespace in the file match exactly the directory
-structure. Is the way how <emphasis>ClojureScript</emphasis> structures its source code.</simpara>
-</section>
-<section id="_compile_the_example_application">
-<title>Compile the example application</title>
-<simpara>Now, in order to compile that source code, we need a simple build script that
-instructs the <emphasis>ClojureScript</emphasis> compiler the source directory and the output file. The
-<emphasis>ClojureScript</emphasis> has a lot of other options but at this momen we can ignore that.</simpara>
-<simpara>Let create the <emphasis>build.clj</emphasis> file with the following content:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(require 'cljs.closure)
-
-(cljs.closure/build "src"
- {:output-to "main.js"
-  :main myapp.core
-  :target :nodejs})</programlisting>
-<simpara>The <literal>:output-to</literal> parameter indicates to the compiler the destination of the compiled code, in this
-case to the "main.js" file. The <literal>:main</literal> propety indicates to the compiler the namespace that will
-acts as the entry point of your application when it&#8217;s executed. And finally the <literal>:target</literal> property
-indicates the platform when you want execute the compiled code. In this case we are going to use
-<emphasis role="strong">iojs</emphasis> (formerly nodejs). If you ommit this parameter the source will be compiled for run in the
-browser environment.</simpara>
-<simpara>For run the compilation, just execute the following command:</simpara>
-<programlisting language="bash" linenumbering="unnumbered">java -cp cljs.jar:src clojure.main build.clj</programlisting>
-<simpara>And when it finishes, execute the compiled file using <emphasis role="strong">iojs</emphasis>:</simpara>
-<programlisting language="shell" linenumbering="unnumbered">$ iojs main.js
-"Hello world"</programlisting>
-</section>
-</section>
-</section>
+<simpara>Unlike the previos chapter, this chapter intends to tell different histories not all related
+to each other.</simpara>
 <section id="_working_with_the_repl">
 <title>Working with the REPL</title>
+<simpara>TBD</simpara>
+</section>
+<section id="_getting_started_with_compiler">
+<title>Getting started with Compiler</title>
 <simpara>TBD</simpara>
 </section>
 <section id="_build_dependency_management_tools">
