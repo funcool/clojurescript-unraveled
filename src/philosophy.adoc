@@ -1,32 +1,33 @@
-=== The first contact.
+=== First contact
 
-_ClojureScript_ is a clojure language that targets javascript and can work in different
-execution enviroments like browser, nodejs, iojs, nashhorn, and much others.
+_ClojureScript_ is an implementation of the Clojure programming language that
+targets JavaScript. Because of this it can run in many different execution
+environments including web browsers, Node.js, io.js, and Nashhorn.
 
-Unlike other languages that intends to _compile_ to javascript (like typescript,
-funscript or coffeescript) is designed to use the javascript like a bytecode. It embrases the
-functional programming approach with very safe and consistent defaults.
+Unlike other languages that intend to _compile_ to JavaScript (like TypeScript,
+FunScript or CoffeeScript), ClojureScript is designed to use JavaScript like bytecode. It embraces
+functional programming, and has very safe and consistent defaults.
 
-An other big difference and in my opinion a big advantage over other languages, is that the clojure
-language is designed to be guest. Is designed as language without own virtual machine that
-can be easy adaptated to the host differences.
+Another big difference (and in my opinion a big advantage) over other languages is that Clojure
+is designed to be a guest. It is a language without its own virtual machine that
+can be easy adapted to differences between its execution environments.
 
 [comment]
-But, that it means? It means that _ClojureScript_ does not conserve the semantics of host language
-and imposes the own one. The result of compilation clojure (unlike happens with other "transpillers")
-is not always has direct translation of the compiled code to your code. Maybe you are thinking that
-this will dificult on debugging tasks, but in in modern environments, sourcemaps works very well and
-them practically hides the needs to inspect the real compiled code.
+But, what does this mean? It means that ClojureScript does not preserve the semantics of its host language,
+but imposes its own. The result of compiling Clojure (unlike what happens with other "transpilers")
+does not always result in direct 1:1 translation your code to compiled code. Maybe you think that
+this will make debugging difficult, but in in modern environments source maps work very well and
+this practically hides the need to inspect compiled code.
 
 
 TBD
 
 
-=== The pillars behind the language.
+=== The pillars of the language
 
 TBD
 
 
-=== Why the javascript host (improve title).
+=== Why host on JavaScript?
 
 TBD
