@@ -16,3 +16,7 @@ docbook:
 
 pdf: docbook git
 	./asciidoctor-fopub/fopub -t docbook-xsl dist/index.xml
+
+github: html
+	ghp-import -m "Generate book" -b gh-pages dist/
+	git push origin gh-pages

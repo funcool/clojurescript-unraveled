@@ -2,7 +2,7 @@
 
 [![](https://licensebuttons.net/l/by-sa/4.0/80x15.png "License")](http://creativecommons.org/licenses/by-sa/4.0/)
 
-A ClojureScript open source book.
+An open source ClojureScript book. Read it [here](http://funcool.github.io/clojurescript-unraveled/).
 
 This books aims to serve as:
 - A comprehensive introduction to the ClojureScript language and its idiomatic usage, asuming no previous experience
