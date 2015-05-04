@@ -4,14 +4,20 @@
 
 A ClojureScript open source book.
 
-NOTE: obvioulsy, this needs better description text.
+This books aims to serve as:
+- A comprehensive introduction to the ClojureScript language and its idiomatic usage, asuming no previous experience
+  with Clojure or functional programming;
+- a detailed guide of the ClojureScript compiler and the tooling around it; and
+- a mixed bag of topics that are useful in day-to-day ClojureScript programming.
+
+As such, is divided in three main sections: Language, Tooling & Compiler and Mixed Bag.
 
 
 ## Status ##
 
-A this moment the book is stil writting and is mostly incomplete.
+A this moment the book is still being written and is mostly incomplete.
 
-We are not native English, so language improvements and typo fixes are very
+We are not native English speakers, so language improvements and typo fixes are very
 very welcome!
 
 
@@ -19,15 +25,15 @@ very welcome!
 
 This is a quick and dirty faq:
 
-- If you found some typo or language improvements (that not implies any structural
-  changes) fire a pull-request directly.
-- If you want propose new chapter, please open an issue for discuss it before.
-- If you want purpose some structural change, please open a issue for discuss it.
-- If you want suggest some additional topic, please open a issue for discuss it.
+- If you found some typo or wording improvements (that do not imply any structural
+  changes) open a pull-request directly.
+- If you want to propose a new chapter, please open an issue for discussing it.
+- If you want to propose a structural change, please open an issue for discussing it.
+- If you want to suggest an additional topic, please open a issue for discussing it.
 
-**General note**: at this moment we do not have plans accept new chapters until the
-the basic book structure are finished. Not becase we do not want, because is
-very difficult handle that at this status of the book. But proposals are very
+**General note**: at this moment we do not have plans to accept new chapters until the
+the basic book structure is finished. Not becase we don't want but because it's
+very difficult to handle that at this stage of the book. That being said, proposals are very
 welcome.
 
 
