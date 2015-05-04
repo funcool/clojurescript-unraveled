@@ -15,8 +15,8 @@ v1, 2015-05-04
 
 == Introduction
 
-This chapter will be a first introduction to the clojure ecosystem, and intends to explain
-the philosophy behind of it.
+This chapter is an introduction to the Clojure ecosystem, and intends to explain
+the philosophy behind it.
 
 include::philosophy.adoc[]
 
