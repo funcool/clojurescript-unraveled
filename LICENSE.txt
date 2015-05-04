@@ -1,0 +1,5 @@
+This book is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. And
+the primary authors are:
+
+- Andrey Antukh <niwi@niwi.be>
+- Alejandro Gómez <alejandro@dialelo.com>
