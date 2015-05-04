@@ -5,7 +5,7 @@ itself and want to write and execute some code. The goal of this section is make
 introduction to the _ClojureScript_ compiler.
 
 The _ClojureScript_ compiler takes the source code splited in directories and namespaces and
-compiles it down to the javascript. Today, javascript has very great a mount of different environments
+compiles it down to the javascript. Today, javascript has very great amount of different environments
 where it can be executed with their own pecularities.
 
 This chapter intends to explain how to use the _ClojureScript_ without any additional tooling. This
