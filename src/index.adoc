@@ -44,22 +44,21 @@ developing using ClojureScript. It will cover:
 * Browser based development
 * Server based development
 
-Unlike the previos chapter, this chapter intends to tell different stories not mandatory that
-all related to each other.
+Unlike the previous chapter, this chapter intends to tell different stories each independent of each other.
 
 include::compiler.adoc[]
 
 
 == Mixed Bag
 
-This chapter will cover miscelaneous topics that are not classified in the previous ones. This is a
+This chapter will cover miscellaneous topics that are not classified in the previous ones. This is a
 "catchall" section and will touch a bunch of heterogeneus topics like:
 
-* Async primitives using _core.async_ library.
+* Async primitives using the _core.async_ library.
 * Working with promises.
-* Error handling using _cats_ library.
-* Pattern matching with _core.match_ library.
-* Web development using Om library.
+* Error handling using the _cats_ library.
+* Pattern matching with the _core.match_ library.
+* Web development using the Om library.
 * Share code betwen clojure and clojurescript.
 
 include::mixedbag.adoc[]
