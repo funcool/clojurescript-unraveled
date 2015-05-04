@@ -159,7 +159,7 @@ so the entry point is the entire namespace.
 
 ===== Compile the example application
 
-In order to compile that source code the previous code for run properly in a browser, overwrite
+In order to compile that source code for run properly in a browser, overwrite
 the _build.clj_ file with the following content:
 
 [source, clojure]
