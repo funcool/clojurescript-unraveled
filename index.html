@@ -945,7 +945,7 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#getting-started-with-clojurescript-compiler">3.1. Getting Started with ClojureScript compiler</a>
 <ul class="sectlevel3">
 <li><a href="#execution-environments">3.1.1. Execution environments</a></li>
-<li><a href="#download-te-compiler">3.1.2. Download te compiler</a></li>
+<li><a href="#download-the-compiler">3.1.2. Download the compiler</a></li>
 <li><a href="#compile-for-nodejs-iojs">3.1.3. Compile for nodejs/iojs</a></li>
 <li><a href="#compile-for-the-browser">3.1.4. Compile for the Browser</a></li>
 <li><a href="#watch-process">3.1.5. Watch process</a></li>
@@ -3630,38 +3630,38 @@ all related to each other.</p>
 <div class="sect2">
 <h3 id="getting-started-with-clojurescript-compiler"><a class="link" href="#getting-started-with-clojurescript-compiler">3.1. Getting Started with ClojureScript compiler</a></h3>
 <div class="paragraph">
-<p>At this point, surelly you are very borred with constantly teoric explication about the language
-itself and want to write and execute some code. The goal of this section is make a little practical
+<p>At this point, you will surely be very bored with the constant theoric explanations about the language
+itself and will want to write and execute some code. The goal of this section is to provide a little practical
 introduction to the <em>ClojureScript</em> compiler.</p>
 </div>
 <div class="paragraph">
-<p>The <em>ClojureScript</em> compiler takes the source code splited in directories and namespaces and
-compiles it down to the javascript. Today, javascript has very great amount of different environments
-where it can be executed with their own pecularities.</p>
+<p>The <em>ClojureScript</em> compiler takes the source code that has been split over numerous directories and namespaces and
+compiles it down to javascript. Today, javascript has great amount of different environments
+where it can be executed - each with their own pecularities.</p>
 </div>
 <div class="paragraph">
-<p>This chapter intends to explain how to use the <em>ClojureScript</em> without any additional tooling. This
-will help you understand how the compiler works and how you can use it when other tooling are not
+<p>This chapter intends to explain how to use <em>ClojureScript</em> without any additional tooling. This
+will help you understand how the compiler works and how you can use it when other tooling is not
 available (such as leiningen+cljsbuld or boot).</p>
 </div>
 <div class="sect3">
 <h4 id="execution-environments"><a class="link" href="#execution-environments">3.1.1. Execution environments</a></h4>
 <div class="paragraph">
-<p>What is a execution environment? An execution environment is a engine, where javascript can be
+<p>What is an execution environment? An execution environment is an engine where javascript can be
 executed. For example, the most popular execution environment is a Browser (Chrome, Firefox, &#8230;&#8203;)
-followed by the second most popular is the nodejs/iojs.</p>
+followed by the second most popular - nodejs/iojs.</p>
 </div>
 <div class="paragraph">
-<p>It there others, such as Rhino (jdk6+), Nashorn (jdk8), QtQuick (QT),&#8230;&#8203; but all them does not have
-significant differences from the first two. So, the <em>ClojureScript</em> at this moment may compile
-the code for run in browser or in nodejs/iojs like environments out of the box.</p>
+<p>There are others, such as Rhino (jdk6+), Nashorn (jdk8), QtQuick (QT),&#8230;&#8203; but none of them have
+significant differences from the first two. So, <em>ClojureScript</em> at the moment may compile
+code to run in the browser or in nodejs/iojs like environments out of the box.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="download-te-compiler"><a class="link" href="#download-te-compiler">3.1.2. Download te compiler</a></h4>
+<h4 id="download-the-compiler"><a class="link" href="#download-the-compiler">3.1.2. Download the compiler</a></h4>
 <div class="paragraph">
-<p>The <em>ClojureScript</em> compiler is implemented in java, and for use it, you should have jdk8 installed.
-<em>ClojureScript</em> itself only requires jdk7, but the standalone compiller that we going to use in this
+<p>The <em>ClojureScript</em> compiler is implemented in java, and to use it, you should have jdk8 installed.
+<em>ClojureScript</em> itself only requires jdk7, but the standalone compiler that we going to use in this
 chapter requires jdk8.</p>
 </div>
 <div class="paragraph">
@@ -3680,16 +3680,15 @@ file and jdk8 that you need for compile the <em>ClojureScript</em> source code t
 <div class="sect3">
 <h4 id="compile-for-nodejs-iojs"><a class="link" href="#compile-for-nodejs-iojs">3.1.3. Compile for nodejs/iojs</a></h4>
 <div class="paragraph">
-<p>Let start with a practical example compiling code that will target to execute in <strong>nodejs</strong>/<strong>iojs</strong>. For
-it you should have installed the nodejs or iojs (recommended).</p>
+<p>Let start with a practical example compiling code that will target <strong>nodejs</strong>/<strong>iojs</strong>. For
+it you should have installed nodejs or iojs (recommended).</p>
 </div>
 <div class="paragraph">
-<p>It there different ways to install iojs, but the most recommended way is using the nvm (node version
-manager). You can read the instructions for install and use on its
-<a href="https://github.com/creationix/nvm">home page</a>.</p>
+<p>There are different ways to install iojs, but the most recommended way is using nvm (node version
+manager). You can read the instructions to install and use nvm on:https://github.com/creationix/nvm[home page].</p>
 </div>
 <div class="paragraph">
-<p>You can test the <strong>iojs</strong> installed in your system with this command:</p>
+<p>You can test <strong>iojs</strong> installed in your system with this command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3700,7 +3699,7 @@ v1.7.1</code></pre>
 <div class="sect4">
 <h5 id="create-the-example-application"><a class="link" href="#create-the-example-application">Create the example application</a></h5>
 <div class="paragraph">
-<p>As first step of our practical example, we should create our application directory structure
+<p>For the first step of our practical example, we should create our application directory structure
 and populate it with example code.</p>
 </div>
 <div class="paragraph">
@@ -3713,7 +3712,7 @@ touch src/myapp/core.cljs</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Secondly, write the example code into the previously created <code>src/myapp/core.cljs</code> file:</p>
+<p>Second, write the example code into the previously created <code>src/myapp/core.cljs</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3735,8 +3734,8 @@ touch src/myapp/core.cljs</code></pre>
 <div class="title">Note</div>
 </td>
 <td class="content">
-Is very important that the declared namespace in the file match exactly the directory
-structure. Is the way how <em>ClojureScript</em> structures its source code.
+Is very important that the declared namespace in the file exactly matches the directory
+structure. Is the way <em>ClojureScript</em> structures its source code.
 </td>
 </tr>
 </table>
@@ -3746,11 +3745,11 @@ structure. Is the way how <em>ClojureScript</em> structures its source code.
 <h5 id="compile-the-example-application"><a class="link" href="#compile-the-example-application">Compile the example application</a></h5>
 <div class="paragraph">
 <p>In order to compile that source code, we need a simple build script that instructs the
-<em>ClojureScript</em> compiler the source directory and the output file. The <em>ClojureScript</em> has a
-lot of other options but at this momen we can ignore that.</p>
+<em>ClojureScript</em> compiler with the source directory and the output file. <em>ClojureScript</em> has a
+lot of other options but at this moment we can ignore that.</p>
 </div>
 <div class="paragraph">
-<p>Let create the <em>build.clj</em> file with the following content:</p>
+<p>Lets create the <em>build.clj</em> file with the following content:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3763,7 +3762,7 @@ lot of other options but at this momen we can ignore that.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This is a brew explanation of the used compiler options:</p>
+<p>This is a breif explanation of the used compiler options:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3772,18 +3771,18 @@ lot of other options but at this momen we can ignore that.</p>
 case to the "main.js" file.</p>
 </li>
 <li>
-<p>The <code>:main</code> propety indicates to the compiler the namespace that will acts as the entry point of
+<p>The <code>:main</code> property indicates to the compiler the namespace that will acts as the entry point of
 your application when it&#8217;s executed.</p>
 </li>
 <li>
-<p>The <code>:target</code> property indicates the platform when you want execute the compiled code. In this case
-we are going to use <strong>iojs</strong> (formerly nodejs). If you ommit this parameter the source will be
-compiled for run in the browser environment.</p>
+<p>The <code>:target</code> property indicates the platform where you want execute the compiled code. In this case
+we are going to use <strong>iojs</strong> (formerly nodejs). If you omit this parameter the source will be
+compiled to run in the browser environment.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>For run the compilation, just execute the following command:</p>
+<p>To run the compilation, just execute the following command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3805,15 +3804,15 @@ compiled for run in the browser environment.</p>
 <h4 id="compile-for-the-browser"><a class="link" href="#compile-for-the-browser">3.1.4. Compile for the Browser</a></h4>
 <div class="paragraph">
 <p>In this section we are going to create a similar "hello world" example aplication from the
-previous section for run in the browser environent. The minimal requirement for do it, it
-is just have a browser that can execute javascript.</p>
+previous section to run in the browser environent. The minimal requirement for it
+is just a browser that can execute javascript.</p>
 </div>
 <div class="paragraph">
 <p>The process is almost the same, the directory structure is the same. The only things that
 changes is the entry point of the application and the build script.</p>
 </div>
 <div class="paragraph">
-<p>Start writing a new content to the src/myapp/core.cljs` file:</p>
+<p>Start writing new content to the src/myapp/core.cljs` file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3825,13 +3824,13 @@ changes is the entry point of the application and the build script.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In the browser environments we do not need a specific entry point for the application,
+<p>In the browser environment we do not need a specific entry point for the application,
 so the entry point is the entire namespace.</p>
 </div>
 <div class="sect4">
 <h5 id="compile-the-example-application-2"><a class="link" href="#compile-the-example-application-2">Compile the example application</a></h5>
 <div class="paragraph">
-<p>In order to compile that source code for run properly in a browser, overwrite
+<p>In order to compile the source code to run properly in a browser, overwrite
 the <em>build.clj</em> file with the following content:</p>
 </div>
 <div class="listingblock">
@@ -3847,7 +3846,7 @@ the <em>build.clj</em> file with the following content:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This is a brew explanation of the used compiler options:</p>
+<p>This is a brief explanation of the used compiler options:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3856,24 +3855,24 @@ the <em>build.clj</em> file with the following content:</p>
 case to the "main.js" file.</p>
 </li>
 <li>
-<p>The <code>:main</code> propety indicates to the compiler the namespace that will acts as the entry point of
+<p>The <code>:main</code> property indicates to the compiler the namespace that will acts as the entry point of
 your application when it&#8217;s executed.</p>
 </li>
 <li>
-<p>The <code>:source-map</code> indicates the destination of the source map.</p>
+<p><code>:source-map</code> indicates the destination of the source map.</p>
 </li>
 <li>
-<p>The <code>:output-dir</code> indicates the destination directory for all files sources used in a compilation. Is
+<p><code>:output-dir</code> indicates the destination directory for all files sources used in a compilation. Is
 just for make source maps works properly with the rest of code, not only your source.</p>
 </li>
 <li>
-<p>The <code>:optimizations</code> indicates the compilation optimizacion. It there different values for this option
-but that will covered in following sections in more details.</p>
+<p><code>:optimizations</code> indicates the compilation optimization. There are different values for this option
+but that will be covered in following sections in more detail.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>For run the compilation, just execute the following command:</p>
+<p>To run the compilation, just execute the following command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3881,12 +3880,12 @@ but that will covered in following sections in more details.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This process can take some time, so do not worry, wait a little bit. The jvm bootstrap with clojure
-compiler is slightly slow. In following sections we will explain how start a watch process for avoid
-constant start and stop the slow process.</p>
+<p>This process can take some time, so do not worry, wait a little bit. The jvm bootstrap with Clojure
+compiler is slightly slow. In the following sections we will explain how to start a watch process to avoid
+constantly starting and stopping the slow process.</p>
 </div>
 <div class="paragraph">
-<p>While waiting the compilation, let&#8217;s go creating a dummy html file for make easy execute our example
+<p>While waiting for the compilation, let&#8217;s create a dummy html file to make it easy to execute our example
 app in the browser. Create the <em>index.html</em> file with the following content:</p>
 </div>
 <div class="listingblock">
@@ -3904,7 +3903,7 @@ app in the browser. Create the <em>index.html</em> file with the following conte
 </div>
 </div>
 <div class="paragraph">
-<p>Now, when compilation are completed and you have the basic html file, just open it with your favorite
+<p>Now, when compilation is completed and you have the basic html file, just open it with your favorite
 browser and take a look in a development tools console. There should appear the "hello world" message.</p>
 </div>
 </div>
@@ -3912,12 +3911,12 @@ browser and take a look in a development tools console. There should appear the 
 <div class="sect3">
 <h4 id="watch-process"><a class="link" href="#watch-process">3.1.5. Watch process</a></h4>
 <div class="paragraph">
-<p>Surelly, that you already have experimented the slow statup of <em>ClojureScript</em> compiler. For solve this,
-the <em>ClojureScript</em> standalone compiler also comes with tools for start a process for watch changes
-in some directory and perform a incrmenetal compilation.</p>
+<p>Surely, you have already experienced the slow startup of the <em>ClojureScript</em> compiler. To solve this,
+the <em>ClojureScript</em> standalone compiler also comes with tools to start a process to watch changes
+in some directory and perform an incremenetal compilation.</p>
 </div>
 <div class="paragraph">
-<p>Start creating an other build script, but in this case name it <em>watch.clj</em>:</p>
+<p>Start creating another build script, but in this case name it <em>watch.clj</em>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3952,55 +3951,55 @@ Using cached cljs.core out/cljs/core.cljs
 </div>
 </div>
 <div class="paragraph">
-<p>You can observe that in second compilation, the time is drastically reduced. An other advantage
-of this method is that it is a little bit verbose.</p>
+<p>You can observe that in the second compilation, the time is drastically reduced. Another advantage
+of this method is that it is a little bit more verbose.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="optimization-levels"><a class="link" href="#optimization-levels">3.1.6. Optimization levels</a></h4>
 <div class="paragraph">
-<p>The <em>ClojureScript</em> compiler has different level of optimizations. Behind the scenes, that compilation
+<p>The <em>ClojureScript</em> compiler has different level of optimizations. Behind the scenes, those compilation
 levels are coming from Google Closure Compiler.</p>
 </div>
 <div class="paragraph">
-<p>The very inacurate overview of the compilation process is:</p>
+<p>A very inacurate overview of the compilation process is:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The reader reads the code and makes some analisys. This process can raise some warnings
+<p>The reader reads the code and makes some analysis. This process can raise some warnings
 during its phase.</p>
 </li>
 <li>
-<p>Then, the <em>ClojureScript</em> compiler emits javascript code. The result of that is a one javascript
+<p>Then, the <em>ClojureScript</em> compiler emits javascript code. The result of that is one javascript
 file for each cljs file.</p>
 </li>
 <li>
-<p>The generated files pases throught the Closure Compiler that depending of the optimization level,
+<p>The generated files pases throught the Closure Compiler that depending on the optimization level,
 and other options (sourcemaps, output dir output to, &#8230;&#8203;) generates the final output.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>The final output dependens strictly on the optimization level.</p>
+<p>The final output dependends strictly on the optimization level.</p>
 </div>
 <div class="sect4">
 <h5 id="none"><a class="link" href="#none">none</a></h5>
 <div class="paragraph">
 <p>Implies that closure compiler is noop, just writes the files as is, without any additional
-optiomization applied to the source code. This optimization level is manadatory if you are targeting
-<strong>nodejs</strong> or <strong>iojs</strong>, and the appropiate in development mode when you code is targets to the browser.</p>
+optimization applied to the source code. This optimization level is manadatory if you are targeting
+<strong>nodejs</strong> or <strong>iojs</strong>, and the appropiate in development mode when your code targets the browser.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="whitespace"><a class="link" href="#whitespace">whitespace</a></h5>
 <div class="paragraph">
-<p>This optimization level consists in a concatenation of the compiled files in a apropiate order, remove
-line breaks, line breaks and other whitespaces and generate the output as one unique file.</p>
+<p>This optimization level consists of concatenating the compiled files in an appropriate order, removing
+line breaks and other whitespaces and generating the output as one unique file.</p>
 </div>
 <div class="paragraph">
-<p>It also has some compilation speed penality, resulting in a slower compilations. In any case is not
-very very slow and is completelly usable in small/medium applications.</p>
+<p>It also has some compilation speed penality, resulting in slower compilations. In any case it is not
+very very slow and is completely usable in small/medium applications.</p>
 </div>
 </div>
 <div class="sect4">
