@@ -1,32 +1,32 @@
 === Getting Started with ClojureScript compiler
 
-At this point, surelly you are very borred with constantly teoric explication about the language
-itself and want to write and execute some code. The goal of this section is make a little practical
+At this point, you will surely be very bored with the constant theoric explanations about the language
+itself and will want to write and execute some code. The goal of this section is to provide a little practical
 introduction to the _ClojureScript_ compiler.
 
-The _ClojureScript_ compiler takes the source code splited in directories and namespaces and
-compiles it down to the javascript. Today, javascript has very great amount of different environments
-where it can be executed with their own pecularities.
+The _ClojureScript_ compiler takes the source code that has been split over numerous directories and namespaces and
+compiles it down to javascript. Today, javascript has great amount of different environments
+where it can be executed - each with their own pecularities.
 
-This chapter intends to explain how to use the _ClojureScript_ without any additional tooling. This
-will help you understand how the compiler works and how you can use it when other tooling are not
+This chapter intends to explain how to use _ClojureScript_ without any additional tooling. This
+will help you understand how the compiler works and how you can use it when other tooling is not
 available (such as leiningen+cljsbuld or boot).
 
 
 ==== Execution environments
 
-What is a execution environment? An execution environment is a engine, where javascript can be
+What is an execution environment? An execution environment is an engine where javascript can be
 executed. For example, the most popular execution environment is a Browser (Chrome, Firefox, ...)
-followed by the second most popular is the nodejs/iojs.
+followed by the second most popular - nodejs/iojs.
 
-It there others, such as Rhino (jdk6+), Nashorn (jdk8), QtQuick (QT),... but all them does not have
-significant differences from the first two. So, the _ClojureScript_ at this moment may compile
-the code for run in browser or in nodejs/iojs like environments out of the box.
+There are others, such as Rhino (jdk6+), Nashorn (jdk8), QtQuick (QT),... but none of them have
+significant differences from the first two. So, _ClojureScript_ at the moment may compile
+code to run in the browser or in nodejs/iojs like environments out of the box.
 
-==== Download te compiler
+==== Download the compiler
 
-The _ClojureScript_ compiler is implemented in java, and for use it, you should have jdk8 installed.
-_ClojureScript_ itself only requires jdk7, but the standalone compiller that we going to use in this
+The _ClojureScript_ compiler is implemented in java, and to use it, you should have jdk8 installed.
+_ClojureScript_ itself only requires jdk7, but the standalone compiler that we going to use in this
 chapter requires jdk8.
 
 You can download it using wget:
@@ -42,14 +42,13 @@ file and jdk8 that you need for compile the _ClojureScript_ source code to javas
 
 ==== Compile for nodejs/iojs
 
-Let start with a practical example compiling code that will target to execute in *nodejs*/*iojs*. For
-it you should have installed the nodejs or iojs (recommended).
+Let start with a practical example compiling code that will target *nodejs*/*iojs*. For
+it you should have installed nodejs or iojs (recommended).
 
-It there different ways to install iojs, but the most recommended way is using the nvm (node version
-manager). You can read the instructions for install and use on its
-link:https://github.com/creationix/nvm[home page].
+There are different ways to install iojs, but the most recommended way is using nvm (node version
+manager). You can read the instructions to install and use nvm on:https://github.com/creationix/nvm[home page].
 
-You can test the *iojs* installed in your system with this command:
+You can test *iojs* installed in your system with this command:
 
 [source, shell]
 ----
@@ -59,7 +58,7 @@ v1.7.1
 
 ===== Create the example application
 
-As first step of our practical example, we should create our application directory structure
+For the first step of our practical example, we should create our application directory structure
 and populate it with example code.
 
 So start creating the directory tree structure for our "hello world" application:
@@ -70,7 +69,7 @@ mkdir -p src/myapp
 touch src/myapp/core.cljs
 ----
 
-Secondly, write the example code into the previously created `src/myapp/core.cljs` file:
+Second, write the example code into the previously created `src/myapp/core.cljs` file:
 
 [source, clojure]
 ----
@@ -85,17 +84,17 @@ Secondly, write the example code into the previously created `src/myapp/core.clj
 (set! *main-cli-fn* -main)
 ----
 
-NOTE: Is very important that the declared namespace in the file match exactly the directory
-structure. Is the way how _ClojureScript_ structures its source code.
+NOTE: Is very important that the declared namespace in the file exactly matches the directory
+structure. Is the way _ClojureScript_ structures its source code.
 
 
 ===== Compile the example application
 
 In order to compile that source code, we need a simple build script that instructs the
-_ClojureScript_ compiler the source directory and the output file. The _ClojureScript_ has a
-lot of other options but at this momen we can ignore that.
+_ClojureScript_ compiler with the source directory and the output file. _ClojureScript_ has a
+lot of other options but at this moment we can ignore that.
 
-Let create the _build.clj_ file with the following content:
+Lets create the _build.clj_ file with the following content:
 
 [source, clojure]
 ----
@@ -107,17 +106,17 @@ Let create the _build.clj_ file with the following content:
   :target :nodejs})
 ----
 
-This is a brew explanation of the used compiler options:
+This is a breif explanation of the used compiler options:
 
 * The `:output-to` parameter indicates to the compiler the destination of the compiled code, in this
   case to the "main.js" file.
-* The `:main` propety indicates to the compiler the namespace that will acts as the entry point of
+* The `:main` property indicates to the compiler the namespace that will acts as the entry point of
   your application when it's executed.
-* The `:target` property indicates the platform when you want execute the compiled code. In this case
-  we are going to use *iojs* (formerly nodejs). If you ommit this parameter the source will be
-  compiled for run in the browser environment.
+* The `:target` property indicates the platform where you want execute the compiled code. In this case
+  we are going to use *iojs* (formerly nodejs). If you omit this parameter the source will be
+  compiled to run in the browser environment.
 
-For run the compilation, just execute the following command:
+To run the compilation, just execute the following command:
 
 [source, bash]
 ----
@@ -136,13 +135,13 @@ $ iojs main.js
 ==== Compile for the Browser
 
 In this section we are going to create a similar "hello world" example aplication from the
-previous section for run in the browser environent. The minimal requirement for do it, it
-is just have a browser that can execute javascript.
+previous section to run in the browser environent. The minimal requirement for it
+is just a browser that can execute javascript.
 
 The process is almost the same, the directory structure is the same. The only things that
 changes is the entry point of the application and the build script.
 
-Start writing a new content to the src/myapp/core.cljs` file:
+Start writing new content to the src/myapp/core.cljs` file:
 
 [source, clojure]
 ----
@@ -153,13 +152,13 @@ Start writing a new content to the src/myapp/core.cljs` file:
 (println "Hello world!")
 ----
 
-In the browser environments we do not need a specific entry point for the application,
+In the browser environment we do not need a specific entry point for the application,
 so the entry point is the entire namespace.
 
 
 ===== Compile the example application
 
-In order to compile that source code for run properly in a browser, overwrite
+In order to compile the source code to run properly in a browser, overwrite
 the _build.clj_ file with the following content:
 
 [source, clojure]
@@ -174,30 +173,30 @@ the _build.clj_ file with the following content:
   :optimizations :none})
 ----
 
-This is a brew explanation of the used compiler options:
+This is a brief explanation of the used compiler options:
 
 * The `:output-to` parameter indicates to the compiler the destination of the compiled code, in this
   case to the "main.js" file.
-* The `:main` propety indicates to the compiler the namespace that will acts as the entry point of
+* The `:main` property indicates to the compiler the namespace that will acts as the entry point of
   your application when it's executed.
-* The `:source-map` indicates the destination of the source map.
-* The `:output-dir` indicates the destination directory for all files sources used in a compilation. Is
+* `:source-map` indicates the destination of the source map.
+* `:output-dir` indicates the destination directory for all files sources used in a compilation. Is
   just for make source maps works properly with the rest of code, not only your source.
-* The `:optimizations` indicates the compilation optimizacion. It there different values for this option
-  but that will covered in following sections in more details.
+* `:optimizations` indicates the compilation optimization. There are different values for this option
+  but that will be covered in following sections in more detail.
 
-For run the compilation, just execute the following command:
+To run the compilation, just execute the following command:
 
 [source, bash]
 ----
 java -cp cljs.jar:src clojure.main build.clj
 ----
 
-This process can take some time, so do not worry, wait a little bit. The jvm bootstrap with clojure
-compiler is slightly slow. In following sections we will explain how start a watch process for avoid
-constant start and stop the slow process.
+This process can take some time, so do not worry, wait a little bit. The jvm bootstrap with Clojure
+compiler is slightly slow. In the following sections we will explain how to start a watch process to avoid
+constantly starting and stopping the slow process.
 
-While waiting the compilation, let's go creating a dummy html file for make easy execute our example
+While waiting for the compilation, let's create a dummy html file to make it easy to execute our example
 app in the browser. Create the _index.html_ file with the following content:
 
 [source, html]
@@ -215,17 +214,17 @@ app in the browser. Create the _index.html_ file with the following content:
 ----
 
 
-Now, when compilation are completed and you have the basic html file, just open it with your favorite
+Now, when compilation is completed and you have the basic html file, just open it with your favorite
 browser and take a look in a development tools console. There should appear the "hello world" message.
 
 
 ==== Watch process
 
-Surelly, that you already have experimented the slow statup of _ClojureScript_ compiler. For solve this,
-the _ClojureScript_ standalone compiler also comes with tools for start a process for watch changes
-in some directory and perform a incrmenetal compilation.
+Surely, you have already experienced the slow startup of the _ClojureScript_ compiler. To solve this,
+the _ClojureScript_ standalone compiler also comes with tools to start a process to watch changes
+in some directory and perform an incremenetal compilation.
 
-Start creating an other build script, but in this case name it _watch.clj_:
+Start creating another build script, but in this case name it _watch.clj_:
 
 [source, clojure]
 ----
@@ -258,41 +257,41 @@ Using cached cljs.core out/cljs/core.cljs
 ... done. Elapsed 0.191963443 seconds
 ----
 
-You can observe that in second compilation, the time is drastically reduced. An other advantage
-of this method is that it is a little bit verbose.
+You can observe that in the second compilation, the time is drastically reduced. Another advantage
+of this method is that it is a little bit more verbose.
 
 
 ==== Optimization levels
 
-The _ClojureScript_ compiler has different level of optimizations. Behind the scenes, that compilation
+The _ClojureScript_ compiler has different level of optimizations. Behind the scenes, those compilation
 levels are coming from Google Closure Compiler.
 
-The very inacurate overview of the compilation process is:
+A very inacurate overview of the compilation process is:
 
-1. The reader reads the code and makes some analisys. This process can raise some warnings
+1. The reader reads the code and makes some analysis. This process can raise some warnings
    during its phase.
-2. Then, the _ClojureScript_ compiler emits javascript code. The result of that is a one javascript
+2. Then, the _ClojureScript_ compiler emits javascript code. The result of that is one javascript
    file for each cljs file.
-3. The generated files pases throught the Closure Compiler that depending of the optimization level,
+3. The generated files pases throught the Closure Compiler that depending on the optimization level,
    and other options (sourcemaps, output dir output to, ...) generates the final output.
 
-The final output dependens strictly on the optimization level.
+The final output dependends strictly on the optimization level.
 
 
 ===== none
 
 Implies that closure compiler is noop, just writes the files as is, without any additional
-optiomization applied to the source code. This optimization level is manadatory if you are targeting
-*nodejs* or *iojs*, and the appropiate in development mode when you code is targets to the browser.
+optimization applied to the source code. This optimization level is manadatory if you are targeting
+*nodejs* or *iojs*, and the appropiate in development mode when your code targets the browser.
 
 
 ===== whitespace
 
-This optimization level consists in a concatenation of the compiled files in a apropiate order, remove
-line breaks, line breaks and other whitespaces and generate the output as one unique file.
+This optimization level consists of concatenating the compiled files in an appropriate order, removing
+line breaks and other whitespaces and generating the output as one unique file.
 
-It also has some compilation speed penality, resulting in a slower compilations. In any case is not
-very very slow and is completelly usable in small/medium applications.
+It also has some compilation speed penality, resulting in slower compilations. In any case it is not
+very very slow and is completely usable in small/medium applications.
 
 
 ===== simple
