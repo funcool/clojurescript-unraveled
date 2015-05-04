@@ -44,7 +44,7 @@ developing using ClojureScript. It will cover:
 * Browser based development
 * Server based development
 
-Unlike the previos chapter, this chapter intends to tell different stories not mandatory that
+Unlike the previous chapter, this chapter intends to tell different stories not mandatory that
 all related to each other.
 
 include::compiler.adoc[]
