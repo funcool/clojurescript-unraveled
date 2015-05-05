@@ -476,7 +476,7 @@ will be explained in the next section.
 
 ==== Branching with `cond`
 
-Sometimes, the `if` expression can be slightly limited because it lacks an "else if" to check multiple conditions
+Sometimes, the `if` expression can be slightly limiting because it lacks an "else if" to check multiple conditions
 one after another. No worries though, because the `cond` expression comes to the rescue.
 
 With the `cond` expression, you can define multiple conditions:
