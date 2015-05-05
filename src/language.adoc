@@ -2367,13 +2367,13 @@ TBD
 
 === Truthiness
 
-This is the aspect where the each language has its own semantics, the majority of languages
-treats empty collections, the 0 integer and other things like this are considered false.
+This is an aspect where the each language has its own semantics, the majority of languages
+treat empty collections, the 0 integer and other things like this as false.
 In _ClojureScript_ unlike in other languages only two values are considered as false: `nil`
-and `false`, Everything except them, are treated as `true`.
+and `false`, Everything else is  treated as `true`.
 
-So, thanks to it, sets can be considered also predicates, so if them return a value so it exists
-and if it return `nil` so the value does not exists:
+Thanks to that, sets can also be considered predicates, if it returns a value then it exists
+and if it returns `nil` then it doesn't exist:
 
 [source, clojure]
 ----
