@@ -596,18 +596,17 @@ expression. In fact, it is said to have an implicit `do`.
 
 ==== Loops
 
-The functional approach of _ClojureScript_, this causes that it does not have standard,
-well known statements based loops. The loops in clojurescript are handled using recursion.
-The recursion sometimes requires additional thinking about how model your problem in
-a slightly different way than imperative languages.
+Because of its functional design, _ClojureScript_ typically favors recursion over
+imperative, statement based loops. Recursion sometimes requires additional thinking about
+how to model your problem in a different way than imperative languages.
 
-Also, many of the common patterns for which `for` is used in other languages are achieved
-through higher-order functions.
+Many of the common patterns which use `for` in other languages are achieved through
+higher-order functions.
 
 
 ===== Looping with loop/recur
 
-Let's take a look at how to express loops using recursions with the `loop` and `recur` forms.
+Let's take a look at how to express loops using recursion with the `loop` and `recur` forms.
 `loop` defines a possibly empty list of bindings (notice the symmetry with `let`) and `recur`
 jumps execution after the looping point with new values for those bindings.
 
@@ -627,12 +626,12 @@ Let's see an example:
 ;; => nil
 ----
 
-In the above snippet, we bind the name `x` to the value `0` and execute the body. Since the
-condition is not met the first time is run we `recur`, incrementing the binding value with
-the `inc` function. We do this once more until the condition is met and, since there aren't
-more `recur` calls, exit the loop.
+In the above snippet, we bind the name `x` to the value `0` and execute the body. Since
+the condition is not met the first time it is run we `recur`, incrementing the binding
+value with the `inc` function. We repeat this once more until the condition is met and
+since there are no more `recur` calls, exit the loop.
 
-Note that `loop` isn't the only point we can `recur` too, using `recur` inside a function
+Note that `loop` isn't the only point we can `recur`, using `recur` inside a function
 executes the body of the function recursively with the new bindings:
 
 [source, clojure]
@@ -654,11 +653,11 @@ executes the body of the function recursively with the new bindings:
 
 ===== Replacing for loops with higher-order functions
 
-In imperative programming languages is common to use `for` loops for iterating over data and
-transforming it, usually the intent being one of the following:
+In imperative programming languages it is common to use `for` loops to iterate over data
+and transform it, where the intent is usually one of the following:
 
-- Transform every value in the iterable yielding another iterable
-- Filter the elements of the iterable by a certain criteria
+- Transform every value in the iterable, yielding another iterable
+- Filter the elements of the iterable by some criteria
 - Convert the iterable to a value where each iteration depends on the result from the previous one
 - Run a computation for every value in the iterable
 
