@@ -97,7 +97,7 @@ used in map data structures to efficiently represent the keys.
 As you can see, the keywords are all prefixed with `:`, but this character is only part
 of the literal syntax and is not part of the name of the object.
 
-You can also create a keyword by calling the `keyword` function. Do not worry if you don't understand
+You can also create a keyword by calling the `keyword` function. Don't worry if you don't understand
 or are unclear about anything in the following example; the functions are discussed in later chapters.
 
 [source, clojure]
@@ -123,7 +123,7 @@ f1
 ----
 
 Don't worry if you don't understand right away; symbols are used in almost
-all our examples, which will give you the opportunity to learn more as we go on.
+all of our examples, which will give you the opportunity to learn more as we go on.
 
 
 ==== Strings
@@ -218,14 +218,14 @@ You can also explicitly create a list with the `list` function:
 ----
 
 Lists have the pecularity that they are very efficient if you access them sequentially or
-access their first elements, but a list is not a very good option if you need random (index) access to its
+access their first elements, but a list is not a very good option if you need random (index) access to it's
 elements.
 
 
 ===== Vectors
 
 Like lists, *Vectors*  store a series of values, but in this case with very efficient index access
-to their elements, as opposed to lists, which are evaluated in order. Do not worry; in
+to their elements, as opposed to lists, which are evaluated in order. Don't worry; in
 the following chapters we'll go in depth with details, but at this moment, this simple explanation is
 more than enough.
 
@@ -274,8 +274,8 @@ the order of evaluation is not guaranteed.
 
 And finally, *Sets*.
 
-Sets store zero or more unique items of any type in an unordered way. They,
-like maps, use curly braces for their literal syntax, with the difference that they use a `#` as leading
+Sets store zero or more unique items of any type and are unordered. They,
+like maps, use curly braces for their literal syntax, with the difference being that they use a `#` as leading
 character:
 
 [source, clojure]
@@ -338,7 +338,7 @@ argument for the `inc` function.
 ;; => 6
 ----
 
-The `+` symbol represents a `add` function. It allows multiple parameters, whereas in ALGOL-type languages,
+The `+` symbol represents an `add` function. It allows multiple parameters, whereas in ALGOL-type languages,
 `+` is an operator and only allows two parameters.
 
 The prefix notation has huge advantages, some of them not always obvious. _ClojureScript_ does not
@@ -982,7 +982,7 @@ TODO: think about this.
 
 ===== nil-punning
 
-The above behaviour of `seq` coupled with the falsey nature of `nil` in boolean contexts make an idiom for checking
+The above behaviour of `seq` when coupled with the falsey nature of `nil` in boolean contexts make it an idiom for checking
 the emptyness of a sequence in ClojureScript, which is often referred to as nil-punning.
 
 [source, clojure]
@@ -1025,7 +1025,7 @@ the emptyness of a sequence in ClojureScript, which is often referred to as nil-
 
 The ClojureScript core functions that work on collections call `seq` on their arguments, thus being
 implemented in terms of generic sequence operations. This also makes them short-circuit when encountering empty
-collections and being `nil`-safe.
+collections and makes them `nil`-safe.
 
 ////
 The last sentence in the preceding paragraph really needs an example. I think it is far too complicated
@@ -1123,7 +1123,7 @@ The `empty?` predicate returns true if the given collection is empty:
 ----
 
 The `conj` operation adds elements to collections and may add them in different "places" depending
-on the collection. It adds them where it makes more sense for the given collection performance-wise,
+on the collection. It adds them where it is most performant for the collection type,
 but note that not every collection has a defined order.
 
 We can pass as many elements we want to add to `conj`; let's see it in action:
@@ -1181,7 +1181,7 @@ list. The prepend operation is performed using the `cons` (construct) function.
 ;; => (0 1 2)
 ----
 
-We used the literal `()` to represent the empty list. Since it doesn't contain any symbol, it is not treated
+We used the literal `()` to represent the empty list. Since it doesn't contain any symbols, it is not treated
 as a function call. However, when using list literals that contain elements, we need to quote them to
 prevent ClojureScript from evaluating them as a function call:
 
