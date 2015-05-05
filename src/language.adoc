@@ -603,9 +603,9 @@ using higher-order functions.
 
 ===== Looping with loop/recur
 
-Let's take a look at how to express loops using recursions with the `loop` and `recur` forms.
+Let's take a look at how to express loops using recursion with the `loop` and `recur` forms.
 `loop` defines a possibly empty list of bindings (notice the symmetry with `let`) and `recur`
-jumps execution after the looping point with new values for those bindings.
+jumps to the start of the loop with new values for those bindings.
 
 Let's see an example:
 
@@ -624,11 +624,11 @@ Let's see an example:
 ----
 
 In the above snippet, we bind the name `x` to the value `0` and execute the body. Since the
-condition is not met the first time is run we `recur`, incrementing the binding value with
+condition is not met the first time it's run we `recur`, incrementing the binding value with
 the `inc` function. We do this once more until the condition is met and, since there aren't
 more `recur` calls, exit the loop.
 
-Note that `loop` isn't the only point we can `recur` too, using `recur` inside a function
+Note that `loop` isn't the only point we can `recur` to, using `recur` inside a function
 executes the body of the function recursively with the new bindings:
 
 [source, clojure]
@@ -650,10 +650,10 @@ executes the body of the function recursively with the new bindings:
 
 ===== Replacing for loops with higher-order functions
 
-In imperative programming languages is common to use `for` loops for iterating over data and
-transforming it, usually the intent being one of the following:
+In imperative programming languages it is common to use `for` loops for iterating over data and
+transforming it, usually with one of the following objectives:
 
-- Transform every value in the iterable yielding another iterable
+- Transform every value in the iterable and yielding another iterable
 - Filter the elements of the iterable by a certain criteria
 - Convert the iterable to a value where each iteration depends on the result from the previous one
 - Run a computation for every value in the iterable
@@ -661,7 +661,7 @@ transforming it, usually the intent being one of the following:
 The above actions are encoded in higher-order functions and syntactic constructs in ClojureScript,
 let's see an example of the first three.
 
-For transforming every value in a iterable data structure we use the `map` function, which takes a
+For transforming every value in an iterable data structure we use the `map` function, which takes a
 function and a sequence and applies the function to every element:
 
 [source, clojure]
@@ -697,7 +697,7 @@ In ClojureScript the `for` construct isn't used for iteration but for generating
 also known as "sequence comprehension". It offers a small domain specific language for declaratively
 building lazy sequences.
 
-It takes a vector of bindings and a expression and generates a sequence of the result of evaluating the
+It takes a vector of bindings and a expression and generates a sequence of the results of evaluating the
 expression, let's take a look at an example:
 
 [source, clojure]
