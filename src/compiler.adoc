@@ -337,7 +337,7 @@ TBD
 //^ A little guide and notes about implications of developing for web
 //^ environments (optimizations, third party libraries, modularization, ...)
 
-==== Using third party javascript libraryes
+==== Using third party javascript libraries
 
 TBD
 
