@@ -173,11 +173,11 @@ the _build.clj_ file with the following content:
   :optimizations :none})
 ----
 
-This is a brief explanation of the used compiler options:
+This is a brief explanation of the compiler options we're using:
 
 * The `:output-to` parameter indicates to the compiler the destination of the compiled code, in this
   case to the "main.js" file.
-* The `:main` property indicates to the compiler the namespace that will acts as the entry point of
+* The `:main` property indicates to the compiler the namespace that will act as the entry point of
   your application when it's executed.
 * `:source-map` indicates the destination of the source map.
 * `:output-dir` indicates the destination directory for all files sources used in a compilation. Is
@@ -194,7 +194,7 @@ java -cp cljs.jar:src clojure.main build.clj
 
 This process can take some time, so do not worry, wait a little bit. The jvm bootstrap with Clojure
 compiler is slightly slow. In the following sections we will explain how to start a watch process to avoid
-constantly starting and stopping the slow process.
+constantly starting and stopping this slow process.
 
 While waiting for the compilation, let's create a dummy html file to make it easy to execute our example
 app in the browser. Create the _index.html_ file with the following content:
@@ -214,14 +214,14 @@ app in the browser. Create the _index.html_ file with the following content:
 ----
 
 
-Now, when compilation is completed and you have the basic html file, just open it with your favorite
-browser and take a look in a development tools console. There should appear the "hello world" message.
+Now, when the compilation finishes and you have the basic html file you can just open it with your favorite
+browser and take a look in the development tools console. There should appear the "hello world" message.
 
 
 ==== Watch process
 
 Surely, you have already experienced the slow startup of the _ClojureScript_ compiler. To solve this,
-the _ClojureScript_ standalone compiler also comes with tools to start a process to watch changes
+the _ClojureScript_ standalone compiler also comes with tools to start a process that watches the changes
 in some directory and perform an incremental compilation.
 
 Start creating another build script, but in this case name it _watch.clj_:
@@ -238,7 +238,7 @@ Start creating another build script, but in this case name it _watch.clj_:
   :optimizations :none})
 ----
 
-Now, execute that script like any other that you have executed in previos sections:
+Now, execute that script like any other that you have executed in previous sections:
 
 [source, bash]
 ----
@@ -258,7 +258,7 @@ Using cached cljs.core out/cljs/core.cljs
 ----
 
 You can observe that in the second compilation, the time is drastically reduced. Another advantage
-of this method is that it is a little bit more verbose.
+of this method is that it's a little bit more verbose.
 
 
 ==== Optimization levels
