@@ -1412,7 +1412,7 @@ the lexical scope. <em>ClojureScript</em> also has some features of dynamic scop
 in other section.</p>
 </div>
 <div class="paragraph">
-<p>If you want know more about scopes, this <a href="http://en.wikipedia.org/wiki/Scope_%28computer_science">wikipedia article</a>
+<p>If you want know more about scopes, this <a href="http://en.wikipedia.org/wiki/Scope_(computer_science)">wikipedia article</a>
 is very extensive and explains different types of scoping.</p>
 </div>
 <div class="paragraph">
@@ -2339,10 +2339,10 @@ but note that not every collection has a defined order.</p>
 <div class="sect4">
 <h5 id="laziness"><a class="link" href="#laziness">Laziness</a></h5>
 <div class="paragraph">
-<p>Most of ClojureScript sequence-returning functions generate lazy sequences instead of eagerly creating
+<p>Most of ClojureScript&#8217;s sequence-returning functions generate lazy sequences instead of eagerly creating
 a whole new sequence. Lazy sequences generate their contents as they are requested, usually when iterating
-over them. Laziness ensures that we don&#8217;t do more work that we need to and gives us the possibility to
-treat potentially infinite sequence as regular ones.</p>
+over them. Laziness ensures that we don&#8217;t do more work than we need to and gives us the possibility of
+treating potentially infinite sequences as regular ones.</p>
 </div>
 <div class="paragraph">
 <p>TODO</p>
@@ -2760,9 +2760,9 @@ functions are now part of your namespace, and you do not need to qualify them at
 </div>
 </div>
 <div class="paragraph">
-<p>And finally, you should know that everything that located in the <code>cljs.core</code> namespace is automatically
-loaded and you should not require it explicitly. But sometimes you want declare vars that will clash
-with some others defined in the <code>cljs.core</code> namespace. To do this, the <code>ns</code> macro offers another directive that
+<p>And finally, you should know that everything located in the <code>cljs.core</code> namespace is automatically
+loaded and you should not require it explicitly. Sometimes you will want to declare vars that will clash
+with those defined in the <code>cljs.core</code> namespace. To do this, the <code>ns</code> macro offers another directive that
 allows you to exclude specific symbols and prevent them from being automatically loaded.</p>
 </div>
 <div class="paragraph">
@@ -2813,12 +2813,12 @@ consistent behavior when this happens.</p>
 <div class="sect3">
 <h4 id="protocols"><a class="link" href="#protocols">2.10.1. Protocols</a></h4>
 <div class="paragraph">
-<p>The <em>ClojureScript</em> primitive for define "interfaces" are called Protocols. A protocol consists in
-a name and set of functions. All functions have at least one argument corresponding to the
+<p>The <em>ClojureScript</em> primitive for defining "interfaces" is called a Protocol. A protocol consists in
+a name and a set of functions. All functions have at least one argument corresponding to
 <code>this</code> in javascript or <code>self</code> in Python.</p>
 </div>
 <div class="paragraph">
-<p>Protocols provides a type based polymorphism, and the dispatch is always done by the
+<p>Protocols provide a type based polymorphism, and the dispatch is always done by the
 first argument previously mentioned as <code>this</code>.</p>
 </div>
 <div class="paragraph">
@@ -3028,9 +3028,9 @@ of the first argument.</p>
 </div>
 <div class="paragraph">
 <p>So, if you execute that function over a hash map containing the <code>:locale</code> and optionally
-the <code>:name</code> key, the multimethod firstly will call the dispatch function for determine the
-dispatch value, secondly it will search an implementation for that value, if it is found,
-it will execute it, in case contrary it will search the default implementation (if it
+the <code>:name</code> key, the multimethod will first call the dispatch function for determining the
+dispatch value, secondly it will search for an implementation of that value, if it is found,
+it will execute it, otherwise it will search for the default implementation (if it&#8217;s
 specified) and execute it.</p>
 </div>
 <div class="listingblock">
@@ -3046,26 +3046,26 @@ specified) and execute it.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>If the default implementation is not specified, an exception will be raised notifying about
-that some value does not have a implementation for that multimethod.</p>
+<p>If the default implementation is not specified, an exception will be raised notifying us
+that a value does not have an implementation for that multimethod.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="hierarchies"><a class="link" href="#hierarchies">2.10.3. Hierarchies</a></h4>
 <div class="paragraph">
-<p>Hierarchies is a way that <em>ClojureScript</em> offers you build a whatever relations that your
-domain may require. The hierarchies are difined in term of relations betwen named objects,
+<p>Hierarchies are a way that <em>ClojureScript</em> allows you to build whatever relations your
+domain may require. Hierarchies are defined in terms of relations betwen named objects,
 such as symbols, keywords or types.</p>
 </div>
 <div class="paragraph">
 <p>The hierarchies can be defined globally or locally, depending on your needs. Like multimethods,
-hierarchies are not limited to single namespace. You can extend a hierarchy from any namespace,
-not necesary the one which they are defined.</p>
+hierarchies are not limited to a single namespace. You can extend a hierarchy from any namespace,
+not just the one in which they are defined.</p>
 </div>
 <div class="paragraph">
-<p>The global namespace is more limited, for good reasons. Not namespaced keywords or symbols can
-not be used in the global hierarcy. That behavior helps prevent unexpected situations when
-two or more third party libraries uses the same symbol for different semantics.</p>
+<p>The global namespace is more limited, for good reason. Namespaced keywords or symbols cannot
+be used in the global hierarcy. This behavior helps prevent unexpected situations when
+two or more third party libraries use the same symbol for different semantics.</p>
 </div>
 <div class="sect4">
 <h5 id="defining-a-hierarchy"><a class="link" href="#defining-a-hierarchy">Defining a hierarchy</a></h5>
@@ -3079,7 +3079,7 @@ two or more third party libraries uses the same symbol for different semantics.<
 </div>
 </div>
 <div class="paragraph">
-<p>We have just defined a set of relationships between namespaced keywords, in this case the
+<p>We have just defined a set of relationships between namespaced keywords, in this case
 <code>::circle</code> is a child of <code>::shape</code> and <code>::box</code> is also a child of <code>::shape</code>.</p>
 </div>
 <div class="admonitionblock tip">
@@ -3090,7 +3090,7 @@ two or more third party libraries uses the same symbol for different semantics.<
 </td>
 <td class="content">
 The <code>::circle</code> keyword syntax is a shortland for <code>:current.ns/circle</code>. So if you are executing
-it in a repl, sureally that <code>::circle</code> will be evaluated to <code>:cljs.user/circe</code>.
+it in a repl, then <code>::circle</code> will be evaluated to <code>:cljs.user/circe</code>.
 </td>
 </tr>
 </table>
@@ -3099,12 +3099,12 @@ it in a repl, sureally that <code>::circle</code> will be evaluated to <code>:cl
 <div class="sect4">
 <h5 id="hierarchies-introspection"><a class="link" href="#hierarchies-introspection">Hierarchies introspection</a></h5>
 <div class="paragraph">
-<p><em>ClojureScript</em> comes with little toolset of functions that allow runtime introspection
-of the global or local defined hierarchies. These toolset consists on thre functions:
-<code>isa?</code>, <code>anscestors</code>, and <code>descendants</code>.</p>
+<p><em>ClojureScript</em> comes with a little toolset of functions that allow runtime introspection
+of the global or locally defined hierarchies. These tools consist of three functions:
+<code>isa?</code>, <code>ancestors</code>, and <code>descendants</code>.</p>
 </div>
 <div class="paragraph">
-<p>Let see an example on how it can be used with hierarchy defined in previous example:</p>
+<p>Let&#8217;s see an example of how it can be used with the hierarchy defined in previous example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3125,9 +3125,9 @@ of the global or local defined hierarchies. These toolset consists on thre funct
 <div class="sect4">
 <h5 id="local-defined-hierarchies"><a class="link" href="#local-defined-hierarchies">Local defined hierarchies</a></h5>
 <div class="paragraph">
-<p>As we mentioned previously, in <em>ClojureScript</em> you also can define local hierarchies. This can be
-done with <code>make-hierarchy</code> function. And this is the aspect of how you can replicate the previous
-example but using the local hierarchy:</p>
+<p>As mentioned previously; in <em>ClojureScript</em> you also can define local hierarchies. This can be
+done with the <code>make-hierarchy</code> function. Here is how you can replicate the previous
+example, this time using the local hierarchy:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3137,7 +3137,7 @@ example but using the local hierarchy:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now, if you can use the same introspection functions with that, locally defined hierarchy:</p>
+<p>You can also use the same introspection functions with a locally defined hierarchy:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3157,12 +3157,12 @@ return false.</p>
 <div class="sect4">
 <h5 id="hierarchies-in-multimethods"><a class="link" href="#hierarchies-in-multimethods">Hierarchies in multimethods</a></h5>
 <div class="paragraph">
-<p>One of the big advantages of hierarchies, is that they works very well together with multimethods.
-Because, multimethods by default uses the <code>isa?</code> function for the last step of dispatching.</p>
+<p>One of the big advantages of hierarchies is that they work very well with multimethods.
+This is because multimethods, by default, use the <code>isa?</code> function for the last step of dispatching.</p>
 </div>
 <div class="paragraph">
-<p>Let see an example for clearly understand that it means. Firstly define the multimethod with
-<code>defmulti</code> form:</p>
+<p>Let&#8217;s see an example so we can clearly understand what this means. Firstly we define the multimethod with
+the <code>defmulti</code> form:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3174,11 +3174,11 @@ Because, multimethods by default uses the <code>isa?</code> function for the las
 </div>
 </div>
 <div class="paragraph">
-<p>With <code>:hierarchy</code> keyword parameter we indicate to the multimethod that hierarchy we want to use,
-if it is not specified, the global hierarchi will be used.</p>
+<p>With the <code>:hierarchy</code> keyword parameter we indicate to the multimethod the hierarchy that we want to use. Left
+unspecified, the global hierarchy will be used.</p>
 </div>
 <div class="paragraph">
-<p>Secondly, define a implementation for our multimethod using the <code>defmethod</code> form:</p>
+<p>Secondly, we define an implementation for our multimethod using the <code>defmethod</code> form:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3196,7 +3196,7 @@ if it is not specified, the global hierarchi will be used.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now, let see what is happens if we execute that function with a box:</p>
+<p>Now, let&#8217;s see what happens if we execute that function with a box:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3205,9 +3205,9 @@ if it is not specified, the global hierarchi will be used.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now everything works as expected, the multimethod executes the direct matching implementation
-for the given parameter. But that is happens if we execute the same function but with <code>:circle</code>
-keyword as parameter, that does not have the direct matching dispatch value:</p>
+<p>Now everything works as expected because the multimethod executes the direct matching implementation
+for the given parameter. Next, let&#8217;s see what happens if we execute the same function but with the <code>:circle</code>
+keyword as the parameter, which does not have the direct matching dispatch value:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3216,8 +3216,8 @@ keyword as parameter, that does not have the direct matching dispatch value:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The multimethod automatically resolves it using the provided hierarchy, and that <code>:circle</code> is
-a descendat of <code>:shape</code>, so the <code>:shape</code> implementation is executed.</p>
+<p>The multimethod automatically resolves it using the provided hierarchy, and since <code>:circle</code> is
+a descendant of <code>:shape</code>, the <code>:shape</code> implementation is executed.</p>
 </div>
 </div>
 </div>
@@ -3740,14 +3740,14 @@ with plain objects:</p>
 <div class="sect2">
 <h3 id="truthiness"><a class="link" href="#truthiness">2.14. Truthiness</a></h3>
 <div class="paragraph">
-<p>This is the aspect where the each language has its own semantics, the majority of languages
-treats empty collections, the 0 integer and other things like this are considered false.
+<p>This is an aspect where the each language has its own semantics, the majority of languages
+treat empty collections, the 0 integer and other things like this as false.
 In <em>ClojureScript</em> unlike in other languages only two values are considered as false: <code>nil</code>
-and <code>false</code>, Everything except them, are treated as <code>true</code>.</p>
+and <code>false</code>, Everything else is  treated as <code>true</code>.</p>
 </div>
 <div class="paragraph">
-<p>So, thanks to it, sets can be considered also predicates, so if them return a value so it exists
-and if it return <code>nil</code> so the value does not exists:</p>
+<p>Thanks to that, sets can also be considered predicates, if it returns a value then it exists
+and if it returns <code>nil</code> then it doesn&#8217;t exist:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4345,7 +4345,7 @@ other JavaScript.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1<br/>
-Last updated 2015-05-05 14:56:37 CEST
+Last updated 2015-05-05 01:02:17 CEST
 </div>
 </div>
 </body>
