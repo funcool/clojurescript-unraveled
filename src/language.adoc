@@ -603,8 +603,8 @@ Here is the same example as previous one, but using `case`:
 
 ==== Locals
 
-_ClojureScript_ does not has the concept of variables as in ALGOL-like languages, but it does 
-have locals. Locals, as per usual, are immutable, and if you try mutate them, the compiller 
+_ClojureScript_ does not has the concept of variables as in ALGOL-like languages, but it does
+have locals. Locals, as per usual, are immutable, and if you try mutate them, the compiller
 will throw an error.
 
 The locals are defined with the `let` expression. The expression starts with a vector as first parameter
@@ -629,9 +629,9 @@ expressions `(println "Simple message from the body of a let")` and `(* x y)` ar
 
 ==== Blocks
 
-In JavaScript, braces `{` and `}` delimit a block of code that “belongs together.” Blocks in 
-_ClojureScript_ are created using the `do` expression and are ususally used for side effects, like 
-printing something to the console or writing a log in a logger. 
+In JavaScript, braces `{` and `}` delimit a block of code that “belongs together.” Blocks in
+_ClojureScript_ are created using the `do` expression and are ususally used for side effects, like
+printing something to the console or writing a log in a logger.
 
 A side effect is something that is not necessary for the return value.
 
@@ -2092,13 +2092,13 @@ _ClojureScript_ has two ways to create instances:
 .Using the `new` special form
 [source, clojure]
 ----
-(new js/Regex "^foo$")
+(new js/RegExp "^foo$")
 ----
 
 Using the `.` special form
 [source, clojure]
 ----
-(js/Regex. "^foo$")
+(js/RegExp. "^foo$")
 ----
 
 The last one is the recommended way to do that operation. We do not aware of real differences
