@@ -1530,9 +1530,9 @@ functions are now part of your namespace, and you do not need to qualify them at
 ;; => "HELLO"
 ----
 
-And finally, you should know that everything that located in the `cljs.core` namespace is automatically
-loaded and you should not require it explicitly. But sometimes you want declare vars that will clash
-with some others defined in the `cljs.core` namespace. To do this, the `ns` macro offers another directive that
+And finally, you should know that everything located in the `cljs.core` namespace is automatically
+loaded and you should not require it explicitly. Sometimes you will want to declare vars that will clash
+with those defined in the `cljs.core` namespace. To do this, the `ns` macro offers another directive that
 allows you to exclude specific symbols and prevent them from being automatically loaded.
 
 Observe the following:
@@ -1581,11 +1581,11 @@ TODO: add link to expression problem description
 
 ==== Protocols
 
-The _ClojureScript_ primitive for define "interfaces" are called Protocols. A protocol consists in
-a name and set of functions. All functions have at least one argument corresponding to the
+The _ClojureScript_ primitive for defining "interfaces" is called a Protocol. A protocol consists in
+a name and a set of functions. All functions have at least one argument corresponding to 
 `this` in javascript or `self` in Python.
 
-Protocols provides a type based polymorphism, and the dispatch is always done by the
+Protocols provide a type based polymorphism, and the dispatch is always done by the
 first argument previously mentioned as `this`.
 
 A protocol looks like this:
