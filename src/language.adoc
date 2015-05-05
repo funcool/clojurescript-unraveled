@@ -552,13 +552,13 @@ Let see the same example as previous one but using `case`:
 
 ==== Locals
 
-_ClojureScript_ does not has the variables concepts, but it does have locals. Locals as per
-usual, are immutable and if you try mutate them, the compiller will throw an error.
+_ClojureScript_ does not have variables, but it does have locals. Locals as per usual, are
+immutable and if you try to mutate them, the compiler will throw an error.
 
-The locals are defined with `let` expression. It starts with a vector as first parameter
-followed by arbitrary number of expresions. The first parameter should contain a arbitrary
-number of pairs that starts with a binding form followed of an expression whose value will
-be bound to this new local for the remainer of the let expression.
+Locals are defined with the `let` expression. It accepts a vector as the first parameter
+followed by arbitrary number of expressions. The first parameter should contain an
+arbitrary number of pairs that starts with a binding form followed by an expression whose
+value will be bound to this new local for the remainder of the let expression.
 
 [source, clojure]
 ----
