@@ -1,7 +1,7 @@
 === First steps with lisp syntax
 
 Invented by John McCarthy in 1958, Lisp is one of the oldest programming languages that is still
-around. It has evolved into a whole lot of derivatives called dialects and ClojureScript is
+around. It has evolved into many derivatives called dialects and ClojureScript is
 one of them. It's a programming language written in its own data structures, originally lists enclosed in
 parenthesis, but Clojure(Script) has evolved the Lisp syntax with more data structures making
 it more pleasant to write and read.
@@ -163,7 +163,7 @@ behind the scenes into single character strings.
 
 ==== Collections
 
-Another big step in explaining a language, is to explain it's collections and collection
+Another big step in explaining a language, is to explain its collections and collection
 abstractions. _ClojureScript_ is not an exception in this rule.
 
 _ClojureScript_ comes with many types of different collections. The main difference between _ClojureScript_
@@ -187,7 +187,7 @@ Lists in _ClojureScript_ are repsesented by items enclosed between parenthesis:
 '(:foo :bar 2)
 ----
 
-As you can observe, all list examples are prefixed with the `'` char. This is because lists in lisp like
+As you can see, all list examples are prefixed with the `'` char. This is because lists in lisp like
 languages are often used to express things like function or macro calls. In that case
 the first item should be a symbol that will evaluate to a something callable and the rest of the list
 elemenents will be function parameters.
@@ -201,22 +201,19 @@ elemenents will be function parameters.
 ;; => (inc 1)
 ----
 
-As you see, if you will evaluate the `(inc 1)` without prefixing it with `'` char, it will resolve
-the `inc` symbol to the *inc* function and will execute it with `1` as first parameter. Resulting
-in a `2` as return value.
+As you see, if you  evaluate `(inc 1)` without prefixing it with `'`, it will resolve
+the `inc` symbol to the *inc* function and will execute it with `1` as first parameter returning the value `2`.
 
-Lists have the pecularity that they are very efficient if you access to it in a sequence mode or
-access to its first elements but are not very good option if you need random (index) acces to its
-elements.
+Lists are very efficient if you access it in a sequence mode or access its first elements
+but perform poorly if you need random (index) access.
 
 
 ===== Vectors
 
 Like lists, *Vectors*  store a series of values, but in this case with very efficient index access
-to its elements and its elements in difference with list are evaluated in order. Do not worry, in
-below chapters we'll go depth in details but at this moment is more that enough.
+and elements evaluated in order. We'll go over the details in depth later but this serves as an introduction.
 
-Vectors uses square brakets for the literal syntax, let see some examples:
+Vectors uses square brakets for the literal syntax, lets see some examples:
 
 [source, clojure]
 ----
@@ -224,14 +221,14 @@ Vectors uses square brakets for the literal syntax, let see some examples:
 [3 4 5 nil]
 ----
 
-Like lists, vectors can contain objects of any type, as you can observe the previos example.
+Like lists, vectors can contain objects of any type, as you can see in the previous example.
 
 
 ===== Maps
 
-Maps is a collection abstraction that allows store unique keys associated with one value. In other
-languages are commonly known as hash-maps or dicts. Maps in _ClojureScript_ uses a
-curly braces as literal syntax.
+Maps are a collection abstraction that allows you to store key/value pairs. In other
+languages this type of structure is commonly known as a hash-map or dictionary. Map literals in
+_ClojureScript_ are written with the pairs between curly braces.
 
 [source, clojure]
 ----
@@ -239,8 +236,8 @@ curly braces as literal syntax.
 {:foobar [:a :b :c]}
 ----
 
-NOTE: Commas are frequently used for separate a key value pair but are completelly optional. In
-_ClojureScript_ syntax, comas are treated like spaces.
+NOTE: Commas are frequently used to separate a key value pair but are completelly optional. In
+_ClojureScript_ comas are treated just like spaces.
 
 Like Vectors, every item in a map literal is evaluated before the result is stored in a map, but
 the order of evaluation is not guaranteed.
@@ -250,23 +247,22 @@ the order of evaluation is not guaranteed.
 
 And finally, *Sets*.
 
-Sets stores in an unordered way zero or more unique items of any type. They,
-like maps, uses curly braces for its literal syntax with difference that uses a `#` as leading
-character:
+Sets are an unordered collection of zero or more unique items of any type. Like maps, sets use curly braces
+for their literal syntax with the difference being that sets use have a `#` preceding the curly braces:
 
 [source, clojure]
 ----
 #{1 2 3 :foo :bar}
 ----
 
-In below chapters we'll go depth in sets and other collection types explained in this chapter.
+In the following chapters we'll go into detail about sets and other collection types explained in this chapter.
 
 
 === Vars
 
-_ClojureScript_ is a mostly functional language and focused in immutability. Becuase of that, it does
-not has the concept of variables. The most closest analogy to variables are *vars*. The vars are
-represented by symbols and stores a single value together with metadata.
+_ClojureScript_ is a mostly functional language and focused on immutability. Becuase of that, it does
+not have the concept of traditional variables. The closest analogy to the variables of imperative languages
+are *vars*. Vars are represented by symbols and store a single value together with metadata.
 
 You can define a var using a `def` special form:
 
@@ -276,7 +272,7 @@ You can define a var using a `def` special form:
 (def y [1 2 3])
 ----
 
-The vars are always top level in the namespace. If you use `def` in a function call, the var will be defined
+Vars are always top level in the namespace. If you use `def` in a function call, the var will be defined
 at the namespace level.
 
 
@@ -284,15 +280,15 @@ at the namespace level.
 
 ==== The first contact
 
-It's time of make things happen. In _ClojureScript_, a function are first-class type. It behaves
-like any other type, you can pass it as parameter, you can return it as value, always respecting
-the lexical scope. _ClojureScript_ also has some features from dynamic scope but this will be discused
+It's time to make things happen. _ClojureScript_, has what are known as first class functions. They behave
+like any other type, you can pass them as parameters, you can return them as values, always respecting
+the lexical scope. _ClojureScript_ also has some features of dynamic scoping but this will be discused
 in other section.
 
 If you want know more about scopes, this link:http://en.wikipedia.org/wiki/Scope_%28computer_science[wikipedia article]
-is ver extensive and explain very well different types of scope.
+is very extensive and explains different types of scoping.
 
-As _ClojureScript_ is a lisp dialect, it uses the prefix notation for calling a function:
+As _ClojureScript_ is a lisp dialect, it uses prefix notation for calling a function:
 
 [source, clojure]
 ----
@@ -300,7 +296,7 @@ As _ClojureScript_ is a lisp dialect, it uses the prefix notation for calling a 
 ;; => 2
 ----
 
-The `inc` is a function and is part of _ClojureScript_ runtime, and `1` is a first positional
+In the example above `inc` is a function and is part of the _ClojureScript_ runtime, and `1` is the first
 argument for the `inc` function.
 
 [source, clojure]
@@ -309,18 +305,18 @@ argument for the `inc` function.
 ;; => 6
 ----
 
-The `+` symbol represents a `add` function, in ALGOL type of languages is an operator and only
+The `+` symbol represents an `add` function, and in ALGOL derived languages is an operator and only
 allows two parameters.
 
-The prefix notation has huge advantages, some of them not alwats obvious. _ClojureScript_ does not
-has distinction between a function and operator, everything is a function. The inmediate advantage
-is that the prefix notation allows an arbitrary number of arguments per "operator". Also, it eliminates
-per complete the problem of operator precedence.
+The prefix notation has many advantages, some of which are not always obvious. _ClojureScript_ does not
+make distinction between a function and an operator, everything is a function. The immediate advantage
+of this is that the prefix notation allows an arbitrary number of arguments per "operator". Also, it eliminates
+the problem of operator precedence.
 
 
-==== Defining own functions
+==== Defining functions
 
-The function can be defined with `fn` special form. This is aspect of function definition:
+Functions can be defined with the `fn` special form.:
 
 [source, clojure]
 ----
@@ -328,7 +324,7 @@ The function can be defined with `fn` special form. This is aspect of function d
   (+ (inc param1) (inc param2)))
 ----
 
-You can define a function and call it in same time (in a single expression):
+You can also define a function and call it in same time (in a single expression):
 
 [source, clojure]
 ----
@@ -336,9 +332,9 @@ You can define a function and call it in same time (in a single expression):
 ;; => 2
 ----
 
-Let start creating named functions. But that is means named function really? Is very simple,
-as in _ClojureScript_ functions are fist-class and behaves like any other value, naming a function
-is just store it in a var:
+Let's start creating named functions. What is a named function you ask? Simply put,
+in _ClojureScript_ functions are fist-class citizens and behave like any other value, naming a function
+is just storing it in a var:
 
 [source, clojure]
 ----
@@ -348,7 +344,7 @@ is just store it in a var:
 ;; => 2
 ----
 
-_ClojureScript_ also offers the `defn` macro as a little sugar syntax for make function definition
+_ClojureScript_ also offers the `defn` macro as a little syntactic sugar to make function definition
 more idiomatic:
 
 [source, clojure]
@@ -362,11 +358,11 @@ more idiomatic:
 
 ==== Function with multiple arities
 
-_ClojureScript_ also comes with ability to define functions with arbitrary number of arities. The
-syntax is almost the same as define standard function with the difference that it has more that
+_ClojureScript_ also comes with the ability to define functions with arbitrary numbers of arities. The
+syntax is almost the same as we use to define standard functions, the difference being that it has more than
 one body.
 
-Let see an example, surelly it will explain it much better:
+Let's see an example, surely it will explain it much better:
 
 [source, clojure]
 ----
@@ -377,8 +373,8 @@ Let see an example, surelly it will explain it much better:
    (+ x increment)))
 ----
 
-And there some examples using the previously defined multi arity function. I can observe that
-if you call a function with wrong number of parameters the compiler will emit an error about that:
+Next we have some examples using the previously defined multi-arity function. We can see that
+if you call a function with wrong number of parameters the compiler will emit an error telling you:
 
 [source, clojure]
 ----
@@ -393,7 +389,7 @@ if you call a function with wrong number of parameters the compiler will emit an
 ----
 
 [NOTE]
-Explaining the "arity" is out of scope of this book, however you can read about that in this
+Explaining the concept of "arity" is out of the scope of this book, however you can read about that in this
 link:http://en.wikipedia.org/wiki/Arity[wikipedia article].
 
 
@@ -412,14 +408,14 @@ are functions that will be able accept arbitrary number of arguments:
 ;; => #{1 2 3}
 ----
 
-The way to denone a variadic function is using the `&` simbol prefix on its arguments vector.
+The way to denote a variadic function is using the `&` simbol prefix on its arguments vector.
 
 
 ==== Short syntax for anonymous functions
 
-_ClojureScript_ provides a shorter syntax for define anonymos (and almost always one liner) functions
-using the `#()` reader macro. Reader macros are "special" expressions that in compile time will be
-transformed to the apropiate language form. In this case to some expression that uses `fn` special
+_ClojureScript_ provides a shorter syntax for defining anonymous (and almost always one liner) functions
+using the `#()` reader macro. Reader macros are "special" expressions that at compile time will be
+transformed to the appropiate language form. In this case to an expression that uses the `fn` special
 form.
 
 [source, clojure]
@@ -430,13 +426,13 @@ form.
 ;; => #{1 2}
 ----
 
-The `%1`, `%2`, `%N` are simple markers for parameter positions that are implicitly declared when
-the reader macro will be interpreted and converted to `fn` expression.
+`%1`, `%2`, and `%N` are all simple markers for parameter positions that are implicitly declared when
+the reader macro will be interpreted and converted to the `fn` expression.
 
 Also, if a function only accepts one argument, you can ommit the number after `%` symbol, the
 function `#(set %1)` can be written `++#++(set %)`.
 
-Additionaly, this syntax also supports the variadic form with `%&` symbol:
+Additionally, this syntax also supports the variadic form with `%&` symbol:
 
 [source, clojure]
 ----
@@ -449,14 +445,14 @@ Additionaly, this syntax also supports the variadic form with `%&` symbol:
 
 === Flow control
 
-_ClojureScript_ has a great different approaches for flow control.
+_ClojureScript_ has many different approaches for flow control.
 
 
 ==== Branching with `if`
 
-Let start with a basic one: `if`. In _ClojureScript_ the `if` is an expression and not an
-statement, and it has three parametes: first one the condition expression, the second one
-a expression that will evalute if a condition expression will evalute in a logical true,
+Let's start with a basic one: `if`. In _ClojureScript_ `if` is an expression and not a
+statement, it has three parameters: the first is the condition expression, the second one
+an expression that will evalute if a condition expression evaluates as logically true,
 and the third one will evaluated otherwise.
 
 [source, clojure]
@@ -474,16 +470,16 @@ and the third one will evaluated otherwise.
 ;; => "negative"
 ----
 
-If you want do more that one thing in one of two expressions, you can use block expression `do`, that
-is will explained in next section.
+If you want do more than one thing in one of two expressions, you can use the block expression `do`, that
+will be explained in the next section.
 
 
 ==== Branching with `cond`
 
-Sometimes, the `if` expression can be slightly limited because it does not have the "else if" part
-for add more that one condition. The cond comes to the rescue.
+Sometimes, the `if` expression can be slightly limiting because it lacks an "else if" to check multiple conditions
+one after another. No worries though, because the `cond` expression comes to the rescue.
 
-With `cond` expression, you can define multiple conditions:
+With the `cond` expression, you can define multiple conditions:
 
 [source, clojure]
 ----
@@ -501,8 +497,8 @@ With `cond` expression, you can define multiple conditions:
 ;; => "negative"
 ----
 
-Also, cond has an other form, called `condp`, that works very similar to the simple `cond`
-but looks more cleaner when a predicate is always the same for all conditions:
+Another form, `condp`, works very similarly to the simple `cond` but looks cleaner when a predicate
+is the same for all conditions:
 
 [source, clojure]
 ----
@@ -523,13 +519,13 @@ but looks more cleaner when a predicate is always the same for all conditions:
 
 ==== Branching with `case`
 
-The `case` branching expression has very similar use case that our previous example with
-`condp`. The main difference is that, case always uses the `=` predicate/function and its
-branching values are evaluated at compile time. This results in a more prerformant form
-that `cond` or `condp` but has the disadvantage of that the condition value should be
+The `case` branching expression has a very similar use case to our previous example of
+`condp`. The main difference is that case always uses the `=` predicate/function and its
+branching values are evaluated at compile time. This results in a more performant form
+than `cond` or `condp` but has the disadvantage that the condition value should be
 a static value.
 
-Let see the same example as previous one but using `case`:
+Let's see the same example as last time but using `case` this time:
 
 [source, clojure]
 ----
@@ -552,12 +548,12 @@ Let see the same example as previous one but using `case`:
 
 ==== Locals
 
-_ClojureScript_ does not has the variables concepts, but it does have locals. Locals as per
-usual, are immutable and if you try mutate them, the compiller will throw an error.
+_ClojureScript_ does not have the traditional concept of variables , but it does have locals.
+Locals as per usual, are immutable and if you try to mutate them, the compiler will throw an error.
 
-The locals are defined with `let` expression. It starts with a vector as first parameter
-followed by arbitrary number of expresions. The first parameter should contain a arbitrary
-number of pairs that starts with a binding form followed of an expression whose value will
+Locals are defined with the `let` expression. It starts with a vector as the first parameter
+followed by an arbitrary number of expresions. The first parameter should contain an arbitrary
+number of pairs that start with a binding form followed by an expression whose value will
 be bound to this new local for the remainer of the let expression.
 
 [source, clojure]
@@ -572,11 +568,11 @@ be bound to this new local for the remainer of the let expression.
 
 ==== Blocks
 
-The blocks in _ClojureScript_ can be done using the `do` expression and is ususally used
-for side effects, like printing something in console or write a log in a logger. Something
+Blocks in _ClojureScript_ can be written using the `do` expression and is ususally used
+for side effects such as printing something to the console or writing to a log. Something
 for that the return value is not necesary.
 
-The `do` expression accept as parameter an arbitrary number of other expressions but return
+The `do` expression accepts an arbitrary number of other expressions as its paramter(s), but returns
 the return value only from the last one:
 
 [source, clojure]
@@ -590,26 +586,26 @@ the return value only from the last one:
 ;; => 3
 ----
 
-The `let` expression, explained just in previous section, the body is very similar to the
-`do` expression. In fact, it is called that is has an implicit `do`.
+The `let` expression, which we explained above, has a body that is very similar to the
+`do` expression. In fact, it has an implicit `do`.
 
 
 ==== Loops
 
-The functional approach of _ClojureScript_, this causes that it does not have standard,
-well known statements based loops. The loops in clojurescript are handled using recursion.
-The recursion sometimes requires additional thinking about how model your problem in
+Since _ClojureScript_ has a functional approach it does not have the standard well known 
+statement based loops. The loops in _ClojuresSript_ are handled instead by using recursion.
+Recursion sometimes requires additional thinking about how to model your problem in
 a slightly different way than imperative languages.
 
-Also, many of the common patterns for which `for` is used in other languages are achieved
-through higher-order functions.
+Also, many of the common patterns which are solved using `for` in other languages are achieved
+using higher-order functions.
 
 
 ===== Looping with loop/recur
 
-Let's take a look at how to express loops using recursions with the `loop` and `recur` forms.
+Let's take a look at how to express loops using recursion with the `loop` and `recur` forms.
 `loop` defines a possibly empty list of bindings (notice the symmetry with `let`) and `recur`
-jumps execution after the looping point with new values for those bindings.
+jumps to the start of the loop with new values for those bindings.
 
 Let's see an example:
 
@@ -628,11 +624,11 @@ Let's see an example:
 ----
 
 In the above snippet, we bind the name `x` to the value `0` and execute the body. Since the
-condition is not met the first time is run we `recur`, incrementing the binding value with
+condition is not met the first time it's run we `recur`, incrementing the binding value with
 the `inc` function. We do this once more until the condition is met and, since there aren't
 more `recur` calls, exit the loop.
 
-Note that `loop` isn't the only point we can `recur` too, using `recur` inside a function
+Note that `loop` isn't the only point we can `recur` to, using `recur` inside a function
 executes the body of the function recursively with the new bindings:
 
 [source, clojure]
@@ -654,10 +650,10 @@ executes the body of the function recursively with the new bindings:
 
 ===== Replacing for loops with higher-order functions
 
-In imperative programming languages is common to use `for` loops for iterating over data and
-transforming it, usually the intent being one of the following:
+In imperative programming languages it is common to use `for` loops for iterating over data and
+transforming it, usually with one of the following objectives:
 
-- Transform every value in the iterable yielding another iterable
+- Transform every value in the iterable and yielding another iterable
 - Filter the elements of the iterable by a certain criteria
 - Convert the iterable to a value where each iteration depends on the result from the previous one
 - Run a computation for every value in the iterable
@@ -665,7 +661,7 @@ transforming it, usually the intent being one of the following:
 The above actions are encoded in higher-order functions and syntactic constructs in ClojureScript,
 let's see an example of the first three.
 
-For transforming every value in a iterable data structure we use the `map` function, which takes a
+For transforming every value in an iterable data structure we use the `map` function, which takes a
 function and a sequence and applies the function to every element:
 
 [source, clojure]
@@ -701,7 +697,7 @@ In ClojureScript the `for` construct isn't used for iteration but for generating
 also known as "sequence comprehension". It offers a small domain specific language for declaratively
 building lazy sequences.
 
-It takes a vector of bindings and a expression and generates a sequence of the result of evaluating the
+It takes a vector of bindings and a expression and generates a sequence of the results of evaluating the
 expression, let's take a look at an example:
 
 [source, clojure]
