@@ -1502,19 +1502,19 @@ A protocol looks like this:
   (sample-method [this] "A doc string of the function associated with the protocol."))
 ----
 
-NOTE: the "I" prefix is very common for make clear separation of protocols and types. In clojute
-comunity it there many dispare optionions about the use of the "I" prefix. In our opinion is an
+NOTE: the "I" prefix is very common for make clear separation of protocols and types. In clojure
+community it there many disparate opinions about the use of the "I" prefix. In our opinion is an
 acceptable solution for avoid name clashing and confusions.
 
 From the user perspective, protocol functions are simple and plain functions defined in the namespace
-where the protocol is defined. As you can intuit, this makes protocols completelly namespaces and
+where the protocol is defined. As you can intuit, this makes protocols completely namespaces and
 avoid any accidental clashing between implemented protocols for same type.
 
 
 ===== Extending to existing types
 
-On of the big strengths of protocols is the ability to extend existing and maybe third party types
-and this operation can be done in different ways. The majority of time you will be tend to use
+One of the strengths of protocols is the ability to extend both native and third party types.
+Though this operation is highly flexible, the majority of time you will be tend to use
 the *extend-protocol* or the *extend-type* macros.
 
 This is the aspect on how *extend-type* macro can be used:
@@ -1536,9 +1536,9 @@ This is the aspect on how *extend-type* macro can be used:
     ))
 ----
 
-You can observe that with *extend-type* you are extending one type with different protocols
-in one expression. In difference to that, *extend-protocol* do just the inverse operation. It,
-given a protocol, add implementation for it to multiple types:
+You can observe that with *extend-type* you are extending a single type with different protocols
+in a single expression. In comparison, *extend-protocol* does just the inverse operation:
+given a protocol, it adds implementation for multiple types:
 
 [source, clojure]
 ----
@@ -1554,17 +1554,17 @@ given a protocol, add implementation for it to multiple types:
     ))
 ----
 
-It there other ways to extend a type with a protocol implementation but them will be covered
-in other section of this book.
+There are other ways to extend a type with a protocol implementation, but they will be covered
+in a later section of this book.
 
 
 ===== Participate in ClojureScript abstractions
 
-ClojureScript it self is built up on abstractions defined as protocols, so almost all behavior
-in the _ClojureScript_ language can be adopted for third party libraries. Let's go to see an
+ClojureScript it self is built up on abstractions defined as protocols. Almost all behavior
+in the _ClojureScript_ language itself can be adopted for third party libraries. Let's go to see a
 real life example.
 
-In previous sections we have explained different kind of builtin collections, in this case we
+In previous sections we have explained different kinds of built-in collections. In this case we
 will use the *Set*'s. See this snipped of code:
 
 [source, clojure]
@@ -1575,11 +1575,11 @@ will use the *Set*'s. See this snipped of code:
 ;; => (1 2 1)
 ----
 
-But, that it happens where? In this case, the set type implements the _ClojureScript_ internal
+What happened? In this case, the _set_ type implements the _ClojureScript_ internal
 `IFn` protocol that represents an abstraction for functions or any thing callable. So it can be
 used like a callable predicate in filter.
 
-Ok, but what it happens if we want use a regular expression as predicate function for filter
+Ok, but what happens if we want use a regular expression as predicate function for filtering
 a collection of strings:
 
 [source, clojure]
@@ -1588,8 +1588,8 @@ a collection of strings:
 ;; TypeError: Cannot call undefined
 ----
 
-Obviosly, this exception is raised because the RegExp type does not implements the `IFn` protocol
-so it can not behave like a callable. But it can be easy fixed:
+The exception is raised because the RegExp type does not implements the `IFn` protocol
+so it can not behave like a callable, but that can be easily fixed:
 
 [source, clojure]
 ----
@@ -1611,8 +1611,8 @@ Now, you will be able use the regex instances as predicates in filter operation:
 
 ===== Protocols introspection
 
-_ClojureScript_ comes with a usefull function that allows runtime introspection: `satisfies?`. The
-purpose of this function is know in runtime if some object (instance of some type) satisfies the
+_ClojureScript_ comes with a useful function that allows runtime introspection: `satisfies?`. The
+purpose of this function is know during runtime if some object (ie an instance of some type) satisfies the
 concrete protocol.
 
 So, with previous examples, if we check if a set instance satisfies a *IFn* protocol, it should
@@ -1620,7 +1620,7 @@ return `true`:
 
 [source, clojure]
 ----
-(satisfies IFn #{1})
+(satisfies? IFn #{1})
 ;; => true
 ----
 
@@ -1863,7 +1863,7 @@ Once the type has beed defined, we can create an instance of our `User`:
 (def user (User. "Triss" "Merigold"))
 ----
 
-And its fields can be accesset using the prefix-dot notation:
+And its fields can be accessed using the prefix-dot notation:
 
 [source, clojure]
 ----
