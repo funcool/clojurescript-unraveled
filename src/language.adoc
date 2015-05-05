@@ -572,12 +572,12 @@ value will be bound to this new local for the remainder of the let expression.
 
 ==== Blocks
 
-The blocks in _ClojureScript_ can be done using the `do` expression and is ususally used
-for side effects, like printing something in console or write a log in a logger. Something
-for that the return value is not necesary.
+Blocks in _ClojureScript_ can be accomplished using the `do` form and are usually used for
+side effects, like printing something to the console or writing a log with a logger. Side
+effects make the order of evaluation observable by mutating state.
 
-The `do` expression accept as parameter an arbitrary number of other expressions but return
-the return value only from the last one:
+The `do` form accepts an arbitrary number of expressions but returns the value only from
+the final expression:
 
 [source, clojure]
 ----
@@ -590,8 +590,8 @@ the return value only from the last one:
 ;; => 3
 ----
 
-The `let` expression, explained just in previous section, the body is very similar to the
-`do` expression. In fact, it is called that is has an implicit `do`.
+The `let` expression, explained in previous section, the body is very similar to the `do`
+expression. In fact, it is said to have an implicit `do`.
 
 
 ==== Loops
