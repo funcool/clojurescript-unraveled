@@ -1,7 +1,7 @@
 === First steps with lisp syntax
 
 Invented by John McCarthy in 1958, Lisp is one of the oldest programming languages that is still
-around. It has evolved into a whole lot of derivatives called dialects and ClojureScript is
+around. It has evolved into many derivatives called dialects and ClojureScript is
 one of them. It's a programming language written in its own data structures, originally lists enclosed in
 parenthesis, but Clojure(Script) has evolved the Lisp syntax with more data structures making
 it more pleasant to write and read.
@@ -163,7 +163,7 @@ behind the scenes into single character strings.
 
 ==== Collections
 
-Another big step in explaining a language, is to explain it's collections and collection
+Another big step in explaining a language, is to explain its collections and collection
 abstractions. _ClojureScript_ is not an exception in this rule.
 
 _ClojureScript_ comes with many types of different collections. The main difference between _ClojureScript_
@@ -187,7 +187,7 @@ Lists in _ClojureScript_ are repsesented by items enclosed between parenthesis:
 '(:foo :bar 2)
 ----
 
-As you can observe, all list examples are prefixed with the `'` char. This is because lists in lisp like
+As you can see, all list examples are prefixed with the `'` char. This is because lists in lisp like
 languages are often used to express things like function or macro calls. In that case
 the first item should be a symbol that will evaluate to a something callable and the rest of the list
 elemenents will be function parameters.
@@ -201,22 +201,19 @@ elemenents will be function parameters.
 ;; => (inc 1)
 ----
 
-As you see, if you will evaluate the `(inc 1)` without prefixing it with `'` char, it will resolve
-the `inc` symbol to the *inc* function and will execute it with `1` as first parameter. Resulting
-in a `2` as return value.
+As you see, if you  evaluate `(inc 1)` without prefixing it with `'`, it will resolve
+the `inc` symbol to the *inc* function and will execute it with `1` as first parameter returning the value `2`.
 
-Lists have the pecularity that they are very efficient if you access to it in a sequence mode or
-access to its first elements but are not very good option if you need random (index) acces to its
-elements.
+Lists are very efficient if you access it in a sequence mode or access its first elements
+but perform poorly if you need random (index) access.
 
 
 ===== Vectors
 
 Like lists, *Vectors*  store a series of values, but in this case with very efficient index access
-to its elements and its elements in difference with list are evaluated in order. Do not worry, in
-below chapters we'll go depth in details but at this moment is more that enough.
+and elements evaluated in order. We'll go over the details in depth later but this serves as an introduction.
 
-Vectors uses square brakets for the literal syntax, let see some examples:
+Vectors uses square brakets for the literal syntax, lets see some examples:
 
 [source, clojure]
 ----
@@ -224,14 +221,14 @@ Vectors uses square brakets for the literal syntax, let see some examples:
 [3 4 5 nil]
 ----
 
-Like lists, vectors can contain objects of any type, as you can observe the previos example.
+Like lists, vectors can contain objects of any type, as you can see in the previous example.
 
 
 ===== Maps
 
-Maps is a collection abstraction that allows store unique keys associated with one value. In other
-languages are commonly known as hash-maps or dicts. Maps in _ClojureScript_ uses a
-curly braces as literal syntax.
+Maps are a collection abstraction that allows you to store ordered key/value pairs. In other
+languages this type of structure is commonly known as a hash-map or dict. Map literals in _ClojureScript_ are
+written with the pairs between curly braces.
 
 [source, clojure]
 ----
