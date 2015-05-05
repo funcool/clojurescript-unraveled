@@ -318,7 +318,7 @@ like any other type, you can pass them as parameters and you can return them as 
 the lexical scope. _ClojureScript_ also has some features of dynamic scoping, but this will be discused
 in other section.
 
-If you want know more about scopes, this link:http://en.wikipedia.org/wiki/Scope_%28computer_science[wikipedia article]
+If you want know more about scopes, this link:http://en.wikipedia.org/wiki/Scope_(computer_science)[wikipedia article]
 is very extensive and explains different types of scoping.
 
 As _ClojureScript_ is a Lisp dialect, it uses the prefix notation for calling a function:
