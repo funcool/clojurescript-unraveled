@@ -36,7 +36,7 @@ You can download it using wget:
 wget https://github.com/clojure/clojurescript/releases/download/r3211/cljs.jar
 ----
 
-The _ClojureScript_ compiler is packages in a standalone executable jar file, so this is the unique
+The _ClojureScript_ compiler is packaged in a standalone executable jar file, so this is the unique
 file and jdk8 that you need for compile the _ClojureScript_ source code to javascript.
 
 
@@ -134,7 +134,7 @@ $ iojs main.js
 
 ==== Compile for the Browser
 
-In this section we are going to create a similar "hello world" example aplication from the
+In this section we are going to create a similar "hello world" example application from the
 previous section to run in the browser environent. The minimal requirement for it
 is just a browser that can execute javascript.
 
@@ -222,7 +222,7 @@ browser and take a look in a development tools console. There should appear the 
 
 Surely, you have already experienced the slow startup of the _ClojureScript_ compiler. To solve this,
 the _ClojureScript_ standalone compiler also comes with tools to start a process to watch changes
-in some directory and perform an incremenetal compilation.
+in some directory and perform an incremental compilation.
 
 Start creating another build script, but in this case name it _watch.clj_:
 
