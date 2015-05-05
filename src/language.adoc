@@ -1152,10 +1152,10 @@ We can pass as many elements we want to add to `conj`; let's see it in action:
 
 ===== Laziness
 
-Most of ClojureScript sequence-returning functions generate lazy sequences instead of eagerly creating
+Most of ClojureScript's sequence-returning functions generate lazy sequences instead of eagerly creating
 a whole new sequence. Lazy sequences generate their contents as they are requested, usually when iterating
-over them. Laziness ensures that we don't do more work that we need to and gives us the possibility to
-treat potentially infinite sequence as regular ones.
+over them. Laziness ensures that we don't do more work than we need to and gives us the possibility of
+treating potentially infinite sequences as regular ones.
 
 TODO
 
@@ -1765,9 +1765,9 @@ And finally, we should add implementations. That is done with `defmethod` form:
 ----
 
 So, if you execute that function over a hash map containing the `:locale` and optionally
-the `:name` key, the multimethod firstly will call the dispatch function for determine the
-dispatch value, secondly it will search an implementation for that value, if it is found,
-it will execute it, in case contrary it will search the default implementation (if it
+the `:name` key, the multimethod will first call the dispatch function for determining the
+dispatch value, secondly it will search for an implementation of that value, if it is found,
+it will execute it, otherwise it will search for the default implementation (if it's
 specified) and execute it.
 
 [source, clojure]
@@ -1782,23 +1782,23 @@ specified) and execute it.
 ;; => "Hello Anonymous"
 ----
 
-If the default implementation is not specified, an exception will be raised notifying about
-that some value does not have a implementation for that multimethod.
+If the default implementation is not specified, an exception will be raised notifying us 
+that a value does not have an implementation for that multimethod.
 
 
 ==== Hierarchies
 
-Hierarchies is a way that _ClojureScript_ offers you build a whatever relations that your
-domain may require. The hierarchies are difined in term of relations betwen named objects,
+Hierarchies are a way that _ClojureScript_ allows you to build whatever relations your
+domain may require. Hierarchies are defined in terms of relations betwen named objects,
 such as symbols, keywords or types.
 
 The hierarchies can be defined globally or locally, depending on your needs. Like multimethods,
-hierarchies are not limited to single namespace. You can extend a hierarchy from any namespace,
-not necesary the one which they are defined.
+hierarchies are not limited to a single namespace. You can extend a hierarchy from any namespace,
+not just the one in which they are defined.
 
-The global namespace is more limited, for good reasons. Not namespaced keywords or symbols can
-not be used in the global hierarcy. That behavior helps prevent unexpected situations when
-two or more third party libraries uses the same symbol for different semantics.
+The global namespace is more limited, for good reason. Namespaced keywords or symbols cannot
+be used in the global hierarcy. This behavior helps prevent unexpected situations when
+two or more third party libraries use the same symbol for different semantics.
 
 ===== Defining a hierarchy
 
@@ -1810,20 +1810,20 @@ The hierarchy relations should be established using `derive` function:
 (derive ::box ::shape)
 ----
 
-We have just defined a set of relationships between namespaced keywords, in this case the
+We have just defined a set of relationships between namespaced keywords, in this case
 `::circle` is a child of `::shape` and `::box` is also a child of `::shape`.
 
 TIP: The `::circle` keyword syntax is a shortland for `:current.ns/circle`. So if you are executing
-it in a repl, sureally that `::circle` will be evaluated to `:cljs.user/circe`.
+it in a repl, then `::circle` will be evaluated to `:cljs.user/circe`.
 
 
 ===== Hierarchies introspection
 
-_ClojureScript_ comes with little toolset of functions that allow runtime introspection
-of the global or local defined hierarchies. These toolset consists on thre functions:
-`isa?`, `anscestors`, and `descendants`.
+_ClojureScript_ comes with a little toolset of functions that allow runtime introspection
+of the global or locally defined hierarchies. These tools consist of three functions:
+`isa?`, `ancestors`, and `descendants`.
 
-Let see an example on how it can be used with hierarchy defined in previous example:
+Let's see an example of how it can be used with the hierarchy defined in previous example:
 
 [source, clojure]
 ----
@@ -1843,9 +1843,9 @@ Let see an example on how it can be used with hierarchy defined in previous exam
 
 ===== Local defined hierarchies
 
-As we mentioned previously, in _ClojureScript_ you also can define local hierarchies. This can be
-done with `make-hierarchy` function. And this is the aspect of how you can replicate the previous
-example but using the local hierarchy:
+As mentioned previously; in _ClojureScript_ you also can define local hierarchies. This can be
+done with the `make-hierarchy` function. Here is how you can replicate the previous
+example, this time using the local hierarchy:
 
 [source, clojure]
 ----
@@ -1854,7 +1854,7 @@ example but using the local hierarchy:
            (derive :circle :shape)))
 ----
 
-Now, if you can use the same introspection functions with that, locally defined hierarchy:
+You can also use the same introspection functions with a locally defined hierarchy:
 
 [source, clojure]
 ----
@@ -1872,11 +1872,11 @@ return false.
 
 ===== Hierarchies in multimethods
 
-One of the big advantages of hierarchies, is that they works very well together with multimethods.
-Because, multimethods by default uses the `isa?` function for the last step of dispatching.
+One of the big advantages of hierarchies is that they work very well with multimethods.
+This is because multimethods, by default, use the `isa?` function for the last step of dispatching.
 
-Let see an example for clearly understand that it means. Firstly define the multimethod with
-`defmulti` form:
+Let's see an example so we can clearly understand what this means. Firstly we define the multimethod with
+the `defmulti` form:
 
 [source, clojure]
 ----
@@ -1887,10 +1887,10 @@ Let see an example for clearly understand that it means. Firstly define the mult
   :hierarchy h)
 ----
 
-With `:hierarchy` keyword parameter we indicate to the multimethod that hierarchy we want to use,
-if it is not specified, the global hierarchi will be used.
+With the `:hierarchy` keyword parameter we indicate to the multimethod the hierarchy that we want to use. Left
+unspecified, the global hierarchy will be used.
 
-Secondly, define a implementation for our multimethod using the `defmethod` form:
+Secondly, we define an implementation for our multimethod using the `defmethod` form:
 
 [source, clojure]
 ----
@@ -1907,7 +1907,7 @@ Secondly, define a implementation for our multimethod using the `defmethod` form
   "Unexpected object")
 ----
 
-Now, let see what is happens if we execute that function with a box:
+Now, let's see what happens if we execute that function with a box:
 
 [source, clojure]
 ----
@@ -1915,9 +1915,10 @@ Now, let see what is happens if we execute that function with a box:
 ;; => "A box shape"
 ----
 
-Now everything works as expected, the multimethod executes the direct matching implementation
-for the given parameter. But that is happens if we execute the same function but with `:circle`
-keyword as parameter, that does not have the direct matching dispatch value:
+Now everything works as expected because the multimethod executes the direct matching implementation
+for the given parameter. Next, let's see what happens if we execute the same function but with the `:circle`
+keyword as the parameter, which does not have the direct matching dispatch value:
+
 
 [source, clojure]
 ----
@@ -1925,8 +1926,8 @@ keyword as parameter, that does not have the direct matching dispatch value:
 ;; => "A generic shape"
 ----
 
-The multimethod automatically resolves it using the provided hierarchy, and that `:circle` is
-a descendat of `:shape`, so the `:shape` implementation is executed.
+The multimethod automatically resolves it using the provided hierarchy, and since `:circle` is
+a descendant of `:shape`, the `:shape` implementation is executed.
 
 
 === Data types
