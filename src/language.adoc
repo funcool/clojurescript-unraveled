@@ -519,13 +519,13 @@ is the same for all conditions:
 
 ==== Branching with `case`
 
-The `case` branching expression has very similar use case that our previous example with
-`condp`. The main difference is that, case always uses the `=` predicate/function and its
-branching values are evaluated at compile time. This results in a more prerformant form
-that `cond` or `condp` but has the disadvantage of that the condition value should be
+The `case` branching expression has a very similar use case to our previous example of
+`condp`. The main difference is that case always uses the `=` predicate/function and its
+branching values are evaluated at compile time. This results in a more performant form
+than `cond` or `condp` but has the disadvantage that the condition value should be
 a static value.
 
-Let see the same example as previous one but using `case`:
+Let's see the same example as last time but using `case` this time:
 
 [source, clojure]
 ----
@@ -548,12 +548,12 @@ Let see the same example as previous one but using `case`:
 
 ==== Locals
 
-_ClojureScript_ does not has the variables concepts, but it does have locals. Locals as per
-usual, are immutable and if you try mutate them, the compiller will throw an error.
+_ClojureScript_ does not have the traditional concept of variables , but it does have locals.
+Locals as per usual, are immutable and if you try to mutate them, the compiler will throw an error.
 
-The locals are defined with `let` expression. It starts with a vector as first parameter
-followed by arbitrary number of expresions. The first parameter should contain a arbitrary
-number of pairs that starts with a binding form followed of an expression whose value will
+Locals are defined with the `let` expression. It starts with a vector as the first parameter
+followed by an arbitrary number of expresions. The first parameter should contain an arbitrary
+number of pairs that start with a binding form followed by an expression whose value will
 be bound to this new local for the remainer of the let expression.
 
 [source, clojure]
@@ -568,11 +568,11 @@ be bound to this new local for the remainer of the let expression.
 
 ==== Blocks
 
-The blocks in _ClojureScript_ can be done using the `do` expression and is ususally used
-for side effects, like printing something in console or write a log in a logger. Something
+Blocks in _ClojureScript_ can be written using the `do` expression and is ususally used
+for side effects such as printing something to the console or writing to a log. Something
 for that the return value is not necesary.
 
-The `do` expression accept as parameter an arbitrary number of other expressions but return
+The `do` expression accepts an arbitrary number of other expressions as its paramter(s), but returns
 the return value only from the last one:
 
 [source, clojure]
@@ -586,19 +586,19 @@ the return value only from the last one:
 ;; => 3
 ----
 
-The `let` expression, explained just in previous section, the body is very similar to the
-`do` expression. In fact, it is called that is has an implicit `do`.
+The `let` expression, which we explained above, has a body that is very similar to the
+`do` expression. In fact, it has an implicit `do`.
 
 
 ==== Loops
 
-The functional approach of _ClojureScript_, this causes that it does not have standard,
-well known statements based loops. The loops in clojurescript are handled using recursion.
-The recursion sometimes requires additional thinking about how model your problem in
+Since _ClojureScript_ has a functional approach it does not have the standard well known 
+statement based loops. The loops in _ClojuresSript_ are handled instead by using recursion.
+Recursion sometimes requires additional thinking about how to model your problem in
 a slightly different way than imperative languages.
 
-Also, many of the common patterns for which `for` is used in other languages are achieved
-through higher-order functions.
+Also, many of the common patterns which are solved using `for` in other languages are achieved
+using higher-order functions.
 
 
 ===== Looping with loop/recur
