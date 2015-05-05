@@ -109,9 +109,9 @@ or are unclear about anything in the following example, the functions are discus
 
 ==== Symbols
 
-Symbols in _ClojureScript_ are very very similar to now known *Keywords*. But them
-instead of evaluating to themselves, are evalutated to something that them refers, that
-can be function, variables, ...
+Symbols in _ClojureScript_ are very very similar to now known *Keywords*. But,
+instead of evaluating to themselves, they are evalutated to something that refers to them, which
+can be function, variables, etc...
 
 Them are represented with something that not start with a number
 
