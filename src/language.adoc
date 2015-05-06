@@ -522,8 +522,8 @@ and the third expression will be evaluated otherwise.
 ;; => 0.05
 ----
 
-If you want do more than one thing in one of two expressions, you can use block expression `do`, which
-is explained in the next section.
+The block expression `do` can be used to have multiple expressions in an `if` branch.
+`do` is explained in the next section.
 
 
 ==== Branching with `cond`
