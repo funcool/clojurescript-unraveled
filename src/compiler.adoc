@@ -242,7 +242,7 @@ Now, execute that script like any other that you have executed in previous secti
 
 [source, bash]
 ----
-$ java -cp cljs.jar:src clojure.main build.clj
+$ java -cp cljs.jar:src clojure.main watch.clj
 Building ...
 Reading analysis cache for jar:file:/home/niwi/cljsbook/playground/cljs.jar!/cljs/core.cljs
 Compiling out/cljs/core.cljs
