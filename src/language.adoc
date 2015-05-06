@@ -457,7 +457,7 @@ The way to denote a variadic function is using the `&` symbol prefix on its argu
 
 ==== Short syntax for anonymous functions
 
-_ClojureScript_ provides a shorter syntax for defining anonymouss (and almost always one liner)
+_ClojureScript_ provides a shorter syntax for defining anonymous (and almost always one liner)
 functions using the `#()` reader macro. Reader macros are "special" expressions that will be
 transformed to the appropriate language form at compile time; in this case, to some expression
 that uses `fn` special form.
