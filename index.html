@@ -924,7 +924,7 @@ p { margin-bottom: 1.25rem; }
 <ul class="sectlevel3">
 <li><a href="#deftype">2.11.1. Deftype</a></li>
 <li><a href="#defrecord">2.11.2. Defrecord</a></li>
-<li><a href="#implement-protocols">2.11.3. Implement protocols</a></li>
+<li><a href="#implementing-protocols">2.11.3. Implementing protocols</a></li>
 <li><a href="#reify">2.11.4. Reify</a></li>
 </ul>
 </li>
@@ -943,7 +943,7 @@ p { margin-bottom: 1.25rem; }
 </li>
 <li><a href="#tooling-compiler">3. Tooling &amp; Compiler</a>
 <ul class="sectlevel2">
-<li><a href="#getting-started-with-clojurescript-compiler">3.1. Getting Started with ClojureScript compiler</a>
+<li><a href="#getting-started-with-the-clojurescript-compiler">3.1. Getting Started with the ClojureScript compiler</a>
 <ul class="sectlevel3">
 <li><a href="#execution-environments">3.1.1. Execution environments</a></li>
 <li><a href="#download-the-compiler">3.1.2. Download the compiler</a></li>
@@ -954,16 +954,16 @@ p { margin-bottom: 1.25rem; }
 </ul>
 </li>
 <li><a href="#working-with-the-repl">3.2. Working with the REPL</a></li>
-<li><a href="#build-dependency-management-tools">3.3. Build &amp; Dependency management tools</a>
+<li><a href="#build-and-dependency-management-tools">3.3. Build and Dependency management tools</a>
 <ul class="sectlevel3">
-<li><a href="#getting-started-with-leiningen">3.3.1. Getting started with leiningen.</a></li>
+<li><a href="#getting-started-with-leiningen">3.3.1. Getting started with Leiningen.</a></li>
 <li><a href="#getting-started-with-boot">3.3.2. Getting started with boot.</a></li>
 </ul>
 </li>
 <li><a href="#the-closure-library">3.4. The Closure Library</a></li>
 <li><a href="#browser-based-development">3.5. Browser based development</a>
 <ul class="sectlevel3">
-<li><a href="#using-third-party-javascript-libraries">3.5.1. Using third party javascript libraries</a></li>
+<li><a href="#using-third-party-javascript-libraries">3.5.1. Using third party JavaScript libraries</a></li>
 <li><a href="#modularizing-your-code">3.5.2. Modularizing your code</a></li>
 </ul>
 </li>
@@ -1570,14 +1570,14 @@ are functions that will be able to accept an arbitrary number of arguments:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The way to denote a variadic function is using the <code>&amp;</code> simbol prefix on its arguments vector.</p>
+<p>The way to denote a variadic function is using the <code>&amp;</code> symbol prefix on its arguments vector.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="short-syntax-for-anonymous-functions"><a class="link" href="#short-syntax-for-anonymous-functions">2.4.5. Short syntax for anonymous functions</a></h4>
 <div class="paragraph">
-<p><em>ClojureScript</em> provides a shorter syntax for defining anonymouss (and almost always one liner)
-functions using the <code>#()</code> reader macro. Reader macros are "special" expressions that will be
+<p><em>ClojureScript</em> provides a shorter syntax for defining anonymous functions using
+the <code>#()</code> reader macro (usually leads to one liners). Reader macros are "special" expressions that will be
 transformed to the appropriate language form at compile time; in this case, to some expression
 that uses <code>fn</code> special form.</p>
 </div>
@@ -1648,8 +1648,8 @@ and the third expression will be evaluated otherwise.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>If you want do more than one thing in one of two expressions, you can use block expression <code>do</code>, which
-is explained in the next section.</p>
+<p>The block expression <code>do</code> can be used to have multiple expressions in an <code>if</code> branch.
+<code>do</code> is explained in the next section.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2685,13 +2685,13 @@ ClojureScript source you have seen something like this at begining of the file:<
 </div>
 </div>
 <div class="paragraph">
-<p>Namespaces are dynamic and you can create one at any time, but the convention is to have one namespace
-per file. So, the namespace definition usually is at begining of the file, followed by an optional
+<p>Namespaces are dynamic, meaning you can create one at any time. The convention however, is to have one namespace
+per file. Naturally, a namespace definition is usually at the beginning of the file, followed by an optional
 docstring.</p>
 </div>
 <div class="paragraph">
 <p>Previously we have explained vars and symbols. Every var that you define will be associated
-with one namespace. If you do not define a concrete namespace, the default one called "user" will be
+with it&#8217;s namespace. If you do not define a concrete namespace then the default one called "user" will be
 used:</p>
 </div>
 <div class="listingblock">
@@ -2704,8 +2704,8 @@ used:</p>
 <div class="sect3">
 <h4 id="loading-other-namespaces"><a class="link" href="#loading-other-namespaces">2.9.2. Loading other namespaces</a></h4>
 <div class="paragraph">
-<p>Defining a namespace and vars in it is really easy, but it is not very useful if we can&#8217;t
-use definitions from other namespaces. For this purpose, the <code>ns</code> macro also offers a simple way to load other
+<p>Defining a namespace and the vars in it is really easy, but it&#8217;s not very useful if we can&#8217;t
+use them from other namespaces. For this purpose, the <code>ns</code> macro offers a simple way to load other
 namespaces.</p>
 </div>
 <div class="paragraph">
@@ -2726,10 +2726,10 @@ namespaces.</p>
 functions from different namespaces.</p>
 </div>
 <div class="paragraph">
-<p>This works. It lets you access other namespaces, but is very boring always write the complete namespace
-name for access to its vars and functions. It will be especially uncomfortable if a namespace name
-is very large. To solve that, you can use the <code>:as</code> directive to create an additional (usually
-shorter) alias to the namespace. This is how it can be done:</p>
+<p>While this will let you access other namespaces, it&#8217;s also repetitive and overly verbose. It will be especially
+uncomfortable if the name of a  namespace is very large. To solve that, you can use the <code>:as</code> directive to
+create an additional (usually shorter) alias to the namespace.
+This is how it can be done:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2761,8 +2761,8 @@ functions are now part of your namespace, and you do not need to qualify them at
 </div>
 <div class="paragraph">
 <p>And finally, you should know that everything located in the <code>cljs.core</code> namespace is automatically
-loaded and you should not require it explicitly. Sometimes you will want to declare vars that will clash
-with those defined in the <code>cljs.core</code> namespace. To do this, the <code>ns</code> macro offers another directive that
+loaded and you should not require it explicitly. Sometimes you may want declare vars that will clash
+with some others defined in the <code>cljs.core</code> namespace. To do this, the <code>ns</code> macro offers another directive that
 allows you to exclude specific symbols and prevent them from being automatically loaded.</p>
 </div>
 <div class="paragraph">
@@ -2805,21 +2805,19 @@ bad practice.</p>
 consistent behavior when this happens.</p>
 </div>
 <div class="paragraph">
-<p>These symptoms are commonly called the "expression problem".</p>
-</div>
-<div class="paragraph">
-<p>TODO: add link to expression problem description</p>
+<p>These symptoms are commonly called the "expression problem".
+see <a href="http://en.wikipedia.org/wiki/Expression_problem" class="bare">http://en.wikipedia.org/wiki/Expression_problem</a> for more details</p>
 </div>
 <div class="sect3">
 <h4 id="protocols"><a class="link" href="#protocols">2.10.1. Protocols</a></h4>
 <div class="paragraph">
-<p>The <em>ClojureScript</em> primitive for defining "interfaces" is called a Protocol. A protocol consists in
-a name and a set of functions. All functions have at least one argument corresponding to
+<p>The <em>ClojureScript</em> primitive for defining "interfaces" is called a Protocol. A protocol consists of
+a name and set of functions. All the functions have at least one argument corresponding to the
 <code>this</code> in javascript or <code>self</code> in Python.</p>
 </div>
 <div class="paragraph">
-<p>Protocols provide a type based polymorphism, and the dispatch is always done by the
-first argument previously mentioned as <code>this</code>.</p>
+<p>Protocols provide a type-based polymorphism, and the dispatch is always done by the
+first argument (equivalent to JavaScript’s <code>this</code>, as previously mentioned).</p>
 </div>
 <div class="paragraph">
 <p>A protocol looks like this:</p>
@@ -2840,27 +2838,27 @@ first argument previously mentioned as <code>this</code>.</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-the "I" prefix is very common for make clear separation of protocols and types. In clojure
-community it there many disparate opinions about the use of the "I" prefix. In our opinion is an
-acceptable solution for avoid name clashing and confusions.
+the "I" prefix is commonly used to designate the separation of protocols and types. In the clojure
+community there many different opinions about how the "I" prefix should be used. In our opinion, it is an
+acceptable solution to avoid name clashing and possible confusion.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>From the user perspective, protocol functions are simple and plain functions defined in the namespace
-where the protocol is defined. As you can intuit, this makes protocols completely namespaces and
-avoid any accidental clashing between implemented protocols for same type.</p>
+<p>From the user perspective, protocol functions are simply plain functions defined in the namespace
+where the protocol is defined. As you can intuit, this namespacing of protocols allows us to avoid
+any conflict between implemented protocols for the same type.</p>
 </div>
 <div class="sect4">
-<h5 id="extending-to-existing-types"><a class="link" href="#extending-to-existing-types">Extending to existing types</a></h5>
+<h5 id="extending-existing-types"><a class="link" href="#extending-existing-types">Extending existing types</a></h5>
 <div class="paragraph">
-<p>One of the strengths of protocols is the ability to extend both native and third party types.
-Though this operation is highly flexible, the majority of time you will be tend to use
+<p>One of the big strengths of protocols is the ability to extend existing and maybe third party types,
+and this operation can be done in different ways. The majority of time you will tend to use
 the <strong>extend-protocol</strong> or the <strong>extend-type</strong> macros.</p>
 </div>
 <div class="paragraph">
-<p>This is the aspect on how <strong>extend-type</strong> macro can be used:</p>
+<p>This is an example of how the <strong>extend-type</strong> macro can be used:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2881,8 +2879,8 @@ the <strong>extend-protocol</strong> or the <strong>extend-type</strong> macros.
 </div>
 <div class="paragraph">
 <p>You can observe that with <strong>extend-type</strong> you are extending a single type with different protocols
-in a single expression. In comparison, <strong>extend-protocol</strong> does just the inverse operation:
-given a protocol, it adds implementation for multiple types:</p>
+in a single expression. In comparison, <strong>extend-protocol</strong> does the inverse;
+given a protocol, it adds implementations for multiple types:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2900,19 +2898,19 @@ given a protocol, it adds implementation for multiple types:</p>
 </div>
 <div class="paragraph">
 <p>There are other ways to extend a type with a protocol implementation, but they will be covered
-in a later section of this book.</p>
+in another section of this book.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="participate-in-clojurescript-abstractions"><a class="link" href="#participate-in-clojurescript-abstractions">Participate in ClojureScript abstractions</a></h5>
 <div class="paragraph">
 <p>ClojureScript it self is built up on abstractions defined as protocols. Almost all behavior
-in the <em>ClojureScript</em> language itself can be adopted for third party libraries. Let&#8217;s go to see a
+in the <em>ClojureScript</em> language itself can be adapted to third party libraries. Let&#8217;s go to see a
 real life example.</p>
 </div>
 <div class="paragraph">
-<p>In previous sections we have explained different kinds of built-in collections. In this case we
-will use the <strong>Set</strong>'s. See this snipped of code:</p>
+<p>In previous sections we have explained the different kinds of built-in collections. For this example we
+will use the <strong>Set</strong>. See this snipped of code:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2924,7 +2922,7 @@ will use the <strong>Set</strong>'s. See this snipped of code:</p>
 </div>
 <div class="paragraph">
 <p>What happened? In this case, the <em>set</em> type implements the <em>ClojureScript</em> internal
-<code>IFn</code> protocol that represents an abstraction for functions or any thing callable. So it can be
+<code>IFn</code> protocol that represents an abstraction for functions or anything callable. This way it can be
 used like a callable predicate in filter.</p>
 </div>
 <div class="paragraph">
@@ -2939,7 +2937,7 @@ a collection of strings:</p>
 </div>
 <div class="paragraph">
 <p>The exception is raised because the RegExp type does not implements the <code>IFn</code> protocol
-so it can not behave like a callable, but that can be easily fixed:</p>
+so it cannot behave like a callable, but that can be easily fixed:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2949,6 +2947,11 @@ so it can not behave like a callable, but that can be easily fixed:</p>
    <span class="tok-p">([</span><span class="tok-nv">this</span> <span class="tok-nv">a</span><span class="tok-p">]</span>
      <span class="tok-p">(</span><span class="tok-nb">re-find </span><span class="tok-nv">this</span> <span class="tok-nv">a</span><span class="tok-p">))))</span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Let’s analyze this:  we are extending the <code>js/RegExp</code> type so that it implements the <code>invoke</code> function in the
+<code>IFn</code> protocol. To invoke a regular expression <code>a</code> as if it were a function, call the <code>re-find</code> function with
+the object of the function and the pattern.</p>
 </div>
 <div class="paragraph">
 <p>Now, you will be able use the regex instances as predicates in filter operation:</p>
@@ -2961,14 +2964,14 @@ so it can not behave like a callable, but that can be easily fixed:</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="protocols-introspection"><a class="link" href="#protocols-introspection">Protocols introspection</a></h5>
+<h5 id="introspection-using-protocols"><a class="link" href="#introspection-using-protocols">Introspection using Protocols</a></h5>
 <div class="paragraph">
 <p><em>ClojureScript</em> comes with a useful function that allows runtime introspection: <code>satisfies?</code>. The
-purpose of this function is know during runtime if some object (ie an instance of some type) satisfies the
+purpose of this function is to determinate at runtime if some object (instance of some type) satisfies the
 concrete protocol.</p>
 </div>
 <div class="paragraph">
-<p>So, with previous examples, if we check if a set instance satisfies a <strong>IFn</strong> protocol, it should
+<p>So, with previous examples, if we check if a <code>set</code> instance satisfies a <strong>IFn</strong> protocol, it should
 return <code>true</code>:</p>
 </div>
 <div class="listingblock">
@@ -2982,20 +2985,20 @@ return <code>true</code>:</p>
 <div class="sect3">
 <h4 id="multimethods"><a class="link" href="#multimethods">2.10.2. Multimethods</a></h4>
 <div class="paragraph">
-<p>We have previously talked about protocols, that solves a very common use case of polymorphism:
-dispatch by type. But in some circumstances the protocol&#8217;s approach it can be limiting. And
-here <strong>multimethods</strong> comes to the rescue.</p>
+<p>We have previously talked about protocols, which solve a very common use case of polymorphism:
+dispatch by type. But in some circumstances, the protocol approach it can be limiting. And
+here, <strong>multimethods</strong> come to the rescue.</p>
 </div>
 <div class="paragraph">
-<p>The <strong>multimethods</strong> are not limited to type dispatch only, instead, them also offers dispatch
-by types of multiple arguments, by value and allows ad-hoc hierarchies to be defined. Also,
-like protocols, is a "Open System" so you or any third parties can extend a multimethod for
+<p>These <strong>multimethods</strong> are not limited to type dispatch only; instead, they also offer dispatch
+by types of multiple arguments and by value. They also allow ad-hoc hierarchies to be defined. Also,
+like protocols, multimethods are an "Open System," so you or any third parties can extend a multimethod for
 new types.</p>
 </div>
 <div class="paragraph">
-<p>The basic consturctions of <strong>multimethods</strong> consists in <code>defmulti</code> and <code>defmethod</code> forms. The
-<code>defmulti</code> form is used for create the multimethod with initial dispatch function. This is
-a common look and feel of it:</p>
+<p>The basic constructions of <strong>multimethods</strong> are the <code>defmulti</code> and <code>defmethod</code> forms. The
+<code>defmulti</code> form is used to create the multimethod with an initial dispatch function. This is
+a model of what it looks like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3008,12 +3011,12 @@ a common look and feel of it:</p>
 </div>
 <div class="paragraph">
 <p>The anonymous function defined within the <code>defmulti</code> form is a dispatch function. It will
-be called in every call to <code>say-hello</code> function and should return some kind of mark object
-that will be used for dispatch. In our example it returns the contents of <code>:locale</code> key
+be called in every call to <code>say-hello</code> function and should return some kind of marker object
+that will be used for dispatch. In our example it returns the contents of the <code>:locale</code> key
 of the first argument.</p>
 </div>
 <div class="paragraph">
-<p>And finally, we should add implementations. That is done with <code>defmethod</code> form:</p>
+<p>And finally, you should add implementations. That is done with <code>defmethod</code> form:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3023,20 +3026,20 @@ of the first argument.</p>
 
 <span class="tok-p">(</span><span class="tok-kd">defmethod </span><span class="tok-nv">say-hello</span> <span class="tok-ss">:es</span>
   <span class="tok-p">[</span><span class="tok-nv">person</span><span class="tok-p">]</span>
-  <span class="tok-p">(</span><span class="tok-nb">str </span><span class="tok-s">&quot;Hola &quot;</span> <span class="tok-p">(</span><span class="tok-ss">:name</span> <span class="tok-nv">person</span> <span class="tok-s">&quot;Anonimo&quot;</span><span class="tok-p">)))</span></code></pre>
+  <span class="tok-p">(</span><span class="tok-nb">str </span><span class="tok-s">&quot;Hola &quot;</span> <span class="tok-p">(</span><span class="tok-ss">:name</span> <span class="tok-nv">person</span> <span class="tok-s">&quot;Anónimo&quot;</span><span class="tok-p">)))</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>So, if you execute that function over a hash map containing the <code>:locale</code> and optionally
-the <code>:name</code> key, the multimethod will first call the dispatch function for determining the
-dispatch value, secondly it will search for an implementation of that value, if it is found,
-it will execute it, otherwise it will search for the default implementation (if it&#8217;s
-specified) and execute it.</p>
+the <code>:name</code> key, the multimethod will first call the dispatch function to determine the
+dispatch value, then it will search for an implementation for that value. If an implementation
+is found, the dispatcher will execute it. Otherwise, the dispatch will search for a default implementation
+(if one is specified) and execute it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">say-hello</span> <span class="tok-p">{</span><span class="tok-ss">:locale</span> <span class="tok-ss">:es</span><span class="tok-p">})</span>
-<span class="tok-c1">;; =&gt; &quot;Hola Anonymo&quot;</span>
+<span class="tok-c1">;; =&gt; &quot;Hola Anónimo&quot;</span>
 
 <span class="tok-p">(</span><span class="tok-nf">say-hello</span> <span class="tok-p">{</span><span class="tok-ss">:locale</span> <span class="tok-ss">:en</span> <span class="tok-ss">:name</span> <span class="tok-s">&quot;Ciri&quot;</span><span class="tok-p">})</span>
 <span class="tok-c1">;; =&gt; &quot;Hello Ciri&quot;</span>
@@ -3046,31 +3049,31 @@ specified) and execute it.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>If the default implementation is not specified, an exception will be raised notifying us
-that a value does not have an implementation for that multimethod.</p>
+<p>If the default implementation is not specified, an exception will be raised notifying you
+that some value does not have a implementation for that multimethod.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="hierarchies"><a class="link" href="#hierarchies">2.10.3. Hierarchies</a></h4>
 <div class="paragraph">
-<p>Hierarchies are a way that <em>ClojureScript</em> allows you to build whatever relations your
-domain may require. Hierarchies are defined in terms of relations betwen named objects,
+<p>Hierarchies are <em>ClojureScript</em>’s way to let you build whatever relations that your
+domain may require. The hierarchies are difined in term of relations betwen named objects,
 such as symbols, keywords or types.</p>
 </div>
 <div class="paragraph">
 <p>The hierarchies can be defined globally or locally, depending on your needs. Like multimethods,
 hierarchies are not limited to a single namespace. You can extend a hierarchy from any namespace,
-not just the one in which they are defined.</p>
+not necessarily the one in which they are defined.</p>
 </div>
 <div class="paragraph">
-<p>The global namespace is more limited, for good reason. Namespaced keywords or symbols cannot
-be used in the global hierarcy. This behavior helps prevent unexpected situations when
+<p>The global namespace is more limited, for good reasons. Keywords or symbols that are not namespaced can
+not be used in the global hierarchy. That behavior helps prevent unexpected situations when
 two or more third party libraries use the same symbol for different semantics.</p>
 </div>
 <div class="sect4">
 <h5 id="defining-a-hierarchy"><a class="link" href="#defining-a-hierarchy">Defining a hierarchy</a></h5>
 <div class="paragraph">
-<p>The hierarchy relations should be established using <code>derive</code> function:</p>
+<p>The hierarchy relations should be established using the <code>derive</code> function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3079,8 +3082,8 @@ two or more third party libraries use the same symbol for different semantics.</
 </div>
 </div>
 <div class="paragraph">
-<p>We have just defined a set of relationships between namespaced keywords, in this case
-<code>::circle</code> is a child of <code>::shape</code> and <code>::box</code> is also a child of <code>::shape</code>.</p>
+<p>We have just defined a set of relationships between namespaced keywords. In this case the
+<code>::circle</code> is a child of <code>::shape</code>, and <code>::box</code> is also a child of <code>::shape</code>.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -3089,19 +3092,19 @@ two or more third party libraries use the same symbol for different semantics.</
 <div class="title">Tip</div>
 </td>
 <td class="content">
-The <code>::circle</code> keyword syntax is a shortland for <code>:current.ns/circle</code>. So if you are executing
-it in a repl, then <code>::circle</code> will be evaluated to <code>:cljs.user/circe</code>.
+The <code>::circle</code> keyword syntax is a shorthand for <code>:current.ns/circle</code>. So if you are executing
+it in a REPL, <code>::circle</code> will be evaluated as <code>:cljs.user/circle</code>.
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect4">
-<h5 id="hierarchies-introspection"><a class="link" href="#hierarchies-introspection">Hierarchies introspection</a></h5>
+<h5 id="hierarchies-and-introspection"><a class="link" href="#hierarchies-and-introspection">Hierarchies and introspection</a></h5>
 <div class="paragraph">
 <p><em>ClojureScript</em> comes with a little toolset of functions that allow runtime introspection
-of the global or locally defined hierarchies. These tools consist of three functions:
-<code>isa?</code>, <code>ancestors</code>, and <code>descendants</code>.</p>
+of globally or locally defined hierarchies. This toolset consists of three functions:
+<code>isa?</code>, <code>anscestors</code>, and <code>descendants</code>.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s see an example of how it can be used with the hierarchy defined in previous example:</p>
@@ -3123,11 +3126,11 @@ of the global or locally defined hierarchies. These tools consist of three funct
 </div>
 </div>
 <div class="sect4">
-<h5 id="local-defined-hierarchies"><a class="link" href="#local-defined-hierarchies">Local defined hierarchies</a></h5>
+<h5 id="locally-defined-hierarchies"><a class="link" href="#locally-defined-hierarchies">Locally defined hierarchies</a></h5>
 <div class="paragraph">
-<p>As mentioned previously; in <em>ClojureScript</em> you also can define local hierarchies. This can be
-done with the <code>make-hierarchy</code> function. Here is how you can replicate the previous
-example, this time using the local hierarchy:</p>
+<p>As we mentioned previously, in <em>ClojureScript</em> you also can define local hierarchies. This can be
+done with the <code>make-hierarchy</code> function. Here is an example of how you can replicate the previous
+example using a local hierarchy:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3137,7 +3140,7 @@ example, this time using the local hierarchy:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>You can also use the same introspection functions with a locally defined hierarchy:</p>
+<p>Now you can use the same introspection functions with that locally defined hierarchy:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3149,20 +3152,20 @@ example, this time using the local hierarchy:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>As you can observe, in local hierarchies we can use normal (not namespace qualified) keywords
-and if we execute the <code>isa?</code> without passing the local hierarchy parameter, its as expected
-return false.</p>
+<p>As you can observe, in local hierarchies we can use normal (not namespace qualified) keywords,
+and if we execute the <code>isa?</code> without passing the local hierarchy parameter, it returns <code>false</code>
+as expected.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="hierarchies-in-multimethods"><a class="link" href="#hierarchies-in-multimethods">Hierarchies in multimethods</a></h5>
 <div class="paragraph">
-<p>One of the big advantages of hierarchies is that they work very well with multimethods.
-This is because multimethods, by default, use the <code>isa?</code> function for the last step of dispatching.</p>
+<p>One of the big advantages of hierarchies is that they works very well together with multimethods.
+This is because multimethods by default use the <code>isa?</code> function for the last step of dispatching.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s see an example so we can clearly understand what this means. Firstly we define the multimethod with
-the <code>defmulti</code> form:</p>
+<p>Let&#8217;s see an example to clearly understand what that means. Firstly, define the multimethod with
+<code>defmulti</code> form:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3174,8 +3177,8 @@ the <code>defmulti</code> form:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>With the <code>:hierarchy</code> keyword parameter we indicate to the multimethod the hierarchy that we want to use. Left
-unspecified, the global hierarchy will be used.</p>
+<p>With <code>:hierarchy</code> keyword parameter we indicate to the multimethod that hierarchy we want to use;
+if it is not specified, the global hierarchy will be used.</p>
 </div>
 <div class="paragraph">
 <p>Secondly, we define an implementation for our multimethod using the <code>defmethod</code> form:</p>
@@ -3205,7 +3208,7 @@ unspecified, the global hierarchy will be used.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now everything works as expected because the multimethod executes the direct matching implementation
+<p>Now everything works as expected; the multimethod executes the direct matching implementation
 for the given parameter. Next, let&#8217;s see what happens if we execute the same function but with the <code>:circle</code>
 keyword as the parameter, which does not have the direct matching dispatch value:</p>
 </div>
@@ -3225,8 +3228,8 @@ a descendant of <code>:shape</code>, the <code>:shape</code> implementation is e
 <div class="sect2">
 <h3 id="data-types"><a class="link" href="#data-types">2.11. Data types</a></h3>
 <div class="paragraph">
-<p>Until, now, we have used maps, sets, lists and vectors for represent our data. And in most cases is a
-really great aproach for do it. But some times we need define our own types and in this book we will
+<p>Until, now, we have used maps, sets, lists and vectors to represent our data. And in most cases, this is a
+really great approach. But sometimes we need to define our own types, and in this book we will
 call them <strong>datatypes</strong>.</p>
 </div>
 <div class="paragraph">
@@ -3235,13 +3238,13 @@ call them <strong>datatypes</strong>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>A unique host backed type, either named or anonymous.</p>
+<p>A unique host-backed type, either named or anonymous.</p>
+</li>
+<li>
+<p>The ability to implement protocols (inline).</p>
 </li>
 <li>
 <p>Explicitly declared structure using fields or closures.</p>
-</li>
-<li>
-<p>Implement concrete abstractions.</p>
 </li>
 <li>
 <p>Map like behavior (via records, see below).</p>
@@ -3251,8 +3254,8 @@ call them <strong>datatypes</strong>.</p>
 <div class="sect3">
 <h4 id="deftype"><a class="link" href="#deftype">2.11.1. Deftype</a></h4>
 <div class="paragraph">
-<p>The most low level construction in <em>ClojureScript</em> for create own types, is the <code>deftype</code> macro. For
-demostration we will define a type called <code>User</code>:</p>
+<p>The most low level construction in <em>ClojureScript</em> for creating your own types is the <code>deftype</code> macro. As a
+demonstration, we will define a type called <code>User</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3260,11 +3263,12 @@ demostration we will define a type called <code>User</code>:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Once the type has beed defined, we can create an instance of our <code>User</code>:</p>
+<p>Once the type has been defined, we can create an instance of our <code>User</code>. In the
+following example, the <code>.</code> after <code>User</code> indicates that we are calling a constructor.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">user</span> <span class="tok-p">(</span><span class="tok-nf">User.</span> <span class="tok-s">&quot;Triss&quot;</span> <span class="tok-s">&quot;Merigold&quot;</span><span class="tok-p">))</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">person</span> <span class="tok-p">(</span><span class="tok-nf">User.</span> <span class="tok-s">&quot;Triss&quot;</span> <span class="tok-s">&quot;Merigold&quot;</span><span class="tok-p">))</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3272,15 +3276,15 @@ demostration we will define a type called <code>User</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.-firstname</span> <span class="tok-nv">user</span><span class="tok-p">)</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.-firstname</span> <span class="tok-nv">person</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; &quot;Triss&quot;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Types defined with deftype (and posteriory with defrecord) creates a host backed class like object
-associated to the current namespace. But it has some peculiarities when we intend to use or import
-it from other namespace. The types in <em>ClojureScript</em> should be imported with <code>:import</code> directive
-of <code>ns</code> macro:</p>
+<p>Types defined with <code>deftype</code> (and <code>defrecord</code>, which we will see later) creates a host-backed class-like object
+associated with the current namespace. But it has some peculiarities when we intend to use or import
+it from another namespace. The types in <em>ClojureScript</em> should be imported with the <code>:import</code> directive
+of the <code>ns</code> macro:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3292,15 +3296,15 @@ of <code>ns</code> macro:</p>
 </div>
 <div class="paragraph">
 <p>For convenience, <em>ClojureScript</em> also defines a constructor function caled <code>&#8594;User</code> that can be imported
-with the common way using <code>:require</code> directive.</p>
+in the common way using the <code>:require</code> directive.</p>
 </div>
 <div class="paragraph">
-<p>We personally do not like this type of functions, and we prefer define own constructors, with more
+<p>We personally do not like this type of function, and we prefer to define our own constructors, with more
 idiomatic names:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">user</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">make-user</span>
   <span class="tok-p">[</span><span class="tok-nv">firstname</span> <span class="tok-nv">lastname</span><span class="tok-p">]</span>
   <span class="tok-p">(</span><span class="tok-nf">User.</span> <span class="tok-nv">firstname</span> <span class="tok-nv">lastname</span><span class="tok-p">))</span></code></pre>
 </div>
@@ -3312,19 +3316,19 @@ idiomatic names:</p>
 <div class="sect3">
 <h4 id="defrecord"><a class="link" href="#defrecord">2.11.2. Defrecord</a></h4>
 <div class="paragraph">
-<p>The record is a slightly higher level abstraction for define types in <em>ClojureScript</em> and should be
-prefered way to do it.</p>
+<p>The record is a slightly higher level abstraction for defining types in <em>ClojureScript</em> and should be
+preferred way to do it.</p>
 </div>
 <div class="paragraph">
-<p>As we know, <em>ClojureScript</em> tends to use plain data types how are the maps but in most cases we need
-have a named type for represent the entities of our application. Here come the records.</p>
+<p>As we know, <em>ClojureScript</em> tends to use plain data types such as maps, but in most cases we need
+a named type to represent the entities of our application. Here come the records.</p>
 </div>
 <div class="paragraph">
-<p>A record is a datatype that implements a map protocols and therefore can be used like any other map.
+<p>A record is a datatype that implements the map protocol and therefore can be used like any other map.
 And since records are also proper types, they support type-based polymorphism through protocols.</p>
 </div>
 <div class="paragraph">
-<p>In summary: with records, we have the best of both worlds, maps that can play in in different
+<p>In summary: with records, we have the best of both worlds, maps that can play in different
 abstractions.</p>
 </div>
 <div class="paragraph">
@@ -3336,29 +3340,29 @@ abstractions.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>It looks really similar to deftype syntax, in fact, it uses deftype behind the scenes as low level
+<p>It looks really similar to the <code>deftype</code> syntax; in fact, it uses <code>deftype</code> behind the scenes as a low level
 primitive for defining types.</p>
 </div>
 <div class="paragraph">
-<p>Now, look the difference with raw types for access to its fields:</p>
+<p>Now, look at the difference with raw types for access to its fields:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">user</span> <span class="tok-p">(</span><span class="tok-nf">User.</span> <span class="tok-s">&quot;Yennefer&quot;</span> <span class="tok-s">&quot;of Vengerberg&quot;</span><span class="tok-p">))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">person</span> <span class="tok-p">(</span><span class="tok-nf">User.</span> <span class="tok-s">&quot;Yennefer&quot;</span> <span class="tok-s">&quot;of Vengerberg&quot;</span><span class="tok-p">))</span>
 
-<span class="tok-p">(</span><span class="tok-ss">:username</span> <span class="tok-nv">user</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-ss">:firstname</span> <span class="tok-nv">user</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; &quot;Yennefer&quot;</span>
 
-<span class="tok-p">(</span><span class="tok-nb">get </span><span class="tok-nv">user</span> <span class="tok-ss">:username</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nb">get </span><span class="tok-nv">person</span> <span class="tok-ss">:firstname</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; &quot;Yennefer&quot;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>As we mention previously, records are maps and acts like tham:</p>
+<p>As we mentioned previously, records are maps and act like tham:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">map? </span><span class="tok-nv">user</span><span class="tok-p">)</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">map? </span><span class="tok-nv">person</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; true</span></code></pre>
 </div>
 </div>
@@ -3367,36 +3371,36 @@ primitive for defining types.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">user2</span> <span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-nv">user</span> <span class="tok-ss">:age</span> <span class="tok-mi">92</span><span class="tok-p">))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">person2</span> <span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-nv">person</span> <span class="tok-ss">:age</span> <span class="tok-mi">92</span><span class="tok-p">))</span>
 
-<span class="tok-p">(</span><span class="tok-ss">:age</span> <span class="tok-nv">user2</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-ss">:age</span> <span class="tok-nv">person2</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; 92</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>As we can see, the <code>assoc</code> function works as is expected and return a new instance of the same
-type but with new key value pair. But take care with <code>dissoc</code>, its behavior with records is slightly
-different that with maps; it will return a new record if the field being dissociated is an optional
-field, but it will return a plain map if you dissociate the mandatory field.</p>
+<p>As we can see, the <code>assoc</code> function works as expected and returns a new instance of the same
+type but with new key value pair. But take care with <code>dissoc</code>! Its behavior with records is slightly
+different than with maps; it will return a new record if the field being dissociated is an optional
+field, but it will return a plain map if you dissociate a mandatory field.</p>
 </div>
 <div class="paragraph">
-<p>An other difference with maps is that records does not acts like functions:</p>
+<p>An other difference with maps is that records do not act like functions:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">plain-user</span> <span class="tok-p">{</span><span class="tok-ss">:username</span> <span class="tok-s">&quot;Yennefer&quot;</span>, <span class="tok-ss">:lastname</span> <span class="tok-s">&quot;of Vengerberg&quot;</span><span class="tok-p">})</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">plain-person</span> <span class="tok-p">{</span><span class="tok-ss">:firstname</span> <span class="tok-s">&quot;Yennefer&quot;</span>, <span class="tok-ss">:lastname</span> <span class="tok-s">&quot;of Vengerberg&quot;</span><span class="tok-p">})</span>
 
-<span class="tok-p">(</span><span class="tok-nf">plain-user</span> <span class="tok-ss">:username</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">plain-person</span> <span class="tok-ss">:firstname</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; &quot;Yennefer&quot;</span>
 
-<span class="tok-p">(</span><span class="tok-nf">user</span> <span class="tok-ss">:username</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; user.User does not implements IFn protocol.</span></code></pre>
+<span class="tok-p">(</span><span class="tok-nf">person</span> <span class="tok-ss">:firstname</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; person.User does not implement IFn protocol.</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>defrecord</code> macro like the <code>deftype</code>, for convenience esposes <code>&#8594;User</code> function, but with additional
-one <code>map&#8594;User</code> constructor function. We have the same opionon about that constructors that with
-deftype defined ones: we recommend define own instead of use that ones. But as they exists, let see
+<p>For convenience, the <code>defrecord</code> macro, like <code>deftype</code>, exposes a <code>&#8594;User</code> function, as well as an additional
+<code>map&#8594;User</code> constructor function. We have the same opinion about that constructor as with
+<code>deftype</code> defined ones: we recommend defining your own instead of using the other ones. But as they exist, let’s see
 how they can be used:</p>
 </div>
 <div class="listingblock">
@@ -3408,15 +3412,15 @@ how they can be used:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="implement-protocols"><a class="link" href="#implement-protocols">2.11.3. Implement protocols</a></h4>
+<h4 id="implementing-protocols"><a class="link" href="#implementing-protocols">2.11.3. Implementing protocols</a></h4>
 <div class="paragraph">
-<p>Both type definition primitives that we have seen until now allows inline implementations for protocols
-(explained in previous section). Let start define one for example purposes:</p>
+<p>Both type definition primitives that we have seen so far allow inline implementations for protocols
+(explained in a previous section). Let&#8217;s define one for example purposes:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defprotocol </span><span class="tok-nv">IUser</span>
-  <span class="tok-s">&quot;A common abstraction for work with user types.&quot;</span>
+  <span class="tok-s">&quot;A common abstraction for working with user types.&quot;</span>
   <span class="tok-p">(</span><span class="tok-nf">full-name</span> <span class="tok-p">[</span><span class="tok-nv">_</span><span class="tok-p">]</span> <span class="tok-s">&quot;Get the full name of the user.&quot;</span><span class="tok-p">))</span></code></pre>
 </div>
 </div>
@@ -3441,11 +3445,11 @@ how they can be used:</p>
 <div class="sect3">
 <h4 id="reify"><a class="link" href="#reify">2.11.4. Reify</a></h4>
 <div class="paragraph">
-<p>The <code>reify</code> macro lets you create an anonymous types that implement protocols. In difference with
-deftype and defrecord, it does not has accessible fields.</p>
+<p>The <code>reify</code> macro lets you create an anonymous type that implements protocols. In contrast to
+<code>deftype</code> and <code>defrecord</code>, it does not have accessible fields.</p>
 </div>
 <div class="paragraph">
-<p>This is a way how we can emulate an instance of user type and that plays well in <code>IUser</code> abstraction:</p>
+<p>This is  how we can emulate an instance of the user type that plays well with the <code>IUser</code> abstraction:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3462,23 +3466,23 @@ deftype and defrecord, it does not has accessible fields.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The real purpose of reify is create anonymous types that plains in a concrete abstractions but
-you do not want a type in self.</p>
+<p>The real purpose of <code>reify</code> is to create an anonymous type that may implement protocols,
+but you don&#8217;t want the type itself.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="host-interoperability"><a class="link" href="#host-interoperability">2.12. Host interoperability</a></h3>
 <div class="paragraph">
-<p><em>ClojureScript</em> in the same way as it brother Clojure, is designed to be a "Guest" language. It means
-that the design of the language fits very well to work on to of existing ecosystem such as javascript
-for <em>ClojureScript</em> and jvm for <em>Clojure</em>.</p>
+<p><em>ClojureScript</em>, in the same way as it brother Clojure, is designed to be a "Guest" language. This means
+that the design of the language works well on top of an existing ecosystem such as JavaScript
+for <em>ClojureScript</em> and the JVM for <em>Clojure</em>.</p>
 </div>
 <div class="sect3">
 <h4 id="the-types"><a class="link" href="#the-types">2.12.1. The types.</a></h4>
 <div class="paragraph">
-<p><em>ClojureScript</em> unlike expected, try takes advantage of every type that the platform provides. This
-is a maybe incomplete list of things that <em>ClojureScript</em> inherits and reuse from the underlying
+<p><em>ClojureScript</em> unlike what you might expect, tries to take advantage of every type that the platform provides. This
+is a (perhaps incomplete) list of things that <em>ClojureScript</em> inherits and reuses from the underlying
 platform:</p>
 </div>
 <div class="ulist">
@@ -3496,34 +3500,34 @@ platform:</p>
 <p><em>ClojureScript</em> regular expressions are javascript <code>RegExp</code> instances.</p>
 </li>
 <li>
-<p><em>ClojureScript</em> is not interpreted, is always compiled town to the javascript.</p>
+<p><em>ClojureScript</em> is not interpreted; it is always compiled down to JavaScript.</p>
 </li>
 <li>
-<p><em>ClojureScript</em> allows easy call platform apis with the same semantics.</p>
+<p><em>ClojureScript</em> allows easy call to platform APIs with the same semantics.</p>
 </li>
 <li>
-<p><em>ClojureScript</em> data types internally compiles to objects in javascript.</p>
+<p><em>ClojureScript</em> data types internally compile to objects in JavaScript.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>On top of it, <em>ClojureScript</em> buid own abstractions and types that are does not exists in the
-platform, such as Vectors, Maps, Sets, and others that are explained in previous chapters.</p>
+<p>On top of it, <em>ClojureScript</em> builds its own abstractions and types that do not exist in the
+platform, such as Vectors, Maps, Sets, and others that are explained in previous sections of this chapter.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="interacting-with-platform-types"><a class="link" href="#interacting-with-platform-types">2.12.2. Interacting with platform types</a></h4>
 <div class="paragraph">
-<p><em>ClojureScript</em> comes with a little set of special forms that allows interact with platform
-types such as calling object methods, creating new instances and accessing to object
+<p><em>ClojureScript</em> comes with a little set of special forms that allows it interact with platform
+types such as calling object methods, creating new instances, and accessing object
 properties.</p>
 </div>
 <div class="sect4">
 <h5 id="access-to-the-platform"><a class="link" href="#access-to-the-platform">Access to the platform</a></h5>
 <div class="paragraph">
-<p><em>ClojureScript</em> has a special syntax for access to the all platform environment through the
-<code>js/</code> special namespace. This is the aspect of the expression for execute the javascript&#8217;s
-builtin <code>parseInt</code> function:</p>
+<p><em>ClojureScript</em> has a special syntax for access to the entire platform environment through the
+<code>js/</code> special namespace. This is an example of an expression to execute JavaScript&#8217;s
+built-in <code>parseInt</code> function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3552,25 +3556,25 @@ builtin <code>parseInt</code> function:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The last one is the recommended way to do that operation. We do not aware of real differences
-between the two forms, but in the clojurescript comunity the last one is the most adopted.</p>
+<p>The last one is the recommended way to create instances. We are not aware of real differences
+between the two forms, but in the ClojureScript community the last one is used most often.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="invoke-instance-methods"><a class="link" href="#invoke-instance-methods">Invoke instance methods</a></h5>
 <div class="paragraph">
-<p>For invoke methods of some object instance, in contrary to how it used in javascript (eg:
-<code>obj.method()</code>, the method name comes first like any other standard function in lisp languages
-but with little variation: the function name starts with special form <code>.</code>.</p>
+<p>To invoke methods of some object instance, as opposed to how it is done in JavaScript (e.g.,
+<code>obj.method()</code>, the method name comes first like any other standard function in Lisp languages
+but with a little variation: the function name starts with special form <code>.</code>.</p>
 </div>
 <div class="paragraph">
-<p>Let see how we can call the <code>.test()</code> method of regexp instance:</p>
+<p>Let&#8217;s see how we can call the <code>.test()</code> method of a regexp instance:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">re</span> <span class="tok-p">(</span><span class="tok-nf">js/RegExp</span> <span class="tok-s">&quot;^foo&quot;</span><span class="tok-p">))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">re</span> <span class="tok-p">(</span><span class="tok-nf">js/RegExp</span> <span class="tok-s">&quot;^Clojure&quot;</span><span class="tok-p">))</span>
 
-<span class="tok-p">(</span><span class="tok-nf">.test</span> <span class="tok-nv">re</span> <span class="tok-s">&quot;foobar&quot;</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">.test</span> <span class="tok-nv">re</span> <span class="tok-s">&quot;ClojureScript&quot;</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; true</span></code></pre>
 </div>
 </div>
@@ -3578,41 +3582,43 @@ but with little variation: the function name starts with special form <code>.</c
 <div class="sect4">
 <h5 id="access-to-object-properties"><a class="link" href="#access-to-object-properties">Access to object properties</a></h5>
 <div class="paragraph">
-<p>Access to the object properties is really very similar to call a method, the difference is that
-instead of using the <code>.</code> we should use the <code>.-</code>. Let see an example:</p>
+<p>Access to the object properties is really very similar to calling a method. The difference is that
+instead of using the <code>.</code> you use <code>.-</code>. Let&#8217;s see an example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.-multiline</span> <span class="tok-nv">re</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; false</span></code></pre>
+<span class="tok-c1">;; =&gt; false</span>
+<span class="tok-p">(</span><span class="tok-nf">.-PI</span> <span class="tok-nv">js/Math</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 3.141592653589793</span></code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="javascrpt-objects"><a class="link" href="#javascrpt-objects">Javascrpt objects</a></h5>
+<h5 id="javascript-objects"><a class="link" href="#javascript-objects">JavaScript objects</a></h5>
 <div class="paragraph">
-<p><em>ClojureScript</em> has different ways for create plain javascript objects, each one has its own
-purpose. The basic one is the <code>js-obj</code> function. It accepts a variable length of pairs of key
-values and return a javascript object:</p>
+<p><em>ClojureScript</em> has different ways to create plain JavaScript objects, each one has its own
+purpose. The basic one is the <code>js-obj</code> function. It accepts a variable number of pairs of keys and
+values and returns a JavaScript object:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">js-obj</span> <span class="tok-s">&quot;foo&quot;</span> <span class="tok-s">&quot;bar&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; #js {:foo &quot;bar&quot;}</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">js-obj</span> <span class="tok-s">&quot;country&quot;</span> <span class="tok-s">&quot;FR&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #js {:country &quot;FR&quot;}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The return value can be passed to some kind of third party library that accepts a plain
-javascript objects. But you can observe the repl representation of the return value of this
-function. It is exactly the other form for do the same thing.</p>
+JavaScript object, but you can observe the real representation of the return value of this
+function. It is really another other form for doing the same thing.</p>
 </div>
 <div class="paragraph">
-<p>Using the reader macro <code>#js</code> consists of prepend it to the clojure map or vector and the
-result will be transformed to plain javascript:</p>
+<p>Using the reader macro <code>#js</code> consists of prepending it to a ClojureScript map or vector, and the
+result will be transformed to plain JavaScript:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">myobj</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">{</span><span class="tok-ss">:foo</span> <span class="tok-s">&quot;bar&quot;</span><span class="tok-p">})</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">myobj</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">{</span><span class="tok-ss">:country</span> <span class="tok-s">&quot;FR&quot;</span><span class="tok-p">})</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3620,7 +3626,7 @@ result will be transformed to plain javascript:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="javascript"><span class="tok-kd">var</span> <span class="tok-nx">myobj</span> <span class="tok-o">=</span> <span class="tok-p">{</span><span class="tok-nx">foo</span><span class="tok-o">:</span> <span class="tok-s2">&quot;bar&quot;</span><span class="tok-p">};</span></code></pre>
+<pre class="pygments highlight"><code data-lang="javascript"><span class="tok-kd">var</span> <span class="tok-nx">myobj</span> <span class="tok-o">=</span> <span class="tok-p">{</span><span class="tok-nx">country</span><span class="tok-o">:</span> <span class="tok-s2">&quot;FR&quot;</span><span class="tok-p">};</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3629,27 +3635,27 @@ the <code>.-</code> syntax:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.-foo</span> <span class="tok-nv">myobj</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; &quot;bar&quot;</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.-country</span> <span class="tok-nv">myobj</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;FR&quot;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And as javascript objects are mutable, you can set a new value to some property using
+<p>And as JavaScript objects are mutable, you can set a new value for some property using
 the <code>set!</code> function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-foo</span> <span class="tok-nv">myobj</span><span class="tok-p">)</span> <span class="tok-s">&quot;baz&quot;</span><span class="tok-p">)</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-country</span> <span class="tok-nv">myobj</span><span class="tok-p">)</span> <span class="tok-s">&quot;KR&quot;</span><span class="tok-p">)</span></code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
 <h5 id="conversions"><a class="link" href="#conversions">Conversions</a></h5>
 <div class="paragraph">
-<p>The inconvenience of previously explained forms, is that they does not make recursive
-transformatios, so if you have nested objects, the nested objects do not will be converted.
-For solve that use cases, <em>ClojureScript</em> comes with <code>clj&#8594;js</code> and <code>js&#8594;clj</code> functions
-that transforms clojure collection types into javascript and in reverse order:</p>
+<p>The inconvenience of the previously explained forms is that they does not make recursive
+transformatios, so if you have nested objects, the nested objects will not be converted.
+To solve that use cases <em>ClojureScript</em> comes with the <code>clj&#8594;js</code> and <code>js&#8594;clj</code> functions
+that transform clojure collection types into JavaScript and bacl:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3658,20 +3664,20 @@ that transforms clojure collection types into javascript and in reverse order:</
 </div>
 </div>
 <div class="paragraph">
-<p>In case of arrays, it there a specialized function <code>into-array</code> that behaves as it expected:</p>
+<p>In case of arrays, there is a specialized function <code>into-array</code> that behaves as expected:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">into-array </span><span class="tok-p">[</span><span class="tok-s">&quot;foo&quot;</span><span class="tok-p">])</span>
-<span class="tok-c1">;; =&gt; #js [&quot;foo&quot;]</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">into-array </span><span class="tok-p">[</span><span class="tok-s">&quot;France&quot;</span> <span class="tok-s">&quot;Korea&quot;</span> <span class="tok-s">&quot;Peru&quot;</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; #js [&quot;France&quot; &quot;Korea&quot; &quot;Peru&quot;]</span></code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
 <h5 id="arrays"><a class="link" href="#arrays">Arrays</a></h5>
 <div class="paragraph">
-<p>In previous example we have seen how we can create an array from existing <em>ClojureScript</em>
-collection. But it there other function for create arrays: <code>make-array</code>.</p>
+<p>In previous example we have seen how we can create an array from an existing <em>ClojureScript</em>
+collection. But it there other function for creating arrays: <code>make-array</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">Creating a preallocated array with length 10</div>
@@ -3681,8 +3687,8 @@ collection. But it there other function for create arrays: <code>make-array</cod
 </div>
 </div>
 <div class="paragraph">
-<p>In <em>ClojureScript</em> arrays are also play well in sequence abstraction so you can iterate
-over it or simple get the number of elements with <code>count</code> function:</p>
+<p>In <em>ClojureScript</em> arrays also play well with sequence abstractions so you can iterate
+over them or simply get the number of elements with the <code>count</code> function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3691,17 +3697,19 @@ over it or simple get the number of elements with <code>count</code> function:</
 </div>
 </div>
 <div class="paragraph">
-<p>As arrays are platform mutable collection type, you can acces to a concrete index and set
-value to on that position:</p>
+<p>As arrays on the JavaScript platform are a mutable collection type, you can access a concrete index
+and set the value at that position:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">aset </span><span class="tok-nv">a</span> <span class="tok-mi">0</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; 2</span></code></pre>
+<span class="tok-c1">;; =&gt; 2</span>
+<span class="tok-nv">a</span>
+<span class="tok-c1">;; =&gt; #js [2 nil nil nil nil nil nil nil nil nil]</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Or access in a indexed way to it values:</p>
+<p>Or access in a indexed way to get its values:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3710,22 +3718,22 @@ value to on that position:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In javascript, the objects are also arrays, so you can use the same functions for interacting
+<p>In JavaScript, objects are also arrays, so you can use the same functions for interacting
 with plain objects:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">b</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">{</span><span class="tok-ss">:foo</span> <span class="tok-s">&quot;bar&quot;</span><span class="tok-p">})</span>
-<span class="tok-c1">;; =&gt; #js {:foo &quot;bar&quot;}</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">b</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">{</span><span class="tok-ss">:hour</span> <span class="tok-mi">16</span><span class="tok-p">})</span>
+<span class="tok-c1">;; =&gt; #js {:hour 16}</span>
 
-<span class="tok-p">(</span><span class="tok-nb">aget </span><span class="tok-nv">b</span> <span class="tok-s">&quot;foo&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; &quot;bar&quot;</span>
+<span class="tok-p">(</span><span class="tok-nb">aget </span><span class="tok-nv">b</span> <span class="tok-s">&quot;hour&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 16</span>
 
-<span class="tok-p">(</span><span class="tok-nb">aset </span><span class="tok-nv">b</span> <span class="tok-s">&quot;baz&quot;</span> <span class="tok-s">&quot;bar&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; &quot;bar&quot;</span>
+<span class="tok-p">(</span><span class="tok-nb">aset </span><span class="tok-nv">b</span> <span class="tok-s">&quot;minute&quot;</span> <span class="tok-mi">22</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 22</span>
 
 <span class="tok-nv">b</span>
-<span class="tok-c1">;; =&gt; #js {:foo &quot;bar&quot;, :baz &quot;bar&quot;}</span></code></pre>
+<span class="tok-c1">;; =&gt; #js {:hour 16, :minute 22}</span></code></pre>
 </div>
 </div>
 </div>
@@ -3740,14 +3748,14 @@ with plain objects:</p>
 <div class="sect2">
 <h3 id="truthiness"><a class="link" href="#truthiness">2.14. Truthiness</a></h3>
 <div class="paragraph">
-<p>This is an aspect where the each language has its own semantics, the majority of languages
-treat empty collections, the 0 integer and other things like this as false.
-In <em>ClojureScript</em> unlike in other languages only two values are considered as false: <code>nil</code>
-and <code>false</code>, Everything else is  treated as <code>true</code>.</p>
+<p>This is the aspect where each language has its own semantics. The majority of languages
+consider empty collections, the integer 0, and other things like this to be false.
+In <em>ClojureScript</em>, unlike in other languages, only two values are considered as false: <code>nil</code>
+and <code>false</code>, Everything else is treated as <code>true</code>.</p>
 </div>
 <div class="paragraph">
-<p>Thanks to that, sets can also be considered predicates, if it returns a value then it exists
-and if it returns <code>nil</code> then it doesn&#8217;t exist:</p>
+<p>So, thanks to this, sets can be also be considered as predicates. If a set returns a value, it exists,
+and if it returns <code>nil</code> he value does not exist:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3820,16 +3828,16 @@ developing using ClojureScript. It will cover:</p>
 <p>Unlike the previous chapter, this chapter intends to tell different stories each independent of each other.</p>
 </div>
 <div class="sect2">
-<h3 id="getting-started-with-clojurescript-compiler"><a class="link" href="#getting-started-with-clojurescript-compiler">3.1. Getting Started with ClojureScript compiler</a></h3>
+<h3 id="getting-started-with-the-clojurescript-compiler"><a class="link" href="#getting-started-with-the-clojurescript-compiler">3.1. Getting Started with the ClojureScript compiler</a></h3>
 <div class="paragraph">
-<p>At this point, you will surely be very bored with the constant theoretic explanations about the language
+<p>At this point, you are surely very bored with the constant theoretical explanations about the language
 itself and will want to write and execute some code. The goal of this section is to provide a little practical
 introduction to the <em>ClojureScript</em> compiler.</p>
 </div>
 <div class="paragraph">
 <p>The <em>ClojureScript</em> compiler takes the source code that has been split over numerous directories and namespaces and
-compiles it down to javascript. Today, javascript has great amount of different environments
-where it can be executed - each with their own pecularities.</p>
+compiles it down to JavaScript. Today, JavaScript has great number of different environments
+where it can be executed - each with its own pecularities.</p>
 </div>
 <div class="paragraph">
 <p>This chapter intends to explain how to use <em>ClojureScript</em> without any additional tooling. This
@@ -3839,8 +3847,8 @@ available (such as leiningen+cljsbuld or boot).</p>
 <div class="sect3">
 <h4 id="execution-environments"><a class="link" href="#execution-environments">3.1.1. Execution environments</a></h4>
 <div class="paragraph">
-<p>What is an execution environment? An execution environment is an engine where javascript can be
-executed. For example, the most popular execution environment is a Browser (Chrome, Firefox, &#8230;&#8203;)
+<p>What is an execution environment? An execution environment is an engine where JavaScript can be
+executed. For example, the most popular execution environment is a browser (Chrome, Firefox, &#8230;&#8203;)
 followed by the second most popular - nodejs/iojs.</p>
 </div>
 <div class="paragraph">
@@ -3857,7 +3865,7 @@ code to run in the browser or in nodejs/iojs like environments out of the box.</
 chapter requires jdk8 which can be found at <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" class="bare">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a></p>
 </div>
 <div class="paragraph">
-<p>You can download it using wget:</p>
+<p>You can download it using <code>wget</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3865,22 +3873,22 @@ chapter requires jdk8 which can be found at <a href="http://www.oracle.com/techn
 </div>
 </div>
 <div class="paragraph">
-<p>The <em>ClojureScript</em> compiler is packaged in a standalone executable jar file, so this is the unique
-file and jdk8 that you need for compile the <em>ClojureScript</em> source code to javascript.</p>
+<p>The <em>ClojureScript</em> compiler is packaged in a standalone executable jar file, so this is the only
+file and JDK8 that you need to compile the <em>ClojureScript</em> source code to JavaScript.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="compile-for-nodejs-iojs"><a class="link" href="#compile-for-nodejs-iojs">3.1.3. Compile for nodejs/iojs</a></h4>
 <div class="paragraph">
 <p>Let start with a practical example compiling code that will target <strong>nodejs</strong>/<strong>iojs</strong>. For
-it you should have installed nodejs or iojs (recommended).</p>
+this example you should have nodejs or iojs (recommended) installed.</p>
 </div>
 <div class="paragraph">
-<p>There are different ways to install iojs, but the most recommended way is using nvm (node version
-manager). You can read the instructions to install and use nvm on:https://github.com/creationix/nvm[home page].</p>
+<p>There are different ways to install iojs, but the recommended way is using nvm (node version
+manager). You can read the instructions to install and use nvm at: <a href="https://github.com/creationix/nvm">home page</a>.</p>
 </div>
 <div class="paragraph">
-<p>You can test <strong>iojs</strong> installed in your system with this command:</p>
+<p>You can test if <strong>iojs</strong> is installed in your system with this command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3891,7 +3899,7 @@ v1.7.1</code></pre>
 <div class="sect4">
 <h5 id="create-the-example-application"><a class="link" href="#create-the-example-application">Create the example application</a></h5>
 <div class="paragraph">
-<p>For the first step of our practical example, we should create our application directory structure
+<p>For the first step of our practical example, we will create our application directory structure
 and populate it with example code.</p>
 </div>
 <div class="paragraph">
@@ -3926,8 +3934,8 @@ touch src/myapp/core.cljs</code></pre>
 <div class="title">Note</div>
 </td>
 <td class="content">
-Is very important that the declared namespace in the file exactly matches the directory
-structure. Is the way <em>ClojureScript</em> structures its source code.
+It is very important that the declared namespace in the file exactly matches the directory
+structure. This is the way <em>ClojureScript</em> structures its source code.
 </td>
 </tr>
 </table>
@@ -3954,7 +3962,7 @@ lot of other options but at this moment we can ignore that.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This is a breif explanation of the used compiler options:</p>
+<p>This is a brief explanation of the compiler options used in this example:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3963,12 +3971,12 @@ lot of other options but at this moment we can ignore that.</p>
 case to the "main.js" file.</p>
 </li>
 <li>
-<p>The <code>:main</code> property indicates to the compiler the namespace that will acts as the entry point of
+<p>The <code>:main</code> property indicates to the compiler the namespace that will act as the entry point of
 your application when it&#8217;s executed.</p>
 </li>
 <li>
 <p>The <code>:target</code> property indicates the platform where you want execute the compiled code. In this case
-we are going to use <strong>iojs</strong> (formerly nodejs). If you omit this parameter the source will be
+we are going to use <strong>iojs</strong> (formerly nodejs). If you omit this parameter, the source will be
 compiled to run in the browser environment.</p>
 </li>
 </ul>
@@ -3987,7 +3995,7 @@ compiled to run in the browser environment.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="shell">$ iojs main.js
-&quot;Hello world&quot;</code></pre>
+Hello world!</code></pre>
 </div>
 </div>
 </div>
@@ -3997,14 +4005,14 @@ compiled to run in the browser environment.</p>
 <div class="paragraph">
 <p>In this section we are going to create a similar "hello world" example application from the
 previous section to run in the browser environent. The minimal requirement for it
-is just a browser that can execute javascript.</p>
+is just a browser that can execute JavaScript.</p>
 </div>
 <div class="paragraph">
 <p>The process is almost the same, the directory structure is the same. The only things that
 changes is the entry point of the application and the build script.</p>
 </div>
 <div class="paragraph">
-<p>Start writing new content to the src/myapp/core.cljs` file:</p>
+<p>Start writing new content to the <code>src/myapp/core.cljs</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4051,14 +4059,15 @@ case to the "main.js" file.</p>
 your application when it&#8217;s executed.</p>
 </li>
 <li>
-<p><code>:source-map</code> indicates the destination of the source map.</p>
+<p><code>:source-map</code> indicates the destination of the source map. (The source map connects the ClojureScript source
+to the generated JavaScript so that error messages can point you back to the original source.)</p>
 </li>
 <li>
-<p><code>:output-dir</code> indicates the destination directory for all files sources used in a compilation. Is
-just for make source maps works properly with the rest of code, not only your source.</p>
+<p><code>:output-dir</code> indicates the destination directory for all files sources used in a compilation. It is
+just for making source maps work properly with the rest of code, not only your source.</p>
 </li>
 <li>
-<p><code>:optimizations</code> indicates the compilation optimization. There are different values for this option
+<p><code>:optimizations</code> indicates the compilation optimization. There are different values for this option,
 but that will be covered in following sections in more detail.</p>
 </li>
 </ul>
@@ -4072,13 +4081,14 @@ but that will be covered in following sections in more detail.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This process can take some time, so do not worry, wait a little bit. The jvm bootstrap with Clojure
+<p>This process can take some time, so do not worry, wait a little bit. The JVM bootstrap with Clojure
 compiler is slightly slow. In the following sections we will explain how to start a watch process to avoid
 constantly starting and stopping this slow process.</p>
 </div>
 <div class="paragraph">
-<p>While waiting for the compilation, let&#8217;s create a dummy html file to make it easy to execute our example
-app in the browser. Create the <em>index.html</em> file with the following content:</p>
+<p>While waiting for the compilation, let&#8217;s create a dummy HTML file to make it easy to execute our example
+app in the browser. Create the <em>index.html</em> file with the following content; it goes in the main <em>myapp</em>
+directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4095,7 +4105,7 @@ app in the browser. Create the <em>index.html</em> file with the following conte
 </div>
 </div>
 <div class="paragraph">
-<p>Now, when the compilation finishes and you have the basic html file you can just open it with your favorite
+<p>Now, when the compilation finishes and you have the basic HTML file you can just open it with your favorite
 browser and take a look in the development tools console. There should appear the "hello world" message.</p>
 </div>
 </div>
@@ -4127,7 +4137,7 @@ in some directory and perform an incremental compilation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>java -cp cljs.jar:src clojure.main build.clj
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>java -cp cljs.jar:src clojure.main watch.clj
 Building ...
 Reading analysis cache <span class="tok-k">for</span> jar:file:/home/niwi/cljsbook/playground/cljs.jar!/cljs/core.cljs
 Compiling out/cljs/core.cljs
@@ -4144,7 +4154,7 @@ Using cached cljs.core out/cljs/core.cljs
 </div>
 <div class="paragraph">
 <p>You can observe that in the second compilation, the time is drastically reduced. Another advantage
-of this method is that it&#8217;s a little bit more verbose.</p>
+of this method is that it is a gives a little bit more output.</p>
 </div>
 </div>
 <div class="sect3">
@@ -4154,7 +4164,7 @@ of this method is that it&#8217;s a little bit more verbose.</p>
 levels are coming from Google Closure Compiler.</p>
 </div>
 <div class="paragraph">
-<p>A very inacurate overview of the compilation process is:</p>
+<p>A very simplified overview of the compilation process is:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -4163,7 +4173,7 @@ levels are coming from Google Closure Compiler.</p>
 during its phase.</p>
 </li>
 <li>
-<p>Then, the <em>ClojureScript</em> compiler emits javascript code. The result of that is one javascript
+<p>Then, the <em>ClojureScript</em> compiler emits JavaScript code. The result of that is one JavaScript
 file for each cljs file.</p>
 </li>
 <li>
@@ -4178,20 +4188,20 @@ and other options (sourcemaps, output dir output to, &#8230;&#8203;) generates t
 <div class="sect4">
 <h5 id="none"><a class="link" href="#none">none</a></h5>
 <div class="paragraph">
-<p>Implies that closure compiler is noop, just writes the files as is, without any additional
+<p>Implies that closure compiler just writes the files as is, without any additional
 optimization applied to the source code. This optimization level is manadatory if you are targeting
-<strong>nodejs</strong> or <strong>iojs</strong>, and the appropiate in development mode when your code targets the browser.</p>
+<strong>nodejs</strong> or <strong>iojs</strong> and is appropiate in development mode when your code targets the browser.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="whitespace"><a class="link" href="#whitespace">whitespace</a></h5>
 <div class="paragraph">
 <p>This optimization level consists of concatenating the compiled files in an appropriate order, removing
-line breaks and other whitespaces and generating the output as one unique file.</p>
+line breaks and other whitespace and generating the output as one large file.</p>
 </div>
 <div class="paragraph">
-<p>It also has some compilation speed penality, resulting in slower compilations. In any case it is not
-very very slow and is completely usable in small/medium applications.</p>
+<p>It also has some compilation speed penality, resulting in slower compilations. In any case, it is not
+terribly slow and is completely usable in small/medium applications.</p>
 </div>
 </div>
 <div class="sect4">
@@ -4202,7 +4212,7 @@ additionally performs optimizations within expressions and functions, including 
 and function parameters to shorter names.</p>
 </div>
 <div class="paragraph">
-<p>Compilation with <code>:simple</code> optimization always preserves the functionality of syntactically valid
+<p>Compilation with the <code>:simple</code> optimization always preserves the functionality of syntactically valid
 JavaScript, so it does not interfere with the interaction between the compiled <em>ClojureScript</em> and
 other JavaScript.</p>
 </div>
@@ -4222,9 +4232,9 @@ other JavaScript.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="build-dependency-management-tools"><a class="link" href="#build-dependency-management-tools">3.3. Build &amp; Dependency management tools</a></h3>
+<h3 id="build-and-dependency-management-tools"><a class="link" href="#build-and-dependency-management-tools">3.3. Build and Dependency management tools</a></h3>
 <div class="sect3">
-<h4 id="getting-started-with-leiningen"><a class="link" href="#getting-started-with-leiningen">3.3.1. Getting started with leiningen.</a></h4>
+<h4 id="getting-started-with-leiningen"><a class="link" href="#getting-started-with-leiningen">3.3.1. Getting started with Leiningen.</a></h4>
 <div class="paragraph">
 <p>TBD</p>
 </div>
@@ -4248,7 +4258,7 @@ other JavaScript.</p>
 <p>TBD</p>
 </div>
 <div class="sect3">
-<h4 id="using-third-party-javascript-libraries"><a class="link" href="#using-third-party-javascript-libraries">3.5.1. Using third party javascript libraries</a></h4>
+<h4 id="using-third-party-javascript-libraries"><a class="link" href="#using-third-party-javascript-libraries">3.5.1. Using third party JavaScript libraries</a></h4>
 <div class="paragraph">
 <p>TBD</p>
 </div>
@@ -4345,7 +4355,7 @@ other JavaScript.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1<br/>
-Last updated 2015-05-05 01:02:17 CEST
+Last updated 2015-05-05 14:56:37 CEST
 </div>
 </div>
 </body>
