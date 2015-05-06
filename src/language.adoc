@@ -1573,12 +1573,12 @@ see http://en.wikipedia.org/wiki/Expression_problem for more details
 
 ==== Protocols
 
-The _ClojureScript_ primitive used to define "interfaces" is the Protocol. A protocol consists of
-a name and a set of functions. All functions have at least one argument corresponding to
+The _ClojureScript_ primitive for defining "interfaces" is called a Protocol. A protocol consists of
+a name and set of functions. All the functions have at least one argument corresponding to the
 `this` in javascript or `self` in Python.
 
-Protocols provide a type based polymorphism, and the dispatch is always done by the
-first argument previously mentioned as `this`.
+Protocols provide a type-based polymorphism, and the dispatch is always done by the
+first argument (equivalent to JavaScript’s `this`, as previously mentioned).
 
 A protocol looks like this:
 
@@ -1595,18 +1595,18 @@ NOTE: the "I" prefix is commonly used to designate the separation of protocols a
 community there many different opinions about how the "I" prefix should be used. In our opinion, it is an
 acceptable solution to avoid name clashing and possible confusion.
 
-From perspective of the user, protocol functions are simply plain functions defined in the namespace
+From the user perspective, protocol functions are simply plain functions defined in the namespace
 where the protocol is defined. As you can intuit, this namespacing of protocols allows us to avoid
 any conflict between implemented protocols for the same type.
 
 
-===== Extending to existing types
+===== Extending existing types
 
-One of the strengths of protocols is the ability to extend both native and third party types.
-Though this operation is highly flexible, the majority of time you will tend to use
+One of the big strengths of protocols is the ability to extend existing and maybe third party types,
+and this operation can be done in different ways. The majority of time you will tend to use
 the *extend-protocol* or the *extend-type* macros.
 
-Here is how the *extend-type* macro can be used:
+This is an example of how the *extend-type* macro can be used:
 
 [source, clojure]
 ----
@@ -1644,17 +1644,17 @@ given a protocol, it adds implementations for multiple types:
 ----
 
 There are other ways to extend a type with a protocol implementation, but they will be covered
-in a later section of this book.
+in another section of this book.
 
 
 ===== Participate in ClojureScript abstractions
 
 ClojureScript it self is built up on abstractions defined as protocols. Almost all behavior
-in the _ClojureScript_ language itself can be adopted for third party libraries. Let's go to see a
+in the _ClojureScript_ language itself can be adapted to third party libraries. Let's go to see a
 real life example.
 
 In previous sections we have explained the different kinds of built-in collections. For this example we
-will use the *Set* collection. See this snipped of code:
+will use the *Set*. See this snipped of code:
 
 [source, clojure]
 ----
@@ -1689,7 +1689,11 @@ so it cannot behave like a callable, but that can be easily fixed:
      (re-find this a))))
 ----
 
-Now, you will be able use the regex instances as predicates in filter operations:
+Let’s analyze this:  we are extending the `js/RegExp` type so that it implements the `invoke` function in the
+`IFn` protocol. To invoke a regular expression `a` as if it were a function, call the `re-find` function with
+the object of the function and the pattern.
+
+Now, you will be able use the regex instances as predicates in filter operation:
 
 [source, clojure]
 ----
@@ -1698,13 +1702,13 @@ Now, you will be able use the regex instances as predicates in filter operations
 ----
 
 
-===== Protocols introspection
+===== Introspection using Protocols
 
 _ClojureScript_ comes with a useful function that allows runtime introspection: `satisfies?`. The
-purpose of this function is know during runtime if some object (ie an instance of some type) satisfies the
+purpose of this function is to determinate at runtime if some object (instance of some type) satisfies the
 concrete protocol.
 
-So, with previous examples, if we check if a set instance satisfies a *IFn* protocol, it should
+So, with previous examples, if we check if a `set` instance satisfies a *IFn* protocol, it should
 return `true`:
 
 [source, clojure]
@@ -1713,21 +1717,20 @@ return `true`:
 ;; => true
 ----
 
-
 ==== Multimethods
 
-We have previously talked about protocols, that solves a very common use case of polymorphism:
-dispatch by type. But in some circumstances the protocol's approach it can be limiting. And
-here *multimethods* comes to the rescue.
+We have previously talked about protocols, which solve a very common use case of polymorphism:
+dispatch by type. But in some circumstances, the protocol approach it can be limiting. And
+here, *multimethods* come to the rescue.
 
-The *multimethods* are not limited to type dispatch only, instead, them also offers dispatch
-by types of multiple arguments, by value and allows ad-hoc hierarchies to be defined. Also,
-like protocols, is a "Open System" so you or any third parties can extend a multimethod for
+These *multimethods* are not limited to type dispatch only; instead, they also offer dispatch
+by types of multiple arguments and by value. They also allow ad-hoc hierarchies to be defined. Also,
+like protocols, multimethods are an "Open System," so you or any third parties can extend a multimethod for
 new types.
 
-The basic consturctions of *multimethods* consists in `defmulti` and `defmethod` forms. The
-`defmulti` form is used for create the multimethod with initial dispatch function. This is
-a common look and feel of it:
+The basic constructions of *multimethods* are the `defmulti` and `defmethod` forms. The
+`defmulti` form is used to create the multimethod with an initial dispatch function. This is
+a model of what it looks like:
 
 [source, clojure]
 ----
@@ -1739,11 +1742,11 @@ a common look and feel of it:
 ----
 
 The anonymous function defined within the `defmulti` form is a dispatch function. It will
-be called in every call to `say-hello` function and should return some kind of mark object
-that will be used for dispatch. In our example it returns the contents of `:locale` key
+be called in every call to `say-hello` function and should return some kind of marker object
+that will be used for dispatch. In our example it returns the contents of the `:locale` key
 of the first argument.
 
-And finally, we should add implementations. That is done with `defmethod` form:
+And finally, you should add implementations. That is done with `defmethod` form:
 
 [source, clojure]
 ----
@@ -1753,19 +1756,19 @@ And finally, we should add implementations. That is done with `defmethod` form:
 
 (defmethod say-hello :es
   [person]
-  (str "Hola " (:name person "Anonimo")))
+  (str "Hola " (:name person "Anónimo")))
 ----
 
 So, if you execute that function over a hash map containing the `:locale` and optionally
-the `:name` key, the multimethod will first call the dispatch function for determining the
-dispatch value, secondly it will search for an implementation of that value, if it is found,
-it will execute it, otherwise it will search for the default implementation (if it's
-specified) and execute it.
+the `:name` key, the multimethod will first call the dispatch function to determine the
+dispatch value, then it will search for an implementation for that value. If an implementation
+is found, the dispatcher will execute it. Otherwise, the dispatch will search for a default implementation
+(if one is specified) and execute it.
 
 [source, clojure]
 ----
 (say-hello {:locale :es})
-;; => "Hola Anonymo"
+;; => "Hola Anónimo"
 
 (say-hello {:locale :en :name "Ciri"})
 ;; => "Hello Ciri"
@@ -1774,27 +1777,28 @@ specified) and execute it.
 ;; => "Hello Anonymous"
 ----
 
-If the default implementation is not specified, an exception will be raised notifying us 
-that a value does not have an implementation for that multimethod.
+If the default implementation is not specified, an exception will be raised notifying you
+that some value does not have a implementation for that multimethod.
 
 
 ==== Hierarchies
 
-Hierarchies are a way that _ClojureScript_ allows you to build whatever relations your
-domain may require. Hierarchies are defined in terms of relations betwen named objects,
+Hierarchies are _ClojureScript_’s way to let you build whatever relations that your
+domain may require. The hierarchies are difined in term of relations betwen named objects,
 such as symbols, keywords or types.
 
 The hierarchies can be defined globally or locally, depending on your needs. Like multimethods,
 hierarchies are not limited to a single namespace. You can extend a hierarchy from any namespace,
-not just the one in which they are defined.
+not necessarily the one in which they are defined.
 
-The global namespace is more limited, for good reason. Namespaced keywords or symbols cannot
-be used in the global hierarcy. This behavior helps prevent unexpected situations when
+The global namespace is more limited, for good reasons. Keywords or symbols that are not namespaced can
+not be used in the global hierarchy. That behavior helps prevent unexpected situations when
 two or more third party libraries use the same symbol for different semantics.
+
 
 ===== Defining a hierarchy
 
-The hierarchy relations should be established using `derive` function:
+The hierarchy relations should be established using the `derive` function:
 
 [source, clojure]
 ----
@@ -1802,18 +1806,18 @@ The hierarchy relations should be established using `derive` function:
 (derive ::box ::shape)
 ----
 
-We have just defined a set of relationships between namespaced keywords, in this case
-`::circle` is a child of `::shape` and `::box` is also a child of `::shape`.
+We have just defined a set of relationships between namespaced keywords. In this case the
+`::circle` is a child of `::shape`, and `::box` is also a child of `::shape`.
 
-TIP: The `::circle` keyword syntax is a shortland for `:current.ns/circle`. So if you are executing
-it in a repl, then `::circle` will be evaluated to `:cljs.user/circe`.
+TIP: The `::circle` keyword syntax is a shorthand for `:current.ns/circle`. So if you are executing
+it in a REPL, `::circle` will be evaluated as `:cljs.user/circle`.
 
 
-===== Hierarchies introspection
+===== Hierarchies and introspection
 
 _ClojureScript_ comes with a little toolset of functions that allow runtime introspection
-of the global or locally defined hierarchies. These tools consist of three functions:
-`isa?`, `ancestors`, and `descendants`.
+of globally or locally defined hierarchies. This toolset consists of three functions:
+`isa?`, `anscestors`, and `descendants`.
 
 Let's see an example of how it can be used with the hierarchy defined in previous example:
 
@@ -1833,11 +1837,16 @@ Let's see an example of how it can be used with the hierarchy defined in previou
 ----
 
 
-===== Local defined hierarchies
+===== Locally defined hierarchies
 
-As mentioned previously; in _ClojureScript_ you also can define local hierarchies. This can be
-done with the `make-hierarchy` function. Here is how you can replicate the previous
-example, this time using the local hierarchy:
+As we mentioned previously, in _ClojureScript_ you also can define local hierarchies. This can be
+done with the `make-hierarchy` function. Here is an example of how you can replicate the previous
+example using a local hierarchy:
+
+////
+Have you explained the -> operator?
+TODO: add chapter for explain the threading macros
+////
 
 [source, clojure]
 ----
@@ -1846,7 +1855,7 @@ example, this time using the local hierarchy:
            (derive :circle :shape)))
 ----
 
-You can also use the same introspection functions with a locally defined hierarchy:
+Now you can use the same introspection functions with that locally defined hierarchy:
 
 [source, clojure]
 ----
@@ -1857,18 +1866,18 @@ You can also use the same introspection functions with a locally defined hierarc
 ;; => false
 ----
 
-As you can observe, in local hierarchies we can use normal (not namespace qualified) keywords
-and if we execute the `isa?` without passing the local hierarchy parameter, its as expected
-return false.
+As you can observe, in local hierarchies we can use normal (not namespace qualified) keywords,
+and if we execute the `isa?` without passing the local hierarchy parameter, it returns `false`
+as expected.
 
 
 ===== Hierarchies in multimethods
 
-One of the big advantages of hierarchies is that they work very well with multimethods.
-This is because multimethods, by default, use the `isa?` function for the last step of dispatching.
+One of the big advantages of hierarchies is that they works very well together with multimethods.
+This is because multimethods by default use the `isa?` function for the last step of dispatching.
 
-Let's see an example so we can clearly understand what this means. Firstly we define the multimethod with
-the `defmulti` form:
+Let's see an example to clearly understand what that means. Firstly, define the multimethod with
+`defmulti` form:
 
 [source, clojure]
 ----
@@ -1879,8 +1888,8 @@ the `defmulti` form:
   :hierarchy h)
 ----
 
-With the `:hierarchy` keyword parameter we indicate to the multimethod the hierarchy that we want to use. Left
-unspecified, the global hierarchy will be used.
+With `:hierarchy` keyword parameter we indicate to the multimethod that hierarchy we want to use;
+if it is not specified, the global hierarchy will be used.
 
 Secondly, we define an implementation for our multimethod using the `defmethod` form:
 
@@ -1907,10 +1916,9 @@ Now, let's see what happens if we execute that function with a box:
 ;; => "A box shape"
 ----
 
-Now everything works as expected because the multimethod executes the direct matching implementation
+Now everything works as expected; the multimethod executes the direct matching implementation
 for the given parameter. Next, let's see what happens if we execute the same function but with the `:circle`
 keyword as the parameter, which does not have the direct matching dispatch value:
-
 
 [source, clojure]
 ----
@@ -1924,47 +1932,48 @@ a descendant of `:shape`, the `:shape` implementation is executed.
 
 === Data types
 
-Until, now, we have used maps, sets, lists and vectors for represent our data. And in most cases is a
-really great aproach for do it. But some times we need define our own types and in this book we will
+Until, now, we have used maps, sets, lists and vectors to represent our data. And in most cases, this is a
+really great approach. But sometimes we need to define our own types, and in this book we will
 call them *datatypes*.
 
 A datatype provides the following:
 
-* A unique host backed type, either named or anonymous.
+* A unique host-backed type, either named or anonymous.
+* The ability to implement protocols (inline).
 * Explicitly declared structure using fields or closures.
-* Implement concrete abstractions.
 * Map like behavior (via records, see below).
 
 
 ==== Deftype
 
-The most low level construction in _ClojureScript_ for create own types, is the `deftype` macro. For
-demostration we will define a type called `User`:
+The most low level construction in _ClojureScript_ for creating your own types is the `deftype` macro. As a
+demonstration, we will define a type called `User`:
 
 [source, clojure]
 ----
 (deftype User [firstname lastname])
 ----
 
-Once the type has beed defined, we can create an instance of our `User`:
+Once the type has been defined, we can create an instance of our `User`. In the
+following example, the `.` after `User` indicates that we are calling a constructor.
 
 [source, clojure]
 ----
-(def user (User. "Triss" "Merigold"))
+(def person (User. "Triss" "Merigold"))
 ----
 
 And its fields can be accessed using the prefix-dot notation:
 
 [source, clojure]
 ----
-(.-firstname user)
+(.-firstname person)
 ;; => "Triss"
 ----
 
-Types defined with deftype (and posteriory with defrecord) creates a host backed class like object
-associated to the current namespace. But it has some peculiarities when we intend to use or import
-it from other namespace. The types in _ClojureScript_ should be imported with `:import` directive
-of `ns` macro:
+Types defined with `deftype` (and `defrecord`, which we will see later) creates a host-backed class-like object
+associated with the current namespace. But it has some peculiarities when we intend to use or import
+it from another namespace. The types in _ClojureScript_ should be imported with the `:import` directive
+of the `ns` macro:
 
 [source, clojure]
 ----
@@ -1975,14 +1984,14 @@ of `ns` macro:
 ----
 
 For convenience, _ClojureScript_ also defines a constructor function caled `->User` that can be imported
-with the common way using `:require` directive.
+in the common way using the `:require` directive.
 
-We personally do not like this type of functions, and we prefer define own constructors, with more
+We personally do not like this type of function, and we prefer to define our own constructors, with more
 idiomatic names:
 
 [source, clojure]
 ----
-(defn user
+(defn make-user
   [firstname lastname]
   (User. firstname lastname))
 ----
@@ -1992,16 +2001,16 @@ And use it in our code instead of `->User`.
 
 ==== Defrecord
 
-The record is a slightly higher level abstraction for define types in _ClojureScript_ and should be
-prefered way to do it.
+The record is a slightly higher level abstraction for defining types in _ClojureScript_ and should be
+preferred way to do it.
 
-As we know, _ClojureScript_ tends to use plain data types how are the maps but in most cases we need
-have a named type for represent the entities of our application. Here come the records.
+As we know, _ClojureScript_ tends to use plain data types such as maps, but in most cases we need
+a named type to represent the entities of our application. Here come the records.
 
-A record is a datatype that implements a map protocols and therefore can be used like any other map.
+A record is a datatype that implements the map protocol and therefore can be used like any other map.
 And since records are also proper types, they support type-based polymorphism through protocols.
 
-In summary: with records, we have the best of both worlds, maps that can play in in different
+In summary: with records, we have the best of both worlds, maps that can play in different
 abstractions.
 
 Let start defining the `User` type but using records:
@@ -2011,27 +2020,27 @@ Let start defining the `User` type but using records:
 (defrecord User [firstname lastname])
 ----
 
-It looks really similar to deftype syntax, in fact, it uses deftype behind the scenes as low level
+It looks really similar to the `deftype` syntax; in fact, it uses `deftype` behind the scenes as a low level
 primitive for defining types.
 
-Now, look the difference with raw types for access to its fields:
+Now, look at the difference with raw types for access to its fields:
 
 [source, clojure]
 ----
-(def user (User. "Yennefer" "of Vengerberg"))
+(def person (User. "Yennefer" "of Vengerberg"))
 
-(:username user)
+(:firstname user)
 ;; => "Yennefer"
 
-(get user :username)
+(get person :firstname)
 ;; => "Yennefer"
 ----
 
-As we mention previously, records are maps and acts like tham:
+As we mentioned previously, records are maps and act like tham:
 
 [source, clojure]
 ----
-(map? user)
+(map? person)
 ;; => true
 ----
 
@@ -2039,33 +2048,33 @@ And like maps, tham support extra fields that are not initially defined:
 
 [source, clojure]
 ----
-(def user2 (assoc user :age 92))
+(def person2 (assoc person :age 92))
 
-(:age user2)
+(:age person2)
 ;; => 92
 ----
 
-As we can see, the `assoc` function works as is expected and return a new instance of the same
-type but with new key value pair. But take care with `dissoc`, its behavior with records is slightly
-different that with maps; it will return a new record if the field being dissociated is an optional
-field, but it will return a plain map if you dissociate the mandatory field.
+As we can see, the `assoc` function works as expected and returns a new instance of the same
+type but with new key value pair. But take care with `dissoc`! Its behavior with records is slightly
+different than with maps; it will return a new record if the field being dissociated is an optional
+field, but it will return a plain map if you dissociate a mandatory field.
 
-An other difference with maps is that records does not acts like functions:
+An other difference with maps is that records do not act like functions:
 
 [source, clojure]
 ----
-(def plain-user {:username "Yennefer", :lastname "of Vengerberg"})
+(def plain-person {:firstname "Yennefer", :lastname "of Vengerberg"})
 
-(plain-user :username)
+(plain-person :firstname)
 ;; => "Yennefer"
 
-(user :username)
-;; => user.User does not implements IFn protocol.
+(person :firstname)
+;; => person.User does not implement IFn protocol.
 ----
 
-The `defrecord` macro like the `deftype`, for convenience esposes `->User` function, but with additional
-one `map->User` constructor function. We have the same opionon about that constructors that with
-deftype defined ones: we recommend define own instead of use that ones. But as they exists, let see
+For convenience, the `defrecord` macro, like `deftype`, exposes a `->User` function, as well as an additional
+`map->User` constructor function. We have the same opinion about that constructor as with
+`deftype` defined ones: we recommend defining your own instead of using the other ones. But as they exist, let’s see
 how they can be used:
 
 [source, clojure]
@@ -2076,15 +2085,15 @@ how they can be used:
 ----
 
 
-==== Implement protocols
+==== Implementing protocols
 
-Both type definition primitives that we have seen until now allows inline implementations for protocols
-(explained in previous section). Let start define one for example purposes:
+Both type definition primitives that we have seen so far allow inline implementations for protocols
+(explained in a previous section). Let's define one for example purposes:
 
 [source, clojure]
 ----
 (defprotocol IUser
-  "A common abstraction for work with user types."
+  "A common abstraction for working with user types."
   (full-name [_] "Get the full name of the user."))
 ----
 
@@ -2107,10 +2116,10 @@ Now, you can define a type with inline implementation for an abstraction, in our
 
 ==== Reify
 
-The `reify` macro lets you create an anonymous types that implement protocols. In difference with
-deftype and defrecord, it does not has accessible fields.
+The `reify` macro lets you create an anonymous type that implements protocols. In contrast to
+`deftype` and `defrecord`, it does not have accessible fields.
 
-This is a way how we can emulate an instance of user type and that plays well in `IUser` abstraction:
+This is  how we can emulate an instance of the user type that plays well with the `IUser` abstraction:
 
 [source, clojure]
 ----
@@ -2126,47 +2135,47 @@ This is a way how we can emulate an instance of user type and that plays well in
 ;; => "Yennefer of Vengerberg"
 ----
 
-The real purpose of reify is create anonymous types that plains in a concrete abstractions but
-you do not want a type in self.
+The real purpose of `reify` is to create an anonymous type that may implement protocols,
+but you don't want the type itself.
 
 
 === Host interoperability
 
-_ClojureScript_ in the same way as it brother Clojure, is designed to be a "Guest" language. It means
-that the design of the language fits very well to work on to of existing ecosystem such as javascript
-for _ClojureScript_ and jvm for _Clojure_.
+_ClojureScript_, in the same way as it brother Clojure, is designed to be a "Guest" language. This means
+that the design of the language works well on top of an existing ecosystem such as JavaScript
+for _ClojureScript_ and the JVM for _Clojure_.
 
 
 ==== The types.
 
-_ClojureScript_ unlike expected, try takes advantage of every type that the platform provides. This
-is a maybe incomplete list of things that _ClojureScript_ inherits and reuse from the underlying
+_ClojureScript_ unlike what you might expect, tries to take advantage of every type that the platform provides. This
+is a (perhaps incomplete) list of things that _ClojureScript_ inherits and reuses from the underlying
 platform:
 
 * _ClojureScript_ strings are javascript *Strings*.
 * _ClojureScript_ numbers are javascript *Numbers*.
 * _ClojureScript_ `nil` is a javascript *null*.
 * _ClojureScript_ regular expressions are javascript `RegExp` instances.
-* _ClojureScript_ is not interpreted, is always compiled town to the javascript.
-* _ClojureScript_ allows easy call platform apis with the same semantics.
-* _ClojureScript_ data types internally compiles to objects in javascript.
+* _ClojureScript_ is not interpreted; it is always compiled down to JavaScript.
+* _ClojureScript_ allows easy call to platform APIs with the same semantics.
+* _ClojureScript_ data types internally compile to objects in JavaScript.
 
-On top of it, _ClojureScript_ buid own abstractions and types that are does not exists in the
-platform, such as Vectors, Maps, Sets, and others that are explained in previous chapters.
+On top of it, _ClojureScript_ builds its own abstractions and types that do not exist in the
+platform, such as Vectors, Maps, Sets, and others that are explained in previous sections of this chapter.
 
 
 ==== Interacting with platform types
 
-_ClojureScript_ comes with a little set of special forms that allows interact with platform
-types such as calling object methods, creating new instances and accessing to object
+_ClojureScript_ comes with a little set of special forms that allows it interact with platform
+types such as calling object methods, creating new instances, and accessing object
 properties.
 
 
 ===== Access to the platform
 
-_ClojureScript_ has a special syntax for access to the all platform environment through the
-`js/` special namespace. This is the aspect of the expression for execute the javascript's
-builtin `parseInt` function:
+_ClojureScript_ has a special syntax for access to the entire platform environment through the
+`js/` special namespace. This is an example of an expression to execute JavaScript's
+built-in `parseInt` function:
 
 [source, clojure]
 ----
@@ -2191,68 +2200,70 @@ Using the `.` special form
 (js/RegExp. "^foo$")
 ----
 
-The last one is the recommended way to do that operation. We do not aware of real differences
-between the two forms, but in the clojurescript comunity the last one is the most adopted.
+The last one is the recommended way to create instances. We are not aware of real differences
+between the two forms, but in the ClojureScript community the last one is used most often.
 
 
 ===== Invoke instance methods
 
-For invoke methods of some object instance, in contrary to how it used in javascript (eg:
-`obj.method()`, the method name comes first like any other standard function in lisp languages
-but with little variation: the function name starts with special form `.`.
+To invoke methods of some object instance, as opposed to how it is done in JavaScript (e.g.,
+`obj.method()`, the method name comes first like any other standard function in Lisp languages
+but with a little variation: the function name starts with special form `.`.
 
-Let see how we can call the `.test()` method of regexp instance:
+Let's see how we can call the `.test()` method of a regexp instance:
 
 [source, clojure]
 ----
-(def re (js/RegExp "^foo"))
+(def re (js/RegExp "^Clojure"))
 
-(.test re "foobar")
+(.test re "ClojureScript")
 ;; => true
 ----
 
 
 ===== Access to object properties
 
-Access to the object properties is really very similar to call a method, the difference is that
-instead of using the `.` we should use the `.-`. Let see an example:
+Access to the object properties is really very similar to calling a method. The difference is that
+instead of using the `.` you use `.-`. Let's see an example:
 
 [source, clojure]
 ----
 (.-multiline re)
 ;; => false
+(.-PI js/Math)
+;; => 3.141592653589793
 ----
 
 
-===== Javascrpt objects
+===== JavaScript objects
 
-_ClojureScript_ has different ways for create plain javascript objects, each one has its own
-purpose. The basic one is the `js-obj` function. It accepts a variable length of pairs of key
-values and return a javascript object:
+_ClojureScript_ has different ways to create plain JavaScript objects, each one has its own
+purpose. The basic one is the `js-obj` function. It accepts a variable number of pairs of keys and
+values and returns a JavaScript object:
 
 [source, clojure]
 ----
-(js-obj "foo" "bar")
-;; => #js {:foo "bar"}
+(js-obj "country" "FR")
+;; => #js {:country "FR"}
 ----
 
 The return value can be passed to some kind of third party library that accepts a plain
-javascript objects. But you can observe the repl representation of the return value of this
-function. It is exactly the other form for do the same thing.
+JavaScript object, but you can observe the real representation of the return value of this
+function. It is really another other form for doing the same thing.
 
-Using the reader macro `#js` consists of prepend it to the clojure map or vector and the
-result will be transformed to plain javascript:
+Using the reader macro `#js` consists of prepending it to a ClojureScript map or vector, and the
+result will be transformed to plain JavaScript:
 
 [source, clojure]
 ----
-(def myobj #js {:foo "bar"})
+(def myobj #js {:country "FR"})
 ----
 
 The translation of that to plain javascript is similar to this:
 
 [source, javascript]
 ----
-var myobj = {foo: "bar"};
+var myobj = {country: "FR"};
 ----
 
 
@@ -2261,25 +2272,25 @@ the `.-` syntax:
 
 [source, clojure]
 ----
-(.-foo myobj)
-;; => "bar"
+(.-country myobj)
+;; => "FR"
 ----
 
-And as javascript objects are mutable, you can set a new value to some property using
+And as JavaScript objects are mutable, you can set a new value for some property using
 the `set!` function:
 
 [source, clojure]
 ----
-(set! (.-foo myobj) "baz")
+(set! (.-country myobj) "KR")
 ----
 
 
 ===== Conversions
 
-The inconvenience of previously explained forms, is that they does not make recursive
-transformatios, so if you have nested objects, the nested objects do not will be converted.
-For solve that use cases, _ClojureScript_ comes with `clj->js` and `js->clj` functions
-that transforms clojure collection types into javascript and in reverse order:
+The inconvenience of the previously explained forms is that they does not make recursive
+transformatios, so if you have nested objects, the nested objects will not be converted.
+To solve that use cases _ClojureScript_ comes with the `clj->js` and `js->clj` functions
+that transform clojure collection types into JavaScript and bacl:
 
 [source, clojure]
 ----
@@ -2287,19 +2298,19 @@ that transforms clojure collection types into javascript and in reverse order:
 ;; => #js {:foo #js {:bar "baz"}}
 ----
 
-In case of arrays, it there a specialized function `into-array` that behaves as it expected:
+In case of arrays, there is a specialized function `into-array` that behaves as expected:
 
 [source, clojure]
 ----
-(into-array ["foo"])
-;; => #js ["foo"]
+(into-array ["France" "Korea" "Peru"])
+;; => #js ["France" "Korea" "Peru"]
 ----
 
 
 ===== Arrays
 
-In previous example we have seen how we can create an array from existing _ClojureScript_
-collection. But it there other function for create arrays: `make-array`.
+In previous example we have seen how we can create an array from an existing _ClojureScript_
+collection. But it there other function for creating arrays: `make-array`.
 
 .Creating a preallocated array with length 10
 [source, clojure]
@@ -2308,8 +2319,8 @@ collection. But it there other function for create arrays: `make-array`.
 ;; => #js [nil nil nil nil nil nil nil nil nil nil]
 ----
 
-In _ClojureScript_ arrays are also play well in sequence abstraction so you can iterate
-over it or simple get the number of elements with `count` function:
+In _ClojureScript_ arrays also play well with sequence abstractions so you can iterate
+over them or simply get the number of elements with the `count` function:
 
 [source, clojure]
 ----
@@ -2317,16 +2328,18 @@ over it or simple get the number of elements with `count` function:
 ;; => 10
 ----
 
-As arrays are platform mutable collection type, you can acces to a concrete index and set
-value to on that position:
+As arrays on the JavaScript platform are a mutable collection type, you can access a concrete index
+and set the value at that position:
 
 [source, clojure]
 ----
 (aset a 0 2)
 ;; => 2
+a
+;; => #js [2 nil nil nil nil nil nil nil nil nil]
 ----
 
-Or access in a indexed way to it values:
+Or access in a indexed way to get its values:
 
 [source, clojure]
 ----
@@ -2334,22 +2347,22 @@ Or access in a indexed way to it values:
 ;; => 2
 ----
 
-In javascript, the objects are also arrays, so you can use the same functions for interacting
+In JavaScript, objects are also arrays, so you can use the same functions for interacting
 with plain objects:
 
 [source, clojure]
 ----
-(def b #js {:foo "bar"})
-;; => #js {:foo "bar"}
+(def b #js {:hour 16})
+;; => #js {:hour 16}
 
-(aget b "foo")
-;; => "bar"
+(aget b "hour")
+;; => 16
 
-(aset b "baz" "bar")
-;; => "bar"
+(aset b "minute" 22)
+;; => 22
 
 b
-;; => #js {:foo "bar", :baz "bar"}
+;; => #js {:hour 16, :minute 22}
 ----
 
 
@@ -2360,13 +2373,13 @@ TBD
 
 === Truthiness
 
-This is an aspect where the each language has its own semantics, the majority of languages
-treat empty collections, the 0 integer and other things like this as false.
-In _ClojureScript_ unlike in other languages only two values are considered as false: `nil`
-and `false`, Everything else is  treated as `true`.
+This is the aspect where each language has its own semantics. The majority of languages
+consider empty collections, the integer 0, and other things like this to be false.
+In _ClojureScript_, unlike in other languages, only two values are considered as false: `nil`
+and `false`, Everything else is treated as `true`.
 
-Thanks to that, sets can also be considered predicates, if it returns a value then it exists
-and if it returns `nil` then it doesn't exist:
+So, thanks to this, sets can be also be considered as predicates. If a set returns a value, it exists,
+and if it returns `nil` he value does not exist:
 
 [source, clojure]
 ----
@@ -2379,13 +2392,16 @@ and if it returns `nil` then it doesn't exist:
 ;; => nil
 ----
 
+
 === Transducers
 
 TBD
 
+
 === Metadata
 
 TBD
+
 
 === A little overview of macros
 
