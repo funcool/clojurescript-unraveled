@@ -1463,12 +1463,12 @@ ClojureScript source you have seen something like this at begining of the file:
 (def x "hello")
 ----
 
-Namespaces are dynamic and you can create one at any time, but the convention is to have one namespace
-per file. So, the namespace definition usually is at begining of the file, followed by an optional
+Namespaces are dynamic, meaning you can create one at any time. The convention however, is to have one namespace
+per file. Naturally, a namespace definition is usually at the beginning of the file, followed by an optional
 docstring.
 
 Previously we have explained vars and symbols. Every var that you define will be associated
-with one namespace. If you do not define a concrete namespace, the default one called "user" will be
+with it's namespace. If you do not define a concrete namespace then the default one called "user" will be
 used:
 
 [source, clojure]
@@ -1480,8 +1480,8 @@ used:
 
 ==== Loading other namespaces
 
-Defining a namespace and vars in it is really easy, but it is not very useful if we can't
-use definitions from other namespaces. For this purpose, the `ns` macro also offers a simple way to load other
+Defining a namespace and the vars in it is really easy, but it's not very useful if we can't
+use them from other namespaces. For this purpose, the `ns` macro offers a simple way to load other
 namespaces.
 
 Observe the following:
@@ -1499,10 +1499,10 @@ Observe the following:
 As you can observe, we are using fully qualified names (namespace + var name) for access to vars and
 functions from different namespaces.
 
-This works. It lets you access other namespaces, but is very boring always write the complete namespace
-name for access to its vars and functions. It will be especially uncomfortable if a namespace name
-is very large. To solve that, you can use the `:as` directive to create an additional (usually
-shorter) alias to the namespace. This is how it can be done:
+While this will let you access other namespaces, it's also repetitive and overly verbose. It will be especially
+uncomfortable if the name of a  namespace is very large. To solve that, you can use the `:as` directive to
+create an additional (usually shorter) alias to the namespace.
+This is how it can be done:
 
 [source, clojure]
 ----
@@ -1531,17 +1531,11 @@ functions are now part of your namespace, and you do not need to qualify them at
 ----
 
 And finally, you should know that everything located in the `cljs.core` namespace is automatically
-loaded and you should not require it explicitly. Sometimes you will want to declare vars that will clash
-with those defined in the `cljs.core` namespace. To do this, the `ns` macro offers another directive that
+loaded and you should not require it explicitly. Sometimes you may want declare vars that will clash
+with some others defined in the `cljs.core` namespace. To do this, the `ns` macro offers another directive that
 allows you to exclude specific symbols and prevent them from being automatically loaded.
 
 Observe the following:
-
-////
-In this example, you have never used something like ":refer-clojure" before
-TODO: explain `:refer-clojure`
-////
-
 
 [source, clojure]
 ----
@@ -1575,14 +1569,12 @@ We can not trust languages that allow you to silently overwrite methods that you
 consistent behavior when this happens.
 
 These symptoms are commonly called the "expression problem".
-
-TODO: add link to expression problem description
-
+see http://en.wikipedia.org/wiki/Expression_problem for more details
 
 ==== Protocols
 
-The _ClojureScript_ primitive for defining "interfaces" is called a Protocol. A protocol consists in
-a name and a set of functions. All functions have at least one argument corresponding to 
+The _ClojureScript_ primitive used to define "interfaces" is the Protocol. A protocol consists of
+a name and a set of functions. All functions have at least one argument corresponding to
 `this` in javascript or `self` in Python.
 
 Protocols provide a type based polymorphism, and the dispatch is always done by the
@@ -1599,22 +1591,22 @@ A protocol looks like this:
   (sample-method [this] "A doc string of the function associated with the protocol."))
 ----
 
-NOTE: the "I" prefix is very common for make clear separation of protocols and types. In clojure
-community it there many disparate opinions about the use of the "I" prefix. In our opinion is an
-acceptable solution for avoid name clashing and confusions.
+NOTE: the "I" prefix is commonly used to designate the separation of protocols and types. In the clojure
+community there many different opinions about how the "I" prefix should be used. In our opinion, it is an
+acceptable solution to avoid name clashing and possible confusion.
 
-From the user perspective, protocol functions are simple and plain functions defined in the namespace
-where the protocol is defined. As you can intuit, this makes protocols completely namespaces and
-avoid any accidental clashing between implemented protocols for same type.
+From perspective of the user, protocol functions are simply plain functions defined in the namespace
+where the protocol is defined. As you can intuit, this namespacing of protocols allows us to avoid
+any conflict between implemented protocols for the same type.
 
 
 ===== Extending to existing types
 
 One of the strengths of protocols is the ability to extend both native and third party types.
-Though this operation is highly flexible, the majority of time you will be tend to use
+Though this operation is highly flexible, the majority of time you will tend to use
 the *extend-protocol* or the *extend-type* macros.
 
-This is the aspect on how *extend-type* macro can be used:
+Here is how the *extend-type* macro can be used:
 
 [source, clojure]
 ----
@@ -1634,8 +1626,8 @@ This is the aspect on how *extend-type* macro can be used:
 ----
 
 You can observe that with *extend-type* you are extending a single type with different protocols
-in a single expression. In comparison, *extend-protocol* does just the inverse operation:
-given a protocol, it adds implementation for multiple types:
+in a single expression. In comparison, *extend-protocol* does the inverse;
+given a protocol, it adds implementations for multiple types:
 
 [source, clojure]
 ----
@@ -1661,8 +1653,8 @@ ClojureScript it self is built up on abstractions defined as protocols. Almost a
 in the _ClojureScript_ language itself can be adopted for third party libraries. Let's go to see a
 real life example.
 
-In previous sections we have explained different kinds of built-in collections. In this case we
-will use the *Set*'s. See this snipped of code:
+In previous sections we have explained the different kinds of built-in collections. For this example we
+will use the *Set* collection. See this snipped of code:
 
 [source, clojure]
 ----
@@ -1673,7 +1665,7 @@ will use the *Set*'s. See this snipped of code:
 ----
 
 What happened? In this case, the _set_ type implements the _ClojureScript_ internal
-`IFn` protocol that represents an abstraction for functions or any thing callable. So it can be
+`IFn` protocol that represents an abstraction for functions or anything callable. This way it can be
 used like a callable predicate in filter.
 
 Ok, but what happens if we want use a regular expression as predicate function for filtering
@@ -1686,7 +1678,7 @@ a collection of strings:
 ----
 
 The exception is raised because the RegExp type does not implements the `IFn` protocol
-so it can not behave like a callable, but that can be easily fixed:
+so it cannot behave like a callable, but that can be easily fixed:
 
 [source, clojure]
 ----
@@ -1697,7 +1689,7 @@ so it can not behave like a callable, but that can be easily fixed:
      (re-find this a))))
 ----
 
-Now, you will be able use the regex instances as predicates in filter operation:
+Now, you will be able use the regex instances as predicates in filter operations:
 
 [source, clojure]
 ----
