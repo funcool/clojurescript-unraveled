@@ -452,7 +452,7 @@ are functions that will be able to accept an arbitrary number of arguments:
 ;; => #{1 2 3}
 ----
 
-The way to denote a variadic function is using the `&` simbol prefix on its arguments vector.
+The way to denote a variadic function is using the `&` symbol prefix on its arguments vector.
 
 
 ==== Short syntax for anonymous functions
