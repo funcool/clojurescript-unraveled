@@ -263,7 +263,7 @@ in _ClojureScript_ are written with the pairs between curly braces.
 {:alphabet [:a :b :c]}
 ----
 
-NOTE: Commas are frequently used to separate a key-value pair but are completelly optional. In
+NOTE: Commas are frequently used to separate a key-value pair but are completely optional. In
 _ClojureScript_ syntax, commas are treated like spaces.
 
 Like Vectors, every item in a map literal is evaluated before the result is stored in a map, but
@@ -289,7 +289,7 @@ chapter.
 
 === Vars
 
-_ClojureScript_ is a mostly functional language and focused on immutability. Becuase of that, it does
+_ClojureScript_ is a mostly functional language and focused on immutability. Because of that, it does
 not have the concept of variables as you know them in most other programming languages. The closest analogy to
 variables are the variables you define in algebra; when you say `x = 6` in mathematics, you are saying that you
 want the symbol `x` to stand for the number six.
@@ -315,7 +315,7 @@ to define variables within a function.
 
 It's time to make things happen. _ClojureScript_, has what are known as first class functions. They behave
 like any other type, you can pass them as parameters and you can return them as values, always respecting
-the lexical scope. _ClojureScript_ also has some features of dynamic scoping, but this will be discused
+the lexical scope. _ClojureScript_ also has some features of dynamic scoping, but this will be discussed
 in other section.
 
 If you want know more about scopes, this link:http://en.wikipedia.org/wiki/Scope_(computer_science)[wikipedia article]
@@ -367,7 +367,7 @@ You can define a function and call it at same time (in a single expression):
 ----
 
 Let's start creating named functions. But what does a _named function_ really mean? It is very simple;
-as in _ClojureScript_, functions are fist-class and behave like any other value, so naming a function
+as in _ClojureScript_, functions are first-class and behave like any other value, so naming a function
 is done by simply binding the function to a symbol:
 
 [source, clojure]
@@ -604,7 +604,7 @@ Here is the same example as previous one, but using `case`:
 ==== Locals
 
 _ClojureScript_ does not has the concept of variables as in ALGOL-like languages, but it does
-have locals. Locals, as per usual, are immutable, and if you try mutate them, the compiller
+have locals. Locals, as per usual, are immutable, and if you try mutate them, the compiler
 will throw an error.
 
 The locals are defined with the `let` expression. The expression starts with a vector as first parameter
@@ -630,7 +630,7 @@ expressions `(println "Simple message from the body of a let")` and `(* x y)` ar
 ==== Blocks
 
 In JavaScript, braces `{` and `}` delimit a block of code that “belongs together.” Blocks in
-_ClojureScript_ are created using the `do` expression and are ususally used for side effects, like
+_ClojureScript_ are created using the `do` expression and are usually used for side effects, like
 printing something to the console or writing a log in a logger.
 
 A side effect is something that is not necessary for the return value.
