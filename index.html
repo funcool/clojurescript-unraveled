@@ -978,7 +978,7 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#error-handling-using-monads-and-cats">4.3. Error handling using monads and Cats.</a></li>
 <li><a href="#pattern-matching-using-core-match">4.4. Pattern matching using core.match.</a></li>
 <li><a href="#web-development-with-om-and-react">4.5. Web development with Om and React.</a></li>
-<li><a href="#writing-libraries-that-shares-code-betwen-clojure-and-clojurescript">4.6. Writing libraries that shares code betwen Clojure and ClojureScript.</a></li>
+<li><a href="#writing-libraries-that-shares-code-between-clojure-and-clojurescript">4.6. Writing libraries that shares code between Clojure and ClojureScript.</a></li>
 </ul>
 </li>
 </ul>
@@ -1161,7 +1161,7 @@ or are unclear about anything in the following example; the functions are discus
 <h4 id="symbols"><a class="link" href="#symbols">2.2.3. Symbols</a></h4>
 <div class="paragraph">
 <p>Symbols in <em>ClojureScript</em> are very, very similar to <strong>Keywords</strong> (which you now know about). But
-instead of evaluating to themselves, symbols are evalutated to something that they refer to, that
+instead of evaluating to themselves, symbols are evaluated to something that they refer to, that
 can be functions, variables, etc.</p>
 </div>
 <div class="paragraph">
@@ -1237,12 +1237,12 @@ of existing collection types in <em>ClojureScript</em>.</p>
 <div class="sect4">
 <h5 id="lists"><a class="link" href="#lists">Lists</a></h5>
 <div class="paragraph">
-<p>This is a clasic collection type in languages based on Lisp. Lists are the
+<p>This is a classic collection type in languages based on Lisp. Lists are the
 simplest type of collection in <em>ClojureScript</em>. Lists can contain items of any type, including
 other collections.</p>
 </div>
 <div class="paragraph">
-<p>Lists in <em>ClojureScript</em> are repsesented by items enclosed between parentheses:</p>
+<p>Lists in <em>ClojureScript</em> are represented by items enclosed between parentheses:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1254,7 +1254,7 @@ other collections.</p>
 <p>As you can see, all list examples are prefixed with the <code>'</code> char. This is because lists in Lisp like
 languages are often used to express things like function or macro calls. In that case
 the first item should be a symbol that will evaluate to a something callable, and the rest of the list
-elemeents will be function parameters. However, in the preceding examples, we don&#8217;t want the first item as a symbol;
+elements will be function parameters. However, in the preceding examples, we don&#8217;t want the first item as a symbol;
 we just want a list of items.  The following example shows the difference between a list without and with the preceding
 single quote mark:</p>
 </div>
@@ -1342,7 +1342,7 @@ in <em>ClojureScript</em> are written with the pairs between curly braces.</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-Commas are frequently used to separate a key-value pair but are completelly optional. In
+Commas are frequently used to separate a key-value pair but are completely optional. In
 <em>ClojureScript</em> syntax, commas are treated like spaces.
 </td>
 </tr>
@@ -1378,7 +1378,7 @@ chapter.</p>
 <div class="sect2">
 <h3 id="vars"><a class="link" href="#vars">2.3. Vars</a></h3>
 <div class="paragraph">
-<p><em>ClojureScript</em> is a mostly functional language and focused on immutability. Becuase of that, it does
+<p><em>ClojureScript</em> is a mostly functional language and focused on immutability. Because of that, it does
 not have the concept of variables as you know them in most other programming languages. The closest analogy to
 variables are the variables you define in algebra; when you say <code>x = 6</code> in mathematics, you are saying that you
 want the symbol <code>x</code> to stand for the number six.</p>
@@ -1408,7 +1408,7 @@ to define variables within a function.</p>
 <div class="paragraph">
 <p>It&#8217;s time to make things happen. <em>ClojureScript</em>, has what are known as first class functions. They behave
 like any other type, you can pass them as parameters and you can return them as values, always respecting
-the lexical scope. <em>ClojureScript</em> also has some features of dynamic scoping, but this will be discused
+the lexical scope. <em>ClojureScript</em> also has some features of dynamic scoping, but this will be discussed
 in other section.</p>
 </div>
 <div class="paragraph">
@@ -1468,7 +1468,7 @@ in the following example, the function takes two parameters and returns their av
 </div>
 <div class="paragraph">
 <p>Let&#8217;s start creating named functions. But what does a <em>named function</em> really mean? It is very simple;
-as in <em>ClojureScript</em>, functions are fist-class and behave like any other value, so naming a function
+as in <em>ClojureScript</em>, functions are first-class and behave like any other value, so naming a function
 is done by simply binding the function to a symbol:</p>
 </div>
 <div class="listingblock">
@@ -1606,7 +1606,7 @@ the reader macro will be interpreted and converted to a <code>fn</code> expressi
 function <code>#(set (list %1))</code> can be written <code>#(set (list %))</code>.</p>
 </div>
 <div class="paragraph">
-<p>Additionaly, this syntax also supports the variadic form with the`%&amp;` symbol:</p>
+<p>Additionally, this syntax also supports the variadic form with the`%&amp;` symbol:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1738,14 +1738,14 @@ a static value.</p>
 <h4 id="locals"><a class="link" href="#locals">2.6.1. Locals</a></h4>
 <div class="paragraph">
 <p><em>ClojureScript</em> does not has the concept of variables as in ALGOL-like languages, but it does
-have locals. Locals, as per usual, are immutable, and if you try mutate them, the compiller
+have locals. Locals, as per usual, are immutable, and if you try mutate them, the compiler
 will throw an error.</p>
 </div>
 <div class="paragraph">
 <p>The locals are defined with the <code>let</code> expression. The expression starts with a vector as first parameter
-followed by arbitrary number of expressions. The first parameter (the vector) should contain a arbitrary
+followed by arbitrary number of expressions. The first parameter (the vector) should contain an arbitrary
 number of pairs that give a <em>binding form</em> (usually a symbol) followed by an expression whose value will
-be bound to this new local for the remainer of the let expression.</p>
+be bound to this new local for the remainder of the let expression.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1767,7 +1767,7 @@ expressions <code>(println "Simple message from the body of a let")</code> and <
 <h4 id="blocks"><a class="link" href="#blocks">2.6.2. Blocks</a></h4>
 <div class="paragraph">
 <p>In JavaScript, braces <code>{</code> and <code>}</code> delimit a block of code that “belongs together.” Blocks in
-<em>ClojureScript</em> are created using the <code>do</code> expression and are ususally used for side effects, like
+<em>ClojureScript</em> are created using the <code>do</code> expression and are usually used for side effects, like
 printing something to the console or writing a log in a logger.</p>
 </div>
 <div class="paragraph">
@@ -2537,7 +2537,7 @@ from the opposite end of the collection as lists:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>map</code> and <code>filter</code> oeprations return lazy sequences, but as itis common to need a fully realized sequence after performing those operations,
+<p>The <code>map</code> and <code>filter</code> operations return lazy sequences, but as it is common to need a fully realized sequence after performing those operations,
 vector-returning counterparts of such functions are available as <code>mapv</code> and <code>filterv</code>. They have the advantages of being faster
 than building a vector from a lazy sequence and making your intent more explicit:</p>
 </div>
@@ -2591,8 +2591,8 @@ for maps expects one or more sequences of key-value pairs as its last arguments:
 <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-nv">ciri</span> <span class="tok-p">[</span><span class="tok-ss">:surname</span> <span class="tok-s">&quot;Fiona&quot;</span><span class="tok-p">])</span>
 <span class="tok-c1">;; =&gt; {:name &quot;Cirilla&quot;, :surname &quot;Fiona&quot;}</span>
 
-<span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-nv">ciri</span> <span class="tok-p">[</span><span class="tok-ss">:surname</span> <span class="tok-s">&quot;Fiona&quot;</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-ss">:ocupation</span> <span class="tok-s">&quot;Wizard&quot;</span><span class="tok-p">])</span>
-<span class="tok-c1">;; =&gt; {:name &quot;Cirilla&quot;, :surname &quot;Fiona&quot;, :ocupation &quot;Wizard&quot;}</span></code></pre>
+<span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-nv">ciri</span> <span class="tok-p">[</span><span class="tok-ss">:surname</span> <span class="tok-s">&quot;Fiona&quot;</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-ss">:occupation</span> <span class="tok-s">&quot;Wizard&quot;</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; {:name &quot;Cirilla&quot;, :surname &quot;Fiona&quot;, :occupation &quot;Wizard&quot;}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2791,7 +2791,7 @@ allows you to exclude specific symbols and prevent them from being automatically
 <div class="paragraph">
 <p>I&#8217;m sure that at more than one time you have found yourself in this situation: you have defined a great
 abstraction (using interfaces or something similar) for your "business logic" and you have found
-the need to deal with another module over which you have absolutelly no control, and you probably
+the need to deal with another module over which you have absolutely no control, and you probably
 were thinking of creating adapters, proxies, and other approaches that imply a great amount
 of additional complexity.</p>
 </div>
@@ -3057,7 +3057,7 @@ that some value does not have a implementation for that multimethod.</p>
 <h4 id="hierarchies"><a class="link" href="#hierarchies">2.10.3. Hierarchies</a></h4>
 <div class="paragraph">
 <p>Hierarchies are <em>ClojureScript</em>’s way to let you build whatever relations that your
-domain may require. The hierarchies are difined in term of relations betwen named objects,
+domain may require. The hierarchies are defined in term of relations between named objects,
 such as symbols, keywords or types.</p>
 </div>
 <div class="paragraph">
@@ -3104,7 +3104,7 @@ it in a REPL, <code>::circle</code> will be evaluated as <code>:cljs.user/circle
 <div class="paragraph">
 <p><em>ClojureScript</em> comes with a little toolset of functions that allow runtime introspection
 of globally or locally defined hierarchies. This toolset consists of three functions:
-<code>isa?</code>, <code>anscestors</code>, and <code>descendants</code>.</p>
+<code>isa?</code>, <code>ancestors</code>, and <code>descendants</code>.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s see an example of how it can be used with the hierarchy defined in previous example:</p>
@@ -3653,9 +3653,9 @@ the <code>set!</code> function:</p>
 <h5 id="conversions"><a class="link" href="#conversions">Conversions</a></h5>
 <div class="paragraph">
 <p>The inconvenience of the previously explained forms is that they does not make recursive
-transformatios, so if you have nested objects, the nested objects will not be converted.
+transformations, so if you have nested objects, the nested objects will not be converted.
 To solve that use cases <em>ClojureScript</em> comes with the <code>clj&#8594;js</code> and <code>js&#8594;clj</code> functions
-that transform clojure collection types into JavaScript and bacl:</p>
+that transform clojure collection types into JavaScript and back:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3677,7 +3677,7 @@ that transform clojure collection types into JavaScript and bacl:</p>
 <h5 id="arrays"><a class="link" href="#arrays">Arrays</a></h5>
 <div class="paragraph">
 <p>In previous example we have seen how we can create an array from an existing <em>ClojureScript</em>
-collection. But it there other function for creating arrays: <code>make-array</code>.</p>
+collection. But there is another function for creating arrays: <code>make-array</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">Creating a preallocated array with length 10</div>
@@ -3755,7 +3755,7 @@ and <code>false</code>, Everything else is treated as <code>true</code>.</p>
 </div>
 <div class="paragraph">
 <p>So, thanks to this, sets can be also be considered as predicates. If a set returns a value, it exists,
-and if it returns <code>nil</code> he value does not exist:</p>
+and if it returns <code>nil</code> the value does not exist:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4177,19 +4177,19 @@ during its phase.</p>
 file for each cljs file.</p>
 </li>
 <li>
-<p>The generated files pases throught the Closure Compiler that depending on the optimization level,
+<p>The generated files passes through the Closure Compiler that depending on the optimization level,
 and other options (sourcemaps, output dir output to, &#8230;&#8203;) generates the final output.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>The final output dependends strictly on the optimization level.</p>
+<p>The final output depends strictly on the optimization level.</p>
 </div>
 <div class="sect4">
 <h5 id="none"><a class="link" href="#none">none</a></h5>
 <div class="paragraph">
 <p>Implies that closure compiler just writes the files as is, without any additional
-optimization applied to the source code. This optimization level is manadatory if you are targeting
+optimization applied to the source code. This optimization level is mandatory if you are targeting
 <strong>nodejs</strong> or <strong>iojs</strong> and is appropiate in development mode when your code targets the browser.</p>
 </div>
 </div>
@@ -4200,7 +4200,7 @@ optimization applied to the source code. This optimization level is manadatory i
 line breaks and other whitespace and generating the output as one large file.</p>
 </div>
 <div class="paragraph">
-<p>It also has some compilation speed penality, resulting in slower compilations. In any case, it is not
+<p>It also has some compilation speed penalty, resulting in slower compilations. In any case, it is not
 terribly slow and is completely usable in small/medium applications.</p>
 </div>
 </div>
@@ -4309,7 +4309,7 @@ other JavaScript.</p>
 <p>Web development using the Om library.</p>
 </li>
 <li>
-<p>Share code betwen clojure and clojurescript.</p>
+<p>Share code between clojure and clojurescript.</p>
 </li>
 </ul>
 </div>
@@ -4344,7 +4344,7 @@ other JavaScript.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-libraries-that-shares-code-betwen-clojure-and-clojurescript"><a class="link" href="#writing-libraries-that-shares-code-betwen-clojure-and-clojurescript">4.6. Writing libraries that shares code betwen Clojure and ClojureScript.</a></h3>
+<h3 id="writing-libraries-that-shares-code-between-clojure-and-clojurescript"><a class="link" href="#writing-libraries-that-shares-code-between-clojure-and-clojurescript">4.6. Writing libraries that shares code between Clojure and ClojureScript.</a></h3>
 <div class="paragraph">
 <p>TBD</p>
 </div>
@@ -4355,7 +4355,7 @@ other JavaScript.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1<br/>
-Last updated 2015-05-05 14:56:37 CEST
+Last updated 2015-05-07 09:35:18 CEST
 </div>
 </div>
 </body>
