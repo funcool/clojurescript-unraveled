@@ -1784,7 +1784,7 @@ that some value does not have a implementation for that multimethod.
 ==== Hierarchies
 
 Hierarchies are _ClojureScript_’s way to let you build whatever relations that your
-domain may require. The hierarchies are difined in term of relations betwen named objects,
+domain may require. The hierarchies are defined in term of relations between named objects,
 such as symbols, keywords or types.
 
 The hierarchies can be defined globally or locally, depending on your needs. Like multimethods,
@@ -1817,7 +1817,7 @@ it in a REPL, `::circle` will be evaluated as `:cljs.user/circle`.
 
 _ClojureScript_ comes with a little toolset of functions that allow runtime introspection
 of globally or locally defined hierarchies. This toolset consists of three functions:
-`isa?`, `anscestors`, and `descendants`.
+`isa?`, `ancestors`, and `descendants`.
 
 Let's see an example of how it can be used with the hierarchy defined in previous example:
 
@@ -2290,7 +2290,7 @@ the `set!` function:
 The inconvenience of the previously explained forms is that they does not make recursive
 transformations, so if you have nested objects, the nested objects will not be converted.
 To solve that use cases _ClojureScript_ comes with the `clj->js` and `js->clj` functions
-that transform clojure collection types into JavaScript and bacl:
+that transform clojure collection types into JavaScript and back:
 
 [source, clojure]
 ----
@@ -2310,7 +2310,7 @@ In case of arrays, there is a specialized function `into-array` that behaves as 
 ===== Arrays
 
 In previous example we have seen how we can create an array from an existing _ClojureScript_
-collection. But it there other function for creating arrays: `make-array`.
+collection. But there is another function for creating arrays: `make-array`.
 
 .Creating a preallocated array with length 10
 [source, clojure]
@@ -2379,7 +2379,7 @@ In _ClojureScript_, unlike in other languages, only two values are considered as
 and `false`, Everything else is treated as `true`.
 
 So, thanks to this, sets can be also be considered as predicates. If a set returns a value, it exists,
-and if it returns `nil` he value does not exist:
+and if it returns `nil` the value does not exist:
 
 [source, clojure]
 ----
