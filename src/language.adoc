@@ -110,7 +110,7 @@ or are unclear about anything in the following example; the functions are discus
 ==== Symbols
 
 Symbols in _ClojureScript_ are very, very similar to *Keywords* (which you now know about). But
-instead of evaluating to themselves, symbols are evalutated to something that they refer to, that
+instead of evaluating to themselves, symbols are evaluated to something that they refer to, that
 can be functions, variables, etc.
 
 Symbols are represented with something that does not start with a number:
@@ -175,11 +175,11 @@ of existing collection types in _ClojureScript_.
 
 ===== Lists
 
-This is a clasic collection type in languages based on Lisp. Lists are the
+This is a classic collection type in languages based on Lisp. Lists are the
 simplest type of collection in _ClojureScript_. Lists can contain items of any type, including
 other collections.
 
-Lists in _ClojureScript_ are repsesented by items enclosed between parentheses:
+Lists in _ClojureScript_ are represented by items enclosed between parentheses:
 
 [source, clojure]
 ----
@@ -190,7 +190,7 @@ Lists in _ClojureScript_ are repsesented by items enclosed between parentheses:
 As you can see, all list examples are prefixed with the `'` char. This is because lists in Lisp like
 languages are often used to express things like function or macro calls. In that case
 the first item should be a symbol that will evaluate to a something callable, and the rest of the list
-elemeents will be function parameters. However, in the preceding examples, we don't want the first item as a symbol;
+elements will be function parameters. However, in the preceding examples, we don't want the first item as a symbol;
 we just want a list of items.  The following example shows the difference between a list without and with the preceding
 single quote mark:
 
@@ -483,7 +483,7 @@ the reader macro will be interpreted and converted to a `fn` expression.
 Also, if a function only accepts one argument, you can omit the number after `%` symbol; the
 function `#(set (list %1))` can be written `++#++(set (list %))`.
 
-Additionaly, this syntax also supports the variadic form with the`%&` symbol:
+Additionally, this syntax also supports the variadic form with the`%&` symbol:
 
 [source, clojure]
 ----
@@ -610,7 +610,7 @@ will throw an error.
 The locals are defined with the `let` expression. The expression starts with a vector as first parameter
 followed by arbitrary number of expressions. The first parameter (the vector) should contain a arbitrary
 number of pairs that give a _binding form_ (usually a symbol) followed by an expression whose value will
-be bound to this new local for the remainer of the let expression.
+be bound to this new local for the remainder of the let expression.
 
 [source, clojure]
 ----
@@ -2288,7 +2288,7 @@ the `set!` function:
 ===== Conversions
 
 The inconvenience of the previously explained forms is that they does not make recursive
-transformatios, so if you have nested objects, the nested objects will not be converted.
+transformations, so if you have nested objects, the nested objects will not be converted.
 To solve that use cases _ClojureScript_ comes with the `clj->js` and `js->clj` functions
 that transform clojure collection types into JavaScript and bacl:
 
