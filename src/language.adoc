@@ -608,7 +608,7 @@ have locals. Locals, as per usual, are immutable, and if you try mutate them, th
 will throw an error.
 
 The locals are defined with the `let` expression. The expression starts with a vector as first parameter
-followed by arbitrary number of expressions. The first parameter (the vector) should contain a arbitrary
+followed by arbitrary number of expressions. The first parameter (the vector) should contain an arbitrary
 number of pairs that give a _binding form_ (usually a symbol) followed by an expression whose value will
 be bound to this new local for the remainder of the let expression.
 
@@ -1331,7 +1331,7 @@ from the opposite end of the collection as lists:
 ;; => cljs.core/PersistentVector
 ----
 
-The `map` and `filter` oeprations return lazy sequences, but as itis common to need a fully realized sequence after performing those operations,
+The `map` and `filter` operations return lazy sequences, but as it is common to need a fully realized sequence after performing those operations,
 vector-returning counterparts of such functions are available as `mapv` and `filterv`. They have the advantages of being faster
 than building a vector from a lazy sequence and making your intent more explicit:
 
@@ -1381,8 +1381,8 @@ for maps expects one or more sequences of key-value pairs as its last arguments:
 (conj ciri [:surname "Fiona"])
 ;; => {:name "Cirilla", :surname "Fiona"}
 
-(conj ciri [:surname "Fiona"] [:ocupation "Wizard"])
-;; => {:name "Cirilla", :surname "Fiona", :ocupation "Wizard"}
+(conj ciri [:surname "Fiona"] [:occupation "Wizard"])
+;; => {:name "Cirilla", :surname "Fiona", :occupation "Wizard"}
 ----
 
 Maps associate keys to values and, as such, are an associative data structure. They support adding associations with `assoc` and,
@@ -1557,7 +1557,7 @@ The `ns` macro also has other directives for loading host classes (`:import`) an
 
 I'm sure that at more than one time you have found yourself in this situation: you have defined a great
 abstraction (using interfaces or something similar) for your "business logic" and you have found
-the need to deal with another module over which you have absolutelly no control, and you probably
+the need to deal with another module over which you have absolutely no control, and you probably
 were thinking of creating adapters, proxies, and other approaches that imply a great amount
 of additional complexity.
 
