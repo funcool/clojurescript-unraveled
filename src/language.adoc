@@ -1436,10 +1436,114 @@ or 1 (greater than):
 ;; => (:c :b :a)
 ----
 
+
 ===== Sets
+
+Sets in ClojureScript have literal syntax as values enclosed in `#{}` and they can be created with the `set` constructor. They are
+unordered collections of values without duplicates.
+
+[source,clojure]
+----
+(set? #{\a \e \i \o \u})
+;; => true
+
+(set [1 1 2 3])
+;; => #{1 2 3}
+----
+
+Set literals can not contain duplicate values. If you accidentaly write a set literal with duplicates an error will be thrown:
+
+[source,clojure]
+----
+#{1 1 2 3}
+;; clojure.lang.ExceptionInfo: Duplicate key: 1
+----
+
+There are many operations that can be performed with sets, although are located in the `clojure.set` namespace and thus need to be imported.
+You'll learn the details of namespacing later, for now you only need to know that we are loading a namespace called `clojure.set` and binding
+it to the `s` symbol.
+
+[source,clojure]
+----
+(require '[clojure.set :as s])
+
+(def danish-vowels #{\a \e \i \o \u \æ \ø \å})
+;; => #{"a" "e" "å" "æ" "i" "o" "u" "ø"}
+
+(def spanish-vowels #{\a \e \i \o \u})
+;; => #{"a" "e" "i" "o" "u"}
+
+(s/difference danish-vowels spanish-vowels)
+;; => #{"å" "æ" "ø"}
+
+(s/union danish-vowels spanish-vowels)
+;; => #{"a" "e" "å" "æ" "i" "o" "u" "ø"}
+
+(s/intersection danish-vowels spanish-vowels)
+;; => #{"a" "e" "i" "o" "u"}
+----
+
+A nice property of immutable sets is that they can be nested, languages that have mutable sets can end up containing duplicate values but
+that can't happen in ClojureScript. In fact, all ClojureScript data structures can be nested arbitrarily due to immutability.
+
+Sets also support the generic `conj` operation, as every other collection does.
+
+[source,clojure]
+----
+(def spanish-vowels #{\a \e \i \o \u})
+;; => #{"a" "e" "i" "o" "u"}
+
+(def danish-vowels (conj spanish-vowels \æ \ø \å))
+;; => #{"a" "e" "i" "o" "u" "æ" "ø" "å"}
+
+(conj #{1 2 3} 1)
+;; => #{1 3 2}
+----
+
+They acts as read-only associative data that associates the values it contains to themselves. Since every value except `nil` and `false` are
+falsy in ClojureScript, we can use sets as predicate functions:
+
+[source,clojure]
+----
+(def vowels #{\a \e \i \o \u})
+;; => #{"a" "e" "i" "o" "u"}
+
+(get vowels \b)
+;; => nil
+
+(contains? vowels \b)
+;; => false
+
+(vowels \a)
+;; => "a"
+
+(filter vowels "Hound dog")
+;; => ("o" "u" "o")
+----
+
+Sets have a sorted counterpart like maps do, created using the functions `sorted-set` and `sorted-set-by` which are analogous to map's `sorted-map` and `sorted-map-by`.
+
+[source,clojure]
+----
+(def unordered-set #{[0] [1] [2]})
+;; => #{[0] [2] [1]}
+
+(seq unordered-set)
+;; => ([0] [2] [1])
+
+(def ordered-set (sorted-set [0] [1] [2]))
+;; =># {[0] [1] [2]}
+
+(seq unordered-set)
+;; => ([0] [1] [2])
+----
+
 
 
 ===== Queues
+
+
+
 
 
 === Destructuring
