@@ -317,8 +317,81 @@ TBD
 
 === Working with the REPL
 
-TBD
+Although you can create a source file and compile it every time you want to try something out in ClojureScript, it’s
+easier to use the REPL. REPL stands for:
 
+* Read - get input from the keyboard
+* Evaluate the input
+* Print the result
+* Loop back for more input
+
+In other words, the REPL lets you try out ClojureScript concepts and get immediate feedback.
+
+Create a file named `brepl.clj` with the following content, adapted from the
+[ClojureScript Quick Start Wiki Page](https://github.com/clojure/clojurescript/wiki/Quick-Start).
+
+````
+(require 'cljs.repl)
+(require 'cljs.closure)
+(require 'cljs.repl.browser)
+
+(cljs.closure/build "src"
+  {:main 'myapp.core
+   :output-to "main.js"
+   :verbose true})
+
+(cljs.repl/repl (cljs.repl.browser/repl-env)
+  :watch "src"
+  :output-dir "out/")
+````
+
+This script builds the source, just as we did earlier, and then starts the REPL.
+It then runs the REPL. watching the source directory for any changes. The REPL starts
+a mini web server to display your web page. You must change your ClojureScript code
+to connect your script to the REPL.  Change the source code in _src/myapp/core.cljs_ to read:
+
+````
+(ns myapp.core
+ (:require [clojure.browser.repl :as repl]))
+
+(defonce conn
+  (repl/connect "http://localhost:9000/repl"))
+
+(enable-console-print!)
+
+(println "Hello, world!")
+````
+
+The `:require` has changed to use code from the `clojure.browser.repl` library, and then defines a
+connection to the REPL, which will be running on port 9000 of ClojureScript's mini-server.
+
+There’s one more step to take. On Linux and Mac OSX, the REPL doesn’t automatically let you use the arrow
+keys to move back and forth within a line or up and down to see previously entered input. Instead, you
+need to use the `rlwrap` program to give you that capability. (Its name comes from the fact that it
+wraps the “readline” utility around other programs.)
+
+Well, that was a lot of setup! But trust us, it’s all worth it when you see it in action.
+Here it is, with a ClojureScript expression typed in as an example:
+
+[source, bash]
+````
+$ rlwrap java -cp cljs.jar:src clojure.main brepl.clj
+Compiling client js ...
+Waiting for browser to connect ...
+Watch compilation log available at: out/watch.log
+To quit, type: :cljs/quit
+cljs.user=> (+ 14 28)
+42
+cljs.user=> 
+````
+
+Since you are watching the source code, if you make changes, your program will recompile, and the compiler output
+will go to the _watch.log_ file in the _out_ directory. If you are on Mac OSX or Linux, you can open up a new
+terminal window and use this command to see the contents of the file continuously updated:
+
+````
+tail -f out/watch.log
+````
 
 === Build and Dependency management tools
 
