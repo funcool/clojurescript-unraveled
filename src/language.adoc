@@ -110,7 +110,7 @@ or are unclear about anything in the following example; the functions are discus
 ==== Symbols
 
 Symbols in _ClojureScript_ are very, very similar to *Keywords* (which you now know about). But
-instead of evaluating to themselves, symbols are evalutated to something that they refer to, that
+instead of evaluating to themselves, symbols are evaluated to something that they refer to, that
 can be functions, variables, etc.
 
 Symbols are represented with something that does not start with a number:
@@ -175,11 +175,11 @@ of existing collection types in _ClojureScript_.
 
 ===== Lists
 
-This is a clasic collection type in languages based on Lisp. Lists are the
+This is a classic collection type in languages based on Lisp. Lists are the
 simplest type of collection in _ClojureScript_. Lists can contain items of any type, including
 other collections.
 
-Lists in _ClojureScript_ are repsesented by items enclosed between parentheses:
+Lists in _ClojureScript_ are represented by items enclosed between parentheses:
 
 [source, clojure]
 ----
@@ -190,7 +190,7 @@ Lists in _ClojureScript_ are repsesented by items enclosed between parentheses:
 As you can see, all list examples are prefixed with the `'` char. This is because lists in Lisp like
 languages are often used to express things like function or macro calls. In that case
 the first item should be a symbol that will evaluate to a something callable, and the rest of the list
-elemeents will be function parameters. However, in the preceding examples, we don't want the first item as a symbol;
+elements will be function parameters. However, in the preceding examples, we don't want the first item as a symbol;
 we just want a list of items.  The following example shows the difference between a list without and with the preceding
 single quote mark:
 
@@ -263,7 +263,7 @@ in _ClojureScript_ are written with the pairs between curly braces.
 {:alphabet [:a :b :c]}
 ----
 
-NOTE: Commas are frequently used to separate a key-value pair but are completelly optional. In
+NOTE: Commas are frequently used to separate a key-value pair but are completely optional. In
 _ClojureScript_ syntax, commas are treated like spaces.
 
 Like Vectors, every item in a map literal is evaluated before the result is stored in a map, but
@@ -289,7 +289,7 @@ chapter.
 
 === Vars
 
-_ClojureScript_ is a mostly functional language and focused on immutability. Becuase of that, it does
+_ClojureScript_ is a mostly functional language and focused on immutability. Because of that, it does
 not have the concept of variables as you know them in most other programming languages. The closest analogy to
 variables are the variables you define in algebra; when you say `x = 6` in mathematics, you are saying that you
 want the symbol `x` to stand for the number six.
@@ -315,7 +315,7 @@ to define variables within a function.
 
 It's time to make things happen. _ClojureScript_, has what are known as first class functions. They behave
 like any other type, you can pass them as parameters and you can return them as values, always respecting
-the lexical scope. _ClojureScript_ also has some features of dynamic scoping, but this will be discused
+the lexical scope. _ClojureScript_ also has some features of dynamic scoping, but this will be discussed
 in other section.
 
 If you want know more about scopes, this link:http://en.wikipedia.org/wiki/Scope_(computer_science)[wikipedia article]
@@ -367,7 +367,7 @@ You can define a function and call it at same time (in a single expression):
 ----
 
 Let's start creating named functions. But what does a _named function_ really mean? It is very simple;
-as in _ClojureScript_, functions are fist-class and behave like any other value, so naming a function
+as in _ClojureScript_, functions are first-class and behave like any other value, so naming a function
 is done by simply binding the function to a symbol:
 
 [source, clojure]
@@ -483,7 +483,7 @@ the reader macro will be interpreted and converted to a `fn` expression.
 Also, if a function only accepts one argument, you can omit the number after `%` symbol; the
 function `#(set (list %1))` can be written `++#++(set (list %))`.
 
-Additionaly, this syntax also supports the variadic form with the`%&` symbol:
+Additionally, this syntax also supports the variadic form with the`%&` symbol:
 
 [source, clojure]
 ----
@@ -604,13 +604,13 @@ Here is the same example as previous one, but using `case`:
 ==== Locals
 
 _ClojureScript_ does not has the concept of variables as in ALGOL-like languages, but it does
-have locals. Locals, as per usual, are immutable, and if you try mutate them, the compiller
+have locals. Locals, as per usual, are immutable, and if you try mutate them, the compiler
 will throw an error.
 
 The locals are defined with the `let` expression. The expression starts with a vector as first parameter
-followed by arbitrary number of expressions. The first parameter (the vector) should contain a arbitrary
+followed by arbitrary number of expressions. The first parameter (the vector) should contain an arbitrary
 number of pairs that give a _binding form_ (usually a symbol) followed by an expression whose value will
-be bound to this new local for the remainer of the let expression.
+be bound to this new local for the remainder of the let expression.
 
 [source, clojure]
 ----
@@ -630,7 +630,7 @@ expressions `(println "Simple message from the body of a let")` and `(* x y)` ar
 ==== Blocks
 
 In JavaScript, braces `{` and `}` delimit a block of code that “belongs together.” Blocks in
-_ClojureScript_ are created using the `do` expression and are ususally used for side effects, like
+_ClojureScript_ are created using the `do` expression and are usually used for side effects, like
 printing something to the console or writing a log in a logger.
 
 A side effect is something that is not necessary for the return value.
@@ -1331,7 +1331,7 @@ from the opposite end of the collection as lists:
 ;; => cljs.core/PersistentVector
 ----
 
-The `map` and `filter` oeprations return lazy sequences, but as itis common to need a fully realized sequence after performing those operations,
+The `map` and `filter` operations return lazy sequences, but as it is common to need a fully realized sequence after performing those operations,
 vector-returning counterparts of such functions are available as `mapv` and `filterv`. They have the advantages of being faster
 than building a vector from a lazy sequence and making your intent more explicit:
 
@@ -1381,8 +1381,8 @@ for maps expects one or more sequences of key-value pairs as its last arguments:
 (conj ciri [:surname "Fiona"])
 ;; => {:name "Cirilla", :surname "Fiona"}
 
-(conj ciri [:surname "Fiona"] [:ocupation "Wizard"])
-;; => {:name "Cirilla", :surname "Fiona", :ocupation "Wizard"}
+(conj ciri [:surname "Fiona"] [:occupation "Wizard"])
+;; => {:name "Cirilla", :surname "Fiona", :occupation "Wizard"}
 ----
 
 Maps associate keys to values and, as such, are an associative data structure. They support adding associations with `assoc` and,
@@ -1557,7 +1557,7 @@ The `ns` macro also has other directives for loading host classes (`:import`) an
 
 I'm sure that at more than one time you have found yourself in this situation: you have defined a great
 abstraction (using interfaces or something similar) for your "business logic" and you have found
-the need to deal with another module over which you have absolutelly no control, and you probably
+the need to deal with another module over which you have absolutely no control, and you probably
 were thinking of creating adapters, proxies, and other approaches that imply a great amount
 of additional complexity.
 
@@ -1784,7 +1784,7 @@ that some value does not have a implementation for that multimethod.
 ==== Hierarchies
 
 Hierarchies are _ClojureScript_’s way to let you build whatever relations that your
-domain may require. The hierarchies are difined in term of relations betwen named objects,
+domain may require. The hierarchies are defined in term of relations between named objects,
 such as symbols, keywords or types.
 
 The hierarchies can be defined globally or locally, depending on your needs. Like multimethods,
@@ -1817,7 +1817,7 @@ it in a REPL, `::circle` will be evaluated as `:cljs.user/circle`.
 
 _ClojureScript_ comes with a little toolset of functions that allow runtime introspection
 of globally or locally defined hierarchies. This toolset consists of three functions:
-`isa?`, `anscestors`, and `descendants`.
+`isa?`, `ancestors`, and `descendants`.
 
 Let's see an example of how it can be used with the hierarchy defined in previous example:
 
@@ -2288,9 +2288,9 @@ the `set!` function:
 ===== Conversions
 
 The inconvenience of the previously explained forms is that they does not make recursive
-transformatios, so if you have nested objects, the nested objects will not be converted.
+transformations, so if you have nested objects, the nested objects will not be converted.
 To solve that use cases _ClojureScript_ comes with the `clj->js` and `js->clj` functions
-that transform clojure collection types into JavaScript and bacl:
+that transform clojure collection types into JavaScript and back:
 
 [source, clojure]
 ----
@@ -2310,7 +2310,7 @@ In case of arrays, there is a specialized function `into-array` that behaves as 
 ===== Arrays
 
 In previous example we have seen how we can create an array from an existing _ClojureScript_
-collection. But it there other function for creating arrays: `make-array`.
+collection. But there is another function for creating arrays: `make-array`.
 
 .Creating a preallocated array with length 10
 [source, clojure]
@@ -2379,7 +2379,7 @@ In _ClojureScript_, unlike in other languages, only two values are considered as
 and `false`, Everything else is treated as `true`.
 
 So, thanks to this, sets can be also be considered as predicates. If a set returns a value, it exists,
-and if it returns `nil` he value does not exist:
+and if it returns `nil` the value does not exist:
 
 [source, clojure]
 ----

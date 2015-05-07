@@ -22,7 +22,7 @@ TBD
 TBD
 
 
-=== Writing libraries that shares code betwen Clojure and ClojureScript.
+=== Writing libraries that shares code between Clojure and ClojureScript.
 
 TBD
 

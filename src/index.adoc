@@ -59,6 +59,6 @@ This chapter will cover miscellaneous topics that are not classified in the prev
 * Error handling using the _cats_ library.
 * Pattern matching with the _core.match_ library.
 * Web development using the Om library.
-* Share code betwen clojure and clojurescript.
+* Share code between clojure and clojurescript.
 
 include::mixedbag.adoc[]

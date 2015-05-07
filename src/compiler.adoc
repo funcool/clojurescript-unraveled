@@ -198,7 +198,7 @@ compiler is slightly slow. In the following sections we will explain how to star
 constantly starting and stopping this slow process.
 
 While waiting for the compilation, let's create a dummy HTML file to make it easy to execute our example
-app in the browser. Create the _index.html_ file with the following content; it goes in the main _myapp_ 
+app in the browser. Create the _index.html_ file with the following content; it goes in the main _myapp_
 directory.
 
 [source, html]
@@ -278,16 +278,16 @@ A very simplified overview of the compilation process is:
    during its phase.
 2. Then, the _ClojureScript_ compiler emits JavaScript code. The result of that is one JavaScript
    file for each cljs file.
-3. The generated files pases throught the Closure Compiler that depending on the optimization level,
+3. The generated files passes through the Closure Compiler that depending on the optimization level,
    and other options (sourcemaps, output dir output to, ...) generates the final output.
 
-The final output dependends strictly on the optimization level.
+The final output depends strictly on the optimization level.
 
 
 ===== none
 
 Implies that closure compiler just writes the files as is, without any additional
-optimization applied to the source code. This optimization level is manadatory if you are targeting
+optimization applied to the source code. This optimization level is mandatory if you are targeting
 *nodejs* or *iojs* and is appropiate in development mode when your code targets the browser.
 
 
@@ -296,7 +296,7 @@ optimization applied to the source code. This optimization level is manadatory i
 This optimization level consists of concatenating the compiled files in an appropriate order, removing
 line breaks and other whitespace and generating the output as one large file.
 
-It also has some compilation speed penality, resulting in slower compilations. In any case, it is not
+It also has some compilation speed penalty, resulting in slower compilations. In any case, it is not
 terribly slow and is completely usable in small/medium applications.
 
 
