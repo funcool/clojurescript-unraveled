@@ -317,6 +317,10 @@ TBD
 
 === Working with the REPL
 
+////
+TODO: maybe would be interesting take some ideas from http://www.alexeberts.com/exploring-the-clojurescript-repl/
+////
+
 ==== Introduction
 
 Although you can create a source file and compile it every time you want to try something out in
