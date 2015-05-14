@@ -953,7 +953,14 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#optimization-levels">3.1.6. Optimization levels</a></li>
 </ul>
 </li>
-<li><a href="#working-with-the-repl">3.2. Working with the REPL</a></li>
+<li><a href="#working-with-the-repl">3.2. Working with the REPL</a>
+<ul class="sectlevel3">
+<li><a href="#introduction-2">3.2.1. Introduction</a></li>
+<li><a href="#node-repl">3.2.2. Node REPL</a></li>
+<li><a href="#nashorn-repl">3.2.3. Nashorn REPL</a></li>
+<li><a href="#browser-repl">3.2.4. Browser REPL</a></li>
+</ul>
+</li>
 <li><a href="#build-and-dependency-management-tools">3.3. Build and Dependency management tools</a>
 <ul class="sectlevel3">
 <li><a href="#getting-started-with-leiningen">3.3.1. Getting started with Leiningen.</a></li>
@@ -2653,11 +2660,162 @@ or 1 (greater than):</p>
 </div>
 <div class="sect4">
 <h5 id="sets-2"><a class="link" href="#sets-2">Sets</a></h5>
+<div class="paragraph">
+<p>Sets in ClojureScript have literal syntax as values enclosed in <code>#{}</code> and they can be created with the <code>set</code> constructor. They are
+unordered collections of values without duplicates.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">set?</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-sc">\a</span> <span class="tok-sc">\e</span> <span class="tok-sc">\i</span> <span class="tok-sc">\o</span> <span class="tok-sc">\u</span><span class="tok-p">})</span>
+<span class="tok-c1">;; =&gt; true</span>
 
+<span class="tok-p">(</span><span class="tok-nb">set </span><span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; #{1 2 3}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set literals can not contain duplicate values. If you accidentaly write a set literal with duplicates an error will be thrown:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">}</span>
+<span class="tok-c1">;; clojure.lang.ExceptionInfo: Duplicate key: 1</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are many operations that can be performed with sets, although are located in the <code>clojure.set</code> namespace and thus need to be imported.
+You&#8217;ll learn the details of namespacing later, for now you only need to know that we are loading a namespace called <code>clojure.set</code> and binding
+it to the <code>s</code> symbol.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">clojure.set</span> <span class="tok-ss">:as</span> <span class="tok-nv">s</span><span class="tok-p">])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">danish-vowels</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-sc">\a</span> <span class="tok-sc">\e</span> <span class="tok-sc">\i</span> <span class="tok-sc">\o</span> <span class="tok-sc">\u</span> <span class="tok-sc">\æ</span> <span class="tok-sc">\ø</span> <span class="tok-sc">\å</span><span class="tok-p">})</span>
+<span class="tok-c1">;; =&gt; #{&quot;a&quot; &quot;e&quot; &quot;å&quot; &quot;æ&quot; &quot;i&quot; &quot;o&quot; &quot;u&quot; &quot;ø&quot;}</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">spanish-vowels</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-sc">\a</span> <span class="tok-sc">\e</span> <span class="tok-sc">\i</span> <span class="tok-sc">\o</span> <span class="tok-sc">\u</span><span class="tok-p">})</span>
+<span class="tok-c1">;; =&gt; #{&quot;a&quot; &quot;e&quot; &quot;i&quot; &quot;o&quot; &quot;u&quot;}</span>
+
+<span class="tok-p">(</span><span class="tok-nf">s/difference</span> <span class="tok-nv">danish-vowels</span> <span class="tok-nv">spanish-vowels</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #{&quot;å&quot; &quot;æ&quot; &quot;ø&quot;}</span>
+
+<span class="tok-p">(</span><span class="tok-nf">s/union</span> <span class="tok-nv">danish-vowels</span> <span class="tok-nv">spanish-vowels</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #{&quot;a&quot; &quot;e&quot; &quot;å&quot; &quot;æ&quot; &quot;i&quot; &quot;o&quot; &quot;u&quot; &quot;ø&quot;}</span>
+
+<span class="tok-p">(</span><span class="tok-nf">s/intersection</span> <span class="tok-nv">danish-vowels</span> <span class="tok-nv">spanish-vowels</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #{&quot;a&quot; &quot;e&quot; &quot;i&quot; &quot;o&quot; &quot;u&quot;}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A nice property of immutable sets is that they can be nested, languages that have mutable sets can end up containing duplicate values but
+that can&#8217;t happen in ClojureScript. In fact, all ClojureScript data structures can be nested arbitrarily due to immutability.</p>
+</div>
+<div class="paragraph">
+<p>Sets also support the generic <code>conj</code> operation, as every other collection does.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">spanish-vowels</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-sc">\a</span> <span class="tok-sc">\e</span> <span class="tok-sc">\i</span> <span class="tok-sc">\o</span> <span class="tok-sc">\u</span><span class="tok-p">})</span>
+<span class="tok-c1">;; =&gt; #{&quot;a&quot; &quot;e&quot; &quot;i&quot; &quot;o&quot; &quot;u&quot;}</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">danish-vowels</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-nv">spanish-vowels</span> <span class="tok-sc">\æ</span> <span class="tok-sc">\ø</span> <span class="tok-sc">\å</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #{&quot;a&quot; &quot;e&quot; &quot;i&quot; &quot;o&quot; &quot;u&quot; &quot;æ&quot; &quot;ø&quot; &quot;å&quot;}</span>
+
+<span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">}</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #{1 3 2}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>They acts as read-only associative data that associates the values it contains to themselves. Since every value except <code>nil</code> and <code>false</code> are
+falsy in ClojureScript, we can use sets as predicate functions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">vowels</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-sc">\a</span> <span class="tok-sc">\e</span> <span class="tok-sc">\i</span> <span class="tok-sc">\o</span> <span class="tok-sc">\u</span><span class="tok-p">})</span>
+<span class="tok-c1">;; =&gt; #{&quot;a&quot; &quot;e&quot; &quot;i&quot; &quot;o&quot; &quot;u&quot;}</span>
+
+<span class="tok-p">(</span><span class="tok-nb">get </span><span class="tok-nv">vowels</span> <span class="tok-sc">\b</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
+<span class="tok-p">(</span><span class="tok-nb">contains? </span><span class="tok-nv">vowels</span> <span class="tok-sc">\b</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; false</span>
+
+<span class="tok-p">(</span><span class="tok-nf">vowels</span> <span class="tok-sc">\a</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;a&quot;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">vowels</span> <span class="tok-s">&quot;Hound dog&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; (&quot;o&quot; &quot;u&quot; &quot;o&quot;)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sets have a sorted counterpart like maps do, created using the functions <code>sorted-set</code> and <code>sorted-set-by</code> which are analogous to map&#8217;s <code>sorted-map</code> and <code>sorted-map-by</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">unordered-set</span> <span class="tok-o">#</span><span class="tok-p">{[</span><span class="tok-mi">0</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-mi">1</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-mi">2</span><span class="tok-p">]})</span>
+<span class="tok-c1">;; =&gt; #{[0] [2] [1]}</span>
+
+<span class="tok-p">(</span><span class="tok-nb">seq </span><span class="tok-nv">unordered-set</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; ([0] [2] [1])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ordered-set</span> <span class="tok-p">(</span><span class="tok-nb">sorted-set </span><span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-mi">1</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-mi">2</span><span class="tok-p">]))</span>
+<span class="tok-c1">;; =&gt;# {[0] [1] [2]}</span>
+
+<span class="tok-p">(</span><span class="tok-nb">seq </span><span class="tok-nv">unordered-set</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; ([0] [1] [2])</span></code></pre>
+</div>
+</div>
 </div>
 <div class="sect4">
 <h5 id="queues"><a class="link" href="#queues">Queues</a></h5>
+<div class="paragraph">
+<p>ClojureScript also provides a persistent and immutable queue. Queues don&#8217;t have literal syntax since they are not used as pervasively as other collection types.</p>
+</div>
+<div class="paragraph">
+<p>There are no convenient constructor functions for creating persistent queues. Instead of that, we can get an empty instance using <code>PersistentQueue`s
+`EMPTY</code> attribute.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">pq</span> <span class="tok-p">(</span><span class="tok-nf">.-EMPTY</span> <span class="tok-nv">PersistentQueue</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #queue []</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using <code>conj</code> to add values to a queue adds items onto the rear:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">pq</span> <span class="tok-p">(</span><span class="tok-nf">.-EMPTY</span> <span class="tok-nv">PersistentQueue</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #queue []</span>
 
+<span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-p">(</span><span class="tok-nf">.-EMPTY</span> <span class="tok-nv">PersistentQueue</span><span class="tok-p">)</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #queue [1 2 3]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A thing to bear in mind about queues is that the stack operations don&#8217;t follow the usual stack semantics (pushing and popping from the same end), pops
+take values from the front position and pushes with <code>conj</code> append elements to the back.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">pq</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-p">(</span><span class="tok-nf">.-EMPTY</span> <span class="tok-nv">PersistentQueue</span><span class="tok-p">)</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #queue [1 2 3]</span>
+
+<span class="tok-p">(</span><span class="tok-nb">peek </span><span class="tok-nv">pq</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 1</span>
+
+<span class="tok-p">(</span><span class="tok-nb">pop </span><span class="tok-nv">pq</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #queue [2 3]</span>
+
+<span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-nv">pq</span> <span class="tok-mi">4</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #queue [1 2 3 4]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Queues are not as frequently used as lists or vectors but is good to know that they are available in ClojureScript, they may come in handy some time.</p>
+</div>
 </div>
 </div>
 </div>
@@ -4227,8 +4385,122 @@ other JavaScript.</p>
 </div>
 <div class="sect2">
 <h3 id="working-with-the-repl"><a class="link" href="#working-with-the-repl">3.2. Working with the REPL</a></h3>
+<div class="sect3">
+<h4 id="introduction-2"><a class="link" href="#introduction-2">3.2.1. Introduction</a></h4>
+<div class="paragraph">
+<p>Although you can create a source file and compile it every time you want to try something out in
+ClojureScript, it&#8217;s easier to use the REPL. REPL stands for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Read - get input from the keyboard</p>
+</li>
+<li>
+<p>Evaluate the input</p>
+</li>
+<li>
+<p>Print the result</p>
+</li>
+<li>
+<p>Loop back for more input</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In other words, the REPL lets you try out ClojureScript concepts and get immediate feedback.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="node-repl"><a class="link" href="#node-repl">3.2.2. Node REPL</a></h4>
 <div class="paragraph">
 <p>TBD</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="nashorn-repl"><a class="link" href="#nashorn-repl">3.2.3. Nashorn REPL</a></h4>
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="browser-repl"><a class="link" href="#browser-repl">3.2.4. Browser REPL</a></h4>
+<div class="paragraph">
+<p>Let start creating a file named <code>brepl.clj</code> with the following content, adapted from the
+[ClojureScript Quick Start Wiki Page](<a href="https://github.com/clojure/clojurescript/wiki/Quick-Start" class="bare">https://github.com/clojure/clojurescript/wiki/Quick-Start</a>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-ss">&#39;cljs.repl</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-ss">&#39;cljs.closure</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-ss">&#39;cljs.repl.browser</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">cljs.closure/build</span> <span class="tok-s">&quot;src&quot;</span>
+  <span class="tok-p">{</span><span class="tok-ss">:main</span> <span class="tok-ss">&#39;myapp.core</span>
+   <span class="tok-ss">:output-to</span> <span class="tok-s">&quot;main.js&quot;</span>
+   <span class="tok-ss">:verbose</span> <span class="tok-nv">true</span><span class="tok-p">})</span>
+
+<span class="tok-p">(</span><span class="tok-nf">cljs.repl/repl</span> <span class="tok-p">(</span><span class="tok-nf">cljs.repl.browser/repl-env</span><span class="tok-p">)</span>
+  <span class="tok-ss">:watch</span> <span class="tok-s">&quot;src&quot;</span>
+  <span class="tok-ss">:output-dir</span> <span class="tok-s">&quot;out/&quot;</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This script builds the source, just as we did earlier, and then starts the REPL.
+It then runs the REPL. watching the source directory for any changes. The REPL starts
+a mini web server to display your web page. You must change your ClojureScript code
+to connect your script to the REPL.  Change the source code in <em>src/myapp/core.cljs</em> to read:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>(ns myapp.core
+ (:require [clojure.browser.repl :as repl]))
+
+(defonce conn
+  (repl/connect "http://localhost:9000/repl"))
+
+(enable-console-print!)
+
+(println "Hello, world!")</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>:require</code> has changed to use code from the <code>clojure.browser.repl</code> library, and then defines a
+connection to the REPL, which will be running on port 9000 of ClojureScript&#8217;s mini-server.</p>
+</div>
+<div class="paragraph">
+<p>There’s one more step to take. On Linux and Mac OSX, the REPL doesn’t automatically let you use the arrow
+keys to move back and forth within a line or up and down to see previously entered input. Instead, you
+need to use the <code>rlwrap</code> program to give you that capability. (Its name comes from the fact that it
+wraps the “readline” utility around other programs.)</p>
+</div>
+<div class="paragraph">
+<p>Well, that was a lot of setup! But trust us, it’s all worth it when you see it in action.
+Here it is, with a ClojureScript expression typed in as an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>rlwrap java -cp cljs.jar:src clojure.main brepl.clj
+Compiling client js ...
+Waiting <span class="tok-k">for</span> browser to connect ...
+Watch compilation log available at: out/watch.log
+To quit, <span class="tok-nb">type</span>: :cljs/quit
+cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">14</span> 28<span class="tok-o">)</span>
+42
+cljs.user<span class="tok-o">=</span>&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since you are watching the source code, if you make changes, your program will recompile, and the
+compiler output will go to the <em>watch.log</em> file in the <em>out</em> directory. If you are on Mac OSX or
+Linux, you can open up a new terminal window and use this command to see the contents of the file
+continuously updated:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>tail -f out/watch.log</pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -4355,7 +4627,7 @@ other JavaScript.</p>
 <div id="footer">
 <div id="footer-text">
 Version 1<br/>
-Last updated 2015-05-07 09:35:18 CEST
+Last updated 2015-05-07 23:29:51 CEST
 </div>
 </div>
 </body>
