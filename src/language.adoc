@@ -2569,6 +2569,11 @@ and if it returns `nil` the value does not exist:
 TBD
 
 
+=== Transients
+
+TBD
+
+
 === Metadata
 
 TBD
