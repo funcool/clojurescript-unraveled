@@ -1023,15 +1023,40 @@ the emptyness of a sequence in ClojureScript, which is often referred to as nil-
 
 ===== Functions that work on sequences
 
-The ClojureScript core functions that work on collections call `seq` on their arguments, thus being
-implemented in terms of generic sequence operations. This also makes them short-circuit when encountering empty
-collections and makes them `nil`-safe.
+The ClojureScript core functions for transforming collections make sequences out of their arguments and are
+implemented in terms of the generic sequence operations we learned about in the preceding chapter. This makes
+them highly generic, since we can use them on any data type that is seqable. Let's see how we can use `map` with
+a variety of seqables:
 
-////
-The last sentence in the preceding paragraph really needs an example. I think it is far too complicated
-for a book that assumes "no previous experience with Clojure or functional programming."
-TODO:
-////
+[source, clojure]
+----
+(map inc [1 2 3])
+;; => (2 3 4)
+
+(map inc #{1 2 3})
+;; => (2 4 3)
+
+(map count {:a 41 :b 40})
+;; => (2 2)
+
+(map inc '(1 2 3))
+;; => (2 3 4)
+----
+
+As you may have noticed, functions that operate on sequences are safe to use with empty collections or even
+`nil` values since they don't need to do anything but return an empty sequence when encountering such values.
+
+[source, clojure]
+----
+(map inc [])
+;; => ()
+
+(map inc #{})
+;; => ()
+
+(map inc nil)
+;; => ()
+----
 
 We already saw examples with the usual suspects like `map`, `filter` and `reduce`, but ClojureScript offers a
 plethora of generic sequence operations in its core namespace. Note that many of the operations we'll learn about
@@ -1157,7 +1182,9 @@ a whole new sequence. Lazy sequences generate their contents as they are request
 over them. Laziness ensures that we don't do more work than we need to and gives us the possibility of
 treating potentially infinite sequences as regular ones.
 
-TODO
+////
+TODO: This needs a lot more elaboration, and examples showing how lazy sequences behave & how to create them.
+////
 
 ==== Collections in depth
 
