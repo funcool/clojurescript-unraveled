@@ -23,6 +23,7 @@ There are others, such as Rhino (jdk6+), Nashorn (jdk8), QtQuick (QT),... but no
 significant differences from the first two. So, _ClojureScript_ at the moment may compile
 code to run in the browser or in nodejs/iojs like environments out of the box.
 
+
 ==== Download the compiler
 
 The _ClojureScript_ compiler is implemented in java, and to use it, you should have jdk8 installed.
@@ -33,7 +34,7 @@ You can download it using `wget`:
 
 [source, bash]
 ----
-wget https://github.com/clojure/clojurescript/releases/download/r3211/cljs.jar
+wget https://github.com/clojure/clojurescript/releases/download/r3269/cljs.jar
 ----
 
 The _ClojureScript_ compiler is packaged in a standalone executable jar file, so this is the only
@@ -309,6 +310,7 @@ and function parameters to shorter names.
 Compilation with the `:simple` optimization always preserves the functionality of syntactically valid
 JavaScript, so it does not interfere with the interaction between the compiled _ClojureScript_ and
 other JavaScript.
+
 
 ===== advanced
 
