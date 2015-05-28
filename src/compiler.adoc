@@ -54,8 +54,9 @@ You can test if *iojs* is installed in your system with this command:
 [source, shell]
 ----
 $ iojs --version
-v1.7.1
+v2.1.0
 ----
+
 
 ===== Create the example application
 
@@ -79,7 +80,8 @@ Second, write the example code into the previously created `src/myapp/core.cljs`
 
 (nodejs/enable-util-print!)
 
-(defn -main [& args]
+(defn -main
+  [& args]
   (println "Hello world!"))
 
 (set! *main-cli-fn* -main)
@@ -140,9 +142,10 @@ previous section to run in the browser environent. The minimal requirement for i
 is just a browser that can execute JavaScript.
 
 The process is almost the same, the directory structure is the same. The only things that
-changes is the entry point of the application and the build script.
+changes is the entry point of the application and the build script. So, start recreating
+the directory tree from previous example in a different directory.
 
-Start writing new content to the `src/myapp/core.cljs` file:
+Then, write new content to the `src/myapp/core.cljs` file:
 
 [source, clojure]
 ----
@@ -218,11 +221,6 @@ directory.
 
 Now, when the compilation finishes and you have the basic HTML file you can just open it with your favorite
 browser and take a look in the development tools console. There should appear the "hello world" message.
-
-////
-Note: I also get this message "ReferenceError: require is not defined"
-TODO: revise the examples code.
-////
 
 
 ==== Watch process
@@ -335,9 +333,59 @@ ClojureScript, it's easier to use the REPL. REPL stands for:
 
 In other words, the REPL lets you try out ClojureScript concepts and get immediate feedback.
 
-////
-TODO: introduce different kind of repls and how they are works
-////
+_ClojureScript_ comes with support for executing the REPL in different execution environments,
+each one has its own advantages or disadvantages. For example, you can run a REPL in a nodejs
+but in that environment you don't have access to the dom.
+
+In summary: everthing depends on that you really needs or your requirements.
+
+
+==== Nashorn REPL
+
+Is the most easy and maybe the most painless REPL environment because it does not requires any
+special stuff, just the JVM (JDK8) that you have used in previous examples for execute the
+_ClojureScript_ compiler.
+
+Let start creating the _repl.clj_ file with following content:
+
+[source, clojure]
+----
+(ns init-repl-test
+  (:require [cljs.repl]
+            [cljs.repl.nashorn]))
+
+(cljs.repl/repl
+ (cljs.repl.nashorn/repl-env)
+ :output-dir "out"
+ :cache-analysis true)
+----
+
+Them, execute the following command for get the REPL up and running:
+
+[source, bash]
+----
+$ java -cp cljs.jar:src clojure.main repl.clj
+To quit, type: :cljs/quit
+cljs.user=> (+ 1 2)
+3
+----
+
+Surelly I have noticed that repl does not have support for history and other shell like facilities, that
+is happens because the default shell does not comes with "readline" support. But it can be solved using
+the simple tool called `rlwrap` that surelly you can found on the package manager of your operating
+system.
+
+The `rlwrap` makes the REPL "readline" capable and will allow have commands history, code navigation
+and other shell like utilities that will make the experience much more pleasant. For use it, just
+prepend it to the previos command that we have run for execute the repl:
+
+[source, bash]
+----
+$ rlwrap java -cp cljs.jar:src clojure.main repl.clj
+To quit, type: :cljs/quit
+cljs.user=> (+ 1 2)
+3
+----
 
 
 ==== Node REPL
@@ -345,15 +393,13 @@ TODO: introduce different kind of repls and how they are works
 TBD
 
 
-==== Nashorn REPL
-
-TBD
-
 
 ==== Browser REPL
 
-Let start creating a file named `brepl.clj` with the following content, adapted from the
-[ClojureScript Quick Start Wiki Page](https://github.com/clojure/clojurescript/wiki/Quick-Start).
+This REPL is the most laborios to get it up and running. This is because it uses a browser for
+as execution environment and it additional requirements.
+
+Let start creating a file named `brepl.clj` with the following content:
 
 [source, clojure]
 ----
@@ -361,21 +407,35 @@ Let start creating a file named `brepl.clj` with the following content, adapted 
 (require 'cljs.closure)
 (require 'cljs.repl.browser)
 
-(cljs.closure/build "src"
-  {:main 'myapp.core
-   :output-to "main.js"
-   :verbose true})
+(cljs.closure/build
+ "src"
+ {:output-to "main.js"
+  :output-dir "out/"
+  :source-map "main.js.map"
+  :main 'myapp.core
+  :optimizations :none})
 
-(cljs.repl/repl (cljs.repl.browser/repl-env)
-  :watch "src"
-  :output-dir "out/")
+(cljs.repl/repl
+ (cljs.repl.browser/repl-env)
+ :watch "src"
+ :output-dir "out/")
 ----
 
-This script builds the source, just as we did earlier, and then starts the REPL.
-It then runs the REPL. watching the source directory for any changes. The REPL starts
-a mini web server to display your web page. You must change your ClojureScript code
-to connect your script to the REPL.  Change the source code in _src/myapp/core.cljs_ to read:
+This script builds the source, just as we did earlier, and then starts the REPL. 
 
+But the browser repl also requires that some code be executed in the browser before get the
+REPL working. For it, just recreate the application structure that we have used
+in previus examples:
+
+[source, bash]
+----
+mkdir -p src/myapp
+touch src/myapp/core.cljs
+----
+
+Then, write new content to the `src/myapp/core.cljs` file:
+
+[source, clojure]
 ----
 (ns myapp.core
  (:require [clojure.browser.repl :as repl]))
@@ -388,37 +448,49 @@ to connect your script to the REPL.  Change the source code in _src/myapp/core.c
 (println "Hello, world!")
 ----
 
-The `:require` has changed to use code from the `clojure.browser.repl` library, and then defines a
-connection to the REPL, which will be running on port 9000 of ClojureScript's mini-server.
+And finally, create the missing _index.html_ file that is going to be used as entry point
+for run the browser side code of the REPL:
 
-There’s one more step to take. On Linux and Mac OSX, the REPL doesn’t automatically let you use the arrow
-keys to move back and forth within a line or up and down to see previously entered input. Instead, you
-need to use the `rlwrap` program to give you that capability. (Its name comes from the fact that it
-wraps the “readline” utility around other programs.)
+[source, html]
+----
+<!DOCTYPE html>
+<html>
+  <header>
+    <meta charset="utf-8" />
+    <title>Hello World from ClojureScript</title>
+  </header>
+  <body>
+    <script src="main.js"></script>
+  </body>
+</html>
+----
 
-Well, that was a lot of setup! But trust us, it’s all worth it when you see it in action.
-Here it is, with a ClojureScript expression typed in as an example:
+Well, that was a lot of setup! But trust us, it’s all worth it when you see it in action. For it
+just execute the `brepl.clj` in same way that we have done it in previous examples:
 
 [source, bash]
 ----
 $ rlwrap java -cp cljs.jar:src clojure.main brepl.clj
 Compiling client js ...
 Waiting for browser to connect ...
+----
+
+And finally, open your favourite browser and go to http://localhost:9000/. Then page
+was loaded (page in blank), switch back to the console when we have run the REPL
+and you will see that the REPL is up and running:
+
+[source, bash]
+----
+[...]
 Watch compilation log available at: out/watch.log
 To quit, type: :cljs/quit
 cljs.user=> (+ 14 28)
 42
-cljs.user=>
 ----
 
-Since you are watching the source code, if you make changes, your program will recompile, and the
-compiler output will go to the _watch.log_ file in the _out_ directory. If you are on Mac OSX or
-Linux, you can open up a new terminal window and use this command to see the contents of the file
-continuously updated:
-
-----
-tail -f out/watch.log
-----
+One of the big advantages of this REPL, is that you have access to all the browser environment. For
+depmostrate it, just execute `(js/alert "hello world")` in the repl. The result of that will be
+the tipical browser alert dialog.
 
 
 === Build and Dependency management tools
