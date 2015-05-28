@@ -370,10 +370,9 @@ cljs.user=> (+ 1 2)
 3
 ----
 
-Surelly I have noticed that repl does not have support for history and other shell like facilities, that
-is happens because the default shell does not comes with "readline" support. But it can be solved using
-the simple tool called `rlwrap` that surelly you can found on the package manager of your operating
-system.
+Surelly you have noticed that repl does not have support for history and other shell like facilities, that
+is happens because the default REPL does not comes with "readline" support. But it can be solved using
+the simple tool called `rlwrap` that you can found surelly on the package manager of your operating system.
 
 The `rlwrap` makes the REPL "readline" capable and will allow have commands history, code navigation
 and other shell like utilities that will make the experience much more pleasant. For use it, just
@@ -397,7 +396,7 @@ TBD
 ==== Browser REPL
 
 This REPL is the most laborios to get it up and running. This is because it uses a browser for
-as execution environment and it additional requirements.
+as execution environment and it has additional requirements.
 
 Let start creating a file named `brepl.clj` with the following content:
 
@@ -421,11 +420,11 @@ Let start creating a file named `brepl.clj` with the following content:
  :output-dir "out/")
 ----
 
-This script builds the source, just as we did earlier, and then starts the REPL. 
+This script builds the source, just as we did earlier, and then starts the REPL.
 
 But the browser repl also requires that some code be executed in the browser before get the
-REPL working. For it, just recreate the application structure that we have used
-in previus examples:
+REPL working. For it, just recreate the application structure very similar to that one
+that we have used in previous sections:
 
 [source, bash]
 ----
