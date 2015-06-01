@@ -521,11 +521,44 @@ the tipical browser alert dialog.
 
 === Build and Dependency management tools
 
-==== Getting started with Leiningen.
+Until now, we have used the builtin _ClojureScript_ toolchain for compile our sources to javascript,
+and it is ok for start using it and understand how it works. But it is not very comfortable for use
+for big projects with dependencies to third party libraries.
 
-TBD
+This chapter intends to explain how you can use *Leiningen*, the defacto clojure build and dependency
+management tool for build _ClojureScript_ projects. It there an other growing in popularity build tool
+called *boot* but at this momenent it will not to be covered in this book.
 
-==== Getting started with boot.
+
+==== Installing leiningen
+
+The installation process of leiningen is quite simple, just follow this steps:
+
+[source, bash]
+----
+mkdir ~/bin
+cd ~/bin
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+chmod a+x ./lein
+export PATH=$PATH:~/bin
+----
+
+Make sure that the `~/bin` directory is always set on your path, so for make it permanent, add the
+line of export to your `~/.bashrc` file (we are supposing that you are using bash shell).
+
+And now, open another clean terminal and execute `lein version`:
+
+[source, bash]
+----
+$ lein version
+Leiningen 2.5.1 on Java 1.8.0_45 OpenJDK 64-Bit Server VM
+----
+
+NOTE: We are supposing that you are using Unix like system such as Linux or BSD, if you are
+windows user, please check the instructions on the link:http://leiningen.org/[Leiningen homepage].
+
+
+==== First project
 
 TBD
 
