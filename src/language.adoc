@@ -47,7 +47,7 @@ example of the usage of a vector (enclosed in brackets) for defining local bindi
 This is practically all the syntax we need to know for using not only ClojureScript, but any Lisp. Being
 written in its own data structures (often referred to as _homoiconicity_) is a great property since the
 syntax is uniform and simple; also, code generation via macros is easier than in any other language, giving
-us plenty of power for extending the language to suit our needs.
+us plenty of power to extend the language to suit our needs.
 
 === The base data types
 
@@ -57,7 +57,7 @@ provides a great number of others that might be less familiar, such as symbols, 
 vars, atoms, volatiles...
 
 _ClojureScript_ embraces the host language, and where possible it uses the host's provided types. For example:
-numbers and strings are used as is and they behave in same way as in JavaScript.
+numbers and strings are used as is, and they behave in same way as in JavaScript.
 
 
 ==== Numbers
@@ -66,7 +66,7 @@ In _ClojureScript_,  numbers include both integers and floating points. Keeping 
 _ClojureScript_ is a guest language that compiles to JavaScript, integers are actually JavaScript's native
 floating points under the hood.
 
-As in any other language, numbers in _ClojureScript_ are represented in following way:
+As in any other language, numbers in _ClojureScript_ are represented in following ways:
 
 [source, clojure]
 ----
@@ -84,7 +84,7 @@ As in any other language, numbers in _ClojureScript_ are represented in followin
 ==== Keywords
 
 Keywords in _ClojureScript_ are objects that always evaluate to themselves. They are usually
-used in map data structures to efficiently represent the keys.
+used in <<maps-section,map data structures>> to efficiently represent the keys.
 
 [source, clojure]
 ----
@@ -98,7 +98,7 @@ As you can see, the keywords are all prefixed with `:`, but this character is on
 of the literal syntax and is not part of the name of the object.
 
 You can also create a keyword by calling the `keyword` function. Don't worry if you don't understand
-or are unclear about anything in the following example; the functions are discussed in later chapters.
+or are unclear about anything in the following example; <<function-section,functions>> are discussed in a later section.
 
 [source, clojure]
 ----
@@ -110,7 +110,7 @@ or are unclear about anything in the following example; the functions are discus
 ==== Symbols
 
 Symbols in _ClojureScript_ are very, very similar to *Keywords* (which you now know about). But
-instead of evaluating to themselves, symbols are evaluated to something that they refer to, that
+instead of evaluating to themselves, symbols are evaluated to something that they refer to, which
 can be functions, variables, etc.
 
 Symbols are represented with something that does not start with a number:
@@ -135,10 +135,10 @@ In this case they are the same as in JavaScript:
 
 [source, clojure]
 ----
-"A example of a string"
+"An example of a string"
 ----
 
-One peculiar aspect of Strings in _ClojureScript_ is due to the language's Lisp syntax: single and multiline strings
+One peculiar aspect of strings in _ClojureScript_ is due to the language's Lisp syntax: single and multiline strings
 have the same syntax:
 
 [source, clojure]
@@ -187,10 +187,10 @@ Lists in _ClojureScript_ are represented by items enclosed between parentheses:
 '(:foo :bar 2)
 ----
 
-As you can see, all list examples are prefixed with the `'` char. This is because lists in Lisp like
-languages are often used to express things like function or macro calls. In that case
-the first item should be a symbol that will evaluate to a something callable, and the rest of the list
-elements will be function parameters. However, in the preceding examples, we don't want the first item as a symbol;
+As you can see, all list examples are prefixed with the `'` char. This is because lists in Lisp-like
+languages are often used to express things like function or macro calls. In that case,
+the first item should be a symbol that will evaluate to something callable, and the rest of the list
+elements will be function arguments. However, in the preceding examples, we don't want the first item as a symbol;
 we just want a list of items.  The following example shows the difference between a list without and with the preceding
 single quote mark:
 
@@ -204,7 +204,7 @@ single quote mark:
 ----
 
 As you see, if you  evaluate `(inc 1)` without prefixing it with `'`, it will resolve
-the `inc` symbol to the *inc* function and will execute it with `1` as first parameter returning the value `2`.
+the `inc` symbol to the *inc* function and will execute it with `1` as first argument, returning the value `2`.
 
 You can also explicitly create a list with the `list` function:
 
@@ -218,13 +218,13 @@ You can also explicitly create a list with the `list` function:
 ----
 
 Lists have the pecularity that they are very efficient if you access them sequentially or
-access their first elements, but a list is not a very good option if you need random (index) access to it's
+access their first elements, but a list is not a very good option if you need random (index) access to its
 elements.
 
 
 ===== Vectors
 
-Like lists, *Vectors*  store a series of values, but in this case with very efficient index access
+Like lists, *vectors*  store a series of values, but in this case with very efficient index access
 to their elements, as opposed to lists, which are evaluated in order. Don't worry; in
 the following chapters we'll go in depth with details, but at this moment, this simple explanation is
 more than enough.
@@ -250,11 +250,11 @@ You can also explicitly create a vector with the `vector` function, but this is 
 ;; => ["blah" 3.5 nil]
 ----
 
-
+[[maps-section]]
 ===== Maps
 
 Maps are a collection abstraction that allows you to store key/value pairs. In other
-languages this type of structure is commonly known as a hash-map or dicts (dictionaries). Map literals
+languages this type of structure is commonly known as a hash-map or dict (dictionary). Map literals
 in _ClojureScript_ are written with the pairs between curly braces.
 
 [source, clojure]
@@ -266,7 +266,7 @@ in _ClojureScript_ are written with the pairs between curly braces.
 NOTE: Commas are frequently used to separate a key-value pair but are completely optional. In
 _ClojureScript_ syntax, commas are treated like spaces.
 
-Like Vectors, every item in a map literal is evaluated before the result is stored in a map, but
+Like vectors, every item in a map literal is evaluated before the result is stored in a map, but
 the order of evaluation is not guaranteed.
 
 
@@ -296,7 +296,7 @@ want the symbol `x` to stand for the number six.
 
 In _ClojureScript_, vars are represented by symbols and store a single value together with metadata.
 
-You can define a var using a `def` special form:
+You can define a var using the `def` special form:
 
 [source, clojure]
 ----
@@ -304,19 +304,19 @@ You can define a var using a `def` special form:
 (def y [1 2 3])
 ----
 
-Vars are always top level in the namespace (which we will explain later). If you use `def` in a function call,
+Vars are always top level in the namespace (<<namespace-section,which we will explain later>>). If you use `def` in a function call,
 the var will be defined at the namespace level, but we do not recommend this - instead, you should use `let`
 to define variables within a function.
 
-
+[[function-section]]
 === Functions
 
 ==== The first contact
 
-It's time to make things happen. _ClojureScript_, has what are known as first class functions. They behave
-like any other type, you can pass them as parameters and you can return them as values, always respecting
+It's time to make things happen. _ClojureScript_ has what are known as first class functions. They behave
+like any other type; you can pass them as parameters and you can return them as values, always respecting
 the lexical scope. _ClojureScript_ also has some features of dynamic scoping, but this will be discussed
-in other section.
+in another section.
 
 If you want know more about scopes, this link:http://en.wikipedia.org/wiki/Scope_(computer_science)[wikipedia article]
 is very extensive and explains different types of scoping.
@@ -367,7 +367,7 @@ You can define a function and call it at same time (in a single expression):
 ----
 
 Let's start creating named functions. But what does a _named function_ really mean? It is very simple;
-as in _ClojureScript_, functions are first-class and behave like any other value, so naming a function
+in _ClojureScript_, functions are first-class and behave like any other value, so naming a function
 is done by simply binding the function to a symbol:
 
 [source, clojure]
@@ -1789,7 +1789,7 @@ on a collection very easy to understand as it mimics the collection's structure:
 ;; => ["Clojure" "ClojureScript"]
 ----
 
-
+[[namespace-section]]
 === Namespaces
 
 ==== Defining a namespace
