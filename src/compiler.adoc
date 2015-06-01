@@ -350,9 +350,8 @@ Let start creating the _repl.clj_ file with following content:
 
 [source, clojure]
 ----
-(ns init-repl-test
-  (:require [cljs.repl]
-            [cljs.repl.nashorn]))
+(require '[cljs.repl]
+         '[cljs.repl.nashorn])
 
 (cljs.repl/repl
  (cljs.repl.nashorn/repl-env)
@@ -389,13 +388,41 @@ cljs.user=> (+ 1 2)
 
 ==== Node REPL
 
-TBD
+This REPL uses a nodejs/iojs as execution environment, and obviously requires that nodejs or iojs will
+be installed in your system.
 
+Surelly you are asking yourself, why I need a repl with nodejs when we have nashorn that does not requires
+any additional dependencies. The answer is very simple, node/iojs is the most used javascript execution
+environment on backend and it has a great amount of community packages around it.
+
+Well, the good notice is that start nodejs/iojs repl is very very easy once you have it installed in 
+your system. Start writing this content to a new `repl.clj` file:
+
+[source, clojure]
+----
+(require '[cljs.repl]
+         '[cljs.repl.node])
+
+(cljs.repl/repl
+ (cljs.repl.node/repl-env)
+ :output-dir "out"
+ :cache-analysis true)
+----
+
+And start the REPL like you have done it previously with nashorn REPL:
+
+[source,bash]
+----
+$ rlwrap java -cp cljs.jar:src clojure.main repl.clj
+To quit, type: :cljs/quit
+cljs.user=> (+ 1 2)
+3
+----
 
 
 ==== Browser REPL
 
-This REPL is the most laborios to get it up and running. This is because it uses a browser for
+This REPL is the most laborious to get it up and running. This is because it uses a browser for
 as execution environment and it has additional requirements.
 
 Let start creating a file named `brepl.clj` with the following content:
