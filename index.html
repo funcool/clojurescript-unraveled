@@ -877,7 +877,7 @@ p { margin-bottom: 1.25rem; }
 </ul>
 </li>
 <li><a href="#vars">3.3. Vars</a></li>
-<li><a href="#functions">3.4. Functions</a>
+<li><a href="#function-section">3.4. Functions</a>
 <ul class="sectlevel3">
 <li><a href="#the-first-contact">3.4.1. The first contact</a></li>
 <li><a href="#defining-your-own-functions">3.4.2. Defining your own functions</a></li>
@@ -908,7 +908,7 @@ p { margin-bottom: 1.25rem; }
 </ul>
 </li>
 <li><a href="#destructuring">3.8. Destructuring</a></li>
-<li><a href="#namespaces">3.9. Namespaces</a>
+<li><a href="#namespace-section">3.9. Namespaces</a>
 <ul class="sectlevel3">
 <li><a href="#defining-a-namespace">3.9.1. Defining a namespace</a></li>
 <li><a href="#loading-other-namespaces">3.9.2. Loading other namespaces</a></li>
@@ -965,8 +965,8 @@ p { margin-bottom: 1.25rem; }
 </li>
 <li><a href="#build-and-dependency-management-tools">4.3. Build and Dependency management tools</a>
 <ul class="sectlevel3">
-<li><a href="#getting-started-with-leiningen">4.3.1. Getting started with Leiningen.</a></li>
-<li><a href="#getting-started-with-boot">4.3.2. Getting started with boot.</a></li>
+<li><a href="#installing-leiningen">4.3.1. Installing leiningen</a></li>
+<li><a href="#first-project">4.3.2. First project</a></li>
 </ul>
 </li>
 <li><a href="#the-closure-library">4.4. The Closure Library</a></li>
@@ -1144,7 +1144,7 @@ example of the usage of a vector (enclosed in brackets) for defining local bindi
 <p>This is practically all the syntax we need to know for using not only ClojureScript, but any Lisp. Being
 written in its own data structures (often referred to as <em>homoiconicity</em>) is a great property since the
 syntax is uniform and simple; also, code generation via macros is easier than in any other language, giving
-us plenty of power for extending the language to suit our needs.</p>
+us plenty of power to extend the language to suit our needs.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1157,7 +1157,7 @@ vars, atoms, volatiles&#8230;&#8203;</p>
 </div>
 <div class="paragraph">
 <p><em>ClojureScript</em> embraces the host language, and where possible it uses the host&#8217;s provided types. For example:
-numbers and strings are used as is and they behave in same way as in JavaScript.</p>
+numbers and strings are used as is, and they behave in same way as in JavaScript.</p>
 </div>
 <div class="sect3">
 <h4 id="numbers"><a class="link" href="#numbers">3.2.1. Numbers</a></h4>
@@ -1167,7 +1167,7 @@ numbers and strings are used as is and they behave in same way as in JavaScript.
 floating points under the hood.</p>
 </div>
 <div class="paragraph">
-<p>As in any other language, numbers in <em>ClojureScript</em> are represented in following way:</p>
+<p>As in any other language, numbers in <em>ClojureScript</em> are represented in following ways:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1186,7 +1186,7 @@ floating points under the hood.</p>
 <h4 id="keywords"><a class="link" href="#keywords">3.2.2. Keywords</a></h4>
 <div class="paragraph">
 <p>Keywords in <em>ClojureScript</em> are objects that always evaluate to themselves. They are usually
-used in map data structures to efficiently represent the keys.</p>
+used in <a href="#maps-section">map data structures</a> to efficiently represent the keys.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1202,7 +1202,7 @@ of the literal syntax and is not part of the name of the object.</p>
 </div>
 <div class="paragraph">
 <p>You can also create a keyword by calling the <code>keyword</code> function. Don&#8217;t worry if you don&#8217;t understand
-or are unclear about anything in the following example; the functions are discussed in later chapters.</p>
+or are unclear about anything in the following example; <a href="#function-section">functions</a> are discussed in a later section.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1215,7 +1215,7 @@ or are unclear about anything in the following example; the functions are discus
 <h4 id="symbols"><a class="link" href="#symbols">3.2.3. Symbols</a></h4>
 <div class="paragraph">
 <p>Symbols in <em>ClojureScript</em> are very, very similar to <strong>Keywords</strong> (which you now know about). But
-instead of evaluating to themselves, symbols are evaluated to something that they refer to, that
+instead of evaluating to themselves, symbols are evaluated to something that they refer to, which
 can be functions, variables, etc.</p>
 </div>
 <div class="paragraph">
@@ -1244,11 +1244,11 @@ all of our examples, which will give you the opportunity to learn more as we go 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-s">&quot;A example of a string&quot;</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-s">&quot;An example of a string&quot;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>One peculiar aspect of Strings in <em>ClojureScript</em> is due to the language&#8217;s Lisp syntax: single and multiline strings
+<p>One peculiar aspect of strings in <em>ClojureScript</em> is due to the language&#8217;s Lisp syntax: single and multiline strings
 have the same syntax:</p>
 </div>
 <div class="listingblock">
@@ -1305,10 +1305,10 @@ other collections.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>As you can see, all list examples are prefixed with the <code>'</code> char. This is because lists in Lisp like
-languages are often used to express things like function or macro calls. In that case
-the first item should be a symbol that will evaluate to a something callable, and the rest of the list
-elements will be function parameters. However, in the preceding examples, we don&#8217;t want the first item as a symbol;
+<p>As you can see, all list examples are prefixed with the <code>'</code> char. This is because lists in Lisp-like
+languages are often used to express things like function or macro calls. In that case,
+the first item should be a symbol that will evaluate to something callable, and the rest of the list
+elements will be function arguments. However, in the preceding examples, we don&#8217;t want the first item as a symbol;
 we just want a list of items.  The following example shows the difference between a list without and with the preceding
 single quote mark:</p>
 </div>
@@ -1323,7 +1323,7 @@ single quote mark:</p>
 </div>
 <div class="paragraph">
 <p>As you see, if you  evaluate <code>(inc 1)</code> without prefixing it with <code>'</code>, it will resolve
-the <code>inc</code> symbol to the <strong>inc</strong> function and will execute it with <code>1</code> as first parameter returning the value <code>2</code>.</p>
+the <code>inc</code> symbol to the <strong>inc</strong> function and will execute it with <code>1</code> as first argument, returning the value <code>2</code>.</p>
 </div>
 <div class="paragraph">
 <p>You can also explicitly create a list with the <code>list</code> function:</p>
@@ -1339,14 +1339,14 @@ the <code>inc</code> symbol to the <strong>inc</strong> function and will execut
 </div>
 <div class="paragraph">
 <p>Lists have the pecularity that they are very efficient if you access them sequentially or
-access their first elements, but a list is not a very good option if you need random (index) access to it&#8217;s
+access their first elements, but a list is not a very good option if you need random (index) access to its
 elements.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="vectors"><a class="link" href="#vectors">Vectors</a></h5>
 <div class="paragraph">
-<p>Like lists, <strong>Vectors</strong>  store a series of values, but in this case with very efficient index access
+<p>Like lists, <strong>vectors</strong>  store a series of values, but in this case with very efficient index access
 to their elements, as opposed to lists, which are evaluated in order. Don&#8217;t worry; in
 the following chapters we&#8217;ll go in depth with details, but at this moment, this simple explanation is
 more than enough.</p>
@@ -1377,10 +1377,10 @@ more than enough.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="maps"><a class="link" href="#maps">Maps</a></h5>
+<h5 id="maps-section"><a class="link" href="#maps-section">Maps</a></h5>
 <div class="paragraph">
 <p>Maps are a collection abstraction that allows you to store key/value pairs. In other
-languages this type of structure is commonly known as a hash-map or dicts (dictionaries). Map literals
+languages this type of structure is commonly known as a hash-map or dict (dictionary). Map literals
 in <em>ClojureScript</em> are written with the pairs between curly braces.</p>
 </div>
 <div class="listingblock">
@@ -1403,7 +1403,7 @@ Commas are frequently used to separate a key-value pair but are completely optio
 </table>
 </div>
 <div class="paragraph">
-<p>Like Vectors, every item in a map literal is evaluated before the result is stored in a map, but
+<p>Like vectors, every item in a map literal is evaluated before the result is stored in a map, but
 the order of evaluation is not guaranteed.</p>
 </div>
 </div>
@@ -1441,7 +1441,7 @@ want the symbol <code>x</code> to stand for the number six.</p>
 <p>In <em>ClojureScript</em>, vars are represented by symbols and store a single value together with metadata.</p>
 </div>
 <div class="paragraph">
-<p>You can define a var using a <code>def</code> special form:</p>
+<p>You can define a var using the <code>def</code> special form:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1450,20 +1450,20 @@ want the symbol <code>x</code> to stand for the number six.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Vars are always top level in the namespace (which we will explain later). If you use <code>def</code> in a function call,
+<p>Vars are always top level in the namespace (<a href="#namespace-section">which we will explain later</a>). If you use <code>def</code> in a function call,
 the var will be defined at the namespace level, but we do not recommend this - instead, you should use <code>let</code>
 to define variables within a function.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions"><a class="link" href="#functions">3.4. Functions</a></h3>
+<h3 id="function-section"><a class="link" href="#function-section">3.4. Functions</a></h3>
 <div class="sect3">
 <h4 id="the-first-contact"><a class="link" href="#the-first-contact">3.4.1. The first contact</a></h4>
 <div class="paragraph">
-<p>It&#8217;s time to make things happen. <em>ClojureScript</em>, has what are known as first class functions. They behave
-like any other type, you can pass them as parameters and you can return them as values, always respecting
+<p>It&#8217;s time to make things happen. <em>ClojureScript</em> has what are known as first class functions. They behave
+like any other type; you can pass them as parameters and you can return them as values, always respecting
 the lexical scope. <em>ClojureScript</em> also has some features of dynamic scoping, but this will be discussed
-in other section.</p>
+in another section.</p>
 </div>
 <div class="paragraph">
 <p>If you want know more about scopes, this <a href="http://en.wikipedia.org/wiki/Scope_(computer_science)">wikipedia article</a>
@@ -1522,7 +1522,7 @@ in the following example, the function takes two parameters and returns their av
 </div>
 <div class="paragraph">
 <p>Let&#8217;s start creating named functions. But what does a <em>named function</em> really mean? It is very simple;
-as in <em>ClojureScript</em>, functions are first-class and behave like any other value, so naming a function
+in <em>ClojureScript</em>, functions are first-class and behave like any other value, so naming a function
 is done by simply binding the function to a symbol:</p>
 </div>
 <div class="listingblock">
@@ -2641,7 +2641,7 @@ than building a vector from a lazy sequence and making your intent more explicit
 </div>
 </div>
 <div class="sect4">
-<h5 id="maps-2"><a class="link" href="#maps-2">Maps</a></h5>
+<h5 id="maps"><a class="link" href="#maps">Maps</a></h5>
 <div class="paragraph">
 <p>Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a syntactic construct for attaching metadata to
 vars. Any ClojureScript data structure can be used as a key in a map, although it&#8217;s common to use keywords since can also
@@ -3091,7 +3091,7 @@ on a collection very easy to understand as it mimics the collection&#8217;s stru
 </div>
 </div>
 <div class="sect2">
-<h3 id="namespaces"><a class="link" href="#namespaces">3.9. Namespaces</a></h3>
+<h3 id="namespace-section"><a class="link" href="#namespace-section">3.9. Namespaces</a></h3>
 <div class="sect3">
 <h4 id="defining-a-namespace"><a class="link" href="#defining-a-namespace">3.9.1. Defining a namespace</a></h4>
 <div class="paragraph">
@@ -4271,17 +4271,18 @@ where it can be executed - each with its own pecularities.</p>
 <div class="paragraph">
 <p>This chapter intends to explain how to use <em>ClojureScript</em> without any additional tooling. This
 will help you understand how the compiler works and how you can use it when other tooling is not
-available (such as leiningen+cljsbuld or boot).</p>
+available (such as <a href="http://leiningen.org/">leiningen</a> + <a href="https://github.com/emezeske/lein-cljsbuild">cljsbuild</a>
+or <a href="http://boot-clj.com/">boot</a>).</p>
 </div>
 <div class="sect3">
 <h4 id="execution-environments"><a class="link" href="#execution-environments">4.1.1. Execution environments</a></h4>
 <div class="paragraph">
 <p>What is an execution environment? An execution environment is an engine where JavaScript can be
 executed. For example, the most popular execution environment is a browser (Chrome, Firefox, &#8230;&#8203;)
-followed by the second most popular - nodejs/iojs.</p>
+followed by the second most popular - <a href="https://nodejs.org/">nodejs</a>/<a href="https://iojs.org/en/index.html">iojs</a>.</p>
 </div>
 <div class="paragraph">
-<p>There are others, such as Rhino (jdk6+), Nashorn (jdk8), QtQuick (QT),&#8230;&#8203; but none of them have
+<p>There are others, such as Rhino (JDK 6+), Nashorn (JDK 8), QtQuick (QT),&#8230;&#8203; but none of them have
 significant differences from the first two. So, <em>ClojureScript</em> at the moment may compile
 code to run in the browser or in nodejs/iojs like environments out of the box.</p>
 </div>
@@ -4289,9 +4290,9 @@ code to run in the browser or in nodejs/iojs like environments out of the box.</
 <div class="sect3">
 <h4 id="download-the-compiler"><a class="link" href="#download-the-compiler">4.1.2. Download the compiler</a></h4>
 <div class="paragraph">
-<p>The <em>ClojureScript</em> compiler is implemented in java, and to use it, you should have jdk8 installed.
-<em>ClojureScript</em> itself only requires jdk7, but the standalone compiler that we going to use in this
-chapter requires jdk8 which can be found at <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" class="bare">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a></p>
+<p>The <em>ClojureScript</em> compiler is implemented in Java, and to use it, you should have jdk8 installed.
+<em>ClojureScript</em> itself only requires JDK 7, but the standalone compiler that we going to use in this
+chapter requires JDK 8, which can be found at <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" class="bare">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a></p>
 </div>
 <div class="paragraph">
 <p>You can download it using <code>wget</code>:</p>
@@ -4303,13 +4304,13 @@ chapter requires jdk8 which can be found at <a href="http://www.oracle.com/techn
 </div>
 <div class="paragraph">
 <p>The <em>ClojureScript</em> compiler is packaged in a standalone executable jar file, so this is the only
-file and JDK8 that you need to compile the <em>ClojureScript</em> source code to JavaScript.</p>
+file (along with JDK 8) that you need to compile your <em>ClojureScript</em> source code to JavaScript.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="compile-for-nodejs-iojs"><a class="link" href="#compile-for-nodejs-iojs">4.1.3. Compile for nodejs/iojs</a></h4>
 <div class="paragraph">
-<p>Let start with a practical example compiling code that will target <strong>nodejs</strong>/<strong>iojs</strong>. For
+<p>Let’s start with a practical example compiling code that will target <strong>nodejs</strong>/<strong>iojs</strong>. For
 this example you should have nodejs or iojs (recommended) installed.</p>
 </div>
 <div class="paragraph">
@@ -4332,7 +4333,7 @@ v2.1.0</code></pre>
 and populate it with example code.</p>
 </div>
 <div class="paragraph">
-<p>So start creating the directory tree structure for our "hello world" application:</p>
+<p>Start by creating the directory tree structure for our “hello world” application:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4374,12 +4375,12 @@ structure. This is the way <em>ClojureScript</em> structures its source code.
 <div class="sect4">
 <h5 id="compile-the-example-application"><a class="link" href="#compile-the-example-application">Compile the example application</a></h5>
 <div class="paragraph">
-<p>In order to compile that source code, we need a simple build script that instructs the
-<em>ClojureScript</em> compiler with the source directory and the output file. <em>ClojureScript</em> has a
-lot of other options but at this moment we can ignore that.</p>
+<p>In order to compile that source code, we need a simple build script that tells the
+<em>ClojureScript</em> compiler the source directory and the output file. <em>ClojureScript</em> has a
+lot of other options, but at this moment we can ignore that.</p>
 </div>
 <div class="paragraph">
-<p>Lets create the <em>build.clj</em> file with the following content:</p>
+<p>Let’s create the <em>build.clj</em> file with the following content:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4433,13 +4434,13 @@ Hello world!</code></pre>
 <div class="sect3">
 <h4 id="compile-for-the-browser"><a class="link" href="#compile-for-the-browser">4.1.4. Compile for the Browser</a></h4>
 <div class="paragraph">
-<p>In this section we are going to create a similar "hello world" example application from the
-previous section to run in the browser environent. The minimal requirement for it
+<p>In this section we are going to create an application similar to the "hello world" example from the
+previous section to run in the browser environment. The minimal requirement for this application
 is just a browser that can execute JavaScript.</p>
 </div>
 <div class="paragraph">
-<p>The process is almost the same, the directory structure is the same. The only things that
-changes is the entry point of the application and the build script. So, start recreating
+<p>The process is almost the same, and the directory structure is the same. The only things that
+changes is the entry point of the application and the build script. So, start re-creating
 the directory tree from previous example in a different directory.</p>
 </div>
 <div class="paragraph">
@@ -4483,7 +4484,7 @@ the <em>build.clj</em> file with the following content:</p>
 <ul>
 <li>
 <p>The <code>:output-to</code> parameter indicates to the compiler the destination of the compiled code, in this
-case to the "main.js" file.</p>
+case the "main.js" file.</p>
 </li>
 <li>
 <p>The <code>:main</code> property indicates to the compiler the namespace that will act as the entry point of
@@ -4512,7 +4513,7 @@ but that will be covered in following sections in more detail.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This process can take some time, so do not worry, wait a little bit. The JVM bootstrap with Clojure
+<p>This process can take some time, so do not worry; wait a little bit. The JVM bootstrap with Clojure
 compiler is slightly slow. In the following sections we will explain how to start a watch process to avoid
 constantly starting and stopping this slow process.</p>
 </div>
@@ -4537,7 +4538,7 @@ directory.</p>
 </div>
 <div class="paragraph">
 <p>Now, when the compilation finishes and you have the basic HTML file you can just open it with your favorite
-browser and take a look in the development tools console. There should appear the "hello world" message.</p>
+browser and take a look in the development tools console. The "Hello world!" message should appear there.</p>
 </div>
 </div>
 </div>
@@ -4546,7 +4547,7 @@ browser and take a look in the development tools console. There should appear th
 <div class="paragraph">
 <p>Surely, you have already experienced the slow startup of the <em>ClojureScript</em> compiler. To solve this,
 the <em>ClojureScript</em> standalone compiler also comes with tools to start a process that watches the changes
-in some directory and perform an incremental compilation.</p>
+in some directory and performs an incremental compilation.</p>
 </div>
 <div class="paragraph">
 <p>Start creating another build script, but in this case name it <em>watch.clj</em>:</p>
@@ -4601,14 +4602,14 @@ levels are coming from Google Closure Compiler.</p>
 <ol class="arabic">
 <li>
 <p>The reader reads the code and makes some analysis. This process can raise some warnings
-during its phase.</p>
+during this phase.</p>
 </li>
 <li>
-<p>Then, the <em>ClojureScript</em> compiler emits JavaScript code. The result of that is one JavaScript
+<p>Then, the <em>ClojureScript</em> compiler emits JavaScript code. The result is one JavaScript
 file for each cljs file.</p>
 </li>
 <li>
-<p>The generated files passes through the Closure Compiler that depending on the optimization level,
+<p>The generated files passes through the Closure Compiler that, depending on the optimization level
 and other options (sourcemaps, output dir output to, &#8230;&#8203;) generates the final output.</p>
 </li>
 </ol>
@@ -4689,24 +4690,23 @@ each one has its own advantages or disadvantages. For example, you can run a REP
 but in that environment you don&#8217;t have access to the dom.</p>
 </div>
 <div class="paragraph">
-<p>In summary: everthing depends on that you really needs or your requirements.</p>
+<p>In summary: everthing really depends on your needs or requirements.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="nashorn-repl"><a class="link" href="#nashorn-repl">4.2.2. Nashorn REPL</a></h4>
 <div class="paragraph">
-<p>Is the most easy and maybe the most painless REPL environment because it does not requires any
-special stuff, just the JVM (JDK8) that you have used in previous examples for execute the
+<p>The Nashorn REPL is the easiest and maybe most painless REPL environment because it does not require any
+special stuff, just the JVM (JDK 8) that you have used in previous examples for running the
 <em>ClojureScript</em> compiler.</p>
 </div>
 <div class="paragraph">
-<p>Let start creating the <em>repl.clj</em> file with following content:</p>
+<p>Let’s start creating the <em>repl.clj</em> file with following content:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">ns </span><span class="tok-nv">init-repl-test</span>
-  <span class="tok-p">(</span><span class="tok-ss">:require</span> <span class="tok-p">[</span><span class="tok-nv">cljs.repl</span><span class="tok-p">]</span>
-            <span class="tok-p">[</span><span class="tok-nv">cljs.repl.nashorn</span><span class="tok-p">]))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.repl</span><span class="tok-p">]</span>
+         <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.repl.nashorn</span><span class="tok-p">])</span>
 
 <span class="tok-p">(</span><span class="tok-nf">cljs.repl/repl</span>
  <span class="tok-p">(</span><span class="tok-nf">cljs.repl.nashorn/repl-env</span><span class="tok-p">)</span>
@@ -4715,7 +4715,7 @@ special stuff, just the JVM (JDK8) that you have used in previous examples for e
 </div>
 </div>
 <div class="paragraph">
-<p>Them, execute the following command for get the REPL up and running:</p>
+<p>Them, execute the following command to get the REPL up and running:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4726,14 +4726,14 @@ cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span cl
 </div>
 </div>
 <div class="paragraph">
-<p>Surelly you have noticed that repl does not have support for history and other shell like facilities, that
-is happens because the default REPL does not comes with "readline" support. But it can be solved using
-the simple tool called <code>rlwrap</code> that you can found surelly on the package manager of your operating system.</p>
+<p>You may have noticed that the REPL does not have support for history and other shell-like facilities. This
+is because the default REPL does not comes with "readline" support. But this problem can be solved using
+the simple tool called <code>rlwrap</code> that you can certainly find with the package manager of your operating system.</p>
 </div>
 <div class="paragraph">
-<p>The <code>rlwrap</code> makes the REPL "readline" capable and will allow have commands history, code navigation
-and other shell like utilities that will make the experience much more pleasant. For use it, just
-prepend it to the previos command that we have run for execute the repl:</p>
+<p>The <code>rlwrap</code> makes the REPL "readline" capable and will allow you to have command history, code navigation,
+and other shell-like utilities that will make your REPL experience much more pleasant. To use it, just
+prepend it to the previous command that we have used to execute the REPL:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4747,17 +4747,49 @@ cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span cl
 <div class="sect3">
 <h4 id="node-repl"><a class="link" href="#node-repl">4.2.3. Node REPL</a></h4>
 <div class="paragraph">
-<p>TBD</p>
+<p>This REPL uses a nodejs/iojs as execution environment, and obviously requires that nodejs or iojs will
+be installed in your system.</p>
+</div>
+<div class="paragraph">
+<p>Surelly you are asking yourself, why I need a repl with nodejs when we have nashorn that does not requires
+any additional dependencies. The answer is very simple, node/iojs is the most used javascript execution
+environment on backend and it has a great amount of community packages around it.</p>
+</div>
+<div class="paragraph">
+<p>Well, the good notice is that start nodejs/iojs repl is very very easy once you have it installed in
+your system. Start writing this content to a new <code>repl.clj</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.repl</span><span class="tok-p">]</span>
+         <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.repl.node</span><span class="tok-p">])</span>
+
+<span class="tok-p">(</span><span class="tok-nf">cljs.repl/repl</span>
+ <span class="tok-p">(</span><span class="tok-nf">cljs.repl.node/repl-env</span><span class="tok-p">)</span>
+ <span class="tok-ss">:output-dir</span> <span class="tok-s">&quot;out&quot;</span>
+ <span class="tok-ss">:cache-analysis</span> <span class="tok-nv">true</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And start the REPL like you have done it previously with nashorn REPL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>rlwrap java -cp cljs.jar:src clojure.main repl.clj
+To quit, <span class="tok-nb">type</span>: :cljs/quit
+cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">1</span> 2<span class="tok-o">)</span>
+3</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="browser-repl"><a class="link" href="#browser-repl">4.2.4. Browser REPL</a></h4>
 <div class="paragraph">
-<p>This REPL is the most laborios to get it up and running. This is because it uses a browser for
-as execution environment and it has additional requirements.</p>
+<p>This REPL is the most laborious to get it up and running. This is because it uses a browser for
+its execution environment and it has additional requirements.</p>
 </div>
 <div class="paragraph">
-<p>Let start creating a file named <code>brepl.clj</code> with the following content:</p>
+<p>Let’s start by creating a file named <code>brepl.clj</code> with the following content:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4783,8 +4815,8 @@ as execution environment and it has additional requirements.</p>
 <p>This script builds the source, just as we did earlier, and then starts the REPL.</p>
 </div>
 <div class="paragraph">
-<p>But the browser repl also requires that some code be executed in the browser before get the
-REPL working. For it, just recreate the application structure very similar to that one
+<p>But the browser REPL also requires that some code be executed in the browser before getting the
+REPL working. To do that, just re-create the application structure very similar to the one
 that we have used in previous sections:</p>
 </div>
 <div class="listingblock">
@@ -4810,8 +4842,8 @@ touch src/myapp/core.cljs</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And finally, create the missing <em>index.html</em> file that is going to be used as entry point
-for run the browser side code of the REPL:</p>
+<p>And finally, create the missing <em>index.html</em> file that is going to be used as the entry point
+for running the browser side code of the REPL:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4828,7 +4860,7 @@ for run the browser side code of the REPL:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Well, that was a lot of setup! But trust us, it’s all worth it when you see it in action. For it
+<p>Well, that was a lot of setup! But trust us, it’s all worth it when you see it in action. To do that,
 just execute the <code>brepl.clj</code> in same way that we have done it in previous examples:</p>
 </div>
 <div class="listingblock">
@@ -4839,9 +4871,9 @@ Waiting <span class="tok-k">for</span> browser to connect ...</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And finally, open your favourite browser and go to <a href="http://localhost:9000/" class="bare">http://localhost:9000/</a>. Then page
-was loaded (page in blank), switch back to the console when we have run the REPL
-and you will see that the REPL is up and running:</p>
+<p>And finally, open your favourite browser and go to <a href="http://localhost:9000/" class="bare">http://localhost:9000/</a>. Once the page
+is loaded (the page will be blank), switch back to the console where you have run the REPL
+and you will see that it is up and running:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4853,22 +4885,67 @@ cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span cl
 </div>
 </div>
 <div class="paragraph">
-<p>One of the big advantages of this REPL, is that you have access to all the browser environment. For
-depmostrate it, just execute <code>(js/alert "hello world")</code> in the repl. The result of that will be
-the tipical browser alert dialog.</p>
+<p>One of the big advantages of this REPL is that you have access to all the browser environment. To
+demonstrate it, just enter <code>(js/alert "hello world")</code> in the repl. The result of that will be
+the typical browser alert dialog.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="build-and-dependency-management-tools"><a class="link" href="#build-and-dependency-management-tools">4.3. Build and Dependency management tools</a></h3>
-<div class="sect3">
-<h4 id="getting-started-with-leiningen"><a class="link" href="#getting-started-with-leiningen">4.3.1. Getting started with Leiningen.</a></h4>
 <div class="paragraph">
-<p>TBD</p>
+<p>Until now, we have used the builtin <em>ClojureScript</em> toolchain for compile our sources to javascript,
+and it is ok for start using it and understand how it works. But it is not very comfortable for use
+for big projects with dependencies to third party libraries.</p>
+</div>
+<div class="paragraph">
+<p>This chapter intends to explain how you can use <strong>Leiningen</strong>, the defacto clojure build and dependency
+management tool for build <em>ClojureScript</em> projects. It there an other growing in popularity build tool
+called <strong>boot</strong> but at this momenent it will not to be covered in this book.</p>
+</div>
+<div class="sect3">
+<h4 id="installing-leiningen"><a class="link" href="#installing-leiningen">4.3.1. Installing leiningen</a></h4>
+<div class="paragraph">
+<p>The installation process of leiningen is quite simple, just follow this steps:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash">mkdir ~/bin
+<span class="tok-nb">cd</span> ~/bin
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+chmod a+x ./lein
+<span class="tok-nb">export </span><span class="tok-nv">PATH</span><span class="tok-o">=</span><span class="tok-nv">$PATH</span>:~/bin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure that the <code>~/bin</code> directory is always set on your path, so for make it permanent, add the
+line of export to your <code>~/.bashrc</code> file (we are supposing that you are using bash shell).</p>
+</div>
+<div class="paragraph">
+<p>And now, open another clean terminal and execute <code>lein version</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein version
+Leiningen 2.5.1 on Java 1.8.0_45 OpenJDK 64-Bit Server VM</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+We are supposing that you are using Unix like system such as Linux or BSD, if you are
+windows user, please check the instructions on the <a href="http://leiningen.org/">Leiningen homepage</a>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
-<h4 id="getting-started-with-boot"><a class="link" href="#getting-started-with-boot">4.3.2. Getting started with boot.</a></h4>
+<h4 id="first-project"><a class="link" href="#first-project">4.3.2. First project</a></h4>
 <div class="paragraph">
 <p>TBD</p>
 </div>
