@@ -10,7 +10,8 @@ where it can be executed - each with its own pecularities.
 
 This chapter intends to explain how to use _ClojureScript_ without any additional tooling. This
 will help you understand how the compiler works and how you can use it when other tooling is not
-available (such as leiningen+cljsbuld or boot).
+available (such as http://leiningen.org/[leiningen]+https://github.com/emezeske/lein-cljsbuild[cljsbuld]
+or http://boot-clj.com/[boot]).
 
 
 ==== Execution environments
