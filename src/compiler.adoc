@@ -10,25 +10,26 @@ where it can be executed - each with its own pecularities.
 
 This chapter intends to explain how to use _ClojureScript_ without any additional tooling. This
 will help you understand how the compiler works and how you can use it when other tooling is not
-available (such as leiningen+cljsbuld or boot).
+available (such as link:http://leiningen.org/[leiningen] + link:https://github.com/emezeske/lein-cljsbuild[cljsbuild]
+or link:http://boot-clj.com/[boot]).
 
 
 ==== Execution environments
 
 What is an execution environment? An execution environment is an engine where JavaScript can be
 executed. For example, the most popular execution environment is a browser (Chrome, Firefox, ...)
-followed by the second most popular - nodejs/iojs.
+followed by the second most popular - link:https://nodejs.org/[nodejs]/link:https://iojs.org/en/index.html[iojs].
 
-There are others, such as Rhino (jdk6+), Nashorn (jdk8), QtQuick (QT),... but none of them have
+There are others, such as Rhino (JDK 6+), Nashorn (JDK 8), QtQuick (QT),... but none of them have
 significant differences from the first two. So, _ClojureScript_ at the moment may compile
 code to run in the browser or in nodejs/iojs like environments out of the box.
 
 
 ==== Download the compiler
 
-The _ClojureScript_ compiler is implemented in java, and to use it, you should have jdk8 installed.
-_ClojureScript_ itself only requires jdk7, but the standalone compiler that we going to use in this
-chapter requires jdk8 which can be found at http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+The _ClojureScript_ compiler is implemented in Java, and to use it, you should have jdk8 installed.
+_ClojureScript_ itself only requires JDK 7, but the standalone compiler that we going to use in this
+chapter requires JDK 8, which can be found at http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
 You can download it using `wget`:
 
@@ -38,12 +39,12 @@ wget https://github.com/clojure/clojurescript/releases/download/r3269/cljs.jar
 ----
 
 The _ClojureScript_ compiler is packaged in a standalone executable jar file, so this is the only
-file and JDK8 that you need to compile the _ClojureScript_ source code to JavaScript.
+file (along with JDK 8) that you need to compile your _ClojureScript_ source code to JavaScript.
 
 
 ==== Compile for nodejs/iojs
 
-Let start with a practical example compiling code that will target *nodejs*/*iojs*. For
+Let’s start with a practical example compiling code that will target *nodejs*/*iojs*. For
 this example you should have nodejs or iojs (recommended) installed.
 
 There are different ways to install iojs, but the recommended way is using nvm (node version
@@ -63,7 +64,7 @@ v2.1.0
 For the first step of our practical example, we will create our application directory structure
 and populate it with example code.
 
-So start creating the directory tree structure for our "hello world" application:
+Start by creating the directory tree structure for our “hello world” application:
 
 [source, bash]
 ----
@@ -93,11 +94,11 @@ structure. This is the way _ClojureScript_ structures its source code.
 
 ===== Compile the example application
 
-In order to compile that source code, we need a simple build script that instructs the
-_ClojureScript_ compiler with the source directory and the output file. _ClojureScript_ has a
-lot of other options but at this moment we can ignore that.
+In order to compile that source code, we need a simple build script that tells the
+_ClojureScript_ compiler the source directory and the output file. _ClojureScript_ has a
+lot of other options, but at this moment we can ignore that.
 
-Lets create the _build.clj_ file with the following content:
+Let’s create the _build.clj_ file with the following content:
 
 [source, clojure]
 ----
@@ -137,12 +138,12 @@ Hello world!
 
 ==== Compile for the Browser
 
-In this section we are going to create a similar "hello world" example application from the
-previous section to run in the browser environent. The minimal requirement for it
+In this section we are going to create an application similar to the "hello world" example from the
+previous section to run in the browser environment. The minimal requirement for this application
 is just a browser that can execute JavaScript.
 
-The process is almost the same, the directory structure is the same. The only things that
-changes is the entry point of the application and the build script. So, start recreating
+The process is almost the same, and the directory structure is the same. The only things that
+changes is the entry point of the application and the build script. So, start re-creating
 the directory tree from previous example in a different directory.
 
 Then, write new content to the `src/myapp/core.cljs` file:
@@ -180,7 +181,7 @@ the _build.clj_ file with the following content:
 This is a brief explanation of the compiler options we're using:
 
 * The `:output-to` parameter indicates to the compiler the destination of the compiled code, in this
-  case to the "main.js" file.
+  case the "main.js" file.
 * The `:main` property indicates to the compiler the namespace that will act as the entry point of
   your application when it's executed.
 * `:source-map` indicates the destination of the source map. (The source map connects the ClojureScript source
@@ -197,7 +198,7 @@ To run the compilation, just execute the following command:
 java -cp cljs.jar:src clojure.main build.clj
 ----
 
-This process can take some time, so do not worry, wait a little bit. The JVM bootstrap with Clojure
+This process can take some time, so do not worry; wait a little bit. The JVM bootstrap with Clojure
 compiler is slightly slow. In the following sections we will explain how to start a watch process to avoid
 constantly starting and stopping this slow process.
 
@@ -220,14 +221,14 @@ directory.
 ----
 
 Now, when the compilation finishes and you have the basic HTML file you can just open it with your favorite
-browser and take a look in the development tools console. There should appear the "hello world" message.
+browser and take a look in the development tools console. The "Hello world!" message should appear there.
 
 
 ==== Watch process
 
 Surely, you have already experienced the slow startup of the _ClojureScript_ compiler. To solve this,
 the _ClojureScript_ standalone compiler also comes with tools to start a process that watches the changes
-in some directory and perform an incremental compilation.
+in some directory and performs an incremental compilation.
 
 Start creating another build script, but in this case name it _watch.clj_:
 
@@ -274,10 +275,10 @@ levels are coming from Google Closure Compiler.
 A very simplified overview of the compilation process is:
 
 1. The reader reads the code and makes some analysis. This process can raise some warnings
-   during its phase.
-2. Then, the _ClojureScript_ compiler emits JavaScript code. The result of that is one JavaScript
+   during this phase.
+2. Then, the _ClojureScript_ compiler emits JavaScript code. The result is one JavaScript
    file for each cljs file.
-3. The generated files passes through the Closure Compiler that depending on the optimization level,
+3. The generated files passes through the Closure Compiler that, depending on the optimization level
    and other options (sourcemaps, output dir output to, ...) generates the final output.
 
 The final output depends strictly on the optimization level.
@@ -337,16 +338,16 @@ _ClojureScript_ comes with support for executing the REPL in different execution
 each one has its own advantages or disadvantages. For example, you can run a REPL in a nodejs
 but in that environment you don't have access to the dom.
 
-In summary: everthing depends on that you really needs or your requirements.
+In summary: everthing really depends on your needs or requirements.
 
 
 ==== Nashorn REPL
 
-Is the most easy and maybe the most painless REPL environment because it does not requires any
-special stuff, just the JVM (JDK8) that you have used in previous examples for execute the
+The Nashorn REPL is the easiest and maybe most painless REPL environment because it does not require any
+special stuff, just the JVM (JDK 8) that you have used in previous examples for running the
 _ClojureScript_ compiler.
 
-Let start creating the _repl.clj_ file with following content:
+Let’s start creating the _repl.clj_ file with following content:
 
 [source, clojure]
 ----
@@ -359,7 +360,7 @@ Let start creating the _repl.clj_ file with following content:
  :cache-analysis true)
 ----
 
-Them, execute the following command for get the REPL up and running:
+Them, execute the following command to get the REPL up and running:
 
 [source, bash]
 ----
@@ -369,13 +370,13 @@ cljs.user=> (+ 1 2)
 3
 ----
 
-Surelly you have noticed that repl does not have support for history and other shell like facilities, that
-is happens because the default REPL does not comes with "readline" support. But it can be solved using
-the simple tool called `rlwrap` that you can found surelly on the package manager of your operating system.
+You may have noticed that the REPL does not have support for history and other shell-like facilities. This
+is because the default REPL does not comes with "readline" support. But this problem can be solved using
+the simple tool called `rlwrap` that you can certainly find with the package manager of your operating system.
 
-The `rlwrap` makes the REPL "readline" capable and will allow have commands history, code navigation
-and other shell like utilities that will make the experience much more pleasant. For use it, just
-prepend it to the previos command that we have run for execute the repl:
+The `rlwrap` makes the REPL "readline" capable and will allow you to have command history, code navigation,
+and other shell-like utilities that will make your REPL experience much more pleasant. To use it, just
+prepend it to the previous command that we have used to execute the REPL:
 
 [source, bash]
 ----
@@ -395,7 +396,7 @@ Surelly you are asking yourself, why I need a repl with nodejs when we have nash
 any additional dependencies. The answer is very simple, node/iojs is the most used javascript execution
 environment on backend and it has a great amount of community packages around it.
 
-Well, the good notice is that start nodejs/iojs repl is very very easy once you have it installed in 
+Well, the good notice is that start nodejs/iojs repl is very very easy once you have it installed in
 your system. Start writing this content to a new `repl.clj` file:
 
 [source, clojure]
@@ -423,9 +424,9 @@ cljs.user=> (+ 1 2)
 ==== Browser REPL
 
 This REPL is the most laborious to get it up and running. This is because it uses a browser for
-as execution environment and it has additional requirements.
+its execution environment and it has additional requirements.
 
-Let start creating a file named `brepl.clj` with the following content:
+Let’s start by creating a file named `brepl.clj` with the following content:
 
 [source, clojure]
 ----
@@ -449,8 +450,8 @@ Let start creating a file named `brepl.clj` with the following content:
 
 This script builds the source, just as we did earlier, and then starts the REPL.
 
-But the browser repl also requires that some code be executed in the browser before get the
-REPL working. For it, just recreate the application structure very similar to that one
+But the browser REPL also requires that some code be executed in the browser before getting the
+REPL working. To do that, just re-create the application structure very similar to the one
 that we have used in previous sections:
 
 [source, bash]
@@ -474,8 +475,8 @@ Then, write new content to the `src/myapp/core.cljs` file:
 (println "Hello, world!")
 ----
 
-And finally, create the missing _index.html_ file that is going to be used as entry point
-for run the browser side code of the REPL:
+And finally, create the missing _index.html_ file that is going to be used as the entry point
+for running the browser side code of the REPL:
 
 [source, html]
 ----
@@ -491,7 +492,7 @@ for run the browser side code of the REPL:
 </html>
 ----
 
-Well, that was a lot of setup! But trust us, it’s all worth it when you see it in action. For it
+Well, that was a lot of setup! But trust us, it’s all worth it when you see it in action. To do that,
 just execute the `brepl.clj` in same way that we have done it in previous examples:
 
 [source, bash]
@@ -501,9 +502,9 @@ Compiling client js ...
 Waiting for browser to connect ...
 ----
 
-And finally, open your favourite browser and go to http://localhost:9000/. Then page
-was loaded (page in blank), switch back to the console when we have run the REPL
-and you will see that the REPL is up and running:
+And finally, open your favourite browser and go to http://localhost:9000/. Once the page
+is loaded (the page will be blank), switch back to the console where you have run the REPL
+and you will see that it is up and running:
 
 [source, bash]
 ----
@@ -514,9 +515,9 @@ cljs.user=> (+ 14 28)
 42
 ----
 
-One of the big advantages of this REPL, is that you have access to all the browser environment. For
-depmostrate it, just execute `(js/alert "hello world")` in the repl. The result of that will be
-the tipical browser alert dialog.
+One of the big advantages of this REPL is that you have access to all the browser environment. To
+demonstrate it, just enter `(js/alert "hello world")` in the repl. The result of that will be
+the typical browser alert dialog.
 
 
 === Build and Dependency management tools
