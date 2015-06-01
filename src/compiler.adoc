@@ -446,8 +446,8 @@ Then, write new content to the `src/myapp/core.cljs` file:
 (println "Hello, world!")
 ----
 
-And finally, create the missing _index.html_ file that is going to be used as entry point
-for run the browser side code of the REPL:
+And finally, create the missing _index.html_ file that is going to be used as the entry point
+for running the browser side code of the REPL:
 
 [source, html]
 ----
@@ -474,7 +474,7 @@ Waiting for browser to connect ...
 ----
 
 And finally, open your favourite browser and go to http://localhost:9000/. Once the page
-is loaded (the page will be blank), switch back to the console where we have run the REPL
+is loaded (the page will be blank), switch back to the console where you have run the REPL
 and you will see that it is up and running:
 
 [source, bash]
