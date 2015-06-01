@@ -1,6 +1,6 @@
 (require 'cljs.closure)
 
 (cljs.closure/build "src"
- {:output-to "out/main.js"
+ {:output-to "main.js"
   :main 'myapp.core
   :target :nodejs})
