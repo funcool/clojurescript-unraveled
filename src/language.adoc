@@ -735,6 +735,28 @@ function and a sequence and applies the function to every element:
 ;; => (1 2 3)
 ----
 
+The first paramater for `map` can be _any_ function that takes one argument and returns a value.
+For example, if you had a graphing application and you wanted to graph the equation
+`y&#160;=&#160;3x&#160;+&#x160;5` for a set of _x_ values, you could get the _y_ values like this:
+
+[source, clojure]
+----
+(defn y-value [x] (+ (* 3 x) 5))
+
+(map y-value [1 2 3 4 5])
+;; => (8 11 14 17 20)
+----
+
+If your function is short, you can use an anonymous function instead, either the normal or short syntax:
+
+[source, clojure]
+----
+(map (fn [x] (+ (* 3 x) 5)) [1 2 3 4 5])
+;; => (8 11 14 17 20)
+(map #(+ (* 3 %1) 5) [1 2 3 4 5])
+;; => (8 11 14 17 20)
+----
+
 For filtering the values of a data structure we use the `filter` function, which takes a predicate
 and a sequence and gives a new sequence with only the elements that returned `true` for the given
 predicate:
@@ -744,6 +766,15 @@ predicate:
 (filter odd? [1 2 3 4])
 ;; => (1 3)
 ----
+
+Again, you can use any function that returns `true` or `false` as the first argument to `filter`.
+Here is an example that keeps only words less than five characters long. (The `count` function
+returns the length of its argument.)
+
+[source, clojure]
+----
+(filter (fn [word] (< (count word) 5)) ["ant" "baboon" "crab" "duck" "echidna" "fox"])
+;; => ("ant" "crab" "duck" "fox")
 
 Converting an iterable to a single value, accumulating the intermediate result at every step of the iteration
 can be achieved with `reduce`, which takes a function for accumulating values, an optional initial value
@@ -755,6 +786,55 @@ and a collection:
 ;; => 10
 ----
 
+Yet again, you can provide your own function as the first argument to `reduce`, but your function must have
+_two_ parameters. The first one is the "accumulated value" and the second parameter is the collection item
+being processed. For example, here is how you would find the sum of squares of a set of numbers (this is 
+an important calculation in statistics). Using a separate function:
+
+[source, clojure]
+----
+(defn sum-squares [accumulator item]
+  (+ accumulator (* item item)))
+  
+(reduce sum-squares 0 [3 4 5])
+;; => 50
+----
+
+...and with an anonymous function:
+
+[source, clojure]
+----
+(reduce (fn [acc item] (+ acc (* item item))) 0 [3 4 5])
+;; => 50
+----
+
+Here is a `reduce` that finds the total number of characters in a set of words:
+
+[source, clojure]
+----
+(reduce (fn [acc word] (+ acc (count word))) 0 ["ant" "bee" "crab" "duck"])
+;; => 14
+----
+
+We have not used the short syntax here, because although it requires less typing,
+it can be less readable, and when you are starting with a new language,
+it's important to be able to read what you wrote! If you are comfortable with the
+short syntax, feel free to use it.
+
+Remember to choose your starting value for the accumulator carefully. If you
+wanted to use `reduce` to find the product of a series of numbers, you would have to start
+with one rather than zero, otherwise all the numbers would be multiplied by zero!
+
+[source, clojure]
+----
+;; wrong starting value
+(reduce * 0 [3 4 5])
+;; => 0
+
+;; correct starting accumulator
+(reduce * 1 [3 4 5])
+;; => 60
+----
 
 ===== `for` sequence comprehensions
 
@@ -973,11 +1053,7 @@ when empty and a sequence otherwise:
 `next` is a similar sequence operation to `rest`, but it differs from the latter in that it yields a `nil` value
 when called with a sequence with one or zero elements. Note that, when given one of the aforementioned sequences,
 the empty sequence returned by `rest` will evaluate as a boolean true whereas the `nil` value returned by `next`
-will evaluate as false (see the section on _truthiness_ later in this chapter).
-
-////
-That section does not exist.
-////
+will evaluate as false (xref:truthiness-section[see the section on _truthiness_ later in this chapter]).
 
 [source, clojure]
 ----
@@ -2735,7 +2811,7 @@ b
 
 TBD
 
-
+anchor:truthiness-section[]
 === Truthiness
 
 This is the aspect where each language has its own semantics. The majority of languages
