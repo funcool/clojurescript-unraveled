@@ -788,7 +788,8 @@ and a collection:
 
 Yet again, you can provide your own function as the first argument to `reduce`, but your function must have
 _two_ parameters. The first one is the "accumulated value" and the second parameter is the collection item
-being processed. For example, here is how you would find the sum of squares of a set of numbers (this is 
+being processed. The function returns a value that becomes the accumulator for the next item in the list.
+For example, here is how you would find the sum of squares of a set of numbers (this is 
 an important calculation in statistics). Using a separate function:
 
 [source, clojure]
