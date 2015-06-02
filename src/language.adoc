@@ -466,8 +466,8 @@ that uses `fn` special form.
 ----
 (def my-set #(set (list %1 %2)))
 
-(my-set 1 2)
-;; => #{1 2}
+(my-set "x" "y")
+;; => #{"x" "y"}
 ----
 
 The preceding definition is shorthand for:
@@ -523,7 +523,7 @@ and the third expression will be evaluated otherwise.
 ----
 
 The block expression `do` can be used to have multiple expressions in an `if` branch.
-`do` is explained in the next section.
+xref:block-section[`do` is explained in the next section].
 
 
 ==== Branching with `cond`
@@ -608,7 +608,7 @@ have locals. Locals, as per usual, are immutable, and if you try mutate them, th
 will throw an error.
 
 The locals are defined with the `let` expression. The expression starts with a vector as first parameter
-followed by arbitrary number of expressions. The first parameter (the vector) should contain an arbitrary
+followed by an arbitrary number of expressions. The first parameter (the vector) should contain an arbitrary
 number of pairs that give a _binding form_ (usually a symbol) followed by an expression whose value will
 be bound to this new local for the remainder of the let expression.
 
@@ -626,7 +626,7 @@ In the preceding example, the symbol `x` is bound to the value `(inc 1)`, which 
 and the symbol `y` is bound to the sum of `x` and 1, which comes out to 3. Given those bindings, the
 expressions `(println "Simple message from the body of a let")` and `(* x y)` are evaluated.
 
-
+anchor:block-section[]
 ==== Blocks
 
 In JavaScript, braces `{` and `}` delimit a block of code that “belongs together.” Blocks in
@@ -761,6 +761,9 @@ and a collection:
 In ClojureScript the `for` construct isn't used for iteration but for generating sequences, an operation
 also known as "sequence comprehension". It offers a small domain specific language for declaratively
 building sequences.
+////
+That previous sentence will totally lose a beginning programmer.
+////
 
 `for` takes a vector of bindings and a expression and generates a sequence of the result of evaluating the
 expression. Let's take a look at an example:
@@ -768,12 +771,12 @@ expression. Let's take a look at an example:
 [source, clojure]
 ----
 (for [x [1 2 3]]
-  [x x])
-;; => ([1 1] [2 2] [3 3])
+  [x (* x x)])
+;; => ([1 1] [2 4] [3 9])
 ----
 
 In this example, `x` is bound to each of the items in the vector `[1 2 3]` in turn, and returns a new
-sequence of two-item vectors with the original item repeated.
+sequence of two-item vectors with the original item squared.
 
 `for` supports multiple bindings, which will cause the collections to be iterated in a nested fashion, much
 like nesting `for` loops in imperative languages. The innermost binding iterates “fastest.”
@@ -883,6 +886,17 @@ implementation technique called _structural sharing_, where most of the data sha
 of a value is not duplicated, and transformations of a value are implemented by copying the minimal amount of data
 required.
 
+////
+I'm not sure you need to go into the following example. Remember, these are beginners.
+It's nice for them to know that there is sharing, but they don't need a proof. The example
+doesn't really advance their general knowledge of the language, either. Instead, I'd conclude
+the preceding paragraph with:
+
+We could write an example program to show this in action, but for now, just trust ClojureScript
+to use sharing to keep memory use low and speed high, and let’s move on.
+
+////
+
 Let's see an example of appending values to a vector using the `conj` (for "conjoin") operation:
 
 [source, clojure]
@@ -924,9 +938,10 @@ a new list `ys` with the element added. The `rest` of the `ys` list (all the val
 are the same object in memory as the `xs` list, thus `xs` and `ys` share structure.
 
 
+
 ==== The sequence abstraction
 
-One of the central ClojureScript abstractions is the Sequence, which can be thought of as a list and can be derived
+One of the central ClojureScript abstractions is the _sequence_, which can be thought of as a list and can be derived
 from any of the collection types. It is persistent and immutable like all collection types, and many of the
 core ClojureScript functions return sequences.
 
@@ -959,6 +974,10 @@ when empty and a sequence otherwise:
 when called with a sequence with one or zero elements. Note that, when given one of the aforementioned sequences,
 the empty sequence returned by `rest` will evaluate as a boolean true whereas the `nil` value returned by `next`
 will evaluate as false (see the section on _truthiness_ later in this chapter).
+
+////
+That section does not exist.
+////
 
 [source, clojure]
 ----
@@ -1486,8 +1505,8 @@ Set literals can not contain duplicate values. If you accidentaly write a set li
 ;; clojure.lang.ExceptionInfo: Duplicate key: 1
 ----
 
-There are many operations that can be performed with sets, although are located in the `clojure.set` namespace and thus need to be imported.
-You'll learn the details of namespacing later, for now you only need to know that we are loading a namespace called `clojure.set` and binding
+There are many operations that can be performed with sets, although they are located in the `clojure.set` namespace and thus need to be imported.
+You'll learn xref:namespace-section[the details of namespacing] later; for now you only need to know that we are loading a namespace called `clojure.set` and binding
 it to the `s` symbol.
 
 [source,clojure]
@@ -1510,7 +1529,7 @@ it to the `s` symbol.
 ;; => #{"a" "e" "i" "o" "u"}
 ----
 
-A nice property of immutable sets is that they can be nested, languages that have mutable sets can end up containing duplicate values but
+A nice property of immutable sets is that they can be nested. Languages that have mutable sets can end up containing duplicate values, but
 that can't happen in ClojureScript. In fact, all ClojureScript data structures can be nested arbitrarily due to immutability.
 
 Sets also support the generic `conj` operation, as every other collection does.
@@ -1527,8 +1546,8 @@ Sets also support the generic `conj` operation, as every other collection does.
 ;; => #{1 3 2}
 ----
 
-They acts as read-only associative data that associates the values it contains to themselves. Since every value except `nil` and `false` are
-falsy in ClojureScript, we can use sets as predicate functions:
+Sets act as read-only associative data that associates the values it contains to themselves. Since every value except `nil` and `false` is
+truthy in ClojureScript, we can use sets as predicate functions:
 
 [source,clojure]
 ----
@@ -1569,6 +1588,9 @@ Sets have a sorted counterpart like maps do, created using the functions `sorted
 
 ===== Queues
 
+////
+I'm not sure that this section is necessary for beginners, but I am OK with it.
+////
 
 ClojureScript also provides a persistent and immutable queue. Queues don't have literal syntax since they are not used as pervasively as other collection types.
 
@@ -1592,8 +1614,8 @@ Using `conj` to add values to a queue adds items onto the rear:
 ;; => #queue [1 2 3]
 ----
 
-A thing to bear in mind about queues is that the stack operations don't follow the usual stack semantics (pushing and popping from the same end), pops
-take values from the front position and pushes with `conj` append elements to the back.
+A thing to bear in mind about queues is that the stack operations don't follow the usual stack semantics (pushing and popping from the same end). `pop`
+takes values from the front position, and `conj` pushes (appends) elements to the back.
 
 [source,clojure]
 ----
@@ -1610,16 +1632,16 @@ take values from the front position and pushes with `conj` append elements to th
 ;; => #queue [1 2 3 4]
 ----
 
-Queues are not as frequently used as lists or vectors but is good to know that they are available in ClojureScript, they may come in handy some time.
+Queues are not as frequently used as lists or vectors, but it is good to know that they are available in ClojureScript, as they may occasionally come in handy.
 
 
 === Destructuring
 
-Destructuring, as it name suggests, is a way of taking apart structured data such as collections and focusing on individual parts of them. ClojureScript
-offers a concise syntax for destructuring both indexed sequences and associative data structures that can be used in any place where bindings are declared.
+Destructuring, as its name suggests, is a way of taking apart structured data such as collections and focusing on individual parts of them. ClojureScript
+offers a concise syntax for destructuring both indexed sequences and associative data structures that can be used any place where bindings are declared.
 
-Let's see a an example of what destructuring is useful for, since it'll help us understand the previous statements better. Imagine that you have a sequence
-but are only interested in the first and third item, you could get a reference to them easily with the `nth` function:
+Let's see an example of what destructuring is useful for, since it'll help us understand the previous statements better. Imagine that you have a sequence
+but are only interested in the first and third item. You could get a reference to them easily with the `nth` function:
 
 [source, clojure]
 ----
@@ -1642,7 +1664,7 @@ However, the previous code is overly verbose. Destructuring lets us extract valu
 In the above example, `[fst _ thrd]` is a destructuring form. It is represented as a vector and used for binding indexed values to the symbols `fst` and
 `thrd`, corresponding to the index `0` and `2` respectively. The `_` symbol is used as a placeholder for indexes we are not interested in, in this case `1`.
 
-Note that destructuring is not limited to the `let` binding form, it works in almost every place where we bind values to symbols such as in the `for` and `doseq`
+Note that destructuring is not limited to the `let` binding form; it works in almost every place where we bind values to symbols such as in the `for` and `doseq`
 special forms or function arguments. We can write a function that takes a pair and swaps its positions very concisely using destructuring syntax in functionn
 arguments:
 
@@ -1658,8 +1680,8 @@ arguments:
 ;; => [4 3]
 ----
 
-Positional destructuring with vectors is quite handy for taking indexed values out of sequences, but some times we don't want to discard the rest of
-the elements in the sequence when destructuring. Similarly to how `&` is used for accepting variadic function arguments, it can be used inside a vector
+Positional destructuring with vectors is quite handy for taking indexed values out of sequences, but sometimes we don't want to discard the rest of
+the elements in the sequence when destructuring. Similarly to how `&` is used for accepting variadic function arguments, the ampersand can be used inside a vector
 destructuring form for grouping together the rest of a sequence:
 
 [source, clojure]
@@ -1674,8 +1696,8 @@ destructuring form for grouping together the rest of a sequence:
 Notice how the value in the `0` index got bound to `fst`, the value in the `1` index got bound to `snd` and the sequence of elements from `2` onwards got
 bound to the `more` symbol.
 
-We may still be interested in a data structure as a whole even when we are destructuring it, this can be achieved with the `:as` keyword. If used inside
-a destructuring form, the original data structure is bound to the symbol following such keyword:
+We may still be interested in a data structure as a whole even when we are destructuring it. This can be achieved with the `:as` keyword. If used inside
+a destructuring form, the original data structure is bound to the symbol following that keyword:
 
 [source, clojure]
 ----
@@ -1726,13 +1748,13 @@ Associative destructuring also supports binding the original data structure to a
 
 [source, clojure]
 ----
-(let [{name :name :as person} {:name "Cirilla"}]
+(let [{name :name :as person} {:name "Cirilla" :age 49}]
   [name person])
-;; => ["Cirilla" {:name "Cirilla"}]
+;; => ["Cirilla" {:name "Cirilla" :age 49}]
 ----
 
 Not only keywords can be the keys of associative data structures. Numbers, strings, symbols and many other data structures can
-be used as keys, so we can destructure using those too. Note that we need to quote the symbols for preventing them from being
+be used as keys, so we can destructure using those too. Note that we need to quote the symbols to prevent them from being
 resolved as a var lookup:
 
 [source, clojure]
@@ -1811,7 +1833,7 @@ per file. Naturally, a namespace definition is usually at the beginning of the f
 docstring.
 
 Previously we have explained vars and symbols. Every var that you define will be associated
-with it's namespace. If you do not define a concrete namespace then the default one called "user" will be
+with its namespace. If you do not define a concrete namespace, then the default one called "user" will be
 used:
 
 [source, clojure]
@@ -1824,7 +1846,7 @@ used:
 ==== Loading other namespaces
 
 Defining a namespace and the vars in it is really easy, but it's not very useful if we can't
-use them from other namespaces. For this purpose, the `ns` macro offers a simple way to load other
+use symbols from other namespaces. For this purpose, the `ns` macro offers a simple way to load other
 namespaces.
 
 Observe the following:
@@ -1843,7 +1865,7 @@ As you can observe, we are using fully qualified names (namespace + var name) fo
 functions from different namespaces.
 
 While this will let you access other namespaces, it's also repetitive and overly verbose. It will be especially
-uncomfortable if the name of a  namespace is very large. To solve that, you can use the `:as` directive to
+uncomfortable if the name of a namespace is very long. To solve that, you can use the `:as` directive to
 create an additional (usually shorter) alias to the namespace.
 This is how it can be done:
 
@@ -1911,7 +1933,7 @@ bad practice.
 We can not trust languages that allow you to silently overwrite methods that you are using when you import third party libraries; you can not expect
 consistent behavior when this happens.
 
-These symptoms are commonly called the "expression problem".
+These symptoms are commonly called the "expression problem";
 see http://en.wikipedia.org/wiki/Expression_problem for more details
 
 ==== Protocols
