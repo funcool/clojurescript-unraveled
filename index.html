@@ -1920,7 +1920,8 @@ returns the length of its argument.)</p>
 <div class="content">
 <pre>Yet again, you can provide your own function as the first argument to `reduce`, but your function must have
 _two_ parameters. The first one is the "accumulated value" and the second parameter is the collection item
-being processed. For example, here is how you would find the sum of squares of a set of numbers (this is
+being processed. The function returns a value that becomes the accumulator for the next item in the list.
+For example, here is how you would find the sum of squares of a set of numbers (this is
 an important calculation in statistics). Using a separate function:
 
 [source, clojure]</pre>
@@ -2401,7 +2402,7 @@ the emptyness of a sequence in ClojureScript, which is often referred to as nil-
 <pre>===== Functions that work on sequences
 
 The ClojureScript core functions for transforming collections make sequences out of their arguments and are
-implemented in terms of the generic sequence operations we learned about in the preceding chapter. This makes
+implemented in terms of the generic sequence operations we learned about in the preceding section. This makes
 them highly generic, since we can use them on any data type that is seqable. Let's see how we can use `map` with
 a variety of seqables:
 
@@ -2564,7 +2565,7 @@ We can query a value to know whether it's a collection type with the `coll?` pre
 <div class="listingblock">
 <div class="content">
 <pre>The `conj` operation adds elements to collections and may add them in different "places" depending
-on the collection. It adds them where it is most performant for the collection type,
+on the type of collection. It adds them where it is most performant for the collection type,
 but note that not every collection has a defined order.
 
 We can pass as many elements we want to add to `conj`; let's see it in action:
@@ -2622,7 +2623,7 @@ Lisps, many of the syntactic constructs of ClojureScript use data structures dif
 This makes code less uniform, but the gains in readability are well worth the price.
 
 You can think of ClojureScript lists as singly linked lists, where each node contains a value and a pointer to the rest of the list.
-This makes natural (and fast!) to add items to the front of the list since adding to the end would require traversal of the entire
+This makes it natural (and fast!) to add items to the front of the list, since adding to the end would require traversal of the entire
 list. The prepend operation is performed using the `cons` (construct) function.
 
 [source, clojure]</pre>
@@ -2660,7 +2661,7 @@ on lists naturally adds item in the front:
 <div class="listingblock">
 <div class="content">
 <pre>Lists and other ClojureScript data structures can be used as stacks using the `peek`, `pop`, and `conj` functions.
-Note that the top of the stack will be the "place" where `conj` adds elements to, making `conj` equivalent to the
+Note that the top of the stack will be the "place" where `conj` adds elements, making `conj` equivalent to the
 stack's push operation. In the case of lists, `conj` adds elements to the front of the list, `peek` returns the first
 element of the list, and `pop` returns a list with all the elements but the first one.
 
@@ -2860,6 +2861,10 @@ Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a synt
 vars. Any ClojureScript data structure can be used as a key in a map, although it's common to use keywords since can also
 be called as functions.
 
+////
+Joe the Beginning Programmer asks: "What do you mean by 'attaching metadata to vars'? I'm conufsed."
+////
+
 ClojureScript maps are written literally as key-value pairs enclosed in braces `{}`. Alternatively, they can be created
 with the `hash-map` function:
 
@@ -2899,7 +2904,10 @@ for maps expects one or more sequences of key-value pairs as its last arguments:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>Maps associate keys to values and, as such, are an associative data structure. They support adding associations with `assoc` and,
+<pre>In the preceding example, it just so happens that the order was preserved, but if you have many keys, you will see that
+the order is not preserved.
+
+Maps associate keys to values and, as such, are an associative data structure. They support adding associations with `assoc` and,
 unlike vectors, removing them with `dissoc`. Let's explore these functions:
 
 [source,clojure]</pre>
@@ -3534,7 +3542,7 @@ see http://en.wikipedia.org/wiki/Expression_problem for more details
 
 The _ClojureScript_ primitive for defining "interfaces" is called a Protocol. A protocol consists of
 a name and set of functions. All the functions have at least one argument corresponding to the
-`this` in javascript or `self` in Python.
+`this` in JavaScript or `self` in Python.
 
 Protocols provide a type-based polymorphism, and the dispatch is always done by the
 first argument (equivalent to JavaScript’s `this`, as previously mentioned).
@@ -3545,7 +3553,7 @@ A protocol looks like this:
 </div>
 </div>
 <div class="paragraph">
-<p>(ns myapp.foobar)</p>
+<p>(ns myapp.testproto)</p>
 </div>
 <div class="paragraph">
 <p>(defprotocol IProtocolName
@@ -3560,10 +3568,25 @@ acceptable solution to avoid name clashing and possible confusion.
 
 From the user perspective, protocol functions are simply plain functions defined in the namespace
 where the protocol is defined. As you can intuit, this namespacing of protocols allows us to avoid
-any conflict between implemented protocols for the same type.
+any conflict between different protocols implemented for the same type.
 
+Here is an example. Let's create a protocol called `IInvertible` for data that can be "inverted."
+It will have a single method named `invert`
 
-===== Extending existing types
+[source, clojure]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(ns proto.testproto)</p>
+</div>
+<div class="paragraph">
+<p>(defprotocol IInvertible
+  "This is a protocol for data types that are 'invertible'"
+    (invert [this] "Invert the given item."))</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>===== Extending existing types
 
 One of the big strengths of protocols is the ability to extend existing and maybe third party types,
 and this operation can be done in different ways. The majority of time you will tend to use
@@ -3595,7 +3618,57 @@ This is an example of how the *extend-type* macro can be used:
 <div class="listingblock">
 <div class="content">
 <pre>You can observe that with *extend-type* you are extending a single type with different protocols
-in a single expression. In comparison, *extend-protocol* does the inverse;
+in a single expression.  Here is code that will extend the `number`, `string`, `List`, and
+`PersistentVector` types to be "invertible."  For numbers, we define the inverse to be the
+reciprocal of the number (or zero, if the number is zero). For strings, lists, and vectors,
+the inverse is defined as the reverse of the input.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(extend-type number
+  IInvertible
+  (invert [this] (if (zero? this) 0 (/ 1 this))))</p>
+</div>
+<div class="paragraph">
+<p>(extend-type string
+  IInvertible
+  (invert [this] (apply str (reverse this))))</p>
+</div>
+<div class="paragraph">
+<p>(extend-type List
+  IInvertible
+  (invert [this] (reverse this)))</p>
+</div>
+<div class="paragraph">
+<p>(extend-type PersistentVector
+  IInvertible
+  (invert [this] (into [] (reverse this))))</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>If you load in this code, you can see that it works:
+
+[source, clojure]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(proto.testproto/invert "abc")
+;; &#8658; "cba"
+(proto.testproto/invert 25)
+;; &#8658; 0.04
+(proto.testproto/invert "abc")
+;; &#8658; "cba"
+(proto.testproto/invert '(1 2 3))
+;; &#8658; (3 2 1)
+(proto.testproto/invert [1 2 3])
+;; &#8658; [3 2 1]</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Admittedly, this is a somewhat contrived example. In xref:extend-type-section[the next section]
+you will see how to extend an existing type.
+
+In comparison, *extend-protocol* does the inverse;
 given a protocol, it adds implementations for multiple types:
 
 [source, clojure]</pre>
@@ -3618,13 +3691,43 @@ given a protocol, it adds implementations for multiple types:
 </div>
 <div class="listingblock">
 <div class="content">
+<pre>Thus, the previous example could have equally well have been written this way:
+
+[source, clojure]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(extend-protocol IInvertible
+  number
+  (invert [this] (if (zero? this) 0 (/ 1 this)))</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>string
+(invert [this] (apply str (reverse this)))</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>List
+(invert [this] (reverse this))</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>PersistentVector
+(invert [this] (into [] (reverse this))))</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
 <pre>There are other ways to extend a type with a protocol implementation, but they will be covered
 in another section of this book.
 
-
+anchor:extend-type-section[]
 ===== Participate in ClojureScript abstractions
 
-ClojureScript it self is built up on abstractions defined as protocols. Almost all behavior
+ClojureScript itself is built up on abstractions defined as protocols. Almost all behavior
 in the _ClojureScript_ language itself can be adapted to third party libraries. Let's go to see a
 real life example.
 
@@ -3710,7 +3813,7 @@ return `true`:
 <pre>==== Multimethods
 
 We have previously talked about protocols, which solve a very common use case of polymorphism:
-dispatch by type. But in some circumstances, the protocol approach it can be limiting. And
+dispatch by type. But in some circumstances, the protocol approach can be limiting. And
 here, *multimethods* come to the rescue.
 
 These *multimethods* are not limited to type dispatch only; instead, they also offer dispatch
