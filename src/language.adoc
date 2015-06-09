@@ -775,6 +775,7 @@ returns the length of its argument.)
 ----
 (filter (fn [word] (< (count word) 5)) ["ant" "baboon" "crab" "duck" "echidna" "fox"])
 ;; => ("ant" "crab" "duck" "fox")
+----
 
 Converting an iterable to a single value, accumulating the intermediate result at every step of the iteration
 can be achieved with `reduce`, which takes a function for accumulating values, an optional initial value
