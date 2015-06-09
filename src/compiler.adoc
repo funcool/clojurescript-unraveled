@@ -29,7 +29,8 @@ code to run in the browser or in nodejs/iojs like environments out of the box.
 
 The _ClojureScript_ compiler is implemented in Java, and to use it, you should have jdk8 installed.
 _ClojureScript_ itself only requires JDK 7, but the standalone compiler that we going to use in this
-chapter requires JDK 8, which can be found at http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+chapter requires JDK 8, which can be found at
+http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
 You can download it using `wget`:
 

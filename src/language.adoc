@@ -790,14 +790,14 @@ and a collection:
 Yet again, you can provide your own function as the first argument to `reduce`, but your function must have
 _two_ parameters. The first one is the "accumulated value" and the second parameter is the collection item
 being processed. The function returns a value that becomes the accumulator for the next item in the list.
-For example, here is how you would find the sum of squares of a set of numbers (this is 
+For example, here is how you would find the sum of squares of a set of numbers (this is
 an important calculation in statistics). Using a separate function:
 
 [source, clojure]
 ----
 (defn sum-squares [accumulator item]
   (+ accumulator (* item item)))
-  
+
 (reduce sum-squares 0 [3 4 5])
 ;; => 50
 ----
@@ -2096,7 +2096,7 @@ the inverse is defined as the reverse of the input.
 (extend-type number
   IInvertible
   (invert [this] (if (zero? this) 0 (/ 1 this))))
-  
+
 (extend-type string
   IInvertible
   (invert [this] (apply str (reverse this))))
@@ -2104,7 +2104,7 @@ the inverse is defined as the reverse of the input.
 (extend-type List
   IInvertible
   (invert [this] (reverse this)))
-  
+
 (extend-type PersistentVector
   IInvertible
   (invert [this] (into [] (reverse this))))
@@ -2153,13 +2153,13 @@ Thus, the previous example could have equally well have been written this way:
 (extend-protocol IInvertible
   number
   (invert [this] (if (zero? this) 0 (/ 1 this)))
-  
+
   string
   (invert [this] (apply str (reverse this)))
-  
+
   List
   (invert [this] (reverse this))
-  
+
   PersistentVector
   (invert [this] (into [] (reverse this))))
 ----
