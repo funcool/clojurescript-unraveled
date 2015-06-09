@@ -48,7 +48,8 @@ Let’s start with a practical example compiling code that will target *nodejs*/
 this example you should have nodejs or iojs (recommended) installed.
 
 There are different ways to install iojs, but the recommended way is using nvm (node version
-manager). You can read the instructions to install and use nvm at: https://github.com/creationix/nvm[home page].
+manager). You can read the instructions to install and use nvm at
+link:https://github.com/creationix/nvm[home page].
 
 You can test if *iojs* is installed in your system with this command:
 
