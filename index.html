@@ -934,11 +934,17 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#interacting-with-platform-types">3.12.2. Interacting with platform types</a></li>
 </ul>
 </li>
-<li><a href="#state-management">3.13. State management</a></li>
-<li><a href="#transducers">3.14. Transducers</a></li>
-<li><a href="#transients">3.15. Transients</a></li>
-<li><a href="#metadata">3.16. Metadata</a></li>
-<li><a href="#a-little-overview-of-macros">3.17. A little overview of macros</a></li>
+<li><a href="#truthiness">3.13. Truthiness</a></li>
+<li><a href="#state-management">3.14. State management</a>
+<ul class="sectlevel3">
+<li><a href="#vars-2">3.14.1. Vars</a></li>
+<li><a href="#atoms">3.14.2. Atoms</a></li>
+</ul>
+</li>
+<li><a href="#transducers">3.15. Transducers</a></li>
+<li><a href="#transients">3.16. Transients</a></li>
+<li><a href="#metadata">3.17. Metadata</a></li>
+<li><a href="#a-little-overview-of-macros">3.18. A little overview of macros</a></li>
 </ul>
 </li>
 <li><a href="#tooling-compiler">4. Tooling &amp; Compiler</a>
@@ -3878,21 +3884,8 @@ following example, the <code>.</code> after <code>User</code> indicates that we 
 </div>
 <div class="paragraph">
 <p>Types defined with <code>deftype</code> (and <code>defrecord</code>, which we will see later) creates a host-backed class-like object
-associated with the current namespace. But it has some peculiarities when we intend to use or import
-it from another namespace. The types in <em>ClojureScript</em> should be imported with the <code>:import</code> directive
-of the <code>ns</code> macro:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">ns </span><span class="tok-nv">myns.core</span>
-  <span class="tok-p">(</span><span class="tok-ss">:import</span> <span class="tok-nv">otherns.User</span><span class="tok-p">))</span>
-
-<span class="tok-p">(</span><span class="tok-nf">User.</span> <span class="tok-s">&quot;Cirilla&quot;</span> <span class="tok-s">&quot;Fiona&quot;</span><span class="tok-p">)</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For convenience, <em>ClojureScript</em> also defines a constructor function caled <code>&#8594;User</code> that can be imported
-in the common way using the <code>:require</code> directive.</p>
+associated with the current namespace. For convenience, <em>ClojureScript</em> also defines a constructor function caled
+<code>&#8594;User</code> that can be imported using the <code>:require</code> directive.</p>
 </div>
 <div class="paragraph">
 <p>We personally do not like this type of function, and we prefer to define our own constructors, with more
@@ -4336,13 +4329,9 @@ with plain objects:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="state-management"><a class="link" href="#state-management">3.13. State management</a></h3>
+<h3 id="truthiness"><a class="link" href="#truthiness">3.13. Truthiness</a></h3>
 <div class="paragraph">
-<p>TBD</p>
-</div>
-<div class="paragraph">
-<p><a id="truthiness-section"></a>
-=== Truthiness</p>
+<p><a id="truthiness-section"></a></p>
 </div>
 <div class="paragraph">
 <p>This is the aspect where each language has its own semantics. The majority of languages
@@ -4367,25 +4356,122 @@ and if it returns <code>nil</code> the value does not exist:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="transducers"><a class="link" href="#transducers">3.14. Transducers</a></h3>
+<h3 id="state-management"><a class="link" href="#state-management">3.14. State management</a></h3>
+<div class="paragraph">
+<p>We&#8217;ve learned that one of ClojureScript&#8217;s fundamental ideas is immutability. Both scalar values
+and collections are immutable in ClojureScript, except those mutable types present in the JS host
+like <code>Date</code>.</p>
+</div>
+<div class="paragraph">
+<p>Immutability has many great properties but we are sometimes faced with the need to model values
+that change over time. How can we achieve this if we can&#8217;t change data structures in place?</p>
+</div>
+<div class="sect3">
+<h4 id="vars-2"><a class="link" href="#vars-2">3.14.1. Vars</a></h4>
+<div class="paragraph">
+<p>Vars can be redefined at will inside a namespace but there is no way to know <strong>when</strong> they change. The
+imposibility to redefine vars from other namespaces is a bit limiting; also, if we are modifying state we&#8217;re
+probably interested in knowing when it occurs.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="atoms"><a class="link" href="#atoms">3.14.2. Atoms</a></h4>
+<div class="paragraph">
+<p>ClojureScript gives us the <code>Atom</code> type, which is an object containing a value that can be altered at
+will. Besides from altering its value, it also supports observation through watcher functions that can
+be attached and dettached from it and validation for ensuring that the value contained in the atom is
+always valid.</p>
+</div>
+<div class="paragraph">
+<p>If we were to model an identity corresponding to a person called Ciri, we could wrap an immutable value
+containing Ciri&#8217;s data in an atom. Note that we can get the atom&#8217;s value with the <code>deref</code> function or using
+its shorthand <code>@</code> notation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ciri</span> <span class="tok-p">(</span><span class="tok-nf">atom</span> <span class="tok-p">{</span><span class="tok-ss">:name</span> <span class="tok-s">&quot;Cirilla&quot;</span> <span class="tok-ss">:lastname</span> <span class="tok-s">&quot;Fiona&quot;</span> <span class="tok-ss">:age</span> <span class="tok-mi">20</span><span class="tok-p">}))</span>
+<span class="tok-c1">;; #&lt;Atom: {:name &quot;Cirilla&quot;, :lastname &quot;Fiona&quot;, :age 20}&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">deref </span><span class="tok-nv">ciri</span><span class="tok-p">)</span>
+<span class="tok-c1">;; {:name &quot;Cirilla&quot;, :lastname &quot;Fiona&quot;, :age 20}</span>
+
+<span class="tok-o">@</span><span class="tok-nv">ciri</span>
+<span class="tok-c1">;; {:name &quot;Cirilla&quot;, :lastname &quot;Fiona&quot;, :age 20}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can use the <code>swap!</code> function on an atom to alter its value with a function. Since Ciri&#8217;s birthday is
+today, let&#8217;s increment her age count:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">swap!</span> <span class="tok-nv">ciri</span> <span class="tok-nv">update</span> <span class="tok-ss">:age</span> <span class="tok-nv">inc</span><span class="tok-p">)</span>
+<span class="tok-c1">;; {:name &quot;Cirilla&quot;, :lastname &quot;Fiona&quot;, :age 21}</span>
+
+<span class="tok-o">@</span><span class="tok-nv">ciri</span>
+<span class="tok-c1">;; {:name &quot;Cirilla&quot;, :lastname &quot;Fiona&quot;, :age 21}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>reset!</code> functions replaces the value contained in the atom with a new one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">reset!</span> <span class="tok-nv">ciri</span> <span class="tok-p">{</span><span class="tok-ss">:name</span> <span class="tok-s">&quot;Cirilla&quot;</span>, <span class="tok-ss">:lastname</span> <span class="tok-s">&quot;Fiona&quot;</span>, <span class="tok-ss">:age</span> <span class="tok-mi">22</span><span class="tok-p">})</span>
+<span class="tok-c1">;; {:name &quot;Cirilla&quot;, :lastname &quot;Fiona&quot;, :age 22}</span>
+
+<span class="tok-o">@</span><span class="tok-nv">ciri</span>
+<span class="tok-c1">;; {:name &quot;Cirilla&quot;, :lastname &quot;Fiona&quot;, :age 22}</span></code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="observation"><a class="link" href="#observation">Observation</a></h5>
+<div class="paragraph">
+<p>We can add and remove watcher functions to atoms. Whenever the atom&#8217;s value is changed through a <code>swap!</code> or <code>reset!</code>
+all the atom&#8217;s watcher functions will be called. Watchers are added with the <code>add-watch</code> function, notice that each
+watcher has key associated (<code>:logger</code> in the example) to it, which is later used to remove the watch from the atom.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">a</span> <span class="tok-p">(</span><span class="tok-nf">atom</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">add-watch</span> <span class="tok-nv">a</span> <span class="tok-ss">:logger</span> <span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[</span><span class="tok-nb">key </span><span class="tok-nv">the-atom</span> <span class="tok-nv">old-value</span> <span class="tok-nv">new-value</span><span class="tok-p">]</span>
+                       <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Key:&quot;</span> <span class="tok-nb">key </span><span class="tok-s">&quot;Old:&quot;</span> <span class="tok-nv">old-value</span> <span class="tok-s">&quot;New:&quot;</span> <span class="tok-nv">new-value</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">reset!</span> <span class="tok-nv">a</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Key: :logger Old: nil New: 42</span>
+<span class="tok-c1">;; =&gt; 42</span>
+
+<span class="tok-p">(</span><span class="tok-nf">swap!</span> <span class="tok-nv">a</span> <span class="tok-nv">inc</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Key: :logger Old: 42 New: 43</span>
+<span class="tok-c1">;; =&gt; 4</span>
+
+<span class="tok-p">(</span><span class="tok-nf">remove-watch</span> <span class="tok-nv">a</span> <span class="tok-ss">:logger</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="transducers"><a class="link" href="#transducers">3.15. Transducers</a></h3>
 <div class="paragraph">
 <p>TBD</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="transients"><a class="link" href="#transients">3.15. Transients</a></h3>
+<h3 id="transients"><a class="link" href="#transients">3.16. Transients</a></h3>
 <div class="paragraph">
 <p>TBD</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="metadata"><a class="link" href="#metadata">3.16. Metadata</a></h3>
+<h3 id="metadata"><a class="link" href="#metadata">3.17. Metadata</a></h3>
 <div class="paragraph">
 <p>TBD</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="a-little-overview-of-macros"><a class="link" href="#a-little-overview-of-macros">3.17. A little overview of macros</a></h3>
+<h3 id="a-little-overview-of-macros"><a class="link" href="#a-little-overview-of-macros">3.18. A little overview of macros</a></h3>
 <div class="paragraph">
 <p>TBD</p>
 </div>
@@ -5236,7 +5322,7 @@ windows user, please check the instructions on the <a href="http://leiningen.org
 <div id="footer">
 <div id="footer-text">
 Version 1<br/>
-Last updated 2015-06-02 00:21:05 CEST
+Last updated 2015-06-02 17:00:43 CEST
 </div>
 </div>
 </body>
