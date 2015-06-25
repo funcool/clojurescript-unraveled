@@ -568,6 +568,7 @@ TBD
 
 === The Closure Library
 
+//^ Mention that :import is used for importing Google Closure classes https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure#namespaces
 TBD
 
 

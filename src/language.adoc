@@ -2492,20 +2492,8 @@ And its fields can be accessed using the prefix-dot notation:
 ----
 
 Types defined with `deftype` (and `defrecord`, which we will see later) creates a host-backed class-like object
-associated with the current namespace. But it has some peculiarities when we intend to use or import
-it from another namespace. The types in _ClojureScript_ should be imported with the `:import` directive
-of the `ns` macro:
-
-[source, clojure]
-----
-(ns myns.core
-  (:import otherns.User))
-
-(User. "Cirilla" "Fiona")
-----
-
-For convenience, _ClojureScript_ also defines a constructor function caled `->User` that can be imported
-in the common way using the `:require` directive.
+associated with the current namespace. For convenience, _ClojureScript_ also defines a constructor function caled
+`->User` that can be imported using the `:require` directive.
 
 We personally do not like this type of function, and we prefer to define our own constructors, with more
 idiomatic names:
