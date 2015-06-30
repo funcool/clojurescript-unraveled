@@ -10,6 +10,7 @@ v1, 2015-07-07
 :idseparator: -
 :idprefix:
 :sectlinks:
+:imagesdir: ./images
 //^:source-highlighter: coderay
 //^:listing-caption: Listing
 
