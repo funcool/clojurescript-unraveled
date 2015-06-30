@@ -704,13 +704,12 @@ cljs.user=> (.-value year-field)
 "24"
 cljs.user=> (set! (.-value year-field) "25")
 "25"
----
+----
 
 This works, but it is little more than direct translation of JavaScript to ClojureScript. The next
 step is to add event handling to the button. Event handling is loaded with all sorts of cross-platform
-compatibility issues, so we’d like one step up from plain ClojureScript.  The solution is xref:google-closure[the Google Closure library].
+compatibility issues, so we’d like one step up from plain ClojureScript.  The solution is the Google Closure library.
 
-anchor:google-closure[]
 === The Closure Library
 
 The good people at Google wrote a library named _Closure_ that does all that hard cross-platform
