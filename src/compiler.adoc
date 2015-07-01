@@ -530,12 +530,12 @@ for big projects with dependencies to third party libraries.
 
 This chapter intends to explain how you can use *Leiningen*, the defacto clojure build and dependency
 management tool for build _ClojureScript_ projects. It there an other growing in popularity build tool
-called *boot* but at this momenent it will not to be covered in this book.
+called *boot* but at this momenent it will not  be covered in this book.
 
 
 ==== Installing leiningen
 
-The installation process of leiningen is quite simple, just follow this steps:
+The installation process of leiningen is quite simple; just follow these steps:
 
 [source, bash]
 ----
@@ -546,8 +546,8 @@ chmod a+x ./lein
 export PATH=$PATH:~/bin
 ----
 
-Make sure that the `~/bin` directory is always set on your path, so for make it permanent, add the
-line of export to your `~/.bashrc` file (we are supposing that you are using bash shell).
+Make sure that the `~/bin` directory is always set on your path. To make it permanent, add the
+line starting with ` export` to your `~/.bashrc` file (we are supposing that you are using the bash shell).
 
 And now, open another clean terminal and execute `lein version`:
 
@@ -557,20 +557,9 @@ $ lein version
 Leiningen 2.5.1 on Java 1.8.0_45 OpenJDK 64-Bit Server VM
 ----
 
-NOTE: We are supposing that you are using Unix like system such as Linux or BSD, if you are
-windows user, please check the instructions on the link:http://leiningen.org/[Leiningen homepage].
-
-
-==== First project
-
-TBD
-
-
-=== The Closure Library
-
-//^ Mention that :import is used for importing Google Closure classes https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure#namespaces
-TBD
-
+NOTE: We are supposing that you are using a Unix-like system such as Linux or BSD. If you are
+a Windows user, please check the instructions on the link:http://leiningen.org/[Leiningen homepage].
+You can also get the Linux/Mac OSX/BSD version of the leiningen script at the web site.
 
 === Browser based development
 
