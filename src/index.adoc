@@ -16,42 +16,42 @@ v1, 2015-06-02
 
 == About this book
 
-This book covers the ClojureScript programming language, a detailed guide of its tooling for
-development and a series of articles about topics that are applicable in day-to-day programming
+This book covers the ClojureScript programming language, serves as a detailed guide of its tooling for
+development, and presents a series of articles about topics that are applicable to day-to-day programming
 in ClojureScript.
 
 It is not an introductory book to programming in that it assumes the reader has experience programming in at least
 one language. However, it doesn't assume experience with ClojureScript or functional programming. We'll try to
-include links to reference material when talking about the theoretical programming language aspects of ClojureScript
-that may be not be familiar to everybody.
+include links to reference material when talking about the theoretical underpinnings of ClojureScript that may not
+be familiar to everyone.
 
-Also, since the ClojureScript documentation is good but disperse, we wanted to write a compendium of reference
+Since the ClojureScript documentation is good but sparse, we wanted to write a compendium of reference
 information and extensive examples to serve as a ClojureScript primer as well as a series of practical how-to's.
-This document will evolve with the ClojureScript language, both as a reference of the language features and a
+This document will evolve with the ClojureScript language, both as a reference of the language features and as a
 sort of cookbook with practical programming recipes.
 
 You'll get the most ouf this book if you:
 
-- are curious about ClojureScript or functional programming and you have some programming experience;
+- are curious about ClojureScript or functional programming and have some programming experience;
 - write JavaScript or any other language that compiles to it and want to know what ClojureScript has to offer;
-- you already know some Clojure and want to learn how ClojureScript differs from it, plus practical topics like
+- already know some Clojure and want to learn how ClojureScript differs from it, plus practical topics like
   how to target both languages with the same code base.
 
-Don't be turned off if you don't see yourself in neither of the above groups, we encourage you to give this book
-a try and give us feedback on how we can make it more accesible. Our goal is to make ClojureScript more friendly
+Don't be turned off if you don't see yourself in any of the above groups. We encourage you to give this book
+a try and to give us feedback on how we can make it more accessible. Our goal is to make ClojureScript more friendly
 to newcomers and spread the ideas about programming that Clojure has helped popularize, as we see a lot of
 value in them.
 
 
 == Introduction
 
-This chapter is an introduction to the Clojure ecosystem, and intends to explain
+This chapter is an introduction to the Clojure ecosystem and intends to explain
 the philosophy behind it.
 
 include::philosophy.adoc[]
 
 
-== The language.
+== The Language
 
 This chapter will be a little introduction to ClojureScript without assumptions about previous
 knowledge of the Clojure language, providing a quick tour over all the things you will need to know
@@ -74,7 +74,7 @@ developing using ClojureScript. It will cover:
 * Browser based development
 * Server based development
 
-Unlike the previous chapter, this chapter intends to tell different stories each independent of each other.
+Unlike the previous chapter, this chapter intends to tell different stories each independent of the other.
 
 include::compiler.adoc[]
 
@@ -82,18 +82,18 @@ include::compiler.adoc[]
 == Mixed Bag
 
 This chapter will cover miscellaneous topics that are not classified in the previous ones. This is a
-"catchall" section and will touch a bunch of heterogeneus topics like:
+"catchall" section and will touch on a bunch of heterogeneous topics like:
 
 * Async primitives using the _core.async_ library.
 * Working with promises.
 * Error handling using the _cats_ library.
 * Pattern matching with the _core.match_ library.
 * Web development using the Om library.
-* Share code between clojure and clojurescript.
+* Share code between Clojure and ClojureScript.
 
 include::mixedbag.adoc[]
 
-== Further reading
+== Further Reading
 
 Here is a list of more resources about ClojureScript.
 

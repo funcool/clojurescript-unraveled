@@ -5,8 +5,8 @@ itself and will want to write and execute some code. The goal of this section is
 introduction to the _ClojureScript_ compiler.
 
 The _ClojureScript_ compiler takes the source code that has been split over numerous directories and namespaces and
-compiles it down to JavaScript. Today, JavaScript has great number of different environments
-where it can be executed - each with its own pecularities.
+compiles it down to JavaScript. Today, JavaScript has a great number of different environments
+where it can be executed - each with its own peculiarities.
 
 This chapter intends to explain how to use _ClojureScript_ without any additional tooling. This
 will help you understand how the compiler works and how you can use it when other tooling is not
@@ -22,13 +22,13 @@ followed by the second most popular - link:https://nodejs.org/[nodejs]/link:http
 
 There are others, such as Rhino (JDK 6+), Nashorn (JDK 8), QtQuick (QT),... but none of them have
 significant differences from the first two. So, _ClojureScript_ at the moment may compile
-code to run in the browser or in nodejs/iojs like environments out of the box.
+code to run in the browser or in nodejs/iojs-like environments out of the box.
 
 
 ==== Download the compiler
 
-The _ClojureScript_ compiler is implemented in Java, and to use it, you should have jdk8 installed.
-_ClojureScript_ itself only requires JDK 7, but the standalone compiler that we going to use in this
+The _ClojureScript_ compiler is implemented in Java. To use it, you should have jdk8 installed.
+_ClojureScript_ itself only requires JDK 7, but the standalone compiler that we are going to use in this
 chapter requires JDK 8, which can be found at
 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
@@ -46,10 +46,10 @@ file (along with JDK 8) that you need to compile your _ClojureScript_ source cod
 ==== Compile for nodejs/iojs
 
 Let’s start with a practical example compiling code that will target *nodejs*/*iojs*. For
-this example you should have nodejs or iojs (recommended) installed.
+this example, you should have nodejs or iojs (recommended) installed.
 
 There are different ways to install iojs, but the recommended way is using nvm (node version
-manager). You can read the instructions to install and use nvm at
+manager). You can read the instructions on how to install and use nvm on its
 link:https://github.com/creationix/nvm[home page].
 
 You can test if *iojs* is installed in your system with this command:
@@ -118,7 +118,7 @@ This is a brief explanation of the compiler options used in this example:
   case to the "main.js" file.
 * The `:main` property indicates to the compiler the namespace that will act as the entry point of
   your application when it's executed.
-* The `:target` property indicates the platform where you want execute the compiled code. In this case
+* The `:target` property indicates the platform where you want to execute the compiled code. In this case,
   we are going to use *iojs* (formerly nodejs). If you omit this parameter, the source will be
   compiled to run in the browser environment.
 
@@ -188,10 +188,10 @@ This is a brief explanation of the compiler options we're using:
   your application when it's executed.
 * `:source-map` indicates the destination of the source map. (The source map connects the ClojureScript source
   to the generated JavaScript so that error messages can point you back to the original source.)
-* `:output-dir` indicates the destination directory for all files sources used in a compilation. It is
-  just for making source maps work properly with the rest of code, not only your source.
+* `:output-dir` indicates the destination directory for all file sources used in a compilation. It is
+  just for making source maps work properly with the rest of the code, not only your source.
 * `:optimizations` indicates the compilation optimization. There are different values for this option,
-  but that will be covered in following sections in more detail.
+  but that will be covered in subsequent sections in more detail.
 
 To run the compilation, just execute the following command:
 
@@ -200,8 +200,8 @@ To run the compilation, just execute the following command:
 java -cp cljs.jar:src clojure.main build.clj
 ----
 
-This process can take some time, so do not worry; wait a little bit. The JVM bootstrap with Clojure
-compiler is slightly slow. In the following sections we will explain how to start a watch process to avoid
+This process can take some time, so do not worry; wait a little bit. The JVM bootstrap with the Clojure
+compiler is slightly slow. In the following sections, we will explain how to start a watch process to avoid
 constantly starting and stopping this slow process.
 
 While waiting for the compilation, let's create a dummy HTML file to make it easy to execute our example
@@ -232,7 +232,7 @@ Surely, you have already experienced the slow startup of the _ClojureScript_ com
 the _ClojureScript_ standalone compiler also comes with tools to start a process that watches the changes
 in some directory and performs an incremental compilation.
 
-Start creating another build script, but in this case name it _watch.clj_:
+Start creating another build script, but in this case, name it _watch.clj_:
 
 [source, clojure]
 ----
@@ -266,7 +266,7 @@ Using cached cljs.core out/cljs/core.cljs
 ----
 
 You can observe that in the second compilation, the time is drastically reduced. Another advantage
-of this method is that it is a gives a little bit more output.
+of this method is that it gives a little bit more output.
 
 
 ==== Optimization levels
@@ -321,7 +321,7 @@ TBD
 === Working with the REPL
 
 ////
-TODO: maybe would be interesting take some ideas from http://www.alexeberts.com/exploring-the-clojurescript-repl/
+TODO: maybe it would be interesting to take some ideas from http://www.alexeberts.com/exploring-the-clojurescript-repl/
 ////
 
 ==== Introduction
@@ -337,8 +337,8 @@ ClojureScript, it's easier to use the REPL. REPL stands for:
 In other words, the REPL lets you try out ClojureScript concepts and get immediate feedback.
 
 _ClojureScript_ comes with support for executing the REPL in different execution environments,
-each one has its own advantages or disadvantages. For example, you can run a REPL in a nodejs
-but in that environment you don't have access to the dom.
+each one has its own advantages or disadvantages. For example, you can run a REPL in nodejs
+but in that environment you don't have access to the DOM.
 
 In summary: everthing really depends on your needs or requirements.
 
@@ -349,7 +349,7 @@ The Nashorn REPL is the easiest and maybe most painless REPL environment because
 special stuff, just the JVM (JDK 8) that you have used in previous examples for running the
 _ClojureScript_ compiler.
 
-Let’s start creating the _repl.clj_ file with following content:
+Let’s start creating the _repl.clj_ file with the following content:
 
 [source, clojure]
 ----
@@ -362,7 +362,7 @@ Let’s start creating the _repl.clj_ file with following content:
  :cache-analysis true)
 ----
 
-Them, execute the following command to get the REPL up and running:
+Then, execute the following command to get the REPL up and running:
 
 [source, bash]
 ----
@@ -391,12 +391,12 @@ cljs.user=> (+ 1 2)
 
 ==== Node REPL
 
-This REPL uses a nodejs/iojs as execution environment, and obviously requires that nodejs or iojs will
+This REPL uses nodejs/iojs as an execution environment and obviously requires that nodejs or iojs will
 be installed in your system.
 
-Surelly you are asking yourself, why I need a repl with nodejs when we have nashorn that does not requires
-any additional dependencies. The answer is very simple, node/iojs is the most used javascript execution
-environment on backend and it has a great amount of community packages around it.
+Surely you are asking yourself, why do I need a repl with nodejs when we have nashorn that does not require
+any additional dependencies. The answer is very simple: node/iojs is the most used JavaScript execution
+environment on the backend, and it has a great amount of community packages around it.
 
 Well, the good notice is that start nodejs/iojs repl is very very easy once you have it installed in
 your system. Start writing this content to a new `repl.clj` file:
@@ -425,7 +425,7 @@ cljs.user=> (+ 1 2)
 
 ==== Browser REPL
 
-This REPL is the most laborious to get it up and running. This is because it uses a browser for
+This REPL is the most laborious to get up and running. This is because it uses a browser for
 its execution environment and it has additional requirements.
 
 Let’s start by creating a file named `brepl.clj` with the following content:
@@ -495,7 +495,7 @@ for running the browser side code of the REPL:
 ----
 
 Well, that was a lot of setup! But trust us, it’s all worth it when you see it in action. To do that,
-just execute the `brepl.clj` in same way that we have done it in previous examples:
+just execute the `brepl.clj` in the same way that we have done it in previous examples:
 
 [source, bash]
 ----
@@ -524,18 +524,18 @@ the typical browser alert dialog.
 
 === Build and Dependency management tools
 
-Until now, we have used the builtin _ClojureScript_ toolchain for compile our sources to javascript,
-and it is ok for start using it and understand how it works. But it is not very comfortable for use
-for big projects with dependencies to third party libraries.
+Until now, we have used the builtin _ClojureScript_ toolchain to compile our sources to JavaScript.
+It is OK to start using it and to understand how it works. But it is not very comfortable for use
+on big projects with dependencies to third party libraries.
 
 This chapter intends to explain how you can use *Leiningen*, the defacto clojure build and dependency
-management tool for build _ClojureScript_ projects. It there an other growing in popularity build tool
-called *boot* but at this momenent it will not to be covered in this book.
+management tool to build _ClojureScript_ projects. There is another build tool growing in popularity
+called *boot*, but at this time, it will not to be covered in this book.
 
 
 ==== Installing leiningen
 
-The installation process of leiningen is quite simple, just follow this steps:
+The installation process of leiningen is quite simple, just follow these steps:
 
 [source, bash]
 ----
@@ -546,10 +546,10 @@ chmod a+x ./lein
 export PATH=$PATH:~/bin
 ----
 
-Make sure that the `~/bin` directory is always set on your path, so for make it permanent, add the
-line of export to your `~/.bashrc` file (we are supposing that you are using bash shell).
+Make sure that the `~/bin` directory is always set on your path. To make it permanent, add the
+line of export to your `~/.bashrc` file (we are supposing that you are using the bash shell).
 
-And now, open another clean terminal and execute `lein version`:
+Now, open another clean terminal and execute `lein version`:
 
 [source, bash]
 ----
@@ -557,8 +557,8 @@ $ lein version
 Leiningen 2.5.1 on Java 1.8.0_45 OpenJDK 64-Bit Server VM
 ----
 
-NOTE: We are supposing that you are using Unix like system such as Linux or BSD, if you are
-windows user, please check the instructions on the link:http://leiningen.org/[Leiningen homepage].
+NOTE: We are supposing that you are using a Unix-like system such as Linux or BSD. If you are a
+Windows user, please check the instructions on the link:http://leiningen.org/[Leiningen homepage].
 
 
 ==== First project
@@ -586,7 +586,7 @@ TBD
 
 ====  Modularizing your code
 
-//^ Mainly related to google closure modules and slightly related to web based development
+//^ Mainly related to Google Closure modules and slightly related to web-based development
 //^ Maybe this is not the chapter for this section.
 
 TBD
