@@ -1,7 +1,3 @@
-=== Async primitives using core.async.
-
-TBD
-
 === Working with promises.
 
 TBD
@@ -17,7 +13,7 @@ TBD
 TBD
 
 
-=== Web development with Om and React.
+=== Web development with Reagent.
 
 TBD
 

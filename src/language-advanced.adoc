@@ -1,0 +1,45 @@
+=== Transducers
+
+TBD
+
+
+=== Transients
+
+TBD
+
+
+=== Metadata
+
+TBD
+
+
+=== Macros
+
+////
+Intends to be a little explanation to macros (an extensive documentation is not a goal,
+because it fits perfectly into its own book) and the peculiarities of the clojurescript
+in respect to the clojure.
+////
+
+TBD
+
+
+=== Core protocols
+
+////
+As clojurescript in difference with Clojure defines everything in terms of protocols and this
+subchapter intends to expain many of these protocols and how them can be used by the user.
+////
+
+TBD
+
+
+=== CSP & core.async
+
+////
+Intends to be an comprensive introduction to csp and core.async. We are aware that core.async
+is not part of core of clojurescript but it is widely used and interesting concepts like that
+would be awesome to cover in the book.
+////
+
+TBD

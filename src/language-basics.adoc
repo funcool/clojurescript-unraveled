@@ -2971,6 +2971,7 @@ The `reset!` functions replaces the value contained in the atom with a new one:
 ;; {:name "Cirilla", :lastname "Fiona", :age 22}
 ----
 
+
 ===== Observation
 
 We can add and remove watcher functions to atoms. Whenever the atom's value is changed through a `swap!` or `reset!`,
@@ -2994,23 +2995,3 @@ watcher has a key associated (`:logger` in the example) to it which is later use
 
 (remove-watch a :logger)
 ----
-
-
-=== Transducers
-
-TBD
-
-
-=== Transients
-
-TBD
-
-
-=== Metadata
-
-TBD
-
-
-=== A little overview of macros
-
-TBD
