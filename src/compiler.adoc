@@ -608,7 +608,7 @@ file is exactly as it should be.
 
 Open the `index.html` file and add the following content at the beginning of body:
 
-[source, html5]
+[source, html]
 ----
 <section class="viewport">
   <div id="result">
