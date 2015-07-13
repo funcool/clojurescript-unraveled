@@ -731,21 +731,6 @@ TBD
 TBD
 
 
-====  Modularizing your code
-
-//^ Mainly related to Google Closure modules and slightly related to web-based development
-//^ Maybe this is not the chapter for this section.
-
-TBD
-
-
-=== Developing a library
-
-//^ A little guide and implications of developing a library for clojurescript.
-
-TBD
-
-
 === Unit testing
 
 TBD

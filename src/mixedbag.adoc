@@ -1,5 +1,18 @@
-=== Development with figwheel
+===  Modularizing your code
 
+//^ Mainly related to Google Closure modules and slightly related to web-based development
+
+TBD
+
+
+=== Developing a library
+
+//^ A little guide and implications of developing a library for clojurescript.
+
+TBD
+
+
+=== Development with figwheel
 
 ==== Introduction
 
