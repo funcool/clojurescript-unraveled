@@ -36,7 +36,7 @@ You can download it using `wget`:
 
 [source, bash]
 ----
-wget https://github.com/clojure/clojurescript/releases/download/r3269/cljs.jar
+wget https://github.com/clojure/clojurescript/releases/download/r3308/cljs.jar
 ----
 
 The _ClojureScript_ compiler is packaged in a standalone executable jar file, so this is the only
