@@ -582,7 +582,6 @@ TBD
 TBD
 
 
-
 === Developing a library
 
 //^ A little guide and implications of developing a library for clojurescript.

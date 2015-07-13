@@ -241,9 +241,6 @@ Now, put that all together in the `core.cljs` file as follows:
 (events/listen (dom/getElement "calculate") "click" calculate)
 ----
 
-=== Async primitives using core.async.
-
-TBD
 
 === Working with promises.
 
