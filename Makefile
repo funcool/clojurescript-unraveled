@@ -13,10 +13,12 @@ docbook:
 	mkdir -p dist/
 	asciidoctor -b docbook45 -a numbered  src/index.adoc -o dist/index.xml
 
-
 pdf: docbook git
 	./asciidoctor-fopub/fopub -t docbook-xsl dist/index.xml
 
 github: html
 	ghp-import -m "Generate book" -b gh-pages dist/
 	git push origin gh-pages
+
+watch: html
+	sh ./watch.sh
