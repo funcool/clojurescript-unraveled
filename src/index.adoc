@@ -94,7 +94,7 @@ include::language-advanced.adoc[]
 This chapter will cover miscellaneous topics that are not classified in the previous ones. This is a
 "catchall" section and will touch on a bunch of heterogeneous topics like:
 
-* Async primitives using the _core.async_ library.
+* Repl based development with figwheel.
 * Working with promises.
 * Error handling using the _cats_ library.
 * Pattern matching with the _core.match_ library.
