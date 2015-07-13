@@ -1,6 +1,8 @@
-(require 'cljs.closure)
+(require '[cljs.build.api :as b])
 
-(cljs.closure/build "src"
- {:output-to "main.js"
-  :main 'myapp.core
-  :target :nodejs})
+(b/build "src"
+ {:main 'myapp.core
+  :output-to "main.js"
+  :output-dir "out"
+  :target :nodejs
+  :verbose true})

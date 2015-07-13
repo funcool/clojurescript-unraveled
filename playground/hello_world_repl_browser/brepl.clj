@@ -1,16 +1,15 @@
-(require 'cljs.repl)
-(require 'cljs.closure)
-(require 'cljs.repl.browser)
+(require
+  '[cljs.build.api :as b]
+  '[cljs.repl :as repl]
+  '[cljs.repl.browser :as browser])
 
-(cljs.closure/build
- "src"
+(b/build "src"
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
   :main 'myapp.core
+  :verbose true
   :optimizations :none})
 
-(cljs.repl/repl
- (cljs.repl.browser/repl-env)
- :watch "src"
- :output-dir "out/")
+(repl/repl (browser/repl-env)
+  :output-dir "out")

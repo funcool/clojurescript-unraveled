@@ -1,8 +1,9 @@
-(require 'cljs.closure)
+(require '[cljs.build.api :as b])
 
-(cljs.closure/build "src"
+(b/build "src"
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
   :main 'myapp.core
+  :verbose true
   :optimizations :none})

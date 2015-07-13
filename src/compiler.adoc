@@ -104,12 +104,14 @@ Let’s create the _build.clj_ file with the following content:
 
 [source, clojure]
 ----
-(require 'cljs.closure)
+(require '[cljs.build.api :as b])
 
-(cljs.closure/build "src"
- {:output-to "main.js"
-  :main 'myapp.core
-  :target :nodejs})
+(b/build "src"
+ {:main 'myapp.core
+  :output-to "main.js"
+  :output-dir "out"
+  :target :nodejs
+  :verbose true})
 ----
 
 This is a brief explanation of the compiler options used in this example:
@@ -170,13 +172,14 @@ the _build.clj_ file with the following content:
 
 [source, clojure]
 ----
-(require 'cljs.closure)
+(require '[cljs.build.api :as b])
 
-(cljs.closure/build "src"
+(b/build "src"
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
   :main 'myapp.core
+  :verbose true
   :optimizations :none})
 ----
 
@@ -236,9 +239,9 @@ Start creating another build script, but in this case, name it _watch.clj_:
 
 [source, clojure]
 ----
-(require 'cljs.closure)
+(require '[cljs.build.api :as b])
 
-(cljs.closure/watch "src"
+(b/watch "src"
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
@@ -433,22 +436,21 @@ Let’s start by creating a file named `brepl.clj` with the following content:
 
 [source, clojure]
 ----
-(require 'cljs.repl)
-(require 'cljs.closure)
-(require 'cljs.repl.browser)
+(require
+  '[cljs.build.api :as b]
+  '[cljs.repl :as repl]
+  '[cljs.repl.browser :as browser])
 
-(cljs.closure/build
- "src"
+(b/build "src"
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
   :main 'myapp.core
+  :verbose true
   :optimizations :none})
 
-(cljs.repl/repl
- (cljs.repl.browser/repl-env)
- :watch "src"
- :output-dir "out/")
+(repl/repl (browser/repl-env)
+  :output-dir "out")
 ----
 
 This script builds the source, just as we did earlier, and then starts the REPL.
@@ -512,7 +514,6 @@ and you will see that it is up and running:
 [source, bash]
 ----
 [...]
-Watch compilation log available at: out/watch.log
 To quit, type: :cljs/quit
 cljs.user=> (+ 14 28)
 42
