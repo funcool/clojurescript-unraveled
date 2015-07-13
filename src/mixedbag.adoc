@@ -1,3 +1,250 @@
+=== Development with figwheel
+
+
+==== Introduction
+
+In this project, we will *not* do “Hello World”&#8212; that has been done to death.
+Instead, this project will be a web page that asks you for your age in years and
+tells you how many days that is, using an approximation of 365 days per year.
+
+And for it, we will use the figwheel leiningen plugin. That plugin enables a fully
+interactive, repl based and autoreloading experience.
+
+
+==== First steps
+
+In this project, we will use the _figwheel_ template to build the project structure.
+Let’s call the project `age` and create it by typing:
+
+[source,bash]
+----
+$ lein new figwheel age
+Retrieving figwheel/lein-template/0.3.5/lein-template-0.3.5.pom from clojars
+Retrieving figwheel/lein-template/0.3.5/lein-template-0.3.5.jar from clojars
+Generating fresh 'lein new' figwheel project.
+$ cd age # move into newly created project directory
+----
+
+The project has the following structure:
+
+----
+age
+├── .gitignore
+├── project.clj
+├── README.md
+├── resources
+│   └── public
+│       ├── css
+│       │   └── style.css
+│       └── index.html
+└── src
+    └── age
+        └── core.cljs
+----
+
+The `project.clj` file contains information that Leiningen uses to download
+dependencies and build the project. For now, just trust that everything in that
+file is exactly as it should be.
+
+Open the `index.html` file and add the `<meta>` element to the head of the document,
+and modify the body as follows:
+
+[source,html]
+----
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <h1>Age in Days</h1>
+      <p>Enter your age in years:
+        <input type="text" size="5" id="years" /></p>
+      <p id="feedback"></p>
+    </div>
+    <script src="js/compiled/age.js" type="text/javascript"></script>
+  </body>
+</html>
+----
+
+The `core.cljs` file is where all the action takes place. For now, leave it exactly
+as it is, and start the figwheel environment, which will load a large number of
+dependencies and start a server.
+
+[source,bash]
+----
+$ lein fighwheel
+# much output
+Prompt will show when figwheel connects to your application
+----
+
+If you are using Linux or Mac OS X, type the command as `rlwrap lein figwheel`.
+In your browser, go to URL `http://localhost:3449`, and you will see something
+like the following screenshot if you open up the web console.
+
+image::localhost1.png[Screenshot of web page and console]
+
+The terminal will then give you a REPL prompt:
+
+[source,bash]
+----
+$ rlwrap lein figwheel
+To quit, type: :cljs/quit
+cljs.user=>
+----
+
+For now, do what it says in the `core.cljs` file -- change the `(println...)` and
+then save the file. When you do so, you will see the change reflected immediately
+in the browser.
+
+Then make an error by adding an extra closing parenthesis to the `println`. When
+you save the file, will see a compile error in the browser window.
+
+image::localhost2.png[Screenshot of browser error message]
+
+
+==== Interacting with JavaScript
+
+In the REPL window, type the following to invoke JavaScript’s `window.alert()`
+function:
+
+[source, clojure]
+----
+(.alert js/window "It works!")
+;; => nil
+----
+
+The general format for invoking a JavaScript function from ClojureScript is to
+give the function name (preceded by a dot), the object that “owns” the function,
+and any parameters to that function. You should see an alert appear in your
+browser winodw; when you dismiss the alert, the REPL will print `nil` and give
+you another prompt. You can also do it this way:
+
+[source, clojure]
+----
+(js/alert "It works!")
+;; => nil
+----
+
+However, the first version always works, so, for consistency, we will use that
+notation throughout. You can create objects by using their class name followed by
+a dot, and you can call methods on any JavaScript objects:
+
+[source, clojure]
+----
+(def d (js/Date.))
+;; => #inst "2015-06-30T01:38:21.764-00:00"
+
+(.getFullYear d)
+;; => 2015
+
+(.toUpperCase "abc")
+;; => "ABC"
+
+(.getElementById js/document "years")
+;; => #<[object HTMLInputElement]>
+----
+
+From that last example, you can see where we’re going. To retrieve an object’s
+property, use a `.-` before the property name. In the browser window, type a number
+into the input field (in the example, we typed `24`), then do this in the REPL.
+
+[source, clojure]
+----
+;; for convenience define a variable
+(def year-field (.getElementById js/document "years"))
+;; => #<[object HTMLInputElement]>
+
+(.-value year-field)
+;; => "24"
+
+(set! (.-value year-field) "25")
+;; => "25"
+----
+
+This works, but it is little more than direct translation of JavaScript to
+ClojureScript. The next step is to add event handling to the button. Event handling
+is loaded with all sorts of cross-platform compatibility issues, so we’d like one
+step up from plain ClojureScript.
+
+The solution is the Google Closure library. To use it, you have to modify the
+`:require` clause at the beginning of `core.cljs`:
+
+[source,clojure]
+----
+(ns ^:figwheel-always age.core
+  (:require [goog.dom :as dom]
+            [goog.events :as events]))
+----
+
+Getting an element and setting its value is slightly easier. Do this in the REPL
+and see the results in the browser window.
+
+[source, clojure]
+----
+cljs.user=> (in-ns 'age.core)
+age.core=> (def y (dom/getElement "years"))
+#<[object HTMLInputElement]>
+
+age.core=> (set! (.-value y) "26")
+"26"
+
+age.core=> (dom/setTextContent (dom/getElement "feedback") "This works!")
+----
+
+To add an event, you define a function that takes a single argument (the event to
+be handled), and then tell the appropriate HTML element to listen for it. the
+`events/listen` function takes three arguments: the element to listen to, the
+event to listen for, and the function that will handle the event.
+
+[source, clojure]
+----
+age.core=> (defn testing [evt] (js/alert "Responding to click"))
+#<function age$core$testing(evt){
+return alert("Responding to click");
+}>
+
+age.core=> (events/listen (dom/getElement "calculate") "click" testing)
+#<[object Object]>
+----
+
+After doing this, the browser should respond to a click on the button.
+If you would like to remove the listener, use `unlisten`.
+
+[source, clojure]
+----
+(events/unlisten (dom/getElement "calculate") "click" testing)
+;; => true
+----
+
+Now, put that all together in the `core.cljs` file as follows:
+
+[source, clojure]
+----
+(ns ^:figwheel-always age.core
+  (:require [goog.dom :as dom]
+            [goog.events :as events]))
+
+(enable-console-print!)
+
+(defn calculate
+  [event]
+  (let [years (.parseInt js/window (.-value (dom/getElement "years")))
+        days (* 365 years)]
+    (dom/setTextContent (dom/getElement "feedback")
+                        (str "That is " days " days old."))))
+
+(defn on-js-reload [])
+
+(events/listen (dom/getElement "calculate") "click" calculate)
+----
+
+=== Async primitives using core.async.
+
+TBD
+
 === Working with promises.
 
 TBD
