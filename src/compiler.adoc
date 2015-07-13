@@ -57,7 +57,7 @@ You can test if *iojs* is installed in your system with this command:
 [source, shell]
 ----
 $ iojs --version
-v2.1.0
+v2.3.4
 ----
 
 
@@ -323,6 +323,7 @@ TBD
 ////
 TODO: maybe it would be interesting to take some ideas from http://www.alexeberts.com/exploring-the-clojurescript-repl/
 ////
+
 
 ==== Introduction
 
