@@ -108,6 +108,7 @@ include::mixedbag.adoc[]
 
 Here is a list of more resources about ClojureScript.
 
-* https://github.com/clojure/clojurescript/wiki[ClojureScript wiki] is the community-mantained wiki about ClojureScript.
-* http://cljs.info/cheatsheet/[ClojureScript Cheatsheet] is a comprehensive reference of the ClojureScript language.
-* http://catcode.com/etudes-for-clojurescript/toc01.html[Études for ClojureScript] is a collection of exercises for learning ClojureScript.
+* https://github.com/clojure/clojurescript/wiki[ClojureScript wiki] (the community-mantained wiki about ClojureScript).
+* https://github.com/cljsinfo/cljs-api-docs/tree/catalog[Api Reference] (the community-maintained complete language api reference).
+* http://cljs.info/cheatsheet/[ClojureScript Cheatsheet] (a comprehensive reference of the ClojureScript language).
+* http://catcode.com/etudes-for-clojurescript/toc01.html[Études for ClojureScript] (a collection of exercises for learning ClojureScript).
