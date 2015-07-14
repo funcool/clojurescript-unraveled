@@ -17,54 +17,58 @@ v1, 2015-07-07
 
 == About this book
 
-This book covers the ClojureScript programming language, serves as a detailed guide of its tooling for
-development, and presents a series of articles about topics that are applicable to day-to-day programming
-in ClojureScript.
+This book covers the ClojureScript programming language, serves as a detailed guide of its
+tooling for development, and presents a series of articles about topics that are
+applicable to day-to-day programming in ClojureScript.
 
-It is not an introductory book to programming in that it assumes the reader has experience programming in at least
-one language. However, it doesn't assume experience with ClojureScript or functional programming. We'll try to
-include links to reference material when talking about the theoretical underpinnings of ClojureScript that may not
+It is not an introductory book to programming in that it assumes the reader has experience
+programming in at least one language. However, it doesn't assume experience with
+_ClojureScript_ or functional programming. We'll try to include links to reference
+material when talking about the theoretical underpinnings of ClojureScript that may not
 be familiar to everyone.
 
-Since the ClojureScript documentation is good but sparse, we wanted to write a compendium of reference
-information and extensive examples to serve as a ClojureScript primer as well as a series of practical how-to's.
-This document will evolve with the ClojureScript language, both as a reference of the language features and as a
-sort of cookbook with practical programming recipes.
+Since the ClojureScript documentation is good but sparse, we wanted to write a compendium
+of reference information and extensive examples to serve as a ClojureScript primer as
+well as a series of practical how-to's. This document will evolve with the ClojureScript
+language, both as a reference of the language features and as a sort of cookbook with
+xpractical programming recipes.
 
 You'll get the most ouf this book if you:
 
-- are curious about ClojureScript or functional programming and have some programming experience;
-- write JavaScript or any other language that compiles to it and want to know what ClojureScript has to offer;
-- already know some Clojure and want to learn how ClojureScript differs from it, plus practical topics like
-  how to target both languages with the same code base.
+- are curious about ClojureScript or functional programming and have some programming
+  experience;
+- write JavaScript or any other language that compiles to it and want to know what
+  ClojureScript has to offer;
+- already know some Clojure and want to learn how ClojureScript differs from it, plus
+  practical topics like how to target both languages with the same code base.
 
-Don't be turned off if you don't see yourself in any of the above groups. We encourage you to give this book
-a try and to give us feedback on how we can make it more accessible. Our goal is to make ClojureScript more friendly
-to newcomers and spread the ideas about programming that Clojure has helped popularize, as we see a lot of
-value in them.
+Don't be turned off if you don't see yourself in any of the above groups. We encourage
+you to give this book a try and to give us feedback on how we can make it more accessible.
+Our goal is to make ClojureScript more friendly to newcomers and spread the ideas about
+programming that Clojure has helped popularize, as we see a lot of value in them.
 
 
 == Introduction
 
-This chapter is an introduction to the Clojure ecosystem and intends to explain
-the philosophy behind it.
+This chapter is an introduction to the Clojure ecosystem and intends to explain the
+philosophy behind it.
 
 include::philosophy.adoc[]
 
 
 == Language (the basics)
 
-This chapter will be a little introduction to ClojureScript without assumptions about previous
-knowledge of the Clojure language, providing a quick tour over all the things you will need to know
-about clojurescript and understand the rest of this book.
+This chapter will be a little introduction to ClojureScript without assumptions about
+previous knowledge of the Clojure language, providing a quick tour over all the things
+you will need to know about clojurescript and understand the rest of this book.
 
 include::language-basics.adoc[]
 
 
 == Tooling & Compiler
 
-This chapter will cover a little introduction to existing tooling for making things easy when
-developing using ClojureScript. It will cover:
+This chapter will cover a little introduction to existing tooling for making things easy
+when developing using ClojureScript. It will cover:
 
 * Using the repl
 * Leiningen and cljsbuild
@@ -75,24 +79,26 @@ developing using ClojureScript. It will cover:
 * Browser based development
 * Server based development
 
-Unlike the previous chapter, this chapter intends to tell different stories each independent of the other.
+Unlike the previous chapter, this chapter intends to tell different stories each
+independent of the other.
 
 include::compiler.adoc[]
 
 
 == Language (advanced topics)
 
-This chapter intends to explain some advanced topics that are part of the language and that does not
-fits in the first chapter. The good candidates for this section are transducers, core protocols,
-transients, metadata. In summary: topics that are not mandatory for understand the language.
+This chapter intends to explain some advanced topics that are part of the language and
+that does not fits in the first chapter. The good candidates for this section are
+transducers, core protocols, transients, metadata. In summary: topics that are not
+mandatory for understand the language.
 
 include::language-advanced.adoc[]
 
 
 == Mixed Bag
 
-This chapter will cover miscellaneous topics that are not classified in the previous ones. This is a
-"catchall" section and will touch on a bunch of heterogeneous topics like:
+This chapter will cover miscellaneous topics that are not classified in the previous ones.
+This is a "catchall" section and will touch on a bunch of heterogeneous topics like:
 
 * Repl based development with figwheel.
 * Working with promises.
