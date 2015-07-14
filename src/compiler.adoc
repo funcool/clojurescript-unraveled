@@ -543,12 +543,43 @@ result of that will be the typical browser alert dialog.
 
 === The Closure Library
 
-//^ Mention that :import is used for importing Google Closure classes https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure#namespaces
+A google closure library is a javascript library developed by google, based on a modular
+architecture and provides cross-browser functions for DOM manipulations and events, ajax
+and JSON, among other features.
 
-TBD
+It's written specifically to take advantage of the Closure Compiler (that is used
+internally by the _ClojureScript_ compiler).
 
+And _ClojureScript_ is built up on Closure Compiler and Closure Library. The great example
+are the _ClojureScript_ namespaces, they are defined as closure modules. This means that
+you can interact with closure library in a very easy way:
 
+[source, clojure]
+----
+(ns yourapp.core
+  (:require [goog.dom :as dom]))
 
+(def element (dom/getElement "body"))
+----
+
+With previous snippet of code you can observe the way you can import the *dom* module of
+the closure library and use one function declared in that module.
+
+Additionally, the closure library also exposes "special" modules that behaves like a
+class or object. For import this kind of things you should use the `:import` directive.
+
+[source, clojure]
+----
+(ns yourapp.core
+  (:import goog.History))
+
+(def instance (History.))
+----
+
+If you are familiar with Clojure, it uses this approach for import the Java clases using
+the `:import` direcrtive. However, if you define types (classes) using _ClojureScript_
+primitives, you should not use `:import` for import them, the standard `:require`
+directives should be used.
 
 
 === Build and Dependency management tools
