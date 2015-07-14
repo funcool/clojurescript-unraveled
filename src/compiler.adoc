@@ -526,13 +526,14 @@ the typical browser alert dialog.
 
 === Build and Dependency management tools
 
-Until now, we have used the builtin _ClojureScript_ toolchain to compile our sources to JavaScript.
-It is OK to start using it and to understand how it works. But it is not very comfortable for use
-on big projects with dependencies to third party libraries.
+Until now, we have used the builtin _ClojureScript_ toolchain to compile our sources to
+JavaScript. It is OK to start using it and to understand how it works. But it is not very
+comfortable for use on big projects with dependencies to third party libraries.
 
-This chapter intends to explain how you can use *Leiningen*, the defacto clojure build and dependency
-management tool for build _ClojureScript_ projects. It there an other growing in popularity build tool
-called *boot* but at this momenent it will not  be covered in this book.
+This chapter intends to explain how you can use *Leiningen*, the defacto clojure build
+and dependency management tool for build _ClojureScript_ projects. It there an other
+growing in popularity build tool called *boot* but at this momenent it will not  be
+covered in this book.
 
 
 ==== Installing leiningen
@@ -548,8 +549,9 @@ chmod a+x ./lein
 export PATH=$PATH:~/bin
 ----
 
-Make sure that the `~/bin` directory is always set on your path. To make it permanent, add the
-line starting with ` export` to your `~/.bashrc` file (we are supposing that you are using the bash shell).
+Make sure that the `~/bin` directory is always set on your path. To make it permanent,
+add the line starting with ` export` to your `~/.bashrc` file (we are supposing that you
+are using the bash shell).
 
 Now, open another clean terminal and execute `lein version`:
 
@@ -559,22 +561,23 @@ $ lein version
 Leiningen 2.5.1 on Java 1.8.0_45 OpenJDK 64-Bit Server VM
 ----
 
-NOTE: We are supposing that you are using a Unix-like system such as Linux or BSD. If you are
-a Windows user, please check the instructions on the link:http://leiningen.org/[Leiningen homepage].
-You can also get the Linux/Mac OSX/BSD version of the leiningen script at the web site.
+NOTE: We are supposing that you are using a Unix-like system such as Linux or BSD. If you
+are a Windows user, please check the instructions on the
+link:http://leiningen.org/[Leiningen homepage]. You can also get the Linux/Mac OSX/BSD
+version of the leiningen script at the web site.
 
 
 ==== First project
 
-The best way to show how a tool works, is creating an toy project with it. In this case we will
-go to create one little application that calculates if a year is leap or not. And for it, we will
-use the *mies* leiningen template.
+The best way to show how a tool works, is creating an toy project with it. In this case
+we will go to create one little application that calculates if a year is leap or not. And
+for it, we will use the *mies* leiningen template.
 
-NOTE: Templates are a way that leiningen has to provide a initial layour for an application
-or a library and clojure community has a great amount of them. In this case we'll use *mies*
-template that is maintained by the clojurescript core developer. If you want to know more about
-templates, you should read the leiningen doc. Explain templates is completely out of scope of
-this book.
+NOTE: Templates are a way that leiningen has to provide a initial layour for an
+application or a library and clojure community has a great amount of them. In this case
+we'll use *mies* template that is maintained by the clojurescript core developer. If you
+want to know more about templates, you should read the leiningen doc. Explain templates
+is completely out of scope of this book.
 
 Let start creating the project layout:
 
@@ -602,9 +605,9 @@ leapyears
         └── core.cljs
 ----
 
-The `project.clj` file contains information that Leiningen uses to download
-dependencies and build the project. For now, just trust that everything in that
-file is exactly as it should be.
+The `project.clj` file contains information that Leiningen uses to download dependencies
+and build the project. For now, just trust that everything in that file is exactly as it
+should be.
 
 Open the `index.html` file and add the following content at the beginning of body:
 
@@ -622,7 +625,7 @@ Open the `index.html` file and add the following content at the beginning of bod
 ----
 
 And the next step is adding some code for make the form interactive. Put the following
-code into the `stc/leapyear/core.cljs`:
+code into the `src/leapyear/core.cljs`:
 
 [source, clojure]
 ----
@@ -669,21 +672,20 @@ rlwrap lein trampoline run -m clojure.main scripts/watch.clj
 
 WARNING: you should have `rlwrap` installed on your system.
 
-Additionally to `watch` script, the *mies* template also generates a bunch
-of other scripts such as `build`,`release`,... but for our purposes on this section
-them are completely useless. And probably after reading the compiler and repl
-sections you already will be familiarized with almost all scripts that comes
-with *mies* template.
+Additionally to `watch` script, the *mies* template also generates a bunch of other
+scripts such as `build`,`release`,... but for our purposes on this section them are
+completely useless. And probably after reading the compiler and repl sections you already
+will be familiarized with almost all scripts that comes with *mies* template.
 
 
-=== Managing dependencies
+==== Managing dependencies
 
 The real purpose of use leiningen for clojurescript compilation process is managing
-dependencies. Because it makes this task more obvios in comparison if we should do
-it manually.
+dependencies. Because it makes this task more obvios in comparison if we should do it
+manually.
 
-The dependencies, among other parameters are declared in the `project.clj` file
-and has this aspect (from *mies* template):
+The dependencies, among other parameters are declared in the `project.clj` file and has
+this aspect (from *mies* template):
 
 [source, clojure]
 ----
@@ -708,27 +710,83 @@ And here a little explanation of properties relevent for clojurescript:
 * `:source-paths`: a vector of paths where the clojurescript source is allocated.
 * `:clean-targets`: a vector of paths that `lein clean` should delete.
 
-The dependencies in clojurescript are packaged using `jar` files. If you are coming
-from clojure or any JVM language, the `jar` files will be very familiar for you. But
-if you don't familiar with them, do not worry: a jar file is like a plain zip file
-that contains the `project.clj` of the library, some metadata and the clojurescript
-sources. The packaging will be explained in other section.
+The dependencies in clojurescript are packaged using `jar` files. If you are coming from
+clojure or any JVM language, the `jar` files will be very familiar for you. But if you
+don't familiar with them, do not worry: a jar file is like a plain zip file that contains
+the `project.clj` of the library, some metadata and the clojurescript sources. The
+packaging will be explained in other section.
 
-The clojure packages are often published in the link:http://clojars.org[Clojars],
-also you can found a bunch of different third party libraries on the
+The clojure packages are often published in the link:http://clojars.org[Clojars], also you
+can found a bunch of different third party libraries on the
 link:https://github.com/clojure/clojurescript/wiki#libraries[ClojureScript Wiki].
 
+For understand it better, we are going to replace the dom utiltiles of the google closure
+library with a third party library for interacting with the dom.
 
-=== The Closure Library
+Let start adding `[prismatic/dommy "1.1.0"]` into the `:dependencies` in the
+*project.clj*:
 
-//^ Mention that :import is used for importing Google Closure classes https://github.com/clojure/clojurescript/wiki/Differences-from-Clojure#namespaces
+[source, clojure]
+----
+ :dependencies [[org.clojure/clojure "1.7.0"]
+                [org.clojure/clojurescript "0.0-3308" :classifier "aot"
+                 :exclusion [org.clojure/data.json]]
+                [org.clojure/data.json "0.2.6" :classifier "aot"]
+                [prismatic/dommy "1.1.0"]]
+----
 
-TBD
+In this moment you should restart the watch process that we had started at the beginning
+of this subchapter:
 
+[source, bash]
+----
+$ ./scripts/watch
+Retrieving prismatic/dommy/1.1.0/dommy-1.1.0.pom from clojars
+Retrieving prismatic/dommy/1.1.0/dommy-1.1.0.jar from clojars
+Building ...
+... done. Elapsed 0.227999601 seconds
+Watching paths: /home/niwi/cljsbook/playground/leapyears/src
+----
 
-==== Using third party JavaScript libraries
+You can observe that dommy dependency is successfully downloaded and then, the watch
+process is started.
 
-TBD
+Now it's time to write some code. Replace the contents of the `src/leapyear/core.cljs`
+with the following content:
+
+[source, clojure]
+----
+(ns leapyears.core
+  (:require [dommy.core :as dom]
+            [cljs.reader :refer (read-string)]))
+
+(enable-console-print!)
+
+(def input (dom/sel1 :#year))
+(def result (dom/sel1 :#result))
+
+(defn leap?
+  [year]
+  (and (zero? (js-mod year 4))
+       (pos? (js-mod year 100))
+       (pos? (js-mod year 400))))
+
+(defn on-change
+  [event]
+  (let [target (.-target event)
+        value (read-string (dom/value target))]
+    (if (leap? value)
+      (dom/set-html! result "YES")
+      (dom/set-html! result "NO"))))
+
+(dom/listen! input :keyup on-change)
+----
+
+As you can observe the code now looks more in clojure friendly way. The host
+interoperabilty calls are almost hidden.
+
+NOTE: This example does not means that we prefer `dommy` over google closure library. In
+fact, dommy does not has documentation so we does not recommend use it.
 
 
 === Unit testing
