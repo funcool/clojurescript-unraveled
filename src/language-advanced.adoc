@@ -1,5 +1,7 @@
 === Transducers
 
+==== Data transformation
+
 ClojureScript offers a rich vocabulary for data transformation in terms of the sequence abstraction,
 which makes such transformations highly general and composable. Let's see how we can combine several
 collection processing functions to build new ones, we will be using a simple problem throughout this
@@ -70,7 +72,7 @@ collection available in memory it is being pushed to us asynchronously in a stre
 we couldn't reuse `process-clusters` since usually `map`, `filter` and `mapcat` have concrete
 implementations depending on the type.
 
-==== Generalizing process transformations
+==== Generalizing to process transformations
 
 The process of mapping, filtering or mapcatting isn't necesarily tied to a concrete type but we
 keep reimplementing them for different types. Let's see how we can generalize such processes to
@@ -253,6 +255,8 @@ transducers are composed may seem backwards but it'll become clear in a moment.
 ;; => [0 0 1 1 2 2]
 ----
 
+==== Transducers in ClojureScript core
+
 Some of the ClojureScript core functions like `map`, `filter` and `mapcat` support an arity 1 versions
 that returns a transducer. Let's revisit our definition of `process-cluster` and define it in terms of
 transducers:
@@ -305,21 +309,94 @@ to `reduce` using `transduce`:
 ;; => [{:rotten? false, :clean? true} {:rotten? false, :clean? true}]
 ----
 
-- initialisation
-- +, *
+==== Initialisation
+
+In the last example we provided an initial value to the `transduce` function (`[]`) but we can omit it
+and get the same result:
+
+[source, clojure]
+----
+(transduce process-clusters conj grape-clusters)
+;; => [{:rotten? false, :clean? true} {:rotten? false, :clean? true}]
+----
+
+What's going on here? How can `transduce` know what initial value use as an accumulator when we haven't
+specified it? Try calling `conj` without any arguments and see what happens:
+
+[source, clojure]
+----
+(conj)
+;; => []
+----
+
+The `conj` function has a arity 0 version that returns an empty vector but is not the only reducing function
+that supports arity 0. Let's explore some others:
+
+[source, clojure]
+----
+(+)
+;; => 0
+
+(*)
+;; => 1
+
+(str)
+;; => ""
+
+(= identity (comp))
+;; => true
+----
+
+The reducing function returned by transducers must support the arity 0 as well, which will tipically delegate
+to the transformed reducing function. There is no sensible implementation of the arity 0 for the transducers
+we have implemented so far so we'll simply call the reducing function without arguments. Here's how our
+modified `my-mapt` could look like:
+
+[source, clojure]
+----
+(defn my-mapt
+  [f]
+  (fn [rfn]
+    (fn
+      ([] (rfn))                ;; arity 0 that delegates to the reducing fn
+      ([acc input]
+        (rfn acc (f input))))))
+----
+
+The call to the arity 0 of the reducing function returned by a transducer will call the arity 0 version of
+every nested reducing function, eventually calling the outermost reducing function. Let's see an example with
+our already defined `process-clusters` transducer:
+
+[source, clojure]
+----
+((process-clusters conj))
+;; => []
+----
+
+The call to the arity 0 flows through the transducer stack, eventually calling `conj`.
+
+==== Stateful transducers
 
 - completion: reduced
  + preserving-reduced
 - stateful transducers
 
-- defining our own stateful transducer: take-while-not
+==== Functions for working with transducers
 
 - transduce
 - eduction
-- transducible processes
-- completing
 - run!
 
+==== Defining our own transducers
+
+- completing
+- preserve-reduced
+- defining our own stateful transducer: take-while-not
+- defining or own flushing transducer: partition
+
+==== Transducible processes
+
+- transducible processes
 
 === Transients
 
