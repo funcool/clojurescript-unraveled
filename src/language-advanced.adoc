@@ -217,8 +217,44 @@ The transducer versions of `map` and `filter` transform a process that carries i
 destination but don't know anything about where the inputs come from and where they end up. In their
 implementation they contain the _essence_ of what they accomplish, independent of context.
 
+Now that we know more about transducers we can try to implement our own version of `mapcat`. We already have
+a fundamental piece of it: the `map` transducer. What `mapcat` does is map a function over an input and flatten
+the resulting structure one level. Let's try to implemt the catenation part as a transducer:
+
+[source, clojure]
+----
+(defn my-cat
+  [rfn]
+  (fn [acc input]
+    (reduce rfn acc input)))
+
+(reduce (my-cat conj) [] [[0 1 2] [3 4 5]])
+;; => [0 1 2 3 4 5]
+----
+
+The `cat` transducer returns a reducing function that catenates its inputs into the accumulator. It does so
+reducing the `input` reducible with the `rfn` reducing function and using the accumulator (`acc`) as the
+initial value for such reduction. `mapcat` is simply the composition of `map` and `cat`. The order in which
+transducers are composed may seem backwards but it'll become clear in a moment.
+
+[source, clojure]
+----
+(defn my-mapcat
+  [f]
+  (comp (my-mapt f) my-cat))
+
+(defn dupe
+  [x]
+  [x x])
+
+(def duper (my-mapcat dupe))
+
+(reduce (duper conj) [] [0 1 2])
+;; => [0 0 1 1 2 2]
+----
+
 Some of the ClojureScript core functions like `map`, `filter` and `mapcat` support an arity 1 versions
-that returns a transducers. Let's revisit our definition of `process-cluster` and define it in terms of
+that returns a transducer. Let's revisit our definition of `process-cluster` and define it in terms of
 transducers:
 
 [source, clojure]
@@ -238,8 +274,6 @@ Also you may have noticed that the order in which they are composed is reversed,
 they are executed. Note that all `map`, `filter` and `mapcat` return a transducer. `filter` transforms the
 transducer returned by `map`, applying the filtering before proceeding; `mapcat` transforms the transducer
 returned by `filter`, applying the mapping and catenation before proceeding.
-
-// TODO: implement cat & mapcat because otherwise this will not be well understood
 
 One of the powerful properties of transducers is that they are combined using regular function composition.
 What's even more elegant is that the composition of various transducers is itself a transducer! This means
