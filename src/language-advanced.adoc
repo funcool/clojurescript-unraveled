@@ -61,7 +61,7 @@ Since transients don't have persistent and immutable semantics for updates they 
 using the already familiar `conj` or `assoc` functions. Instead, the transforming functions that work
 on transients end with a bang. Let's look at an example using `conj!` on a transient:
 
-[Source, clojure]
+[source, clojure]
 ----
 (def tv (transient [1 2 3]))
 
@@ -77,7 +77,7 @@ vector is mutated in place. Although we could transform `tv` repeatedly using `c
 abandon the idioms used with the persistent data structures: when transforming a transient, use the
 returned version of it for further modifications like in the following example:
 
-[Source, clojure]
+[source, clojure]
 ----
 (-> [1 2 3]
   transient
@@ -89,7 +89,7 @@ returned version of it for further modifications like in the following example:
 We can convert a transient back to a persistent and immutable data structure by calling `persistent!` on
 it. This operation, like deriving a transient from a persistent data structure, is done in constant time.
 
-[Source, clojure]
+[source, clojure]
 ----
 (-> [1 2 3]
   transient
@@ -104,7 +104,7 @@ invalidated after being converted to a persistent data structure and we can't do
 to it. This happens because the derived persistent data structure uses the transient's internal nodes
 and mutating them would break the immutability and persistent guarantees:
 
-[Source, clojure]
+[source, clojure]
 ----
 (def tm (transient {}))
 ;; => #<[object Object]>
@@ -123,7 +123,7 @@ Going back to our initial example with `into`, here's a very simplified implemen
 a transient for performance, returning a persistent data structure and thus exposing a purely functional
 interface although it uses mutation internally:
 
-[Source, clojure]
+[source, clojure]
 ----
 (defn my-into
   [to from]
