@@ -176,8 +176,8 @@ That's a lot of higher-order functions so let's break it down for a better under
 on. We'll examine how `my-mapt` works step by step, the mechanics are similar for `my-filtert` so we'll
 leave it out for now.
 
-First of all, `my-mapt` takes a mapping function, in the example we are giving it the `inc` and getting
-another function back. Let's substitue `f` with `inc` to see what we are building:
+First of all, `my-mapt` takes a mapping function, in the example we are giving it `inc` and getting
+another function back. Let's replace `f` with `inc` to see what we are building:
 
 [source, clojure]
 ----
@@ -203,7 +203,7 @@ We get back a reducing function which uses `inc` to transform the inputs and the
 to accumulate the results. In essence, we have defined map as the transformation of a reducing function.
 The functions that transforms a reducing function into another are called transducers in ClojureScript.
 
-To ilustrate the generality of transducers, let's use a different sources and destinations in our call
+To ilustrate the generality of transducers, let's use different sources and destinations in our call
 to `reduce`:
 
 [source, clojure]
@@ -257,7 +257,7 @@ transducers are composed may seem backwards but it'll become clear in a moment.
 
 ==== Transducers in ClojureScript core
 
-Some of the ClojureScript core functions like `map`, `filter` and `mapcat` support an arity 1 versions
+Some of the ClojureScript core functions like `map`, `filter` and `mapcat` support an arity 1 version
 that returns a transducer. Let's revisit our definition of `process-cluster` and define it in terms of
 transducers:
 
@@ -276,8 +276,8 @@ working on sequences.
 
 Also you may have noticed that the order in which they are composed is reversed, they appear in the order
 they are executed. Note that all `map`, `filter` and `mapcat` return a transducer. `filter` transforms the
-transducer returned by `map`, applying the filtering before proceeding; `mapcat` transforms the transducer
-returned by `filter`, applying the mapping and catenation before proceeding.
+reducing function returned by `map`, applying the filtering before proceeding; `mapcat` transforms the reducing
+function returned by `filter`, applying the mapping and catenation before proceeding.
 
 One of the powerful properties of transducers is that they are combined using regular function composition.
 What's even more elegant is that the composition of various transducers is itself a transducer! This means
@@ -373,7 +373,7 @@ our already defined `process-clusters` transducer:
 ;; => []
 ----
 
-The call to the arity 0 flows through the transducer stack, eventually calling `conj`.
+The call to the arity 0 flows through the transducer stack, eventually calling `(conj)`.
 
 ==== Stateful transducers
 
@@ -569,7 +569,7 @@ collection and our transformation. We can create an eduction with the `eduction`
 ;; => [[1 3] [5 7] [9]]
 ----
 
-==== More transducers from ClojureScript core
+==== More transducers in ClojureScript core
 
 We learned about `map`, `filter`, `mapcat`, `take` and `partition-all` but there are a lot more transducers
 available in ClojureScript, here is an incomplete list of some other intersting ones:
