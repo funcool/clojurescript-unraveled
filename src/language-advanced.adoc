@@ -1,6 +1,290 @@
 === Transducers
 
-TBD
+ClojureScript offers a rich vocabulary for data transformation in terms of the sequence abstraction,
+which makes such transformations highly general and composable. Let's see how we can combine several
+collection processing functions to build new ones, we will be using a simple problem throughout this
+section: splitting grape clusters, filtering out the rotten ones and cleaning them. We have a collection
+of grape clusters like the following:
+
+[source, clojure]
+----
+(def grape-clusters [{:grapes [{:rotten? false :clean? false}
+                               {:rotten? true :clean? false}]
+                      :color :green}
+                     {:grapes [{:rotten? true :clean? false}
+                               {:rotten? false :clean? false}]
+                      :color :black}])
+----
+
+We are interested in splitting the grape clusters into individual grapes, discarding the rotten ones
+and cleaning the remaining grapes so they are ready for eating them. We are well-equiped in ClojureScript
+for this data transformation task, we could implement it using the familiar `map`, `filter` and `mapcat`
+functions:
+
+[source, clojure]
+----
+(defn split-cluster
+  [c]
+  (:grapes c))
+
+(defn not-rotten
+  [g]
+  (not (:rotten? g)))
+
+(defn clean-grape
+  [g]
+  (assoc g :clean? true))
+
+(->> grape-clusters
+     (mapcat split-cluster)
+     (filter not-rotten)
+     (map clean-grape))
+;; => ({rotten? false :clean? true} {:rotten? false :clean? true})
+----
+
+In the above example we succintly solved the problem of selecting and cleaning the grapes and
+we can even abstract such transformation combining the `mapcat`, `filter` and `map` operations
+using partial application and function composition:
+
+[source, clojure]
+----
+(def process-clusters
+  (comp
+    (partial map clean-grape)
+    (partial filter not-rotten)
+    (partial mapcat split-cluster)))
+
+(process-clusters grape-clusters)
+;; => ({rotten? false :clean? true} {:rotten? false :clean? true})
+----
+
+The code is very clean but it has a few problems. For example, each call to `map`, `filter` and
+`mapcat` consumes and produces a sequence that, although lazy, generate intermediate results
+that will be discarded. Each sequence is fed to the next step, which also returns a
+sequence. Wouldn't be great if we did the transformation in a single transversal of the `grape-cluster`
+collection?
+
+Another problem is that even though our `process-clusters` function works with any sequence we
+can't reuse it with anything that is not a sequence. Imagine that instead of having the grape cluster
+collection available in memory it is being pushed to us asynchronously in a stream. In that situation
+we couldn't reuse `process-clusters` since usually `map`, `filter` and `mapcat` have concrete
+implementations depending on the type.
+
+==== Generalizing process transformations
+
+The process of mapping, filtering or mapcatting isn't necesarily tied to a concrete type but we
+keep reimplementing them for different types. Let's see how we can generalize such processes to
+be context independent. We'll start implementing naive versions of `map` and `filter` first to
+see how they work internally:
+
+[source, clojure]
+----
+(defn my-map
+  [f coll]
+  (when-let [s (seq coll)]
+    (cons (f (first s)) (map f (rest s)))))
+
+(my-map inc [0 1 2])
+;; => (1 2 3)
+
+(defn my-filter
+  [pred coll]
+  (when-let [s (seq coll)]
+    (let [f (first s)
+          r (rest s)]
+      (if (pred f)
+        (cons f (filter pred r))
+        (filter pred r)))))
+
+(my-filter odd? [0 1 2])
+;; => (1)
+----
+
+As we can see, they both assume that they receive a seqable and return a sequence. Like many recursive
+functions they can be implemented in terms of the already familiar `reduce` function. Note that functions
+that are given to reduce receive an accumulator and an input and return the next accumulator. We'll call
+these types of functions reducing functions from now on.
+
+[source, clojure]
+----
+(defn my-mapr
+  [f coll]
+  (reduce (fn [acc input]         ;; reducing function
+            (conj acc (f input)))
+          []                      ;; initial value
+          coll))                  ;; collection to reduce
+
+(my-mapr inc [0 1 2])
+;; => [1 2 3]
+
+(defn my-filterr
+  [pred coll]
+  (reduce (fn [acc input]         ;; reducing function
+            (if (pred input)
+              (conj acc input)
+              acc))
+          []                      ;; initial value
+          coll))                  ;; collection to reduce
+
+(my-filterr odd? [0 1 2])
+;; => [1]
+----
+
+We've made the previous versions more general since using `reduce` makes our functions work on any thing
+that is reducible, not just sequences. However you may have noticed that, even though `my-mapr` and `my-filterr`
+don't know anything about the source (`coll`) they are still tied to the output they produce (a vector) both
+with the initial value of the reduce (`[]`) and the hardcoded `conj` operation in the body of the reducing
+function. We could have accumulated results in another data structure, for example a lazy sequence, but
+we'd have to rewrite the functions for doing so.
+
+How can we make these functions truly generic? They shouldn't know about neither the source of inputs they
+are transforming nor the output that is generated. Have you noticed that `conj` is just another reducing
+function? It takes an accumulator and an input and returns another accumulator. So, if we parameterise
+the reducing function that `my-mapr` and `my-filterr` use, they won't know anything about the type of the
+result they are building. Let's give it a shot:
+
+[source, clojure]
+----
+(defn my-mapt
+  [f]                         ;; function to map over inputs
+  (fn [rfn]                   ;; parameterised reducing function
+    (fn [acc input]           ;; transformed reducing function, now it maps `f`!
+      (rfn acc (f input)))))
+
+(def incer (my-mapr inc))
+
+(reduce (incer conj) [] [0 1 2])
+;; => [1 2 3]
+
+(defn my-filtert
+  [pred]                      ;; predicate to filter out inputs
+  (fn [rfn]                   ;; parameterised reducing function
+    (fn [acc input]           ;; transformed reducing function, now it discards values based on `pred`!
+      (if (pred input)
+        (rfn acc input)
+        acc))))
+
+(def only-odds (my-filtert odd?))
+
+(reduce (only-odds conj) [] [0 1 2])
+;; => [1]
+----
+
+That's a lot of higher-order functions so let's break it down for a better understanding of what's going
+on. We'll examine how `my-mapt` works step by step, the mechanics are similar for `my-filtert` so we'll
+leave it out for now.
+
+First of all, `my-mapt` takes a mapping function, in the example we are giving it the `inc` and getting
+another function back. Let's substitue `f` with `inc` to see what we are building:
+
+[source, clojure]
+----
+(def incer (my-mapr inc))
+;; (fn [rfn]
+;;   (fn [acc input]
+;;     (rfn acc (inc input))))
+;;               ^^^
+----
+
+The resulting function is still parameterised to receive a reducing function to which it will delegate,
+let's see what happens when we call it with `conj`:
+
+[source, clojure]
+----
+(incer conj)
+;; (fn [acc input]
+;;   (conj acc (inc input)))
+;;    ^^^^
+----
+
+We get back a reducing function which uses `inc` to transform the inputs and the `conj` reducing function
+to accumulate the results. In essence, we have defined map as the transformation of a reducing function.
+The functions that transforms a reducing function into another are called transducers in ClojureScript.
+
+To ilustrate the generality of transducers, let's use a different sources and destinations in our call
+to `reduce`:
+
+[source, clojure]
+----
+(reduce (incer str) "" [0 1 2])
+;; => "123"
+
+(reduce (only-odds str) "" '(0 1 2))
+;; => "1"
+----
+
+The transducer versions of `map` and `filter` transform a process that carries inputs from a source to a
+destination but don't know anything about where the inputs come from and where they end up. In their
+implementation they contain the _essence_ of what they accomplish, independent of context.
+
+Some of the ClojureScript core functions like `map`, `filter` and `mapcat` support an arity 1 versions
+that returns a transducers. Let's revisit our definition of `process-cluster` and define it in terms of
+transducers:
+
+[source, clojure]
+----
+(def process-clusters
+  (comp
+    (mapcat split-cluster)
+    (filter not-rotten)
+    (map clean-grape)))
+----
+
+A few things changed since our previous definition `process-clusters`. First of all, we are using the
+transducer-returning versions of `mapcat`, `filter` and `map` instead of partially applying them for
+working on sequences.
+
+Also you may have noticed that the order in which they are composed is reversed, they appear in the order
+they are executed. Note that all `map`, `filter` and `mapcat` return a transducer. `filter` transforms the
+transducer returned by `map`, applying the filtering before proceeding; `mapcat` transforms the transducer
+returned by `filter`, applying the mapping and catenation before proceeding.
+
+// TODO: implement cat & mapcat because otherwise this will not be well understood
+
+One of the powerful properties of transducers is that they are combined using regular function composition.
+What's even more elegant is that the composition of various transducers is itself a transducer! This means
+that our `process-cluster` is a transducer too, so we have defined a composable and context-independent
+algorithmic transformation.
+
+Many of the core ClojureScript functions accept a transducer, let's look at some examples with our newly
+created `process-cluster`:
+
+[source, clojure]
+----
+(into [] process-clusters grape-clusters)
+;; => [{:rotten? false, :clean? true} {:rotten? false, :clean? true}]
+
+(sequence process-clusters grape-clusters)
+;; => ({:rotten? false, :clean? true} {:rotten? false, :clean? true})
+
+(reduce (process-clusters conj) [] grape-clusters)
+;; => [{:rotten? false, :clean? true} {:rotten? false, :clean? true}]
+----
+
+Since using `reduce` with the reducing function returned from a transducer is so common, there is
+a function for reducing with a transformation called `transduce`. We can now rewrite the previous call
+to `reduce` using `transduce`:
+
+[source, clojure]
+----
+(transduce process-clusters conj [] grape-clusters)
+;; => [{:rotten? false, :clean? true} {:rotten? false, :clean? true}]
+----
+
+- initialisation
+- +, *
+
+- completion: reduced
+ + preserving-reduced
+- stateful transducers
+
+- defining our own stateful transducer: take-while-not
+
+- transduce
+- eduction
+- transducible processes
+- completing
+- run!
 
 
 === Transients
