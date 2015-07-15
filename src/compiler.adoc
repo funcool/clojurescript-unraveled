@@ -765,7 +765,6 @@ this aspect (from *mies* template):
 And here a little explanation of properties relevent for clojurescript:
 
 * `:dependencies`: a vector of dependencies that your project needs.
-* `:source-paths`: a vector of paths where the clojurescript source is allocated.
 * `:clean-targets`: a vector of paths that `lein clean` should delete.
 
 The dependencies in clojurescript are packaged using `jar` files. If you are coming from
@@ -786,11 +785,11 @@ Let start adding `[prismatic/dommy "1.1.0"]` into the `:dependencies` in the
 
 [source, clojure]
 ----
- :dependencies [[org.clojure/clojure "1.7.0"]
-                [org.clojure/clojurescript "0.0-3308" :classifier "aot"
-                 :exclusion [org.clojure/data.json]]
-                [org.clojure/data.json "0.2.6" :classifier "aot"]
-                [prismatic/dommy "1.1.0"]]
+:dependencies [[org.clojure/clojure "1.7.0"]
+               [org.clojure/clojurescript "0.0-3308" :classifier "aot"
+                :exclusion [org.clojure/data.json]]
+               [org.clojure/data.json "0.2.6" :classifier "aot"]
+               [prismatic/dommy "1.1.0"]]
 ----
 
 In this moment you should restart the watch process that we had started at the beginning
