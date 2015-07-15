@@ -535,17 +535,75 @@ is a wrapper for a mutable JavaScript array:
 ;; => [[0 1 2] [3 4 5] [6 7 8] [9]]
 ----
 
-==== Functions for working with transducers
-
-- preserve-reduced
-- completing
-- transduce
-- eduction
-- run!
-
 ==== Transducible processes
 
-- transducible processes
+A transducible process is any process that is defined in terms of a succession of steps ingesting input values.
+The source of input varies from one process to another, most of our examples dealt with inputs from a collection
+or a lazy sequence but it could be an asynchronous stream of values or a `core.async` channel. The outputs produced
+by each step are also different for every process; `into` creates a collection with every output of the transducer,
+`sequence` yields a lazy sequence and asynchronous streams would probably push the outputs to their listeners.
+
+Note that transducible processes must respect `reduced` as a way for signaling early termination. For example,
+building a collection stops when encountering a `reduced` and `core.async` channels with transducers are closed.
+The `reduced` value must be unwrapped with `deref` and passed to the completion step, which must be called exactly
+once.
+
+Transducible processes shouldn't expose the reducing function they generate when calling the transducer with their
+own step function since it may be stateful and unsafe to use from elsewhere.
+
+==== Eductions
+
+Eductions are a way to combine a collection and one or more transformations that can be reduced and iterated over,
+and that apply the transformations every time we do so. If we have a collection that we want to process and a
+transformation over it that we want others to extend, we can hand them a eduction, encapsulating the source
+collection and our transformation. We can create an eduction with the `eduction` function:
+
+[source, clojure]
+----
+(def ed (eduction (filter odd?) (take 5) (range 100)))
+
+(reduce + 0 ed)
+;; => 25
+
+(transduce (partition-all 2) conj ed)
+;; => [[1 3] [5 7] [9]]
+----
+
+==== More transducers from ClojureScript core
+
+We learned about `map`, `filter`, `mapcat`, `take` and `partition-all` but there are a lot more transducers
+available in ClojureScript, here is an incomplete list of some other intersting ones:
+
+- `drop` is the dual of `take`, dropping up to `n` values before passing inputs to the reducing function
+- `distinct` only allows inputs to occur once
+- `dedupe` removes succesive duplicates in input values
+
+We encourage you to explore ClojureScript core to see what other transducers are out there.
+
+==== Defining our own transducers
+
+Since most transducers are only interesting in the reducing step implementation and often delegate to the
+reducing function in arities 0 and 1, there is a little helper called `completion` that fills those arities
+for you:
+
+[source, clojure]
+----
+;; if a completing function is not defined, identity will be used
+(def my-transducer
+  (completing
+    (fn [acc input]
+     ;; ...
+     )))
+
+(def my-transducer-with-completion
+  (completing
+    (fn [acc input]
+     ;; ...
+     )
+    (fn [result]
+     ;; ...
+    )))
+----
 
 === Transients
 
