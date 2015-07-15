@@ -849,4 +849,247 @@ fact, dommy does not has documentation so we does not recommend use it.
 
 === Unit testing
 
+Nothing to say more, the testing in _ClojureScript_ consists in the same concepts as
+you may know from any other language such as Clojure, Java, Python, JavaScript, etc.
+
+Regardless of the language the main objective of unit testing is run some test code
+and verify that your code behaves as expected and returns without raising unexpected
+exceptions.
+
+The immutablity of the _ClojureScript_ in fact helps that your program will be less
+error prone, and facilitates a little bit the tests. An other advantage of _ClojureScript_
+is as it tends to use plain data instead of complex objects. Build "mock" objects
+for testing is greatly simplified.
+
+
+==== First steps
+
+The "official" _ClojureScript_ framework is builtin on its core under "cljs.test"
+namespace. It is very simple library but it should be more that enough for our purposes.
+
+There are other libraries that offers additional features or directly different approach
+for testings such as link:https://github.com/clojure/test.check[test.check]. But them
+are will not be covered in this subchapter.
+
+Start creating a new project using thew *mies* leiningen template for experimenting with
+tests:
+
+[source, bash]
+----
+$ lein new mies appfortesting
+$ cd appfortesting
+----
+
+This project will contain the same layout as we have seen in the *dependency management*
+subchapter so we'll don't explain it again.
+
+The next step is a creating a directory tree for our tests:
+
+[source, bash]
+----
+$ mkdir -p test/appfortesting
+$ touch test/appfortesting/core_tests.cljs
+----
+
+Also, we should adapt the existing `watch.clj` script for work with previously created
+tests directory:
+
+[source, clojure]
+----
+(require '[cljs.build.api :as b])
+
+(b/watch (b/inputs "test" "src")
+  {:main 'appfortesting.core_tests
+   :target :nodejs
+   :output-to "out/appfortesting.js"
+   :output-dir "out"
+   :verbose true})
+----
+
+This new script will compile and watch both directories "src" and "test", and
+sets the new entry point to the `appfortesting.core_tests` namespace.
+
+And then, write some test code into the `core_tests.cljs` file:
+
+[source, clojure]
+----
+(ns appfortesting.core-tests
+  (:require [cljs.test :as t]))
+
+(enable-console-print!)
+
+(t/deftest my-first-test
+  (t/is (= 1 2)))
+
+(set! *main-cli-fn* #(t/run-tests))
+----
+
+The relevant part of that code snipped is:
+
+[source, clojure]
+----
+(t/deftest my-first-test
+  (t/is (= 1 2)))
+----
+
+The `deftest` macro is basic primitive for define our tests. It takes a name as first
+parameter, followed of one or multiple "asserts" using the `is` macro. In that example,
+the assert tries check that `(= 1 2)` is true.
+
+Let's try to run this. For it, firstly start the watch process:
+
+[source,bash]
+----
+$ ./scripts/watch
+Building ...
+Analyzing jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/0.0-3308/clojurescript-0.0-3308-aot.jar!/cljs/core.cljs
+Compiling out/cljs/core.cljs
+Using cached cljs.core out/cljs/core.cljs
+... done. Elapsed 3.862126827 seconds
+Watching paths: /home/niwi/cljsbook/playground/appfortesting/test, /home/niwi/cljsbook/playground/appfortesting/src
+----
+
+And when the compilation is finished, try to run the compiled file with `iojs`
+(or `node`):
+
+[source, bash]
+----
+$ iojs out/appfortesting.js
+
+Testing appfortesting.core-tests
+
+FAIL in (my-first-test) (cljs/test.js:374:14)
+expected: (= 1 2)
+  actual: (not (= 1 2))
+
+Ran 1 tests containing 1 assertions.
+1 failures, 0 errors.
+----
+
+You can observe that expected assert failure is successfully printed in the console. For
+fix the tests, just change the `=` with `not=` and run again the file:
+
+[source, bash]
+----
+$ iojs out/appfortesting.js
+
+Testing appfortesting.core-tests
+
+Ran 1 tests containing 1 assertions.
+0 failures, 0 errors.
+----
+
+It is pretty fine test this kind of assertions but they are not very usefull. Let's go to
+test some application code. For it, we will use a function for check if a year is leap
+or not. Then, write the following content to the `src/appfortesting/core.clj` file:
+
+[source, clojure]
+----
+(defn leap?
+  [year]
+  (and (zero? (js-mod year 4))
+       (pos? (js-mod year 100))
+       (pos? (js-mod year 400))))
+----
+
+In the next place, write a new test case for check that our new functon defined in the
+`appfortesting.core` namespace. This is a new aspect of the `core_tests.cljs` file:
+
+[source, clojure]
+----
+(ns appfortesting.core-tests
+  (:require [cljs.test :as t]
+            [appfortesting.core :as core]))
+
+(enable-console-print!)
+
+(t/deftest my-first-test
+  (t/is (not= 1 2)))
+
+(t/deftest my-second-test
+  (t/is (core/leap? 1980))
+  (t/is (not (core/leap? 1981))))
+
+(set! *main-cli-fn* #(t/run-tests))
+----
+
+You can run again the compiled file for check that the new test passes as expected.
+
+
+==== Async Testing
+
+One of the peculiarities of _ClojureScript_ is that is built up on asynchronous, single
+theaded execution environments, and has its own chalenges.
+
+In async execution environments we should will be able test asynchronous functions. So,
+for this case, the _ClojureScript_ testing library offers a simply facility for do it:
+`async` macro. It allows create blocks that play well with asynchronous code.
+
+Before any thing, we should write a function that works in asynchronous way. And for this
+purpose we will create the `async-leap?` predicate that will do the same operation but
+return a result using a callback:
+
+[source, clojure]
+----
+(defn async-leap?
+  [year callback]
+  (js/setImmediate
+   (fn []
+     (let [result (and (zero? (js-mod year 4))
+                       (pos? (js-mod year 100))
+                       (pos? (js-mod year 400)))]
+       (callback result)))))
+----
+
+The JavaScript `setImmediate` is used for emulate an asyncrhonous task and callback
+is executed with the result of that predicate.
+
+For test it, we should write a test case using the previously mentioned `async` macro:
+
+[source, clojure]
+----
+(t/deftest my-async-test
+  (t/async done
+    (core/async-leap? 1980 (fn [result]
+                             (t/is (true? result))
+                             (done)))))
+----
+
+The `done` function exposed by the `async` macro should be called after asyncronous
+operation is finished and all assertions had run.
+
+It is very important execute that function once. If you execute that function twice or
+never, may cause some kind of strange behavior like execute some tests more that one time
+or skip execution of some tests.
+
+
+==== Fixtures
+
 TBD
+
+
+==== Integrating with CI
+
+Most of continuous integration tools and services expectas that provided test script
+return standard exit code. But the clojurescript by default only runs the tests and output
+the results in the standard output. So the compiled file can not be used directly in
+a continuous integration tools because it does not return any return code when something
+fails. It always return the return code `0`.
+
+For fix it, we should instruct the _ClojureScript_ test runner that when finish with
+failed state it should set the `-1` return code. And this can be done with this
+snipped of code:
+
+[source, clojure]
+----
+(defmethod cljs.test/report [:cljs.test/default :end-run-tests]
+  [m]
+  (if (cljs.test/successful? m)
+    (set! (.-exitCode js/process) 0)
+    (set! (.-exitCode js/process) 1)))
+----
+
+This code snippet obviously supposes that you are running the tests using *iojs* or
+*nodejs*. if you are running your script in an other execution environment you should be
+aware on how we can set the exit code in that environment and modify the previous snippet
+according that.
