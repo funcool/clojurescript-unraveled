@@ -377,22 +377,171 @@ The call to the arity 0 flows through the transducer stack, eventually calling `
 
 ==== Stateful transducers
 
-- completion: reduced
- + preserving-reduced
-- stateful transducers
+So far we've only seen purely functional transducers, they don't have any implicit state and are very
+predictable. However, there are many data transformation functions that are inherently stateful like
+`take`. `take` receives a number `n` of elements to keep and a collection and returns a collection with at
+most `n` elements.
+
+[source, clojure]
+----
+(take 10 (range 100))
+;; => (0 1 2 3 4 5 6 7 8 9)
+----
+
+Let's step back for a bit and learn about the early termination of the `reduce` function. We can wrap an
+accumulator in a type called `Reduced` for telling `reduce` that the reduction process should terminate
+immediately. Let's see an example of a reduction that aggregates the inputs in a collection and finishes
+as soon as there are 10 elements in the accumulator:
+
+[source, clojure]
+----
+(reduce (fn [acc input]
+          (if (= (count acc) 10)
+            (reduced acc)
+            (conj acc input)))
+         []
+         (range 100))
+;; => [0 1 2 3 4 5 6 7 8 9]
+----
+
+Since transducers are modifications of reducing functions they also use `reduced` for early termination.
+Note that stateful transducers may need to do some cleanup before the process terminates, so they
+must support an arity 1 as a "completion" step. Usually, like with arity 0, this arity will simply delegate
+to the transformed reducing function's arity 1.
+
+Knowing this we are able to write stateful transducers like `take`, we'll be using mutable state internally
+for tracking the number of inputs we have seen so far, and wrap the accumulator in a `reduced` as soon as
+we've seen enough elements:
+
+[source, clojure]
+----
+(defn my-take
+  [n]
+  (fn [rfn]
+    (let [remaining (volatile! n)]
+      (fn
+        ([] (rfn))
+        ([acc] (rfn acc))
+        ([acc input]
+          (let [rem @remaining
+                nr (vswap! remaining dec)
+                result (if (pos? rem)
+                         (rfn acc input)   ;; we still have items to take
+                         acc)]             ;; we're done, acc becomes the result
+            (if (not (pos? nr))
+              (ensure-reduced result)      ;; wrap result in reduced if not already
+              result)))))))
+----
+
+This is a simplified version of the `take` function present in ClojureScript core. There are
+a few things to note here so let's break it up in pieces to understand it better.
+
+The first thing to notice is that we are creating a mutable value inside the transducer. Note
+that we don't create it until we receive a reducing function to transform. If we created it before
+returning the transducer we couldn't use `my-take` more than once. Since the transducer is handed
+a reducing function to transform each time it is used, we can use it multiple times and the mutable
+variable will be created in every use.
+
+[source, clojure]
+----
+(fn [rfn]
+  (let [remaining (volatile! n)] ;; make sure to create mutable variables inside the transducer
+    (fn
+      ;; ...
+)))
+
+(def take-five (my-take 5))
+
+(transduce take-five conj (range 100))
+;; => [0 1 2 3 4]
+
+(transduce take-five conj (range 100))
+;; => [0 1 2 3 4]
+----
+
+Let's now dig into the reducing function returned from `my-take`. First of all we `deref` the volatile
+to get the number of elements that remain to be taken and decrement it to get the next remaining value.
+If there are still remaining items to take, we call `rfn` passing the accumulator and input; if not, we
+already have the final result.
+
+[source, clojure]
+----
+([acc input]
+  (let [rem @remaining
+        nr (vswap! remaining dec)
+        result (if (pos? rem)
+                 (rfn acc input)
+                 acc)]
+    ;; ...
+))
+----
+
+The body of `my-take` should be obvious by now. We check whether there are still items to be processed
+using the next remainder (`nr`) and, if not, wrap the result in a `reduced` using the `ensure-reduced`
+function. `ensure-reduced` will wrap the value in a `reduced` if it's not reduced already or simply return
+the value if it's already reduced. In case we are not done yet, we return the accumulated `result` for
+further processing.
+
+[source, clojure]
+----
+(if (not (pos? nr))
+  (ensure-reduced result)
+  result)
+----
+
+We've seen an example of a stateful transducer but it didn't do anything in its completion step. Let's
+see an example of a transducer that uses the completion step to flush an accumulated value. We'll
+implement a simplified version of `partition-all`, which given a `n` number of elements converts the inputs
+in vectors of size `n`. For understanding its purpose better let's see what the arity 2 version gives us when
+providing a number and a collection:
+
+[source, clojure]
+----
+(partition-all 3 (range 10))
+;; => ((0 1 2) (3 4 5) (6 7 8) (9))
+----
+
+The transducer returning function of `partition-all` will take a number `n` and return a transducer that groups
+inputs in vectors of size `n`. In the completion step it will check if there is an accumulated result and, if so,
+add it to the result. Here's a simplified version of ClojureScript core `partition-all` function, where `array-list`
+is a wrapper for a mutable JavaScript array:
+
+[source, clojure]
+----
+(defn my-partition-all
+  [n]
+  (fn [rfn]
+    (let [a (array-list)]
+      (fn
+        ([] (rfn))
+        ([result]
+          (let [result (if (.isEmpty a)                  ;; no inputs accumulated, don't have to modify result
+                         result
+                         (let [v (vec (.toArray a))]
+                           (.clear a)                    ;; flush array contents for garbage collection
+                           (unreduced (rfn result v))))] ;; pass to `rfn`, removing the reduced wrapper if present
+            (rfn result)))
+        ([acc input]
+          (.add a input)
+          (if (== n (.size a))                           ;; got enough results for a chunk
+            (let [v (vec (.toArray a))]
+              (.clear a)
+              (rfn acc v))                               ;; the accumulated chunk becomes input to `rfn`
+            acc))))))
+
+(def triples (my-partition-all 3))
+
+(transduce triples conj (range 10))
+;; => [[0 1 2] [3 4 5] [6 7 8] [9]]
+----
 
 ==== Functions for working with transducers
 
+- preserve-reduced
+- completing
 - transduce
 - eduction
 - run!
-
-==== Defining our own transducers
-
-- completing
-- preserve-reduced
-- defining our own stateful transducer: take-while-not
-- defining or own flushing transducer: partition
 
 ==== Transducible processes
 
