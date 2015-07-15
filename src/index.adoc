@@ -118,3 +118,4 @@ Here is a list of more resources about ClojureScript.
 * https://github.com/cljsinfo/cljs-api-docs/tree/catalog[Api Reference] (the community-maintained complete language api reference).
 * http://cljs.info/cheatsheet/[ClojureScript Cheatsheet] (a comprehensive reference of the ClojureScript language).
 * http://catcode.com/etudes-for-clojurescript/toc01.html[Études for ClojureScript] (a collection of exercises for learning ClojureScript).
+* http://clojurescriptmadeeasy.com/[ClojureScript made easy] (a collection of short articles about solving problems in ClojureScript).
