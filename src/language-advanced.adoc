@@ -906,8 +906,25 @@ interface although it uses mutation internally:
 
 === Metadata
 
-TBD
+values that can have metadata
+- symbols
+- vars
+- persistent collections and their derivates (subvec for example)
+- defn'd functions (vars)
+- atom
 
+syntax support for metadata
+
+functions for working with metadata
+- with-meta
+- meta
+- vary-meta
+- alter-meta!
+- reset-meta!
+
+metadata usages
+- var definition line, column and ns
+- testing, :test metadata for discovery
 
 === Macros
 
