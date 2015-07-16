@@ -21,7 +21,7 @@ docbook:
 pdf: docbook git
 	./asciidoctor-fopub/fopub -t docbook-xsl dist/index.xml
 
-epub: docbook
+epub: docbook copy
 	dbtoepub -s xsl-styleshets/epub/docbook.xsl  dist/index.xml -o dist/index.epub
 
 pdfraw:
