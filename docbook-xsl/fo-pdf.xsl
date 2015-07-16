@@ -48,7 +48,7 @@
   -->
 
   <xsl:template name="pickfont-sans">
-    <xsl:text>Arial,sans-serif</xsl:text>
+    <xsl:text>Open Sans,Arial,sans-serif</xsl:text>
   </xsl:template>
 
   <xsl:template name="pickfont-serif">
@@ -246,8 +246,8 @@
   <xsl:param name="paper.type">A4</xsl:param> <!-- alternative size is USletter -->
   <xsl:param name="headers.on.blank.pages">1</xsl:param>
   <xsl:param name="footers.on.blank.pages">1</xsl:param>
-  <xsl:param name="page.margin.top">10mm</xsl:param> <!-- top margin of page -->
-  <xsl:param name="page.margin.bottom">10mm</xsl:param> <!-- top margin of page -->
+  <xsl:param name="page.margin.top">20mm</xsl:param> <!-- top margin of page -->
+  <xsl:param name="page.margin.bottom">20mm</xsl:param> <!-- top margin of page -->
   <xsl:param name="page.margin.inner">20mm</xsl:param> <!-- side margin of page (left, towards binding) -->
   <xsl:param name="page.margin.outer">20mm</xsl:param> <!-- side margin of page (right, away from binding) -->
   <xsl:param name="body.margin.top">15mm</xsl:param> <!-- top margin of content -->
@@ -279,7 +279,7 @@
     <fo:block text-align-last="justify" end-indent="{$toc.indent.width}pt"
               last-line-end-indent="-{$toc.indent.width}pt">
       <fo:inline keep-with-next.within-line="always">
-        <fo:basic-link internal-destination="{$id}" color="#005498">
+        <fo:basic-link internal-destination="{$id}" color="#222222">
           <!-- Chapter titles should be bold. -->
           <!--
           <xsl:choose>
@@ -304,7 +304,7 @@
                    leader-alignment="reference-area"
                    keep-with-next.within-line="always"/>
           <xsl:text> </xsl:text>
-          <fo:basic-link internal-destination="{$id}" color="#005498">
+          <fo:basic-link internal-destination="{$id}" color="#222222">
             <fo:page-number-citation ref-id="{$id}"/>
         </fo:basic-link>
       </fo:inline>

@@ -31,9 +31,8 @@
   -->
 
   <!-- Colony theme -->
-  
   <xsl:param name="text.color">#222222</xsl:param>
-  <xsl:param name="link.color">#00579E</xsl:param>
+  <xsl:param name="link.color">#222222</xsl:param>
   <xsl:param name="border.color">#DDDDDD</xsl:param>
   <xsl:param name="header.font-weight">normal</xsl:param>
   <xsl:param name="title.color">#7B2D00</xsl:param>
