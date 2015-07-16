@@ -706,6 +706,9 @@ that will accept values while they aren't equal to 4 and will partition inputs i
 ;; => nil
 ----
 
+The example of the queue was heavily inspired by how `core.async` channels use transducers in their internal
+step. We'll discuss channels and their usage with transducers in a later section.
+
 Transducible processes must respect `reduced` as a way for signaling early termination. For example,
 building a collection stops when encountering a `reduced` and `core.async` channels with transducers are closed.
 The `reduced` value must be unwrapped with `deref` and passed to the completion step, which must be called exactly
