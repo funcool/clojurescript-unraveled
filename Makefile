@@ -4,7 +4,7 @@ build: copy html
 
 copy:
 	mkdir -p dist/
-	cp -r ./images dist/
+	cp -r ./src/images dist/
 
 html:
 	mkdir -p dist/
@@ -23,6 +23,9 @@ pdf: docbook git
 
 epub: docbook copy
 	dbtoepub -s xsl-styleshets/epub/docbook.xsl  dist/index.xml -o dist/index.epub
+
+ebook: copy
+	asciidoctor-epub3 -D dist/ src/index.adoc
 
 pdfraw:
 	./asciidoctor-fopub/fopub -t docbook-xsl dist/index.xml
