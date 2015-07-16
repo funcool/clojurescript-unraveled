@@ -84,7 +84,7 @@ see how they work internally:
 (defn my-map
   [f coll]
   (when-let [s (seq coll)]
-    (cons (f (first s)) (map f (rest s)))))
+    (cons (f (first s)) (my-map f (rest s)))))
 
 (my-map inc [0 1 2])
 ;; => (1 2 3)
@@ -95,8 +95,8 @@ see how they work internally:
     (let [f (first s)
           r (rest s)]
       (if (pred f)
-        (cons f (filter pred r))
-        (filter pred r)))))
+        (cons f (my-filter pred r))
+        (my-filter pred r)))))
 
 (my-filter odd? [0 1 2])
 ;; => (1)
