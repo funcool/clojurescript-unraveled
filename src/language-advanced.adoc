@@ -543,7 +543,170 @@ or a lazy sequence but it could be an asynchronous stream of values or a `core.a
 by each step are also different for every process; `into` creates a collection with every output of the transducer,
 `sequence` yields a lazy sequence and asynchronous streams would probably push the outputs to their listeners.
 
-Note that transducible processes must respect `reduced` as a way for signaling early termination. For example,
+For improving our understanding of transducible processes we're going to implement an unbounded queue, since adding
+values to a queue can be thought in terms of a succession of steps ingesting input. First of all we'll define a
+protocol and a data type that implements the unbounded queue:
+
+[source, clojure]
+----
+(defprotocol Queue
+  (put! [q item] "put an item into the queue")
+  (take! [q] "take an item from the queue")
+  (shutdown! [q] "stop accepting puts in the queue"))
+
+(deftype UnboundedQueue [^:mutable arr ^:mutable closed]
+  Queue
+  (put! [_ item]
+    (assert (not closed))
+    (assert (not (nil? item)))
+    (.push arr item)
+    item)
+  (take! [_]
+    (aget (.splice arr 0 1) 0))
+  (shutdown! [_]
+    (set! closed true)))
+----
+
+We defined the `Queue` protocol and as you may have noticed the implementation of `UnboundedQueue` doesn't
+know about transducers at all. It has a `put!` operation as its step function and we're going to implement
+the transducible process on top of that interface:
+
+[source, clojure]
+----
+(defn unbounded-queue
+  ([]
+   (queue nil))
+  ([xform]
+   (let [put! (completing put!)
+         xput! (if xform (xform put!) put!)
+         q (UnboundedQueue. #js [] false)]
+     (reify
+       Queue
+       (put! [_ item]
+         (when-not (.-closed q)
+           (let [val (xput! q item)]
+             (if (reduced? val)
+               (do
+                 (xput! @val)  ;; call completion step
+                 (shutdown! q) ;; respect reduced
+                 @val)
+               val))))
+       (take! [_]
+         (take! q))
+       (shutdown! [_]
+         (shutdown! q))))))
+----
+
+As you can see, the `unbounded-queue` constructor uses an `UnboundedQueue` instance internally, proxying the
+`take!` and `shutdown!` calls and implementing the transducible process logic in the `put!` function. Let's
+deconstruct it to understand what's going on.
+
+[source, clojure]
+----
+(let [put! (completing put!)
+      xput! (if xform (xform put!) put!)
+      q (UnboundedQueue. #js [] false)]
+  ;; ...
+)
+----
+
+First of all, we use `completing` for adding the arity 0 and arity 1 to the `Queue` protocol's `put!` function.
+This will make it play nicely with transducers in case we give this reducing function to `xform` to derive another.
+After that, if a transducer (`xform`) was provided, we derive a reducing function applying the transducer to `put!`.
+If we're not handed a transducer we will just use `put!`. `q` is the internal instance of `UnboundedQueue`.
+
+[source, clojure]
+----
+(reify
+  Queue
+  (put! [_ item]
+    (when-not (.-closed q)
+      (let [val (xput! q item)]
+        (if (reduced? val)
+          (do
+            (xput! @val)  ;; call completion step
+            (shutdown! q) ;; respect reduced
+            @val)
+          val))))
+  ;; ...
+)
+----
+
+The exposed `put!` operation will only be performed if the queue hasn't been shut down. Notice that the `put!`
+implementation of `UnboundedQueue` uses an assert to verify that we can still put values to it and we don't
+want to break that invariant. If the queue isn't closed we can put values into it, we use the possibly transformed
+`xput!` for doing so.
+
+If the put operation gives back a reduced value it's telling us that we should terminate the transducible process.
+In this case that means shutting down the queue to not accept more values. If we didn't get a reduced value we can
+happily continue accepting puts.
+
+Let's see how our queue behaves without transducers:
+
+[source, clojure]
+----
+(def q (queue))
+;; => #<[object Object]>
+
+(put! q 1)
+;; => 1
+(put! q 2)
+;; => 2
+
+(take! q)
+;; => 1
+(take! q)
+;; => 2
+(take! q)
+;; => nil
+----
+
+Pretty much what we expected, let's now try with a stateless transducer:
+
+[source, clojure]
+----
+(def incq (queue (map inc)))
+;; => #<[object Object]>
+
+(put! incq 1)
+;; => 2
+(put! incq 2)
+;; => 3
+
+(take! incq)
+;; => 2
+(take! incq)
+;; => 3
+(take! incq)
+;; => nil
+----
+
+To check that we've implemented the transducible process, let's use a stateful transducer. We'll use a transducer
+that will accept values while they aren't equal to 4 and will partition inputs in chunks of 2 elements:
+
+[source, clojure]
+----
+(def xq (queue (comp
+                 (take-while #(not= % 4))
+                 (partition-all 2))))
+
+(put! xq 1)
+(put! xq 2)
+;; => [1 2]
+(put! xq 3)
+(put! xq 4) ;; shouldn't accept more values from here on
+(put! xq 5)
+;; => nil
+
+(take! xq)
+;; => [1 2]
+(take! xq) ;; seems like `partition-all` flushed correctly!
+;; => [3]
+(take! xq)
+;; => nil
+----
+
+Transducible processes must respect `reduced` as a way for signaling early termination. For example,
 building a collection stops when encountering a `reduced` and `core.async` channels with transducers are closed.
 The `reduced` value must be unwrapped with `deref` and passed to the completion step, which must be called exactly
 once.
