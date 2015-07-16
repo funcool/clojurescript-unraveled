@@ -24,9 +24,9 @@
 
   <!-- We want a separate TOC file, please -->
   <xsl:param name="chunk.tocs.and.lots">1</xsl:param>
-  <xsl:param name="toc.section.depth">2</xsl:param>
+  <xsl:param name="toc.section.depth">1</xsl:param>
   <xsl:param name="generate.toc">
-  book   toc,title
+  book   toc
   </xsl:param>
 
   <xsl:param name="ade.extensions" select="0"/>
