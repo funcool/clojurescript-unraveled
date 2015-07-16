@@ -918,7 +918,7 @@ runtime code introspection and documentation generation very easy, you'll see wh
 ==== Vars
 
 Let's define a var and see what metadata is attached to it by default, note that this code is executed in
-a REPL and thus the metadata of a var defined in a namespace may vary. We'll use the `meta` function to
+a REPL and thus the metadata of a var defined in a source file may vary. We'll use the `meta` function to
 retrieve the metadata of the given value:
 
 [source, clojure]
