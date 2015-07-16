@@ -2997,4 +2997,31 @@ watcher has a key associated (`:logger` in the example) to it which is later use
 
 ==== Volatiles
 
-TODO
+Volatiles, like atoms, are objects containing a value that can be altered. However, they don't provide
+the observation and validation capabilities that atoms provide. This makes them slightly more performant
+and a more suitable mutable container to use inside stateful functions that don't need observation nor
+validation.
+
+Their API closely resembles that of atoms. They can be dereferenced to grab the value they contain and
+support swapping and resetting with `vswap!` and `vreset!` respectively:
+
+[source, clojure]
+----
+(def ciri (volatile! {:name "Cirilla" :lastname "Fiona" :age 20}))
+;; #<Volatile: {:name "Cirilla", :lastname "Fiona", :age 20}>
+
+(volatile? ciri)
+;; => true
+
+(deref ciri)
+;; {:name "Cirilla", :lastname "Fiona", :age 20}
+
+(vswap! ciri update :age inc)
+;; {:name "Cirilla", :lastname "Fiona", :age 21}
+
+(vreset! ciri {:name "Cirilla", :lastname "Fiona", :age 22})
+;; {:name "Cirilla", :lastname "Fiona", :age 22}
+----
+
+Note that another difference with atoms is that the constructor of volatiles uses a bang at the end, you create
+volatiles with `volatile!` and atoms with `atom`.
