@@ -35,7 +35,7 @@ installed. _ClojureScript_ itself only requires JDK 7, but the standalone compil
 are going to use in this chapter requires JDK 8, which can be found at
 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
-You can download it using `wget`:
+You can download the latest _ClojureScript_ compiler using `wget`:
 
 [source, bash]
 ----
