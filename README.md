@@ -34,12 +34,10 @@ This is a quick and dirty FAQ:
 
 Please, maintain the commit size small for easy commits picking.
 
-
 **Rules for text formatting**:
 
 - Use correct asciidoctor syntax.
 - Max line width should be 89 chars.
-
 
 **General note**:
 
@@ -48,6 +46,40 @@ structure is finished. This is not because we don't want to, but because it's ve
 difficult to handle that at this stage of the book. That being said, proposals are very
 welcome.
 
+
+## How to build ##
+
+The book is written using asciidoctor, so you should install the last version of
+asciidoctor using your package manager. The asciidoctor is responsible of the generation
+of the online html format. So if you are happy with a local copy in html format, this
+is a unique dependency that you need.
+
+This is a command for generate the html:
+
+```bash
+make html
+chromium dist/index.html
+```
+
+If you want to generate a pdf. Some additional depencies are needed. For this process
+we are using fopub tool (included in the repo) that requires the JDK 7 or 8.
+
+For generate pdf, having jdk installed, execute this:
+
+```bash
+make git
+make pdf
+# This will generate dist/clojurescript-unraveled.pdf
+```
+
+And finally, if you want to generate epub or mobi, you should install `calibre` and
+`docbook-xsl` using the package manager of you distribution. Once you have this installed,
+execute the following commands:
+
+```bash
+make epub
+make mobi
+```
 
 
 ## License ##
