@@ -153,7 +153,7 @@ result they are building. Let's give it a shot:
     (fn [acc input]           ;; transformed reducing function, now it maps `f`!
       (rfn acc (f input)))))
 
-(def incer (my-mapr inc))
+(def incer (my-mapt inc))
 
 (reduce (incer conj) [] [0 1 2])
 ;; => [1 2 3]
