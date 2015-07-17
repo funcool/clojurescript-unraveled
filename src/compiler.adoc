@@ -589,9 +589,10 @@ JavaScript. It is OK to start using it and to understand how it works. But it is
 comfortable for use on big projects with dependencies to third party libraries.
 
 This chapter intends to explain how you can use *Leiningen*, the defacto clojure build
-and dependency management tool for build _ClojureScript_ projects. It there an other
-growing in popularity build tool called *boot* but at this momenent it will not  be
+and dependency management tool, to build _ClojureScript_ projects. There is another
+build tool called *boot* that is growing in popularity, but at this momenent it will not be
 covered in this book.
+
 
 
 ==== Installing leiningen
@@ -624,20 +625,19 @@ are a Windows user, please check the instructions on the
 link:http://leiningen.org/[Leiningen homepage]. You can also get the Linux/Mac OSX/BSD
 version of the leiningen script at the web site.
 
-
 ==== First project
 
-The best way to show how a tool works, is creating an toy project with it. In this case
+The best way to show how a tool works is by creating a toy project with it. In this case
 we will go to create one little application that calculates if a year is leap or not. And
 for it, we will use the *mies* leiningen template.
 
-NOTE: Templates are a way that leiningen has to provide a initial layour for an
+NOTE: Templates are a way that leiningen has to provide a initial layout for an
 application or a library and clojure community has a great amount of them. In this case
 we'll use *mies* template that is maintained by the clojurescript core developer. If you
-want to know more about templates, you should read the leiningen doc. Explain templates
+want to know more about templates, you should read the leiningen doc. Explaining templates
 is completely out of scope of this book.
 
-Let start creating the project layout:
+Let's start creating the project layout:
 
 [source, bash]
 ----
@@ -682,7 +682,7 @@ Open the `index.html` file and add the following content at the beginning of bod
 </section>
 ----
 
-And the next step is adding some code for make the form interactive. Put the following
+And the next step is adding some code to make the form interactive. Put the following
 code into the `src/leapyear/core.cljs`:
 
 [source, clojure]
@@ -731,19 +731,19 @@ rlwrap lein trampoline run -m clojure.main scripts/watch.clj
 WARNING: you should have `rlwrap` installed on your system.
 
 Additionally to `watch` script, the *mies* template also generates a bunch of other
-scripts such as `build`,`release`,... but for our purposes on this section them are
-completely useless. And probably after reading the compiler and repl sections you already
-will be familiarized with almost all scripts that comes with *mies* template.
+scripts such as `build`,`release`,... but for our purposes in this section they are
+completely useless. And probably after reading the compiler and repl sections, you already
+will be familiar with almost all the scripts that comes with *mies* template.
 
 
 ==== Managing dependencies
 
-The real purpose of use leiningen for clojurescript compilation process is managing
-dependencies. Because it makes this task more obvios in comparison if we should do it
+The real purpose of use leiningen for the ClojureScript compilation process is managing
+dependencies. Because it makes this task more obvious in comparison to doing it
 manually.
 
-The dependencies, among other parameters are declared in the `project.clj` file and has
-this aspect (from *mies* template):
+The dependencies, among other parameters, are declared in the `project.clj` file and have
+this form (from *mies* template):
 
 [source, clojure]
 ----
@@ -762,23 +762,23 @@ this aspect (from *mies* template):
   :target-path "target")
 ----
 
-And here a little explanation of properties relevent for clojurescript:
+And here is a brief explanation of the properties relevant for ClojureScript:
 
 * `:dependencies`: a vector of dependencies that your project needs.
 * `:clean-targets`: a vector of paths that `lein clean` should delete.
 
-The dependencies in clojurescript are packaged using `jar` files. If you are coming from
-clojure or any JVM language, the `jar` files will be very familiar for you. But if you
-don't familiar with them, do not worry: a jar file is like a plain zip file that contains
-the `project.clj` of the library, some metadata and the clojurescript sources. The
+The dependencies in ClojureScript are packaged using `jar` files. If you are coming from
+Clojure or any JVM language, `jar` files will be very familiar to you. But if you
+aren't familiar with them, do not worry: a .jar file is like a plain zip file that contains
+the `project.clj` for the library, some metadata, and the ClojureScript sources. The
 packaging will be explained in other section.
 
-The clojure packages are often published in the link:http://clojars.org[Clojars], also you
-can found a bunch of different third party libraries on the
+Clojure packages are often published on link:http://clojars.org[Clojars]; also you
+can find many different third party libraries on the
 link:https://github.com/clojure/clojurescript/wiki#libraries[ClojureScript Wiki].
 
-For understand it better, we are going to replace the dom utiltiles of the google closure
-library with a third party library for interacting with the dom.
+To understand dependencies better, we are going to replace the DOM utiltiles of the Google Closure
+library with a third party library for interacting with the DOM.
 
 Let start adding `[prismatic/dommy "1.1.0"]` into the `:dependencies` in the
 *project.clj*:
@@ -792,7 +792,7 @@ Let start adding `[prismatic/dommy "1.1.0"]` into the `:dependencies` in the
                [prismatic/dommy "1.1.0"]]
 ----
 
-In this moment you should restart the watch process that we had started at the beginning
+At this moment you should restart the watch process that we had started at the beginning
 of this subchapter:
 
 [source, bash]
@@ -805,7 +805,7 @@ Building ...
 Watching paths: /home/niwi/cljsbook/playground/leapyears/src
 ----
 
-You can observe that dommy dependency is successfully downloaded and then, the watch
+You can observe that dommy dependency is successfully downloaded, and then the watch
 process is started.
 
 Now it's time to write some code. Replace the contents of the `src/leapyear/core.cljs`
@@ -839,38 +839,38 @@ with the following content:
 (dom/listen! input :keyup on-change)
 ----
 
-As you can observe the code now looks more in clojure friendly way. The host
+As you can observe, the code now looks more “Clojure-friendly.” The host
 interoperabilty calls are almost hidden.
 
-NOTE: This example does not means that we prefer `dommy` over google closure library. In
-fact, dommy does not has documentation so we does not recommend use it.
+NOTE: This example does not means that we prefer `dommy` over the Google Closure library. In
+fact, dommy does not have documentation, so we do not recommend use it.
 
 
 === Unit testing
 
-Nothing to say more, the testing in _ClojureScript_ consists in the same concepts as
+There’s not a lot to say here; testing in _ClojureScript_ consists of the same concepts as
 you may know from any other language such as Clojure, Java, Python, JavaScript, etc.
 
-Regardless of the language the main objective of unit testing is run some test code
+Regardless of the languag,e the main objective of unit testing is to run some test code
 and verify that your code behaves as expected and returns without raising unexpected
 exceptions.
 
-The immutablity of the _ClojureScript_ in fact helps that your program will be less
-error prone, and facilitates a little bit the tests. An other advantage of _ClojureScript_
-is as it tends to use plain data instead of complex objects. Build "mock" objects
+The immutablity of _ClojureScript_ in fact helps your program to be less
+error prone and facilitates testing a little bit. Another advantage of _ClojureScript_
+is that it tends to use plain data instead of complex objects. Building "mock" objects
 for testing is greatly simplified.
 
 
 ==== First steps
 
-The "official" _ClojureScript_ framework is builtin on its core under "cljs.test"
-namespace. It is very simple library but it should be more that enough for our purposes.
+The "official" _ClojureScript_ testing framework is built-in on its core under the "cljs.test"
+namespace. It is a very simple library, but it should be more than enough for our purposes.
 
-There are other libraries that offers additional features or directly different approach
-for testings such as link:https://github.com/clojure/test.check[test.check]. But them
-are will not be covered in this subchapter.
+There are other libraries that offer additional features or directly different approaches
+for testing, such as link:https://github.com/clojure/test.check[test.check]. However, they
+will not be covered in this subchapter.
 
-Start creating a new project using thew *mies* leiningen template for experimenting with
+Start creating a new project using the *mies* leiningen template for experimenting with
 tests:
 
 [source, bash]
@@ -880,7 +880,7 @@ $ cd appfortesting
 ----
 
 This project will contain the same layout as we have seen in the *dependency management*
-subchapter so we'll don't explain it again.
+subchapter, so we won’t explain it again.
 
 The next step is a creating a directory tree for our tests:
 
@@ -890,8 +890,8 @@ $ mkdir -p test/appfortesting
 $ touch test/appfortesting/core_tests.cljs
 ----
 
-Also, we should adapt the existing `watch.clj` script for work with previously created
-tests directory:
+Also, we should adapt the existing `watch.clj` script to work with this newly created
+test directory:
 
 [source, clojure]
 ----
@@ -923,7 +923,7 @@ And then, write some test code into the `core_tests.cljs` file:
 (set! *main-cli-fn* #(t/run-tests))
 ----
 
-The relevant part of that code snipped is:
+The relevant part of that code snippet is:
 
 [source, clojure]
 ----
@@ -931,11 +931,11 @@ The relevant part of that code snipped is:
   (t/is (= 1 2)))
 ----
 
-The `deftest` macro is basic primitive for define our tests. It takes a name as first
+The `deftest` macro is a basic primitive for define our tests. It takes a name as its first
 parameter, followed of one or multiple "asserts" using the `is` macro. In that example,
 the assert tries check that `(= 1 2)` is true.
 
-Let's try to run this. For it, firstly start the watch process:
+Let's try to run this. First start the watch process:
 
 [source,bash]
 ----
@@ -965,8 +965,8 @@ Ran 1 tests containing 1 assertions.
 1 failures, 0 errors.
 ----
 
-You can observe that expected assert failure is successfully printed in the console. For
-fix the tests, just change the `=` with `not=` and run again the file:
+You can observe that expected assert failure is successfully printed in the console. To
+fix the test, just change the `=` with `not=` and run again the file:
 
 [source, bash]
 ----
@@ -978,8 +978,8 @@ Ran 1 tests containing 1 assertions.
 0 failures, 0 errors.
 ----
 
-It is pretty fine test this kind of assertions but they are not very usefull. Let's go to
-test some application code. For it, we will use a function for check if a year is leap
+It is fine to test these kinds of assertions, but they are not very useful. Let's go to
+test some application code. For this, we will use a function to check if a year is leap
 or not. Then, write the following content to the `src/appfortesting/core.clj` file:
 
 [source, clojure]
@@ -991,8 +991,9 @@ or not. Then, write the following content to the `src/appfortesting/core.clj` fi
        (pos? (js-mod year 400))))
 ----
 
-In the next place, write a new test case for check that our new functon defined in the
-`appfortesting.core` namespace. This is a new aspect of the `core_tests.cljs` file:
+Next, write a new test case to check that our new function defined in the
+`appfortesting.core` namespace works properly. This is the new content
+of the `core_tests.cljs` file:
 
 [source, clojure]
 ----
@@ -1012,19 +1013,19 @@ In the next place, write a new test case for check that our new functon defined 
 (set! *main-cli-fn* #(t/run-tests))
 ----
 
-You can run again the compiled file for check that the new test passes as expected.
+You can again run the compiled file to check that the new test passes as expected.
 
 
 ==== Async Testing
 
 One of the peculiarities of _ClojureScript_ is that is built up on asynchronous, single
-theaded execution environments, and has its own chalenges.
+theaded execution environments, and this has its own challenges.
 
-In async execution environments we should will be able test asynchronous functions. So,
-for this case, the _ClojureScript_ testing library offers a simply facility for do it:
-`async` macro. It allows create blocks that play well with asynchronous code.
+In async execution environments we should be able test asynchronous functions. So,
+in this case, the _ClojureScript_ testing library offers a simply facility to do it:
+the `async` macro. It allows you to create blocks that play well with asynchronous code.
 
-Before any thing, we should write a function that works in asynchronous way. And for this
+First, we need to write a function that works in an asynchronous way. For this
 purpose we will create the `async-leap?` predicate that will do the same operation but
 return a result using a callback:
 
@@ -1040,10 +1041,10 @@ return a result using a callback:
        (callback result)))))
 ----
 
-The JavaScript `setImmediate` is used for emulate an asyncrhonous task and callback
+The JavaScript function `setImmediate` is used to emulate an asyncrhonous task and the callback
 is executed with the result of that predicate.
 
-For test it, we should write a test case using the previously mentioned `async` macro:
+To test it, we should write a test case using the previously mentioned `async` macro:
 
 [source, clojure]
 ----
@@ -1054,12 +1055,12 @@ For test it, we should write a test case using the previously mentioned `async` 
                              (done)))))
 ----
 
-The `done` function exposed by the `async` macro should be called after asyncronous
-operation is finished and all assertions had run.
+The `done` function exposed by the `async` macro should be called after asynchronous
+operation is finished and all assertions have run.
 
-It is very important execute that function once. If you execute that function twice or
-never, may cause some kind of strange behavior like execute some tests more that one time
-or skip execution of some tests.
+It is very important to execute that function only once. If you execute that function twice or
+never, may cause some kind of strange behavior like executing some tests more than one time
+or skipping execution of some tests.
 
 
 ==== Fixtures
@@ -1069,15 +1070,15 @@ TBD
 
 ==== Integrating with CI
 
-Most of continuous integration tools and services expectas that provided test script
-return standard exit code. But the clojurescript by default only runs the tests and output
-the results in the standard output. So the compiled file can not be used directly in
-a continuous integration tools because it does not return any return code when something
+Most of continuous integration tools and services expect that test scripts you provide
+return a standard exit code. But ClojureScript by default only runs the tests and outputs
+the results to standard output. So the compiled file can not be used directly with
+continuous integration tools because it does not return any return code when something
 fails. It always return the return code `0`.
 
-For fix it, we should instruct the _ClojureScript_ test runner that when finish with
-failed state it should set the `-1` return code. And this can be done with this
-snipped of code:
+To fix this, we must instruct the _ClojureScript_ test runner that when it finishes with
+a failed state it should set `-1` as a return code. This can be done with this
+snippet of code:
 
 [source, clojure]
 ----
@@ -1089,6 +1090,6 @@ snipped of code:
 ----
 
 This code snippet obviously supposes that you are running the tests using *iojs* or
-*nodejs*. if you are running your script in an other execution environment you should be
-aware on how we can set the exit code in that environment and modify the previous snippet
-according that.
+*nodejs*. If you are running your script in another execution environment, you should be
+aware of how you can set the exit code in that environment and modify the previous snippet
+accordingly.
