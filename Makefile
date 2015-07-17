@@ -1,42 +1,42 @@
 all: build
 
-build: copy html
-
-copy:
+setup:
 	mkdir -p dist/
+
+copy: setup
 	cp -r ./images dist/
 
-html:
-	mkdir -p dist/
+html: setup
 	asciidoctor -b xhtml -a docinfo -a stylesheet=../assets/stylesheet2.css  src/index.adoc -o dist/index.html
 
 git:
 	git submodule init
 	git submodule update
 
-docbook45:
-	mkdir -p dist/
-	asciidoctor -b docbook45 -a numbered -d book -a data-uri!  src/index.adoc -o dist/index.xml
+docbook: setup
+	asciidoctor -b docbook45 -a numbered -d book -a data-uri!  src/index.adoc -o dist/clojurescript-unraveled.xml
 
-docbook5:
-	mkdir -p dist/
-	asciidoctor -b docbook -a numbered -d book -a data-uri!  src/index.adoc -o dist/index5.xml
+pdf: docbook
+	./asciidoctor-fopub/fopub -t docbook-xsl dist/clojurescript-unraveled.xml
 
-pdf: docbook5
-	./asciidoctor-fopub/fopub -t docbook-xsl dist/index5.xml
+rawpdf:
+	./asciidoctor-fopub/fopub -t docbook-xsl dist/clojurescript-unraveled.xml
 
-epub3: docbook5 copy
-	dbtoepub -s xsl-styleshets/epub3/docbook.xsl  dist/index5.xml -o dist/index5.epub
+epub: docbook copy
+	dbtoepub -s xsl-styleshets/epub/docbook.xsl  dist/clojurescript-unraveled.xml -o dist/_clojurescript-unraveled.epub
+	ebook-convert dist/_clojurescript-unraveled.epub dist/clojurescript-unraveled.epub --chapter="/" --no-chapters-in-toc --cover=cover/cover.png --authors="Andrey Antukh & Alejandro Gomez"
 
-epub: docbook45 copy
-	dbtoepub -s xsl-styleshets/epub/docbook.xsl  dist/index.xml -o dist/index.epub
-
-pdfraw:
-	./asciidoctor-fopub/fopub -t docbook-xsl dist/index5.xml
+mobi: epub
+	ebook-convert dist/_clojurescript-unraveled.epub dist/clojurescript-unraveled.mobi --output-profile=kindle --chapter="/" --no-chapters-in-toc --cover=cover/cover.png --mobi-ignore-margins --margin-left=2 --margin-right=2
 
 github: html
 	ghp-import -m "Generate book" -b gh-pages dist/
 	git push origin gh-pages
+
+clean:
+	rm -r dist/
+
+build: copy html
 
 watch: build
 	sh ./watch.sh
