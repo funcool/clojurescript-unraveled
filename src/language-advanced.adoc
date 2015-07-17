@@ -4,8 +4,8 @@
 
 ClojureScript offers a rich vocabulary for data transformation in terms of the sequence abstraction,
 which makes such transformations highly general and composable. Let's see how we can combine several
-collection processing functions to build new ones, we will be using a simple problem throughout this
-section: splitting grape clusters, filtering out the rotten ones and cleaning them. We have a collection
+collection processing functions to build new ones. We will be using a simple problem throughout this
+section: splitting grape clusters, filtering out the rotten ones, and cleaning them. We have a collection
 of grape clusters like the following:
 
 [source, clojure]
@@ -19,8 +19,8 @@ of grape clusters like the following:
 ----
 
 We are interested in splitting the grape clusters into individual grapes, discarding the rotten ones
-and cleaning the remaining grapes so they are ready for eating them. We are well-equiped in ClojureScript
-for this data transformation task, we could implement it using the familiar `map`, `filter` and `mapcat`
+and cleaning the remaining grapes so they are ready for eating. We are well-equipped in ClojureScript
+for this data transformation task; we could implement it using the familiar `map`, `filter` and `mapcat`
 functions:
 
 [source, clojure]
@@ -44,8 +44,8 @@ functions:
 ;; => ({rotten? false :clean? true} {:rotten? false :clean? true})
 ----
 
-In the above example we succintly solved the problem of selecting and cleaning the grapes and
-we can even abstract such transformation combining the `mapcat`, `filter` and `map` operations
+In the above example we succintly solved the problem of selecting and cleaning the grapes, and
+we can even abstract such transformations by combining the `mapcat`, `filter` and `map` operations
 using partial application and function composition:
 
 [source, clojure]
@@ -60,13 +60,13 @@ using partial application and function composition:
 ;; => ({rotten? false :clean? true} {:rotten? false :clean? true})
 ----
 
-The code is very clean but it has a few problems. For example, each call to `map`, `filter` and
-`mapcat` consumes and produces a sequence that, although lazy, generate intermediate results
+The code is very clean, but it has a few problems. For example, each call to `map`, `filter` and
+`mapcat` consumes and produces a sequence that, although lazy, generates intermediate results
 that will be discarded. Each sequence is fed to the next step, which also returns a
-sequence. Wouldn't be great if we did the transformation in a single transversal of the `grape-cluster`
+sequence. Wouldn't be great if we could do the transformation in a single transversal of the `grape-cluster`
 collection?
 
-Another problem is that even though our `process-clusters` function works with any sequence we
+Another problem is that even though our `process-clusters` function works with any sequence, we
 can't reuse it with anything that is not a sequence. Imagine that instead of having the grape cluster
 collection available in memory it is being pushed to us asynchronously in a stream. In that situation
 we couldn't reuse `process-clusters` since usually `map`, `filter` and `mapcat` have concrete
@@ -74,9 +74,9 @@ implementations depending on the type.
 
 ==== Generalizing to process transformations
 
-The process of mapping, filtering or mapcatting isn't necesarily tied to a concrete type but we
+The process of mapping, filtering or mapcatting isn't necesarily tied to a concrete type, but we
 keep reimplementing them for different types. Let's see how we can generalize such processes to
-be context independent. We'll start implementing naive versions of `map` and `filter` first to
+be context independent. We'll start by implementing naive versions of `map` and `filter` first to
 see how they work internally:
 
 [source, clojure]
@@ -84,7 +84,7 @@ see how they work internally:
 (defn my-map
   [f coll]
   (when-let [s (seq coll)]
-    (cons (f (first s)) (map f (rest s)))))
+    (cons (f (first s)) (my-map f (rest s)))))
 
 (my-map inc [0 1 2])
 ;; => (1 2 3)
@@ -95,8 +95,8 @@ see how they work internally:
     (let [f (first s)
           r (rest s)]
       (if (pred f)
-        (cons f (filter pred r))
-        (filter pred r)))))
+        (cons f (my-filter pred r))
+        (my-filter pred r)))))
 
 (my-filter odd? [0 1 2])
 ;; => (1)
@@ -137,9 +137,9 @@ that is reducible, not just sequences. However you may have noticed that, even t
 don't know anything about the source (`coll`) they are still tied to the output they produce (a vector) both
 with the initial value of the reduce (`[]`) and the hardcoded `conj` operation in the body of the reducing
 function. We could have accumulated results in another data structure, for example a lazy sequence, but
-we'd have to rewrite the functions for doing so.
+we'd have to rewrite the functions in order to do so.
 
-How can we make these functions truly generic? They shouldn't know about neither the source of inputs they
+How can we make these functions truly generic? They shouldn't know about either the source of inputs they
 are transforming nor the output that is generated. Have you noticed that `conj` is just another reducing
 function? It takes an accumulator and an input and returns another accumulator. So, if we parameterise
 the reducing function that `my-mapr` and `my-filterr` use, they won't know anything about the type of the
@@ -173,15 +173,15 @@ result they are building. Let's give it a shot:
 ----
 
 That's a lot of higher-order functions so let's break it down for a better understanding of what's going
-on. We'll examine how `my-mapt` works step by step, the mechanics are similar for `my-filtert` so we'll
+on. We'll examine how `my-mapt` works step by step. The mechanics are similar for `my-filtert`, so we'll
 leave it out for now.
 
-First of all, `my-mapt` takes a mapping function, in the example we are giving it `inc` and getting
+First of all, `my-mapt` takes a mapping function; in the example we are giving it `inc` and getting
 another function back. Let's replace `f` with `inc` to see what we are building:
 
 [source, clojure]
 ----
-(def incer (my-mapr inc))
+(def incer (my-mapt inc))
 ;; (fn [rfn]
 ;;   (fn [acc input]
 ;;     (rfn acc (inc input))))
@@ -201,7 +201,7 @@ let's see what happens when we call it with `conj`:
 
 We get back a reducing function which uses `inc` to transform the inputs and the `conj` reducing function
 to accumulate the results. In essence, we have defined map as the transformation of a reducing function.
-The functions that transforms a reducing function into another are called transducers in ClojureScript.
+The functions that transform one reducing function into another are called transducers in ClojureScript.
 
 To ilustrate the generality of transducers, let's use different sources and destinations in our call
 to `reduce`:
@@ -221,7 +221,7 @@ implementation they contain the _essence_ of what they accomplish, independent o
 
 Now that we know more about transducers we can try to implement our own version of `mapcat`. We already have
 a fundamental piece of it: the `map` transducer. What `mapcat` does is map a function over an input and flatten
-the resulting structure one level. Let's try to implemt the catenation part as a transducer:
+the resulting structure one level. Let's try to implement the catenation part as a transducer:
 
 [source, clojure]
 ----
@@ -234,7 +234,7 @@ the resulting structure one level. Let's try to implemt the catenation part as a
 ;; => [0 1 2 3 4 5]
 ----
 
-The `cat` transducer returns a reducing function that catenates its inputs into the accumulator. It does so
+The `my-cat` transducer returns a reducing function that catenates its inputs into the accumulator. It does so
 reducing the `input` reducible with the `rfn` reducing function and using the accumulator (`acc`) as the
 initial value for such reduction. `mapcat` is simply the composition of `map` and `cat`. The order in which
 transducers are composed may seem backwards but it'll become clear in a moment.
@@ -347,9 +347,9 @@ that supports arity 0. Let's explore some others:
 ;; => true
 ----
 
-The reducing function returned by transducers must support the arity 0 as well, which will tipically delegate
+The reducing function returned by transducers must support the arity 0 as well, which will typically delegate
 to the transformed reducing function. There is no sensible implementation of the arity 0 for the transducers
-we have implemented so far so we'll simply call the reducing function without arguments. Here's how our
+we have implemented so far, so we'll simply call the reducing function without arguments. Here's how our
 modified `my-mapt` could look like:
 
 [source, clojure]
@@ -377,8 +377,8 @@ The call to the arity 0 flows through the transducer stack, eventually calling `
 
 ==== Stateful transducers
 
-So far we've only seen purely functional transducers, they don't have any implicit state and are very
-predictable. However, there are many data transformation functions that are inherently stateful like
+So far we've only seen purely functional transducer; they don't have any implicit state and are very
+predictable. However, there are many data transformation functions that are inherently stateful, like
 `take`. `take` receives a number `n` of elements to keep and a collection and returns a collection with at
 most `n` elements.
 
@@ -389,7 +389,7 @@ most `n` elements.
 ----
 
 Let's step back for a bit and learn about the early termination of the `reduce` function. We can wrap an
-accumulator in a type called `Reduced` for telling `reduce` that the reduction process should terminate
+accumulator in a type called `reduced` for telling `reduce` that the reduction process should terminate
 immediately. Let's see an example of a reduction that aggregates the inputs in a collection and finishes
 as soon as there are 10 elements in the accumulator:
 
@@ -409,7 +409,7 @@ Note that stateful transducers may need to do some cleanup before the process te
 must support an arity 1 as a "completion" step. Usually, like with arity 0, this arity will simply delegate
 to the transformed reducing function's arity 1.
 
-Knowing this we are able to write stateful transducers like `take`, we'll be using mutable state internally
+Knowing this we are able to write stateful transducers like `take`. We'll be using mutable state internally
 for tracking the number of inputs we have seen so far, and wrap the accumulator in a `reduced` as soon as
 we've seen enough elements:
 
@@ -555,8 +555,8 @@ collection and our transformation. We can create an eduction with the `eduction`
 
 ==== More transducers in ClojureScript core
 
-We learned about `map`, `filter`, `mapcat`, `take` and `partition-all` but there are a lot more transducers
-available in ClojureScript, here is an incomplete list of some other intersting ones:
+We learned about `map`, `filter`, `mapcat`, `take` and `partition-all`, but there are a lot more transducers
+available in ClojureScript. Here is an incomplete list of some other intersting ones:
 
 - `drop` is the dual of `take`, dropping up to `n` values before passing inputs to the reducing function
 - `distinct` only allows inputs to occur once
@@ -569,6 +569,9 @@ We encourage you to explore ClojureScript core to see what other transducers are
 Since most transducers are only interesting in the reducing step implementation and often delegate to the
 reducing function in arities 0 and 1, there is a little helper called `completing` that fills those arities
 for you:
+////
+I think this needs a bit more explanation. Why does my-transducer use completing also, and how is it different from my-transducer-with-completion?
+////
 
 [source, clojure]
 ----
@@ -593,12 +596,12 @@ for you:
 ==== Transducible processes
 
 A transducible process is any process that is defined in terms of a succession of steps ingesting input values.
-The source of input varies from one process to another, most of our examples dealt with inputs from a collection
-or a lazy sequence but it could be an asynchronous stream of values or a `core.async` channel. The outputs produced
+The source of input varies from one process to another. Most of our examples dealt with inputs from a collection
+or a lazy sequence, but it could be an asynchronous stream of values or a `core.async` channel. The outputs produced
 by each step are also different for every process; `into` creates a collection with every output of the transducer,
-`sequence` yields a lazy sequence and asynchronous streams would probably push the outputs to their listeners.
+`sequence` yields a lazy sequence, and asynchronous streams would probably push the outputs to their listeners.
 
-For improving our understanding of transducible processes we're going to implement an unbounded queue, since adding
+In order to improve our understanding of transducible processes, we're going to implement an unbounded queue, since adding
 values to a queue can be thought in terms of a succession of steps ingesting input. First of all we'll define a
 protocol and a data type that implements the unbounded queue:
 
