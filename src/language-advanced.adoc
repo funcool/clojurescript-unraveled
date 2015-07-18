@@ -1207,21 +1207,211 @@ TBD
 
 === CSP & core.async
 
-CSP stands for Communicating Sequential Processes, which is a formalism for describing concurrent
-systems pioneered by C. A. R. Hoare in 1978. It is a concurrency model based on message passing and
-synchronization through channels. An in-depth look at the theoretical model behind CSP is out of the
-scope of this book, instead we'll focus on presenting the concurrency primitives that `core.async`
-offers.
+CSP stands for Communicating Sequential Processes, which is a formalism for describing
+concurrent systems pioneered by C. A. R. Hoare in 1978. It is a concurrency model based
+on message passing and synchronization through channels. An in-depth look at the
+theoretical model behind CSP is out of the scope of this book, instead we'll focus on
+presenting the concurrency primitives that `core.async` offers.
 
-`core.async` is not part of ClojureScript core but it's implemented as a library. Even though is not
-part of the core language it's widely used and many libraries build on top of its primitives so we
-think is worth covering in the book. It's also a good example of the syntactic abstractions that can
-be achieved transforming code with ClojureScript macros, so let's jump right in. You'll need to have
-`core.async` installed to run the examples presented in this section.
+`core.async` is not part of ClojureScript core but it's implemented as a library. Even
+though is not part of the core language it's widely used and many libraries build on top
+of its primitives so we think is worth covering in the book. It's also a good example of
+the syntactic abstractions that can be achieved transforming code with ClojureScript
+macros, so let's jump right in. You'll need to have `core.async` installed to run the
+examples presented in this section.
 
 ==== Channels
 
+Channels are like conveyor belts, we can put and take a single value at a time from them.
+They can have multiple readers and writers and are the message-passing primitive of
+`core.async`. Let's create a channel do some operations on it:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(enable-console-print!)
+
+(def ch (chan))
+
+(take! ch #(println "Got a value:" %))
+;; => nil
+
+;; there is a now a pending take operation, let's put something on the channel
+
+(put! ch 42)
+;; Got a value: 42
+;; => 42
+----
+
+In the above example we created a channel (`ch`) using the `chan` constructor. After that
+we performed a take operation on the channel, providing a callback that will be invoked
+when the take operation succeeds. After using `put!` to put a value on the channel the
+take operation completed and the `"Got a value: 42"` string was printed. Note that `put!`
+returned the value that was just put to the channel.
+
+The `put!` function also accepts a callback like `take!` does but we didn't provide any in
+the last example. For puts the callback will be called whenever the value we provided has
+been taken. Puts and takes can happen in any order, let's do a few puts followed by
+takes to illustrate the point:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan))
+
+(put! ch 42 #(println "Just put 42"))
+;; => true
+(put! ch 43 #(println "Just put 43"))
+;; => true
+
+(take! ch #(println "Got" %))
+;; Got 42
+;; Just put 42
+;; => nil
+
+(take! ch #(println "Got" %))
+;; Got 43
+;; Just put 43
+;; => nil
+----
+
+You may be asking yourself why the `put!` operations return `true`. It signals that the
+put operation could be performed, even though the value hasn't yet been taken. Channels
+can be closed, which will cause the put operations to not succeed:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! close!]])
+
+(def ch (chan))
+
+(close! ch)
+;; => nil
+
+(put! ch 42)
+;; => false
+----
+
+The above example was the simplest possible situation but what happens with pending
+operations when a channel is closed? Let's do a few takes and close the channel and see
+what happens:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take! close!]])
+
+(def ch (chan))
+
+(take! ch #(println "Got value:" %))
+;; => nil
+(take! ch #(println "Got value:" %))
+;; => nil
+
+(close! ch)
+;; Got value: nil
+;; Got value: nil
+;; => nil
+----
+
+We see that if the channel is closed all the `take!` operations receive a `nil` value.
+`nil` in channels is a sentinel value that signals to takers that the channel has been
+closed. Because of that, putting a `nil` value on a channel is not allowed:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put!]])
+
+(def ch (chan))
+
+(put! ch 42)
+;; Error: Assert failed: Can't put nil in on a channel
+----
+
 ===== Buffers
+
+We've seen that pending take and put operations are enqueued in a channel but, what
+happens when there are many pending take or put operations? Let's find out by hammering a
+channel with many puts and takes:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan))
+
+(dotimes [n 1025]
+  (put! ch n))
+;; Error: Assert failed: No more than 1024 pending puts are allowed on a single channel.
+
+(def ch (chan))
+
+(dotimes [n 1025]
+  (take! ch #(println "Got" %)))
+;; Error: Assert failed: No more than 1024 pending takes are allowed on a single channel.
+----
+
+As the example above shows there's a limit of pending puts or takes on a channel, it's
+currently 1024 but that is an implementation detail that may change. Note that there can't
+be both pending puts and pending takes on a channel since puts will immediately succeed
+if there are pending takes and viceversa.
+
+Channels support buffering of put operations. If we create a channel with a buffer the put
+operations will succeed immediately if there's room in the buffer and be enqueued
+otherwise. Let's illustrate the point creating a channel with a buffer of one element. The
+`chan` constructors accepts a number as its first argument which will cause it to have
+a buffer with the given size:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan 1))
+
+(put! ch 42 #(println "Put succeeded!"))
+;; Put succeeded!
+;; => true
+
+(dotimes [n 1024]
+  (put! ch n))
+;; => nil
+
+(put! ch 42)
+;; Error: Assert failed: No more than 1024 pending puts are allowed on a single channel.
+----
+
+What happened in the example above? We created a channel with a buffer of size 1 and
+performed a put operation on it that succeeded immediately because the value was buffered.
+After that we did another 1024 puts to fill the pending put queue and, when trying to put
+one value more the channel complained about not being able to enqueue more puts.
+
+Now that we know about how channels work and what are buffers used for let's explore the
+different buffers that `core.async` implements. Different buffers have different policies
+and it's interesting to know all of them to know when to use what. Channels are unbuffered
+by default.
+
+====== Fixed
+
+The fixed size buffer is the one that is created when we give the `chan` constructor a
+number and it will have the size specified by the given number. It is the simplest
+possible buffer: when full, puts will be enqueued.
+
+The `chan` constructor accepts either a number or a buffer as its first argument. The two
+channels created in the following example both use a fixed buffer of size 32:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan buffer]])
+
+(def a-ch (chan 32))
+
+(def another-ch (chan (buffer 32)))
+----
+
+====== Dropping
+
+====== Sliding
 
 ===== Transducers
 
