@@ -1411,7 +1411,75 @@ channels created in the following example both use a fixed buffer of size 32:
 
 ====== Dropping
 
+The fixed buffer allows put operations to be enqueued. However, as we saw before, puts
+are still queued when the fixed buffer is full. If we wan't to discard the put operations
+that happen when the buffer is full we can use a dropping buffer.
+
+Dropping buffers have a fixed size and, when they are full puts will complete but their
+value will be discarded. Let's illustrate the point with an example:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan dropping-buffer put! take!]])
+
+(def ch (chan (dropping-buffer 2)))
+
+(put! ch 40)
+;; => true
+(put! ch 41)
+;; => true
+(put! ch 42)
+;; => true
+
+(take! ch #(println "Got" %))
+;; Got 40
+;; => nil
+(take! ch #(println "Got" %))
+;; Got 41
+;; => nil
+(take! ch #(println "Got" %))
+;; => nil
+----
+
+We performed three put operations and the three of them succeded but, since the dropping
+buffer of the channel has size 2, only the first two values were delivered to the takers.
+As you can observe the third take is enqueued since there is no value available, the third
+put's value (42) was discarded.
+
 ====== Sliding
+
+The sliding buffer has the opposite policy than the dropping buffer. When full puts will
+complete and the oldest value will be discarded in favor of the new one. The sliding
+buffer is useful when we are interested in processing the last puts only and we can afford
+discarding old values.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan sliding-buffer put! take!]])
+
+(def ch (chan (sliding-buffer 2)))
+
+(put! ch 40)
+;; => true
+(put! ch 41)
+;; => true
+(put! ch 42)
+;; => true
+
+(take! ch #(println "Got" %))
+;; Got 41
+;; => nil
+(take! ch #(println "Got" %))
+;; Got 42
+;; => nil
+(take! ch #(println "Got" %))
+;; => nil
+----
+
+We performed three put operations and the three of them succeded but, since the sliding
+buffer of the channel has size 2, only the last two values were delivered to the takers.
+As you can observe the third take is enqueued since there is no value available since the
+first put's value was discarded.
 
 ===== Transducers
 
