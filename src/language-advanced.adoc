@@ -1600,7 +1600,67 @@ are pending puts.
 
 ==== Processes
 
+We learned all about channels but there is still a missing piece in the puzzle: processes.
+Processes are pieces of logic that run independently and use channels for communication
+and coordination. Puts and takes inside a process will stop the process until the
+operation completes. Stopping a process doesn't block the only thread we have in the
+environments where ClojureScript runs. Instead, it will be resumed at a later time when
+the operation has been performed.
+
+Processes are launched using the `go` macro and puts and takes use the `<!` and `>!`
+placeholders. The `go` macro rewrites your code to use callbacks but inside `go`
+everything looks like synchronous code, which makes understanding it easier:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan <! >!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def ch (chan))
+
+(println "Starting block 1")
+(go
+  (println "Started block 1, gonna take from channel")
+  (println "Got" (<! ch)))
+
+(println "Starting block 2")
+(go
+  (println "Started block 2, gonna put on channel")
+  (>! ch 42)
+  (println "Just put 42"))
+
+;; Starting block 1
+;; Started block 1, gonna take from channel
+;; Starting block 2
+;; Started block 2, gonna put on channel
+;; Just put 42
+;; Got 42
+----
+
+In the above example we are launching a process with `go` that takes a value from `ch` and
+prints it to the console. Since the value isn't immediately available it will park until
+it can resume. After that we launch another process that puts a value on the channel.
+Since there is a pending take the put operation succeeds and the value is delivered to
+the first process, then both processes terminate.
+
+TODO: example with timeout
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan <! >! timeout]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def ch (chan))
+----
+
 ===== Choice
+
+TODO: example using timeout for choice
+TODO: canonical examples with alts (for example web search)
 
 ==== Combinators
 
@@ -1613,3 +1673,7 @@ are pending puts.
 ===== Mult
 
 ===== Pub-sub
+
+==== A complete example
+
+TODO: an example of a non-trivial task accomplished using processes and channels
