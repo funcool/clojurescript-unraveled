@@ -911,17 +911,17 @@ interface although it uses mutation internally:
 
 ClojureScript symbols, vars and persistent collections support attaching metadata to them. Metadata is
 a map with information about the entity it's attached to. The ClojureScript compiler uses metadata for
-several purposes like type hints and the metadata system can be used by tooling, library and application
+several purposes such as type hints, and the metadata system can be used by tooling, library and application
 developers too.
 
-There may not be many cases in day-to-day ClojureScript programming where you need metadata but is a
-nice language feature to have and know about, it may come in handy at some point. It makes things like
-runtime code introspection and documentation generation very easy, you'll see why throughout this section.
+There may not be many cases in day-to-day ClojureScript programming where you need metadata, but it is a
+nice language feature to have and know about; it may come in handy at some point. It makes things like
+runtime code introspection and documentation generation very easy. You'll see why throughout this section.
 
 ==== Vars
 
-Let's define a var and see what metadata is attached to it by default, note that this code is executed in
-a REPL and thus the metadata of a var defined in a source file may vary. We'll use the `meta` function to
+Let's define a var and see what metadata is attached to it by default. Note that this code is executed in
+a REPL, and thus the metadata of a var defined in a source file may vary. We'll use the `meta` function to
 retrieve the metadata of the given value:
 
 [source, clojure]
@@ -1005,9 +1005,9 @@ by the `cljs.test` library for discovering and running tests in the namespaces y
 ==== Values
 
 We learned that vars can have metadata and what kind of metadata is added to them for consumption by the
-compiler and the `cljs.test` testing library. Persistent collections can have metadata too although they don't
+compiler and the `cljs.test` testing library. Persistent collections can have metadata too, although they don't
 have any by default. We can use the `with-meta` function to derive an object with the same value and type with
-the given metadata attached, let's see how:
+the given metadata attached. Let's see how:
 
 [source, clojure]
 ----
@@ -1037,8 +1037,8 @@ It shouldn't come as a surprise that metadata doesn't affect equality between tw
 equality in ClojureScript is based on value. Another interesting thing is that `with-meta` creates another
 object of the same type and value as the given one and attaches the given metadata to it.
 
-Another open question is what happens with metadata when deriving new values from a persistent data structure,
-let's find out:
+Another open question is what happens with metadata when deriving new values from a persistent data structure.
+Let's find out:
 
 [source, clojure]
 ----
@@ -1052,7 +1052,7 @@ let's find out:
 As you can see in the example above, metadata is preserved in derived versions of persistent data structures. There
 are some subtleties, though. As long as the functions that derive new data structures return collections with the
 same type, metadata will be preserved; this is not true if the types change due to the transformation. To
-ilustrate this point let's see what happens when we derive a seq or a subvector from a vector:
+ilustrate this point, let's see what happens when we derive a seq or a subvector from a vector:
 
 [source, clojure]
 ----
@@ -1104,7 +1104,7 @@ Notice how the metadata given in the `answer-to-everything` var definition is me
 
 A very common use of metadata is to set certain keys to a `true` value. For example we may want to add to a
 var's metadata that the variable is dynamic or a constant. For such cases, we have a shorthand notation that
-uses a caret followed by a keyword, let's see some examples:
+uses a caret followed by a keyword. Here are some examples:
 
 [source, clojure]
 ----
@@ -1142,7 +1142,7 @@ compiler hints about the type of expressions or function return types.
 We've learned about `meta` and `with-meta` so far but ClojureScript offers a few functions for transforming
 metadata. There is `vary-meta` which is similar to `with-meta` in that it derives a new object with the same
 type and value as the original but it doesn't take the metadata to attach directly. Instead, it takes a function
-to apply to the metadata of the given object to transform it for deriving new metada, let's see how it works:
+to apply to the metadata of the given object to transform it for deriving new metadata. This is how it works:
 
 [source, clojure]
 ----
@@ -1160,7 +1160,7 @@ to apply to the metadata of the given object to transform it for deriving new me
 ----
 
 If instead we want to change the metadata of an existing var or value we can use `alter-meta!` for changing it
-applying a function or `reset-meta!` for replacing it with another map:
+by applying a function or `reset-meta!` for replacing it with another map:
 
 [source, clojure]
 ----
