@@ -1063,7 +1063,7 @@ To test it, we should write a test case using the previously mentioned `async` m
                              (done)))))
 ----
 
-The `done` function exposed by the `async` macro should be called after asynchronous
+The `done` function exposed by the `async` macro should be called after the asynchronous
 operation is finished and all assertions have run.
 
 It is very important to execute that function only once. If you execute that function twice or
@@ -1078,7 +1078,7 @@ TBD
 
 ==== Integrating with CI
 
-Most of continuous integration tools and services expect that test scripts you provide
+Most continuous integration tools and services expect that test scripts you provide
 return a standard exit code. But ClojureScript by default only runs the tests and outputs
 the results to standard output. So the compiled file can not be used directly with
 continuous integration tools because it does not return any return code when something
