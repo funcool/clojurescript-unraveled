@@ -1483,9 +1483,75 @@ first put's value was discarded.
 
 ===== Transducers
 
+As mentioned in the section about transducers, putting values in a channel can be thought
+as a transducible process. This means that we can create channels and hand them a
+transducer, giving us the ability to transform the input values before being put in the
+channel.
+
+If we want to use a transducer with a channel we must supply a buffer since the reducing
+function that will be modified by the transducer will be the buffer's add function.
+A buffer's add function is a reducing function since it takes a buffer and an input and
+returns a buffer with such input incorporated.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan 1 (map inc)))
+
+(put! ch 41)
+;; => true
+
+(take! ch #(println "Got" %))
+;; Got 42
+;; => nil
+----
+
+You may be wondering what happens to a channel when the reducing function returns a
+reduced value. It turns out that the notion of termination for channels is being closed,
+so channels will be closed when a reduced value is encountered:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan 1 (take 2)))
+
+(take! ch #(println "Got" %))
+;; => nil
+(take! ch #(println "Got" %))
+;; => nil
+(take! ch #(println "Got" %))
+;; => nil
+
+(put! ch 41)
+;; => true
+(put! ch 42)
+;; Got 41
+;; => true
+(put! ch 43)
+;; Got 42
+;; Got nil
+;; => false
+----
+
+We used the `take` stateful transducer to allow maximum 2 puts into the channel. We then
+performed three take operations on the channel and we expect only two to receive a value.
+As you can see in the above example the third take got the sentinel `nil` value which
+indicates that the channel was closed. Also, the third put operation returned `false`
+indicating that it didn't take place.
+
+===== Offer and Poll
+
+===== Handling exceptions
+
 ==== Processes
 
-==== Choice
+===== Choice
+
+==== Combinators
+
+- pipe, pipeline, pipeline-async, split, reduce, onto-chan, to-chan
 
 ==== Higher-level abstractions
 
