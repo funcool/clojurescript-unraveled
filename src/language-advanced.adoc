@@ -1581,6 +1581,23 @@ value.
 
 ===== Offer and Poll
 
+We've learned about the two basic operations on channels so far: `put!` and `take!`. They
+either take or put a value and are enqueued if they can't be performed immediately. Both
+functions are asynchronous because of the nature: they can succeed but be completed at a
+later time.
+
+`core.async` has two synchronous operations for putting or taking values: `offer!` and
+`poll!`. These two operations will only succeed if they can be completed immediately. This
+means that `offer!` can only succeed when there are pending takes and `poll!` when there
+are pending puts.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take! offer! poll!]])
+
+;; TODO: wait for core.async release for documenting offer! and poll!
+----
+
 ==== Processes
 
 ===== Choice
