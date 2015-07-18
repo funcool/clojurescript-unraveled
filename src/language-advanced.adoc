@@ -1207,10 +1207,32 @@ TBD
 
 === CSP & core.async
 
-////
-Intends to be an comprensive introduction to csp and core.async. We are aware that core.async
-is not part of core of clojurescript but it is widely used and interesting concepts like that
-would be awesome to cover in the book.
-////
+CSP stands for Communicating Sequential Processes, which is a formalism for describing concurrent
+systems pioneered by C. A. R. Hoare in 1978. It is a concurrency model based on message passing and
+synchronization through channels. An in-depth look at the theoretical model behind CSP is out of the
+scope of this book, instead we'll focus on presenting the concurrency primitives that `core.async`
+offers.
 
-TBD
+`core.async` is not part of ClojureScript core but it's implemented as a library. Even though is not
+part of the core language it's widely used and many libraries build on top of its primitives so we
+think is worth covering in the book. It's also a good example of the syntactic abstractions that can
+be achieved transforming code with ClojureScript macros, so let's jump right in. You'll need to have
+`core.async` installed to run the examples presented in this section.
+
+==== Channels
+
+===== Buffers
+
+===== Transducers
+
+==== Processes
+
+==== Choice
+
+==== Higher-level abstractions
+
+===== Mixer
+
+===== Mult
+
+===== Pub-sub
