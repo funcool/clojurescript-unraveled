@@ -1541,9 +1541,45 @@ As you can see in the above example the third take got the sentinel `nil` value 
 indicates that the channel was closed. Also, the third put operation returned `false`
 indicating that it didn't take place.
 
-===== Offer and Poll
-
 ===== Handling exceptions
+
+If adding a value to a buffer throws an exception `core.async` the operation will fail and
+the exception will be logged to the console. However, channel constructors accept a third
+argument: a function for handling exceptions.
+
+When creating a channel with an exception handler it will be called with the exception
+whenever an exception occurs. If the handler returns `nil` the operation will fail
+silently and if it returns another value the add operation will be retried with such
+value.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(enable-console-print!)
+
+(defn exception-xform
+  [rfn]
+  (fn [acc input]
+    (throw (js/Error. "I fail!"))))
+
+(defn handle-exception
+  [ex]
+  (println "Exception message:" (.-message ex))
+  42)
+
+(def ch (chan 1 exception-xform handle-exception))
+
+(put! ch 0)
+;; Exception message: I fail!
+;; => true
+
+(take! ch #(println "Got:" %))
+;; Got: 42
+;; => nil
+----
+
+===== Offer and Poll
 
 ==== Processes
 
