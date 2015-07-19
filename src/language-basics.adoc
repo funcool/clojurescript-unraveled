@@ -423,7 +423,7 @@ if you call a function with the wrong number of arguments, the compiler will emi
 [source, clojure]
 ----
 (myinc 1)
-;; => 1
+;; => 2
 
 (myinc 1 3)
 ;; => 4
