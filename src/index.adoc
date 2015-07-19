@@ -1,6 +1,6 @@
 = ClojureScript Unraveled
-Andrey Antukh <niwi@niwi.nz>; Alejandro Gomez <alejandro@dialelo.com>
-v1, 2015-07-17
+Andrey Antukh <niwi@niwi.nz>; Alejandro Gómez <alejandro@dialelo.com>
+v2, 2015-07-19
 :toc: left
 :toclevels: 2
 :doctype: book

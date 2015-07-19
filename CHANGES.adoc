@@ -2,7 +2,7 @@
 
 == Version 2
 
-Date: unreleased
+Date: 2015-07-19
 
 * Add cover to the pdf output.
 * Add acknowledgments section.
