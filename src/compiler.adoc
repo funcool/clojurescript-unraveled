@@ -1,4 +1,4 @@
-=== Getting Started with the ClojureScript compiler
+=== Getting Started with compiler
 
 At this point, you are surely very bored with the constant theoretical explanations about
 the language itself and will want to write and execute some code. The goal of this section
@@ -590,7 +590,7 @@ primitives, you should not use `:import` for import them, the standard `:require
 directives should be used.
 
 
-=== Build and Dependency management tools
+=== Dependency managemen
 
 Until now, we have used the builtin _ClojureScript_ toolchain to compile our sources to
 JavaScript. It is OK to start using it and to understand how it works. But it is not very
@@ -600,7 +600,6 @@ This chapter intends to explain how you can use *Leiningen*, the defacto clojure
 and dependency management tool, to build _ClojureScript_ projects. There is another
 build tool called *boot* that is growing in popularity, but at this momenent it will not be
 covered in this book.
-
 
 
 ==== Installing leiningen
