@@ -183,14 +183,14 @@ and see the results in the browser window.
 
 [source, clojure]
 ----
-cljs.user=> (in-ns 'age.core)
-age.core=> (def y (dom/getElement "years"))
-#<[object HTMLInputElement]>
+(in-ns 'age.core)
+(def y (dom/getElement "years"))
+;; => #<[object HTMLInputElement]>
 
-age.core=> (set! (.-value y) "26")
-"26"
+(set! (.-value y) "26")
+;; => "26"
 
-age.core=> (dom/setTextContent (dom/getElement "feedback") "This works!")
+(dom/setTextContent (dom/getElement "feedback") "This works!")
 ----
 
 To add an event, you define a function that takes a single argument (the event to
@@ -200,13 +200,10 @@ event to listen for, and the function that will handle the event.
 
 [source, clojure]
 ----
-age.core=> (defn testing [evt] (js/alert "Responding to click"))
-#<function age$core$testing(evt){
-return alert("Responding to click");
-}>
+(defn testing [evt] (js/alert "Responding to click"))
 
-age.core=> (events/listen (dom/getElement "calculate") "click" testing)
-#<[object Object]>
+(events/listen (dom/getElement "calculate") "click" testing)
+;; => #<[object Object]>
 ----
 
 After doing this, the browser should respond to a click on the button.
