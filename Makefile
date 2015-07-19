@@ -18,6 +18,8 @@ docbook: setup
 
 pdf: docbook
 	./asciidoctor-fopub/fopub -t docbook-xsl dist/clojurescript-unraveled.xml
+	gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=dist/_clojurescript-unraveled.pdf cover/cover.pdf dist/clojurescript-unraveled.pdf
+	mv dist/_clojurescript-unraveled.pdf dist/clojurescript-unraveled.pdf
 
 rawpdf:
 	./asciidoctor-fopub/fopub -t docbook-xsl dist/clojurescript-unraveled.xml
