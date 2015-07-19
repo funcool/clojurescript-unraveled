@@ -1605,11 +1605,11 @@ Processes are pieces of logic that run independently and use channels for commun
 and coordination. Puts and takes inside a process will stop the process until the
 operation completes. Stopping a process doesn't block the only thread we have in the
 environments where ClojureScript runs. Instead, it will be resumed at a later time when
-the operation has been performed.
+the operation is waiting for has been performed.
 
 Processes are launched using the `go` macro and puts and takes use the `<!` and `>!`
 placeholders. The `go` macro rewrites your code to use callbacks but inside `go`
-everything looks like synchronous code, which makes understanding it easier:
+everything looks like synchronous code, which makes understanding it straightforward:
 
 [source, clojure]
 ----
@@ -1620,23 +1620,19 @@ everything looks like synchronous code, which makes understanding it easier:
 
 (def ch (chan))
 
-(println "Starting block 1")
 (go
-  (println "Started block 1, gonna take from channel")
-  (println "Got" (<! ch)))
+  (println [:a] "Gonna take from channel")
+  (println [:a] "Got" (<! ch)))
 
-(println "Starting block 2")
 (go
-  (println "Started block 2, gonna put on channel")
+  (println [:b] "Gonna put on channel")
   (>! ch 42)
-  (println "Just put 42"))
+  (println [:b] "Just put 42"))
 
-;; Starting block 1
-;; Started block 1, gonna take from channel
-;; Starting block 2
-;; Started block 2, gonna put on channel
-;; Just put 42
-;; Got 42
+;; [:a] Gonna take from channel
+;; [:b] Gonna put on channel
+;; [:b] Just put 42
+;; [:a] Got 42
 ----
 
 In the above example we are launching a process with `go` that takes a value from `ch` and
@@ -1645,22 +1641,220 @@ it can resume. After that we launch another process that puts a value on the cha
 Since there is a pending take the put operation succeeds and the value is delivered to
 the first process, then both processes terminate.
 
-TODO: example with timeout
+Both `go` blocks run independently and, even though they are executed asynchronously, they
+look like they synchronous code. The above go blocks are fairly simple but being able to
+write concurrent processes that coordinate via channels is a very powerful tool for
+implementing complex asynchronous workflows. Channels also offer a great decoupling of
+producers and consumers.
+
+Processes can wait for an arbitrary amount of time too, there is a `timeout` function
+that return a channel that will be closed after the given amount of miliseconds. Combining
+a timeout channel with a take operation inside a go block gives us the ability to sleep:
 
 [source, clojure]
 ----
-(require '[cljs.core.async :refer [chan <! >! timeout]])
+(require '[cljs.core.async :refer [<! timeout]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(defn seconds
+  []
+  (.getSeconds (js/Date.)))
+
+(println "Launching go block")
+
+(go
+  (println [:a] "Gonna take a nap" (seconds))
+  (<! (timeout 1000))
+  (println [:a] "I slept one second, bye!" (seconds)))
+
+(println "Block launched")
+
+;; Launching go block
+;; Block launched
+;; [:a] Gonna take a nap 9
+;; [:a] I slept one second, bye! 10
+----
+
+As we can see in the messages printed, the process does nothing for one second when it
+blocks in the take operation of the timeout channel. The program continues and after one
+second the process resumes and terminates.
+
+===== Choice
+
+Apart from putting and taking one value at a time inside a go block we can also make a
+non-deterministic choice on multiple channel operations using `alts!`. `alts!` is given
+a series of channel put or take operations (note that we can also try to put and take in
+a channel at the same time) and only performs one as soon as is ready; if multiple
+operations can be performed when calling `alts!` it will do a pseudo random choice by
+default.
+
+We can easily try an operation on a channel and cancel it after a certain amount of time
+combining the `timeout` function and `alts!`. Let's see how:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan <! timeout alts!]])
 (require-macros '[cljs.core.async.macros :refer [go]])
 
 (enable-console-print!)
 
 (def ch (chan))
+
+(go
+  (println [:a] "Gonna take a nap")
+  (<! (timeout 1000))
+  (println [:a] "I slept one second, trying to put a value on channel")
+  (>! ch 42)
+  (println [:a] "I'm done!"))
+
+(go
+  (println [:b] "Gonna try taking from channel")
+  (let [cancel (timeout 300)
+        [value ch] (alts! [ch cancel])]
+    (if (= ch cancel)
+      (println [:b] "Too slow, take from channel cancelled")
+      (println [:b] "Got" value))))
+
+;; [:a] Gonna take a nap
+;; [:b] Gonna try taking from channel
+;; [:b] Too slow, take from channel cancelled
+;; [:a] I slept one second, trying to put a value on channel
 ----
 
-===== Choice
+In the example above we launched a go block that, after waiting for a second, puts a value
+in the `ch` channel. The other go block creates a `cancel` channel, which will be closed
+after 300 miliseconds. After that, it tries to read from both `ch` and `cancel` at the same
+time using `alts!`, which will succeed whenever it can take a value from either of those
+channels. Since `cancel` is closed after 300 miliseconds, `alts!` will succeed since takes
+from closed channel return the `nil` sentinel. Note that `alts!` returns a two-element
+vector with the returned value of the operation and the channel where it was performed.
+This is why we are able to detect whether the read operation was performed in the `cancel`
+channel or in `ch`. I suggest you copy this example and set the first process timeout to
+100 miliseconds to see how the read operation on `ch` succeeds.
 
-TODO: example using timeout for choice
-TODO: canonical examples with alts (for example web search)
+We've learned how to choose between read operations so let's look at how to express a
+conditional write operation in `alts!`. Since we need to provide the channel and a value
+to try to put on it, we'll use a two element vector with the channel and the value for
+representing write operations. Let's see an example:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan <! alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def a-ch (chan))
+(def another-ch (chan))
+
+(go
+  (println [:a] "Take a value from `a-ch`")
+  (println [:a] "Got" (<! a-ch))
+  (println [:a] "I'm done!"))
+
+(go
+  (println [:b] "Take a value from `another-ch`")
+  (println [:a] "Got" (<! another-ch))
+  (println [:b] "I'm done!"))
+
+(go
+  (println [:c] "Gonna try putting in both channels simultaneously")
+  (let [[value ch] (alts! [[a-ch 42]
+                           [another-ch 99]])]
+    (if (= ch a-ch)
+      (println [:c] "Put a value in `a-ch`")
+      (println [:c] "Put a value in `another-ch`"))))
+
+;; [:a] Take a value from `a-ch`
+;; [:b] Take a value from `another-ch`
+;; [:c] Gonna try putting in both channels simultaneously
+;; [:c] Put a value in `a-ch`
+;; [:a] Got 42
+;; [:a] I'm done!
+----
+
+When running the above example only the put operation on the `a-ch` channel has succeeded.
+Since both channels are ready to take a value when the `alts!` occurs you may get
+different results when running this code.
+
+===== Priority
+
+`alts!` default is to make a non-deterministic choice whenever several operations are
+ready to be performed. We can instead give priority to the operations passing the
+`:priority` option to `alts!`. Whenever `:priority` is `true`, if more than one operation
+is ready they will be tried in order.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan >! alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def a-ch (chan))
+(def another-ch (chan))
+
+(go
+  (println [:a] "Put a value on `a-ch`")
+  (>! a-ch 42)
+  (println [:a] "I'm done!"))
+
+(go
+  (println [:b] "Put a value on `another-ch`")
+  (>! another-ch 99)
+  (println [:b] "I'm done!"))
+
+(go
+  (println [:c] "Gonna try taking from both channels with priority")
+  (let [[value ch] (alts! [a-ch another-ch] :priority true)]
+    (if (= ch a-ch)
+      (println [:c] "Got" value "from `a-ch`")
+      (println [:c] "Got" value "from `another-ch`"))))
+
+;; [:a] Put a value on `a-ch`
+;; [:a] I'm done!
+;; [:b] Put a value on `another-ch`
+;; [:b] I'm done!
+;; [:c] Gonna try taking from both channels with priority
+;; [:c] Got 42 from `a-ch`
+----
+
+Since both `a-ch` and `another-ch` had a value to read when the `alts!` was executed and
+we set the `:priority` option to true, `a-ch` has preference. You can try deleting the
+`:priority` option and running the example multiple times to see that, without priority,
+`alts!` makes a non-deterministic choice.
+
+===== Defaults
+
+Another interesting bit of `alts!` is that it can return immediately if no operation is
+ready and we provide a default value. We can conditionally do a choice on the operations
+if and only if any of them is ready, returning a default value if it's not.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(def a-ch (chan))
+(def another-ch (chan))
+
+(go
+  (println [:a] "Gonna try taking from any of the channels without blocking")
+  (let [[value ch] (alts! [a-ch another-ch] :default :not-ready)]
+    (if (and (= value :not-ready)
+             (= ch :default))
+      (println [:a] "No operation is ready, aborting")
+      (println [:a] "Got" value))))
+
+;; [:a] Gonna try taking from any of the channels without blocking
+;; [:a] No operation is ready, aborting
+----
+
+As you can see in the above example, if no operation is ready the value returned by
+`alts!` is the one we supplied after the `:default` key when calling it and the channel is
+the `:default` keyword itself.
 
 ==== Combinators
 
