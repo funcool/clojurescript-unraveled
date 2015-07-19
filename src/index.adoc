@@ -138,19 +138,9 @@ mandatory for understand the language.
 include::language-advanced.adoc[]
 
 
-== Mixed Bag
+== Appendix
 
-This chapter will cover miscellaneous topics that are not classified in the previous ones.
-This is a "catchall" section and will touch on a bunch of heterogeneous topics like:
-
-* Repl based development with figwheel.
-* Working with promises.
-* Error handling using the _cats_ library.
-* Pattern matching with the _core.match_ library.
-* Web development using the Om library.
-* Share code between Clojure and ClojureScript.
-
-include::mixedbag.adoc[]
+include::appendix.adoc[]
 
 
 == Further Reading

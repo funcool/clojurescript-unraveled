@@ -1,18 +1,4 @@
-===  Modularizing your code
-
-//^ Mainly related to Google Closure modules and slightly related to web-based development
-
-TBD
-
-
-=== Developing a library
-
-//^ A little guide and implications of developing a library for clojurescript.
-
-TBD
-
-
-=== Development with figwheel
+=== Appendix A: Interactive development with Figwheel.
 
 ==== Introduction
 
@@ -253,31 +239,3 @@ Now, put that all together in the `core.cljs` file as follows:
 
 (events/listen (dom/getElement "calculate") "click" calculate)
 ----
-
-
-=== Working with promises.
-
-TBD
-
-
-=== Error handling using monads and Cats.
-
-TBD
-
-
-=== Pattern matching using core.match.
-
-TBD
-
-
-=== Web development with Reagent.
-
-TBD
-
-
-=== Writing libraries that shares code between Clojure and ClojureScript.
-
-TBD
-
-//^ This chapter can grow as we like with different dispare themes ;)
-
