@@ -45,5 +45,7 @@ Several of the lesser used languages have been removed.
   <highlighter id="css" file="./xslthl/css-hl.xml" />
   <highlighter id="sql" file="./xslthl/sql2003-hl.xml" />
   <highlighter id="asciidoc" file="./xslthl/asciidoc-hl.xml" />
+  <highlighter id="clojure" file="./xslthl/clojure-hl.xml" />
+  <highlighter id="lisp" file="./xslthl/lisp-hl.xml" />
   <namespace prefix="xslthl" uri="http://xslthl.sf.net" />
 </xslthl-config>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Common Lisp highlighter for xslthl -->
+<highlighters>
+  <highlighter type="word">
+    <word>call-next-method</word>
+    <word>do-external-symbols</word>
+    <word>do</word>
+    <word>do*</word>
+    <word>eval-when</word>
+    <word>handler-bind</word>
+    <word>handler-case</word>
+    <word>in-package</word>
+    <word>let*</word>
+    <word>multiple-value-bind</word>
+    <word>restart-bind</word>
+    <word>restart-case</word>
+    <word>return-from</word>
+    <word>signal</word>
+    <word>unwind-protect</word>
+
+    <style>keyword</style>
+    <ignoreCase />
+  </highlighter>
+  <highlighter type="keywords">
+    <keyword>assert</keyword>
+    <keyword>fn</keyword>
+    <keyword>def</keyword>
+    <keyword>defn</keyword>
+    <keyword>case</keyword>
+    <keyword>catch</keyword>
+    <keyword>declare</keyword>
+    <keyword>defmacro</keyword>
+    <keyword>defmethod</keyword>
+    <keyword>defmulti</keyword>
+    <keyword>deftype</keyword>
+    <keyword>defrecord</keyword>
+    <keyword>doseq</keyword>
+    <keyword>dotimes</keyword>
+    <keyword>doall</keyword>
+    <keyword>let</keyword>
+    <keyword>let*</keyword>
+    <keyword>letfn</keyword>
+    <keyword>go</keyword>
+    <keyword>if</keyword>
+    <keyword>if-let</keyword>
+    <keyword>if-not</keyword>
+    <keyword>when</keyword>
+    <keyword>when-not</keyword>
+    <keyword>when-let</keyword>
+    <keyword>loop</keyword>
+    <keyword>recur</keyword>
+    <keyword>throw</keyword>
+    <keyword>reify</keyword>
+    <keyword>defprotocol</keyword>
+    <keyword>proxy</keyword>
+
+    <ignoreCase />
+  </highlighter>
+  <!-- with- -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=\()(\S+[:])?(with-\S+)</pattern>
+    <style>keyword</style>
+  </highlighter>
+
+  <!-- comments -->
+  <highlighter type="multiline-comment">
+    <start>#|</start>
+    <end>|#</end>
+    <style>comment</style>
+  </highlighter>
+  <highlighter type="oneline-comment">
+    ;
+  </highlighter>
+
+  <!-- string -->
+  <highlighter type="string">
+    <string>"</string>
+    <spanNewLines/>
+  </highlighter>
+
+  <!-- keyword package -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=[ \(])(:[^\s\)]+)</pattern>
+    <style>attribute</style>
+  </highlighter>
+
+  <!-- lambda list keywords -->
+  <highlighter type="word">
+    <word>&amp;allow-other-keys</word>
+    <word>&amp;aux</word>
+    <word>&amp;body</word>
+    <word>&amp;environment</word>
+    <word>&amp;key</word>
+    <word>&amp;optional</word>
+    <word>&amp;rest</word>
+    <word>&amp;whole</word>
+
+    <style>attribute</style>
+    <ignoreCase />
+  </highlighter>
+
+  <!-- emacs style highlighted names -->
+  <!-- defclass -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=defclass\s)(\S+)</pattern>
+    <style>directive</style>
+    <flags>CASE_INSENSITIVE</flags>
+  </highlighter>
+  <!-- defun -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=defun\s)(\S+)</pattern>
+    <style>directive</style>
+  </highlighter>
+  <!-- defmacro -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=defmacro\s)(\S+)</pattern>
+    <style>directive</style>
+  </highlighter>
+  <!-- defgeneric -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=defgeneric\s)(\S+)</pattern>
+    <style>directive</style>
+  </highlighter>
+  <!-- defmethod -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=defmethod\s)(\S+)</pattern>
+    <style>directive</style>
+  </highlighter>
+  <!-- defvar -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=defvar\s)(\S+)</pattern>
+    <style>directive</style>
+  </highlighter>
+  <!-- defparameter -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=defparameter\s)(\S+)</pattern>
+    <style>directive</style>
+  </highlighter>
+  <!-- defparameter -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=defconstant\s)(\S+)</pattern>
+    <style>directive</style>
+  </highlighter>
+  <!-- defstruct -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=defstruct\s)(\S+)</pattern>
+    <style>directive</style>
+  </highlighter>
+  <!-- define-condition -->
+  <highlighter type="regex">
+    <pattern>(?&lt;=define-condition\s)(\S+)</pattern>
+    <style>directive</style>
+  </highlighter>
+</highlighters>
