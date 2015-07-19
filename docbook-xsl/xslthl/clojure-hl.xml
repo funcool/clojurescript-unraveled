@@ -22,6 +22,7 @@
     <ignoreCase />
   </highlighter>
   <highlighter type="keywords">
+    <keyword>require-macros</keyword>
     <keyword>assert</keyword>
     <keyword>fn</keyword>
     <keyword>def</keyword>
@@ -34,6 +35,9 @@
     <keyword>defmulti</keyword>
     <keyword>deftype</keyword>
     <keyword>defrecord</keyword>
+    <keyword>pr-str</keyword>
+    <keyword>pr</keyword>
+    <keyword>println</keyword>
     <keyword>doseq</keyword>
     <keyword>dotimes</keyword>
     <keyword>doall</keyword>
@@ -53,12 +57,16 @@
     <keyword>reify</keyword>
     <keyword>defprotocol</keyword>
     <keyword>proxy</keyword>
+    <keyword>require</keyword>
+    <keyword>require-macros</keyword>
+    <keyword>ns</keyword>
 
     <ignoreCase />
   </highlighter>
-  <!-- with- -->
+
+  <!-- ns -->
   <highlighter type="regex">
-    <pattern>(?&lt;=\()(\S+[:])?(with-\S+)</pattern>
+    <pattern>(?&lt;=\()(\S+[:])?(ns\S+)</pattern>
     <style>keyword</style>
   </highlighter>
 
