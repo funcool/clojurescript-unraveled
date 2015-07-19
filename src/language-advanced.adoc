@@ -1203,14 +1203,3 @@ subchapter intends to expain many of these protocols and how them can be used by
 ////
 
 TBD
-
-
-=== CSP & core.async
-
-////
-Intends to be an comprensive introduction to csp and core.async. We are aware that core.async
-is not part of core of clojurescript but it is widely used and interesting concepts like that
-would be awesome to cover in the book.
-////
-
-TBD

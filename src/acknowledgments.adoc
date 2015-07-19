@@ -1,7 +1,7 @@
-Special thanks for:
+Special thanks to:
 
-* *J David Eisenberg*: For huge amount of time spend in fixing all kind of errors and
-  write intire sections of the book.
+* *J David Eisenberg*: For the huge amount of time spend in fixing all kind of errors and
+  writing entire sections of the book, as well as making very valuable suggestions.
 
 And here is an inevitably incomplete list of MUCH-APPRECIATED CONTRIBUTORS --
 people who have submitted corrections, new ideas and generally made the

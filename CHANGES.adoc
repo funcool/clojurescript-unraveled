@@ -9,6 +9,7 @@ Date: unreleased
 * Add placeholder for the "Using javascript libraries" section.
 * Improve some titles on the compiler chapter.
 * Replace mixed bag chapter with Appendix.
+* Add an almost complete appendix about CSP and core.async.
 
 
 == Version 1
