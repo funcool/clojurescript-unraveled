@@ -2065,19 +2065,70 @@ closing it using the given initial value as the seed.
 ;; Result: 6
 ----
 
-TODO: `onto-chan`
+`onto-chan` takes a channel and a collection and puts the contents of the collection into
+the channel. It closes the channel after finishing although it accepts a third argument for
+specifying if it should close it or not. Let's rewrite the `reduce` example using
+`onto-chan`:
 
-TODO: `to-chan`
+[source, clojure]
+----
+(require '[cljs.core.async :as async :refer [chan put! <! close! onto-chan]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(def in (chan))
+
+(go
+  (println "Result" (<! (async/reduce + (+) in))))
+
+(onto-chan in [0 1 2 3])
+
+;; Result: 6
+----
+
+`to-chan` takes a collection and returns a channel where it will put every value in the
+collection, closing the channel afterwards.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! to-chan]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def ch (to-chan (range 3)))
+
+(go-loop [value (<! ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! ch)))))
+
+;; [:a] Got 0
+;; [:a] Waiting for a value
+;; [:a] Got 1
+;; [:a] Waiting for a value
+;; [:a] Got 2
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
 
 TODO: `merge`
 
 ==== Higher-level abstractions
 
+TODO
+
 ===== Mixer
+
+TODO
 
 ===== Mult
 
+TODO
+
 ===== Pub-sub
+
+TODO
 
 ==== A complete example
 
