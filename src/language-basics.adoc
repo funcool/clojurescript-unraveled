@@ -587,7 +587,7 @@ Here is the previous example rewritten to use `case`:
   [code]
   (case code
     "es" "Spanish"
-    "es" "English"
+    "en" "English"
     "Unknown"))
 
 (translate-lang-code "en")
