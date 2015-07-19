@@ -2112,7 +2112,45 @@ collection, closing the channel afterwards.
 ;; [:a] I'm done!
 ----
 
-TODO: `merge`
+`merge` takes a collection of input channels and returns a channel where it will put every
+value that is put on the input channels. The returned channel will be closed when all the
+input channels have been closed. The returned channel will be unbuffered by default but a
+number or buffer can be provided as the last argument.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! merge]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in1 (chan))
+(def in2 (chan))
+(def in3 (chan))
+
+(def out (merge [in1 in2 in3]))
+
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! out)))))
+
+(put! in1 1)
+(close! in1)
+(put! in2 2)
+(close! in2)
+(put! in3 3)
+(close! in3)
+
+;; [:a] Got 3
+;; [:a] Waiting for a value
+;; [:a] Got 2
+;; [:a] Waiting for a value
+;; [:a] Got 1
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
 
 ==== Higher-level abstractions
 
