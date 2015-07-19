@@ -853,6 +853,19 @@ NOTE: This example does not means that we prefer `dommy` over the Google Closure
 fact, dommy does not have documentation, so we do not recommend use it.
 
 
+=== Using javascript libraries
+
+TBD
+
+////
+Ideas:
+
+- include javascript as is
+- include javascript libraries with modules (es6 commonjs)
+- externs generation
+////
+
+
 === Unit testing
 
 There’s not a lot to say here; testing in _ClojureScript_ consists of the same concepts as

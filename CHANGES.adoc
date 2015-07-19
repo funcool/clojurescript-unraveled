@@ -6,6 +6,7 @@ Date: unreleased
 
 * Add cover to the pdf output.
 * Add acknowledgments section.
+* Add placeholder for the "Using javascript libraries" section.
 * Improve some titles on the compiler chapter.
 * Replace mixed bag chapter with Appendix.
 
