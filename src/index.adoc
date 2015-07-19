@@ -143,6 +143,11 @@ include::language-advanced.adoc[]
 include::appendix.adoc[]
 
 
+== Acknowledgments
+
+include::acknowledgments.adoc[]
+
+
 == Further Reading
 
 Here is a list of more resources about ClojureScript.

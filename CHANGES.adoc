@@ -5,6 +5,7 @@
 Date: unreleased
 
 * Add cover to the pdf output.
+* Add acknowledgments section.
 * Replace mixed bag chapter with Appendix.
 
 
