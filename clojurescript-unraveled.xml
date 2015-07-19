@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<?asciidoc-toc maxdepth="3"?>
+<?asciidoc-toc maxdepth="2"?>
 <?asciidoc-numbered?>
 <book lang="en">
 <bookinfo>
 <title>ClojureScript Unraveled</title>
-<date>2015-07-07</date>
+<date>2015-07-19</date>
 <authorgroup>
 <author>
 <firstname>Andrey</firstname>
@@ -14,14 +14,14 @@
 </author>
 <author>
 <firstname>Alejandro</firstname>
-<surname>Gomez</surname>
+<surname>Gómez</surname>
 <email>alejandro@dialelo.com</email>
 </author>
 </authorgroup>
 <revhistory>
 <revision>
-<revnumber>1</revnumber>
-<date>2015-07-07</date>
+<revnumber>2</revnumber>
+<date>2015-07-19</date>
 <authorinitials>AA</authorinitials>
 </revision>
 </revhistory>
@@ -63,29 +63,65 @@ programming that Clojure has helped popularize, as we see a lot of value in them
 </chapter>
 <chapter id="introduction">
 <title>Introduction</title>
-<simpara>This chapter is an introduction to the Clojure ecosystem and intends to explain the
-philosophy behind it.</simpara>
-<section id="first-contact">
-<title>First contact</title>
+<blockquote>
+<attribution>
+Rich Hickey
+</attribution>
+<simpara>Why are we doing this? Because Clojure <emphasis>rocks</emphasis>, and JavaScript <emphasis>reaches</emphasis>.</simpara>
+</blockquote>
 <simpara><emphasis>ClojureScript</emphasis> is an implementation of the Clojure programming language that
 targets JavaScript. Because of this, it can run in many different execution
-environments including web browsers, Node.js, io.js, and Nashorn.</simpara>
+environments including web browsers, Node.js, io.js and Nashorn.</simpara>
 <simpara>Unlike other languages that intend to <emphasis>compile</emphasis> to JavaScript (like TypeScript,
-FunScript, or CoffeeScript), ClojureScript is designed to use JavaScript like bytecode. It embraces
-functional programming and has very safe and consistent defaults.</simpara>
-<simpara>Another big difference (and in my opinion a big advantage) over other languages is that Clojure
-is designed to be a guest. It is a language without its own virtual machine that
-can be easily adapted to the nuances of its execution environment.</simpara>
-<simpara>TBD</simpara>
-</section>
-<section id="the-pillars-of-the-language">
-<title>The pillars of the language</title>
-<simpara>TBD</simpara>
-</section>
-<section id="why-host-on-javascript">
-<title>Why host on JavaScript?</title>
-<simpara>TBD</simpara>
-</section>
+FunScript, or CoffeeScript), ClojureScript is designed to use JavaScript like bytecode.
+It embraces functional programming and has very safe and consistent defaults. Its
+semantics differ significantly from those of JavaScript.</simpara>
+<simpara>Another big difference (and in our opinion an advantage) over other languages is that
+Clojure is designed to be a guest. It is a language without its own virtual machine that
+can be easily adapted to the nuances of its execution environment. This has the
+benefit that Clojure (and hence ClojureScript) has access to all the existing
+libraries written for the host language.</simpara>
+<simpara>Before we jump in, let us summarize some of the core ideas that ClojureScript brings
+to the table. Don&#8217;t worry if you don&#8217;t understand all of them right now, they&#8217;ll become
+clear throughout the book.</simpara>
+<itemizedlist>
+<listitem>
+<simpara>ClojureScript enforces the functional programming paradigm with its design decisions
+and idioms. Although being strongly opinionated about functional programming it&#8217;s a
+pragmatic language rather than pursuing theoretical purity.</simpara>
+</listitem>
+<listitem>
+<simpara>Encourages programming with immutable data, offering highly performant and state of the
+art immutable collection implementations.</simpara>
+</listitem>
+<listitem>
+<simpara>It makes a clear distinction of identity and its state, with explicit constructs
+for managing change as a series of immutable values over time.</simpara>
+</listitem>
+<listitem>
+<simpara>It has type-based and value-based polymorphism, elegantly solving the expression
+problem.</simpara>
+</listitem>
+<listitem>
+<simpara>It is a Lisp dialect so programs are written in the programming language&#8217;s own data
+structures, a property known as <emphasis>homoiconicity</emphasis> that makes metaprogramming (programs
+that write programs) as simple as it can be.</simpara>
+</listitem>
+</itemizedlist>
+<simpara>These ideas together hava a great influence in the way you design and implement software,
+even if you are not using Clojure. Functional programming, decoupling of data (which is
+immutable) from the operations to transform it, explicit idioms for managing change
+over time and polymorphic constructs for programming to abstractions greatly simplify the
+systems we write.</simpara>
+<blockquote>
+<attribution>
+Rich Hickey
+</attribution>
+<simpara>We can make the same exact software we are making today with dramatically simpler stuff
+— dramatically simpler languages, tools, techniques, approaches.</simpara>
+</blockquote>
+<simpara>We hope you enjoy the book and ClojureScript brings the same joy and inspiration that has
+brought to us.</simpara>
 </chapter>
 <chapter id="language-the-basics">
 <title>Language (the basics)</title>
@@ -356,7 +392,7 @@ adding them.</simpara>
 <simpara>Here are some examples using the previously defined multi-arity function. Observe that
 if you call a function with the wrong number of arguments, the compiler will emit an error message.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(myinc 1)
-;; =&gt; 1
+;; =&gt; 2
 
 (myinc 1 3)
 ;; =&gt; 4
@@ -472,7 +508,7 @@ than <literal>cond</literal> or <literal>condp</literal> but has the disadvantag
   [code]
   (case code
     "es" "Spanish"
-    "es" "English"
+    "en" "English"
     "Unknown"))
 
 (translate-lang-code "en")
@@ -2158,8 +2194,8 @@ when developing using ClojureScript. It will cover:</simpara>
 </itemizedlist>
 <simpara>Unlike the previous chapter, this chapter intends to tell different stories each
 independent of the other.</simpara>
-<section id="getting-started-with-the-clojurescript-compiler">
-<title>Getting Started with the ClojureScript compiler</title>
+<section id="getting-started-with-compiler">
+<title>Getting Started with compiler</title>
 <simpara>At this point, you are surely very bored with the constant theoretical explanations about
 the language itself and will want to write and execute some code. The goal of this section
 is to provide a little practical introduction to the <emphasis>ClojureScript</emphasis> compiler.</simpara>
@@ -2188,7 +2224,7 @@ may compile code to run in the browser or in nodejs/iojs-like environments out o
 installed. <emphasis>ClojureScript</emphasis> itself only requires JDK 7, but the standalone compiler that we
 are going to use in this chapter requires JDK 8, which can be found at
 <ulink url="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</ulink></simpara>
-<simpara>You can download it using <literal>wget</literal>:</simpara>
+<simpara>You can download the latest <emphasis>ClojureScript</emphasis> compiler using <literal>wget</literal>:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">wget https://github.com/clojure/clojurescript/releases/download/r3308/cljs.jar</programlisting>
 <simpara>The <emphasis>ClojureScript</emphasis> compiler is packaged in a standalone executable jar file, so this is
 the only file (along with JDK 8) that you need to compile your <emphasis>ClojureScript</emphasis> source code
@@ -2201,6 +2237,9 @@ this example, you should have nodejs or iojs (recommended) installed.</simpara>
 <simpara>There are different ways to install iojs, but the recommended way is using nvm (node
 version manager). You can read the instructions on how to install and use nvm on its
 <ulink url="https://github.com/creationix/nvm">home page</ulink>.</simpara>
+<simpara>Then you have installed the nvm, follow installing the latest version of the iojs:</simpara>
+<programlisting language="shell" linenumbering="unnumbered">nvm install iojs-v2.3.4
+nvm alias default iojs-v2.3.4</programlisting>
 <simpara>You can test if <emphasis role="strong">iojs</emphasis> is installed in your system with this command:</simpara>
 <programlisting language="shell" linenumbering="unnumbered">$ iojs --version
 v2.3.4</programlisting>
@@ -2598,14 +2637,14 @@ the <literal>:import</literal> direcrtive. However, if you define types (classes
 primitives, you should not use <literal>:import</literal> for import them, the standard <literal>:require</literal>
 directives should be used.</simpara>
 </section>
-<section id="build-and-dependency-management-tools">
-<title>Build and Dependency management tools</title>
+<section id="dependency-managemen">
+<title>Dependency managemen</title>
 <simpara>Until now, we have used the builtin <emphasis>ClojureScript</emphasis> toolchain to compile our sources to
 JavaScript. It is OK to start using it and to understand how it works. But it is not very
 comfortable for use on big projects with dependencies to third party libraries.</simpara>
 <simpara>This chapter intends to explain how you can use <emphasis role="strong">Leiningen</emphasis>, the defacto clojure build
-and dependency management tool for build <emphasis>ClojureScript</emphasis> projects. It there an other
-growing in popularity build tool called <emphasis role="strong">boot</emphasis> but at this momenent it will not  be
+and dependency management tool, to build <emphasis>ClojureScript</emphasis> projects. There is another
+build tool called <emphasis role="strong">boot</emphasis> that is growing in popularity, but at this momenent it will not be
 covered in this book.</simpara>
 <section id="installing-leiningen">
 <title>Installing leiningen</title>
@@ -2630,17 +2669,17 @@ version of the leiningen script at the web site.</simpara>
 </section>
 <section id="first-project">
 <title>First project</title>
-<simpara>The best way to show how a tool works, is creating an toy project with it. In this case
+<simpara>The best way to show how a tool works is by creating a toy project with it. In this case
 we will go to create one little application that calculates if a year is leap or not. And
 for it, we will use the <emphasis role="strong">mies</emphasis> leiningen template.</simpara>
 <note>
-<simpara>Templates are a way that leiningen has to provide a initial layour for an
+<simpara>Templates are a way that leiningen has to provide a initial layout for an
 application or a library and clojure community has a great amount of them. In this case
 we&#8217;ll use <emphasis role="strong">mies</emphasis> template that is maintained by the clojurescript core developer. If you
-want to know more about templates, you should read the leiningen doc. Explain templates
+want to know more about templates, you should read the leiningen doc. Explaining templates
 is completely out of scope of this book.</simpara>
 </note>
-<simpara>Let start creating the project layout:</simpara>
+<simpara>Let&#8217;s start creating the project layout:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ lein new mies leapyears
 $ cd leapyears # move into newly created project directory</programlisting>
 <simpara>The project has the following structure:</simpara>
@@ -2670,7 +2709,7 @@ should be.</simpara>
     &lt;input id="year" name="year" /&gt;
   &lt;/form&gt;
 &lt;/section&gt;</programlisting>
-<simpara>And the next step is adding some code for make the form interactive. Put the following
+<simpara>And the next step is adding some code to make the form interactive. Put the following
 code into the <literal>src/leapyear/core.cljs</literal>:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(ns leapyears.core
   (:require [goog.dom :as dom]
@@ -2705,17 +2744,17 @@ code into the <literal>src/leapyear/core.cljs</literal>:</simpara>
 <simpara>you should have <literal>rlwrap</literal> installed on your system.</simpara>
 </warning>
 <simpara>Additionally to <literal>watch</literal> script, the <emphasis role="strong">mies</emphasis> template also generates a bunch of other
-scripts such as <literal>build</literal>,<literal>release</literal>,&#8230;&#8203; but for our purposes on this section them are
-completely useless. And probably after reading the compiler and repl sections you already
-will be familiarized with almost all scripts that comes with <emphasis role="strong">mies</emphasis> template.</simpara>
+scripts such as <literal>build</literal>,<literal>release</literal>,&#8230;&#8203; but for our purposes in this section they are
+completely useless. And probably after reading the compiler and repl sections, you already
+will be familiar with almost all the scripts that comes with <emphasis role="strong">mies</emphasis> template.</simpara>
 </section>
 <section id="managing-dependencies">
 <title>Managing dependencies</title>
-<simpara>The real purpose of use leiningen for clojurescript compilation process is managing
-dependencies. Because it makes this task more obvios in comparison if we should do it
+<simpara>The real purpose of use leiningen for the ClojureScript compilation process is managing
+dependencies. Because it makes this task more obvious in comparison to doing it
 manually.</simpara>
-<simpara>The dependencies, among other parameters are declared in the <literal>project.clj</literal> file and has
-this aspect (from <emphasis role="strong">mies</emphasis> template):</simpara>
+<simpara>The dependencies, among other parameters, are declared in the <literal>project.clj</literal> file and have
+this form (from <emphasis role="strong">mies</emphasis> template):</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defproject leapyears "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
@@ -2729,7 +2768,7 @@ this aspect (from <emphasis role="strong">mies</emphasis> template):</simpara>
   :source-paths ["src" "target/classes"]
   :clean-targets ["out" "release"]
   :target-path "target")</programlisting>
-<simpara>And here a little explanation of properties relevent for clojurescript:</simpara>
+<simpara>And here is a brief explanation of the properties relevant for ClojureScript:</simpara>
 <itemizedlist>
 <listitem>
 <simpara><literal>:dependencies</literal>: a vector of dependencies that your project needs.</simpara>
@@ -2738,16 +2777,16 @@ this aspect (from <emphasis role="strong">mies</emphasis> template):</simpara>
 <simpara><literal>:clean-targets</literal>: a vector of paths that <literal>lein clean</literal> should delete.</simpara>
 </listitem>
 </itemizedlist>
-<simpara>The dependencies in clojurescript are packaged using <literal>jar</literal> files. If you are coming from
-clojure or any JVM language, the <literal>jar</literal> files will be very familiar for you. But if you
-don&#8217;t familiar with them, do not worry: a jar file is like a plain zip file that contains
-the <literal>project.clj</literal> of the library, some metadata and the clojurescript sources. The
+<simpara>The dependencies in ClojureScript are packaged using <literal>jar</literal> files. If you are coming from
+Clojure or any JVM language, <literal>jar</literal> files will be very familiar to you. But if you
+aren&#8217;t familiar with them, do not worry: a .jar file is like a plain zip file that contains
+the <literal>project.clj</literal> for the library, some metadata, and the ClojureScript sources. The
 packaging will be explained in other section.</simpara>
-<simpara>The clojure packages are often published in the <ulink url="http://clojars.org">Clojars</ulink>, also you
-can found a bunch of different third party libraries on the
+<simpara>Clojure packages are often published on <ulink url="http://clojars.org">Clojars</ulink>; also you
+can find many different third party libraries on the
 <ulink url="https://github.com/clojure/clojurescript/wiki#libraries">ClojureScript Wiki</ulink>.</simpara>
-<simpara>For understand it better, we are going to replace the dom utiltiles of the google closure
-library with a third party library for interacting with the dom.</simpara>
+<simpara>To understand dependencies better, we are going to replace the DOM utiltiles of the Google Closure
+library with a third party library for interacting with the DOM.</simpara>
 <simpara>Let start adding <literal>[prismatic/dommy "1.1.0"]</literal> into the <literal>:dependencies</literal> in the
 <emphasis role="strong">project.clj</emphasis>:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">:dependencies [[org.clojure/clojure "1.7.0"]
@@ -2755,7 +2794,7 @@ library with a third party library for interacting with the dom.</simpara>
                 :exclusion [org.clojure/data.json]]
                [org.clojure/data.json "0.2.6" :classifier "aot"]
                [prismatic/dommy "1.1.0"]]</programlisting>
-<simpara>In this moment you should restart the watch process that we had started at the beginning
+<simpara>At this moment you should restart the watch process that we had started at the beginning
 of this subchapter:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ ./scripts/watch
 Retrieving prismatic/dommy/1.1.0/dommy-1.1.0.pom from clojars
@@ -2763,7 +2802,7 @@ Retrieving prismatic/dommy/1.1.0/dommy-1.1.0.jar from clojars
 Building ...
 ... done. Elapsed 0.227999601 seconds
 Watching paths: /home/niwi/cljsbook/playground/leapyears/src</programlisting>
-<simpara>You can observe that dommy dependency is successfully downloaded and then, the watch
+<simpara>You can observe that dommy dependency is successfully downloaded, and then the watch
 process is started.</simpara>
 <simpara>Now it&#8217;s time to write some code. Replace the contents of the <literal>src/leapyear/core.cljs</literal>
 with the following content:</simpara>
@@ -2791,43 +2830,47 @@ with the following content:</simpara>
       (dom/set-html! result "NO"))))
 
 (dom/listen! input :keyup on-change)</programlisting>
-<simpara>As you can observe the code now looks more in clojure friendly way. The host
+<simpara>As you can observe, the code now looks more “Clojure-friendly.” The host
 interoperabilty calls are almost hidden.</simpara>
 <note>
-<simpara>This example does not means that we prefer <literal>dommy</literal> over google closure library. In
-fact, dommy does not has documentation so we does not recommend use it.</simpara>
+<simpara>This example does not means that we prefer <literal>dommy</literal> over the Google Closure library. In
+fact, dommy does not have documentation, so we do not recommend use it.</simpara>
 </note>
 </section>
 </section>
+<section id="using-javascript-libraries">
+<title>Using javascript libraries</title>
+<simpara>TBD</simpara>
+</section>
 <section id="unit-testing">
 <title>Unit testing</title>
-<simpara>Nothing to say more, the testing in <emphasis>ClojureScript</emphasis> consists in the same concepts as
+<simpara>There’s not a lot to say here; testing in <emphasis>ClojureScript</emphasis> consists of the same concepts as
 you may know from any other language such as Clojure, Java, Python, JavaScript, etc.</simpara>
-<simpara>Regardless of the language the main objective of unit testing is run some test code
+<simpara>Regardless of the languag,e the main objective of unit testing is to run some test code
 and verify that your code behaves as expected and returns without raising unexpected
 exceptions.</simpara>
-<simpara>The immutablity of the <emphasis>ClojureScript</emphasis> in fact helps that your program will be less
-error prone, and facilitates a little bit the tests. An other advantage of <emphasis>ClojureScript</emphasis>
-is as it tends to use plain data instead of complex objects. Build "mock" objects
+<simpara>The immutablity of <emphasis>ClojureScript</emphasis> in fact helps your program to be less
+error prone and facilitates testing a little bit. Another advantage of <emphasis>ClojureScript</emphasis>
+is that it tends to use plain data instead of complex objects. Building "mock" objects
 for testing is greatly simplified.</simpara>
 <section id="first-steps">
 <title>First steps</title>
-<simpara>The "official" <emphasis>ClojureScript</emphasis> framework is builtin on its core under "cljs.test"
-namespace. It is very simple library but it should be more that enough for our purposes.</simpara>
-<simpara>There are other libraries that offers additional features or directly different approach
-for testings such as <ulink url="https://github.com/clojure/test.check">test.check</ulink>. But them
-are will not be covered in this subchapter.</simpara>
-<simpara>Start creating a new project using thew <emphasis role="strong">mies</emphasis> leiningen template for experimenting with
+<simpara>The "official" <emphasis>ClojureScript</emphasis> testing framework is built-in on its core under the "cljs.test"
+namespace. It is a very simple library, but it should be more than enough for our purposes.</simpara>
+<simpara>There are other libraries that offer additional features or directly different approaches
+for testing, such as <ulink url="https://github.com/clojure/test.check">test.check</ulink>. However, they
+will not be covered in this subchapter.</simpara>
+<simpara>Start creating a new project using the <emphasis role="strong">mies</emphasis> leiningen template for experimenting with
 tests:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ lein new mies appfortesting
 $ cd appfortesting</programlisting>
 <simpara>This project will contain the same layout as we have seen in the <emphasis role="strong">dependency management</emphasis>
-subchapter so we&#8217;ll don&#8217;t explain it again.</simpara>
+subchapter, so we won’t explain it again.</simpara>
 <simpara>The next step is a creating a directory tree for our tests:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ mkdir -p test/appfortesting
 $ touch test/appfortesting/core_tests.cljs</programlisting>
-<simpara>Also, we should adapt the existing <literal>watch.clj</literal> script for work with previously created
-tests directory:</simpara>
+<simpara>Also, we should adapt the existing <literal>watch.clj</literal> script to work with this newly created
+test directory:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.build.api :as b])
 
 (b/watch (b/inputs "test" "src")
@@ -2848,13 +2891,13 @@ sets the new entry point to the <literal>appfortesting.core_tests</literal> name
   (t/is (= 1 2)))
 
 (set! *main-cli-fn* #(t/run-tests))</programlisting>
-<simpara>The relevant part of that code snipped is:</simpara>
+<simpara>The relevant part of that code snippet is:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(t/deftest my-first-test
   (t/is (= 1 2)))</programlisting>
-<simpara>The <literal>deftest</literal> macro is basic primitive for define our tests. It takes a name as first
+<simpara>The <literal>deftest</literal> macro is a basic primitive for define our tests. It takes a name as its first
 parameter, followed of one or multiple "asserts" using the <literal>is</literal> macro. In that example,
 the assert tries check that <literal>(= 1 2)</literal> is true.</simpara>
-<simpara>Let&#8217;s try to run this. For it, firstly start the watch process:</simpara>
+<simpara>Let&#8217;s try to run this. First start the watch process:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ ./scripts/watch
 Building ...
 Analyzing jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/0.0-3308/clojurescript-0.0-3308-aot.jar!/cljs/core.cljs
@@ -2874,24 +2917,25 @@ expected: (= 1 2)
 
 Ran 1 tests containing 1 assertions.
 1 failures, 0 errors.</programlisting>
-<simpara>You can observe that expected assert failure is successfully printed in the console. For
-fix the tests, just change the <literal>=</literal> with <literal>not=</literal> and run again the file:</simpara>
+<simpara>You can observe that expected assert failure is successfully printed in the console. To
+fix the test, just change the <literal>=</literal> with <literal>not=</literal> and run again the file:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ iojs out/appfortesting.js
 
 Testing appfortesting.core-tests
 
 Ran 1 tests containing 1 assertions.
 0 failures, 0 errors.</programlisting>
-<simpara>It is pretty fine test this kind of assertions but they are not very usefull. Let&#8217;s go to
-test some application code. For it, we will use a function for check if a year is leap
+<simpara>It is fine to test these kinds of assertions, but they are not very useful. Let&#8217;s go to
+test some application code. For this, we will use a function to check if a year is leap
 or not. Then, write the following content to the <literal>src/appfortesting/core.clj</literal> file:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn leap?
   [year]
   (and (zero? (js-mod year 4))
        (pos? (js-mod year 100))
        (pos? (js-mod year 400))))</programlisting>
-<simpara>In the next place, write a new test case for check that our new functon defined in the
-<literal>appfortesting.core</literal> namespace. This is a new aspect of the <literal>core_tests.cljs</literal> file:</simpara>
+<simpara>Next, write a new test case to check that our new function defined in the
+<literal>appfortesting.core</literal> namespace works properly. This is the new content
+of the <literal>core_tests.cljs</literal> file:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(ns appfortesting.core-tests
   (:require [cljs.test :as t]
             [appfortesting.core :as core]))
@@ -2906,16 +2950,16 @@ or not. Then, write the following content to the <literal>src/appfortesting/core
   (t/is (not (core/leap? 1981))))
 
 (set! *main-cli-fn* #(t/run-tests))</programlisting>
-<simpara>You can run again the compiled file for check that the new test passes as expected.</simpara>
+<simpara>You can again run the compiled file to check that the new test passes as expected.</simpara>
 </section>
 <section id="async-testing">
 <title>Async Testing</title>
 <simpara>One of the peculiarities of <emphasis>ClojureScript</emphasis> is that is built up on asynchronous, single
-theaded execution environments, and has its own chalenges.</simpara>
-<simpara>In async execution environments we should will be able test asynchronous functions. So,
-for this case, the <emphasis>ClojureScript</emphasis> testing library offers a simply facility for do it:
-<literal>async</literal> macro. It allows create blocks that play well with asynchronous code.</simpara>
-<simpara>Before any thing, we should write a function that works in asynchronous way. And for this
+theaded execution environments, and this has its own challenges.</simpara>
+<simpara>In async execution environments we should be able test asynchronous functions. So,
+in this case, the <emphasis>ClojureScript</emphasis> testing library offers a simply facility to do it:
+the <literal>async</literal> macro. It allows you to create blocks that play well with asynchronous code.</simpara>
+<simpara>First, we need to write a function that works in an asynchronous way. For this
 purpose we will create the <literal>async-leap?</literal> predicate that will do the same operation but
 return a result using a callback:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn async-leap?
@@ -2926,19 +2970,19 @@ return a result using a callback:</simpara>
                        (pos? (js-mod year 100))
                        (pos? (js-mod year 400)))]
        (callback result)))))</programlisting>
-<simpara>The JavaScript <literal>setImmediate</literal> is used for emulate an asyncrhonous task and callback
+<simpara>The JavaScript function <literal>setImmediate</literal> is used to emulate an asyncrhonous task and the callback
 is executed with the result of that predicate.</simpara>
-<simpara>For test it, we should write a test case using the previously mentioned <literal>async</literal> macro:</simpara>
+<simpara>To test it, we should write a test case using the previously mentioned <literal>async</literal> macro:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(t/deftest my-async-test
   (t/async done
     (core/async-leap? 1980 (fn [result]
                              (t/is (true? result))
                              (done)))))</programlisting>
-<simpara>The <literal>done</literal> function exposed by the <literal>async</literal> macro should be called after asyncronous
-operation is finished and all assertions had run.</simpara>
-<simpara>It is very important execute that function once. If you execute that function twice or
-never, may cause some kind of strange behavior like execute some tests more that one time
-or skip execution of some tests.</simpara>
+<simpara>The <literal>done</literal> function exposed by the <literal>async</literal> macro should be called after the asynchronous
+operation is finished and all assertions have run.</simpara>
+<simpara>It is very important to execute that function only once. If you execute that function twice or
+never, may cause some kind of strange behavior like executing some tests more than one time
+or skipping execution of some tests.</simpara>
 </section>
 <section id="fixtures">
 <title>Fixtures</title>
@@ -2946,23 +2990,23 @@ or skip execution of some tests.</simpara>
 </section>
 <section id="integrating-with-ci">
 <title>Integrating with CI</title>
-<simpara>Most of continuous integration tools and services expectas that provided test script
-return standard exit code. But the clojurescript by default only runs the tests and output
-the results in the standard output. So the compiled file can not be used directly in
-a continuous integration tools because it does not return any return code when something
+<simpara>Most continuous integration tools and services expect that test scripts you provide
+return a standard exit code. But ClojureScript by default only runs the tests and outputs
+the results to standard output. So the compiled file can not be used directly with
+continuous integration tools because it does not return any return code when something
 fails. It always return the return code <literal>0</literal>.</simpara>
-<simpara>For fix it, we should instruct the <emphasis>ClojureScript</emphasis> test runner that when finish with
-failed state it should set the <literal>-1</literal> return code. And this can be done with this
-snipped of code:</simpara>
+<simpara>To fix this, we must instruct the <emphasis>ClojureScript</emphasis> test runner that when it finishes with
+a failed state it should set <literal>-1</literal> as a return code. This can be done with this
+snippet of code:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defmethod cljs.test/report [:cljs.test/default :end-run-tests]
   [m]
   (if (cljs.test/successful? m)
     (set! (.-exitCode js/process) 0)
     (set! (.-exitCode js/process) 1)))</programlisting>
 <simpara>This code snippet obviously supposes that you are running the tests using <emphasis role="strong">iojs</emphasis> or
-<emphasis role="strong">nodejs</emphasis>. if you are running your script in an other execution environment you should be
-aware on how we can set the exit code in that environment and modify the previous snippet
-according that.</simpara>
+<emphasis role="strong">nodejs</emphasis>. If you are running your script in another execution environment, you should be
+aware of how you can set the exit code in that environment and modify the previous snippet
+accordingly.</simpara>
 </section>
 </section>
 </chapter>
@@ -2978,8 +3022,8 @@ mandatory for understand the language.</simpara>
 <title>Data transformation</title>
 <simpara>ClojureScript offers a rich vocabulary for data transformation in terms of the sequence abstraction,
 which makes such transformations highly general and composable. Let&#8217;s see how we can combine several
-collection processing functions to build new ones, we will be using a simple problem throughout this
-section: splitting grape clusters, filtering out the rotten ones and cleaning them. We have a collection
+collection processing functions to build new ones. We will be using a simple problem throughout this
+section: splitting grape clusters, filtering out the rotten ones, and cleaning them. We have a collection
 of grape clusters like the following:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(def grape-clusters [{:grapes [{:rotten? false :clean? false}
                                {:rotten? true :clean? false}]
@@ -2988,8 +3032,8 @@ of grape clusters like the following:</simpara>
                                {:rotten? false :clean? false}]
                       :color :black}])</programlisting>
 <simpara>We are interested in splitting the grape clusters into individual grapes, discarding the rotten ones
-and cleaning the remaining grapes so they are ready for eating them. We are well-equiped in ClojureScript
-for this data transformation task, we could implement it using the familiar <literal>map</literal>, <literal>filter</literal> and <literal>mapcat</literal>
+and cleaning the remaining grapes so they are ready for eating. We are well-equipped in ClojureScript
+for this data transformation task; we could implement it using the familiar <literal>map</literal>, <literal>filter</literal> and <literal>mapcat</literal>
 functions:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn split-cluster
   [c]
@@ -3008,8 +3052,8 @@ functions:</simpara>
      (filter not-rotten)
      (map clean-grape))
 ;; =&gt; ({rotten? false :clean? true} {:rotten? false :clean? true})</programlisting>
-<simpara>In the above example we succintly solved the problem of selecting and cleaning the grapes and
-we can even abstract such transformation combining the <literal>mapcat</literal>, <literal>filter</literal> and <literal>map</literal> operations
+<simpara>In the above example we succintly solved the problem of selecting and cleaning the grapes, and
+we can even abstract such transformations by combining the <literal>mapcat</literal>, <literal>filter</literal> and <literal>map</literal> operations
 using partial application and function composition:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(def process-clusters
   (comp
@@ -3019,12 +3063,12 @@ using partial application and function composition:</simpara>
 
 (process-clusters grape-clusters)
 ;; =&gt; ({rotten? false :clean? true} {:rotten? false :clean? true})</programlisting>
-<simpara>The code is very clean but it has a few problems. For example, each call to <literal>map</literal>, <literal>filter</literal> and
-<literal>mapcat</literal> consumes and produces a sequence that, although lazy, generate intermediate results
+<simpara>The code is very clean, but it has a few problems. For example, each call to <literal>map</literal>, <literal>filter</literal> and
+<literal>mapcat</literal> consumes and produces a sequence that, although lazy, generates intermediate results
 that will be discarded. Each sequence is fed to the next step, which also returns a
-sequence. Wouldn&#8217;t be great if we did the transformation in a single transversal of the <literal>grape-cluster</literal>
+sequence. Wouldn&#8217;t be great if we could do the transformation in a single transversal of the <literal>grape-cluster</literal>
 collection?</simpara>
-<simpara>Another problem is that even though our <literal>process-clusters</literal> function works with any sequence we
+<simpara>Another problem is that even though our <literal>process-clusters</literal> function works with any sequence, we
 can&#8217;t reuse it with anything that is not a sequence. Imagine that instead of having the grape cluster
 collection available in memory it is being pushed to us asynchronously in a stream. In that situation
 we couldn&#8217;t reuse <literal>process-clusters</literal> since usually <literal>map</literal>, <literal>filter</literal> and <literal>mapcat</literal> have concrete
@@ -3032,14 +3076,14 @@ implementations depending on the type.</simpara>
 </section>
 <section id="generalizing-to-process-transformations">
 <title>Generalizing to process transformations</title>
-<simpara>The process of mapping, filtering or mapcatting isn&#8217;t necesarily tied to a concrete type but we
+<simpara>The process of mapping, filtering or mapcatting isn&#8217;t necesarily tied to a concrete type, but we
 keep reimplementing them for different types. Let&#8217;s see how we can generalize such processes to
-be context independent. We&#8217;ll start implementing naive versions of <literal>map</literal> and <literal>filter</literal> first to
+be context independent. We&#8217;ll start by implementing naive versions of <literal>map</literal> and <literal>filter</literal> first to
 see how they work internally:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn my-map
   [f coll]
   (when-let [s (seq coll)]
-    (cons (f (first s)) (map f (rest s)))))
+    (cons (f (first s)) (my-map f (rest s)))))
 
 (my-map inc [0 1 2])
 ;; =&gt; (1 2 3)
@@ -3050,8 +3094,8 @@ see how they work internally:</simpara>
     (let [f (first s)
           r (rest s)]
       (if (pred f)
-        (cons f (filter pred r))
-        (filter pred r)))))
+        (cons f (my-filter pred r))
+        (my-filter pred r)))))
 
 (my-filter odd? [0 1 2])
 ;; =&gt; (1)</programlisting>
@@ -3085,8 +3129,8 @@ that is reducible, not just sequences. However you may have noticed that, even t
 don&#8217;t know anything about the source (<literal>coll</literal>) they are still tied to the output they produce (a vector) both
 with the initial value of the reduce (<literal>[]</literal>) and the hardcoded <literal>conj</literal> operation in the body of the reducing
 function. We could have accumulated results in another data structure, for example a lazy sequence, but
-we&#8217;d have to rewrite the functions for doing so.</simpara>
-<simpara>How can we make these functions truly generic? They shouldn&#8217;t know about neither the source of inputs they
+we&#8217;d have to rewrite the functions in order to do so.</simpara>
+<simpara>How can we make these functions truly generic? They shouldn&#8217;t know about either the source of inputs they
 are transforming nor the output that is generated. Have you noticed that <literal>conj</literal> is just another reducing
 function? It takes an accumulator and an input and returns another accumulator. So, if we parameterise
 the reducing function that <literal>my-mapr</literal> and <literal>my-filterr</literal> use, they won&#8217;t know anything about the type of the
@@ -3097,7 +3141,7 @@ result they are building. Let&#8217;s give it a shot:</simpara>
     (fn [acc input]           ;; transformed reducing function, now it maps `f`!
       (rfn acc (f input)))))
 
-(def incer (my-mapr inc))
+(def incer (my-mapt inc))
 
 (reduce (incer conj) [] [0 1 2])
 ;; =&gt; [1 2 3]
@@ -3115,11 +3159,11 @@ result they are building. Let&#8217;s give it a shot:</simpara>
 (reduce (only-odds conj) [] [0 1 2])
 ;; =&gt; [1]</programlisting>
 <simpara>That&#8217;s a lot of higher-order functions so let&#8217;s break it down for a better understanding of what&#8217;s going
-on. We&#8217;ll examine how <literal>my-mapt</literal> works step by step, the mechanics are similar for <literal>my-filtert</literal> so we&#8217;ll
+on. We&#8217;ll examine how <literal>my-mapt</literal> works step by step. The mechanics are similar for <literal>my-filtert</literal>, so we&#8217;ll
 leave it out for now.</simpara>
-<simpara>First of all, <literal>my-mapt</literal> takes a mapping function, in the example we are giving it <literal>inc</literal> and getting
+<simpara>First of all, <literal>my-mapt</literal> takes a mapping function; in the example we are giving it <literal>inc</literal> and getting
 another function back. Let&#8217;s replace <literal>f</literal> with <literal>inc</literal> to see what we are building:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def incer (my-mapr inc))
+<programlisting language="clojure" linenumbering="unnumbered">(def incer (my-mapt inc))
 ;; (fn [rfn]
 ;;   (fn [acc input]
 ;;     (rfn acc (inc input))))
@@ -3132,7 +3176,7 @@ let&#8217;s see what happens when we call it with <literal>conj</literal>:</simp
 ;;    ^^^^</programlisting>
 <simpara>We get back a reducing function which uses <literal>inc</literal> to transform the inputs and the <literal>conj</literal> reducing function
 to accumulate the results. In essence, we have defined map as the transformation of a reducing function.
-The functions that transforms a reducing function into another are called transducers in ClojureScript.</simpara>
+The functions that transform one reducing function into another are called transducers in ClojureScript.</simpara>
 <simpara>To ilustrate the generality of transducers, let&#8217;s use different sources and destinations in our call
 to <literal>reduce</literal>:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(reduce (incer str) "" [0 1 2])
@@ -3145,7 +3189,7 @@ destination but don&#8217;t know anything about where the inputs come from and w
 implementation they contain the <emphasis>essence</emphasis> of what they accomplish, independent of context.</simpara>
 <simpara>Now that we know more about transducers we can try to implement our own version of <literal>mapcat</literal>. We already have
 a fundamental piece of it: the <literal>map</literal> transducer. What <literal>mapcat</literal> does is map a function over an input and flatten
-the resulting structure one level. Let&#8217;s try to implemt the catenation part as a transducer:</simpara>
+the resulting structure one level. Let&#8217;s try to implement the catenation part as a transducer:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn my-cat
   [rfn]
   (fn [acc input]
@@ -3153,7 +3197,7 @@ the resulting structure one level. Let&#8217;s try to implemt the catenation par
 
 (reduce (my-cat conj) [] [[0 1 2] [3 4 5]])
 ;; =&gt; [0 1 2 3 4 5]</programlisting>
-<simpara>The <literal>cat</literal> transducer returns a reducing function that catenates its inputs into the accumulator. It does so
+<simpara>The <literal>my-cat</literal> transducer returns a reducing function that catenates its inputs into the accumulator. It does so
 reducing the <literal>input</literal> reducible with the <literal>rfn</literal> reducing function and using the accumulator (<literal>acc</literal>) as the
 initial value for such reduction. <literal>mapcat</literal> is simply the composition of <literal>map</literal> and <literal>cat</literal>. The order in which
 transducers are composed may seem backwards but it&#8217;ll become clear in a moment.</simpara>
@@ -3230,9 +3274,9 @@ that supports arity 0. Let&#8217;s explore some others:</simpara>
 
 (= identity (comp))
 ;; =&gt; true</programlisting>
-<simpara>The reducing function returned by transducers must support the arity 0 as well, which will tipically delegate
+<simpara>The reducing function returned by transducers must support the arity 0 as well, which will typically delegate
 to the transformed reducing function. There is no sensible implementation of the arity 0 for the transducers
-we have implemented so far so we&#8217;ll simply call the reducing function without arguments. Here&#8217;s how our
+we have implemented so far, so we&#8217;ll simply call the reducing function without arguments. Here&#8217;s how our
 modified <literal>my-mapt</literal> could look like:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn my-mapt
   [f]
@@ -3250,14 +3294,14 @@ our already defined <literal>process-clusters</literal> transducer:</simpara>
 </section>
 <section id="stateful-transducers">
 <title>Stateful transducers</title>
-<simpara>So far we&#8217;ve only seen purely functional transducers, they don&#8217;t have any implicit state and are very
-predictable. However, there are many data transformation functions that are inherently stateful like
+<simpara>So far we&#8217;ve only seen purely functional transducer; they don&#8217;t have any implicit state and are very
+predictable. However, there are many data transformation functions that are inherently stateful, like
 <literal>take</literal>. <literal>take</literal> receives a number <literal>n</literal> of elements to keep and a collection and returns a collection with at
 most <literal>n</literal> elements.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(take 10 (range 100))
 ;; =&gt; (0 1 2 3 4 5 6 7 8 9)</programlisting>
 <simpara>Let&#8217;s step back for a bit and learn about the early termination of the <literal>reduce</literal> function. We can wrap an
-accumulator in a type called <literal>Reduced</literal> for telling <literal>reduce</literal> that the reduction process should terminate
+accumulator in a type called <literal>reduced</literal> for telling <literal>reduce</literal> that the reduction process should terminate
 immediately. Let&#8217;s see an example of a reduction that aggregates the inputs in a collection and finishes
 as soon as there are 10 elements in the accumulator:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(reduce (fn [acc input]
@@ -3271,7 +3315,7 @@ as soon as there are 10 elements in the accumulator:</simpara>
 Note that stateful transducers may need to do some cleanup before the process terminates, so they
 must support an arity 1 as a "completion" step. Usually, like with arity 0, this arity will simply delegate
 to the transformed reducing function&#8217;s arity 1.</simpara>
-<simpara>Knowing this we are able to write stateful transducers like <literal>take</literal>, we&#8217;ll be using mutable state internally
+<simpara>Knowing this we are able to write stateful transducers like <literal>take</literal>. We&#8217;ll be using mutable state internally
 for tracking the number of inputs we have seen so far, and wrap the accumulator in a <literal>reduced</literal> as soon as
 we&#8217;ve seen enough elements:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn my-take
@@ -3383,8 +3427,8 @@ collection and our transformation. We can create an eduction with the <literal>e
 </section>
 <section id="more-transducers-in-clojurescript-core">
 <title>More transducers in ClojureScript core</title>
-<simpara>We learned about <literal>map</literal>, <literal>filter</literal>, <literal>mapcat</literal>, <literal>take</literal> and <literal>partition-all</literal> but there are a lot more transducers
-available in ClojureScript, here is an incomplete list of some other intersting ones:</simpara>
+<simpara>We learned about <literal>map</literal>, <literal>filter</literal>, <literal>mapcat</literal>, <literal>take</literal> and <literal>partition-all</literal>, but there are a lot more transducers
+available in ClojureScript. Here is an incomplete list of some other intersting ones:</simpara>
 <itemizedlist>
 <listitem>
 <simpara><literal>drop</literal> is the dual of <literal>take</literal>, dropping up to <literal>n</literal> values before passing inputs to the reducing function</simpara>
@@ -3422,11 +3466,11 @@ for you:</simpara>
 <section id="transducible-processes">
 <title>Transducible processes</title>
 <simpara>A transducible process is any process that is defined in terms of a succession of steps ingesting input values.
-The source of input varies from one process to another, most of our examples dealt with inputs from a collection
-or a lazy sequence but it could be an asynchronous stream of values or a <literal>core.async</literal> channel. The outputs produced
+The source of input varies from one process to another. Most of our examples dealt with inputs from a collection
+or a lazy sequence, but it could be an asynchronous stream of values or a <literal>core.async</literal> channel. The outputs produced
 by each step are also different for every process; <literal>into</literal> creates a collection with every output of the transducer,
-<literal>sequence</literal> yields a lazy sequence and asynchronous streams would probably push the outputs to their listeners.</simpara>
-<simpara>For improving our understanding of transducible processes we&#8217;re going to implement an unbounded queue, since adding
+<literal>sequence</literal> yields a lazy sequence, and asynchronous streams would probably push the outputs to their listeners.</simpara>
+<simpara>In order to improve our understanding of transducible processes, we&#8217;re going to implement an unbounded queue, since adding
 values to a queue can be thought in terms of a succession of steps ingesting input. First of all we&#8217;ll define a
 protocol and a data type that implements the unbounded queue:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defprotocol Queue
@@ -3654,7 +3698,223 @@ interface although it uses mutation internally:</simpara>
 </section>
 <section id="metadata">
 <title>Metadata</title>
-<simpara>TBD</simpara>
+<simpara>ClojureScript symbols, vars and persistent collections support attaching metadata to them. Metadata is
+a map with information about the entity it&#8217;s attached to. The ClojureScript compiler uses metadata for
+several purposes such as type hints, and the metadata system can be used by tooling, library and application
+developers too.</simpara>
+<simpara>There may not be many cases in day-to-day ClojureScript programming where you need metadata, but it is a
+nice language feature to have and know about; it may come in handy at some point. It makes things like
+runtime code introspection and documentation generation very easy. You&#8217;ll see why throughout this section.</simpara>
+<section id="vars-3">
+<title>Vars</title>
+<simpara>Let&#8217;s define a var and see what metadata is attached to it by default. Note that this code is executed in
+a REPL, and thus the metadata of a var defined in a source file may vary. We&#8217;ll use the <literal>meta</literal> function to
+retrieve the metadata of the given value:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def answer-to-everything 42)
+;; =&gt; 42
+
+#'answer-to-everything
+;; =&gt; #'cljs.user/answer-to-everyhing
+
+(meta #'answer-to-everything)
+;; =&gt; {:ns cljs.user,
+;;     :name answer-to-everything,
+;;     :file "NO_SOURCE_FILE",
+;;     :source "answer-to-everything",
+;;     :column 6,
+;;     :end-column 26,
+;;     :line 1,
+;;     :end-line 1,
+;;     :arglists (),
+;;     :doc nil,
+;;     :test nil}</programlisting>
+<simpara>Few things to note here. First of all, <literal>#'answer-to-everything</literal> gives us a reference to the <literal>Var</literal> that holds
+the value of the <literal>answer-to-everything</literal> symbol. We see that it includes information about the namespace (<literal>:ns</literal>) in
+which it was defined, its name, file (although, since it was defined at a REPL doesn&#8217;t have a source file),
+source, position in the file where it was defined, argument list (which only makes sense for functions),
+documentation string and test function.</simpara>
+<simpara>Let&#8217;s take a look at a function var&#8217;s metadata:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn add
+  "A function that adds two numbers."
+  [x y]
+  (+ x y))
+
+(meta #'add)
+;; =&gt; {:ns cljs.user,
+;;     :name add,
+;;     :file "NO_SOURCE_FILE",
+;;     :source "add",
+;;     :column 7,
+;;     :end-column 10,
+;;     :line 1,
+;;     :end-line 1,
+;;     :arglists (quote ([x y])),
+;;     :doc "A function that adds two numbers.",
+;;     :test nil}</programlisting>
+<simpara>We see that the argument lists are stored in the <literal>:arglists</literal> field of the var&#8217;s metadata and its documentation
+in the <literal>:doc</literal> field. We&#8217;ll now define a test function to learn about what <literal>:test</literal> is used for:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.test :as t])
+
+(t/deftest i-pass
+  (t/is true))
+
+(meta #'i-pass)
+;; =&gt; {:ns cljs.user,
+;;     :name i-pass,
+;;     :file "NO_SOURCE_FILE",
+;;     :source "i-pass",
+;;     :column 12,
+;;     :end-column 18,
+;;     :line 1,
+;;     :end-line 1,
+;;     :arglists (),
+;;     :doc "A function that adds two numbers.",
+;;     :test #&lt;function (){ ... }&gt;}</programlisting>
+<simpara>The <literal>:test</literal> attribute (truncated for brevity) in the <literal>i-pass</literal> var&#8217;s metadata is a test function. This is used
+by the <literal>cljs.test</literal> library for discovering and running tests in the namespaces you tell it to.</simpara>
+</section>
+<section id="values">
+<title>Values</title>
+<simpara>We learned that vars can have metadata and what kind of metadata is added to them for consumption by the
+compiler and the <literal>cljs.test</literal> testing library. Persistent collections can have metadata too, although they don&#8217;t
+have any by default. We can use the <literal>with-meta</literal> function to derive an object with the same value and type with
+the given metadata attached. Let&#8217;s see how:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def map-without-metadata {:language "ClojureScript"})
+;; =&gt; {:language "ClojureScript"}
+
+(meta map-without-metadata)
+;; =&gt; nil
+
+(def map-with-metadata (with-meta map-without-metadata
+                                  {:answer-to-everything 42}))
+;; =&gt; {:language "ClojureScript"}
+
+(meta map-with-metadata)
+;; =&gt; {:answer-to-everything 42}
+
+(= map-with-metadata
+   map-without-metadata)
+;; =&gt; true
+
+(identical? map-with-metadata
+            map-without-metadata)
+;; =&gt; false</programlisting>
+<simpara>It shouldn&#8217;t come as a surprise that metadata doesn&#8217;t affect equality between two data structures since
+equality in ClojureScript is based on value. Another interesting thing is that <literal>with-meta</literal> creates another
+object of the same type and value as the given one and attaches the given metadata to it.</simpara>
+<simpara>Another open question is what happens with metadata when deriving new values from a persistent data structure.
+Let&#8217;s find out:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def derived-map (assoc map-with-metadata :language "Clojure"))
+;; =&gt; {:language "Clojure"}
+
+(meta derived-map)
+;; =&gt; {:answer-to-everything 42}</programlisting>
+<simpara>As you can see in the example above, metadata is preserved in derived versions of persistent data structures. There
+are some subtleties, though. As long as the functions that derive new data structures return collections with the
+same type, metadata will be preserved; this is not true if the types change due to the transformation. To
+ilustrate this point, let&#8217;s see what happens when we derive a seq or a subvector from a vector:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def v (with-meta [0 1 2 3] {:foo :bar}))
+;; =&gt; [0 1 2 3]
+
+(def sv (subvec v 0 2))
+;; =&gt; [0 1]
+
+(meta sv)
+;; =&gt; nil
+
+(meta (seq v))
+;; =&gt; nil</programlisting>
+</section>
+<section id="syntax-for-metadata">
+<title>Syntax for metadata</title>
+<simpara>The ClojureScript reader has syntactic support for metadata annotations, which can be written in different ways. We
+can prepend var definitions or collections with a caret (<literal>^</literal>) followed by a map for annotating it with the given
+metadata map:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def ^{:doc "The answer to Life, Universe and Everything."} answer-to-everything 42)
+;; =&gt; 42
+
+(meta #'answer-to-everything)
+;; =&gt; {:ns cljs.user,
+;;     :name answer-to-everything,
+;;     :file "NO_SOURCE_FILE",
+;;     :source "answer-to-everything",
+;;     :column 6,
+;;     :end-column 26,
+;;     :line 1,
+;;     :end-line 1,
+;;     :arglists (),
+;;     :doc "The answer to Life, Universe and Everything.",
+;;     :test nil}
+
+(def map-with-metadata ^{:answer-to-everything 42} {:language "ClojureScript"})
+;; =&gt; {:language "ClojureScript"}
+
+(meta map-with-metadata)
+;; =&gt; {:answer-to-everything 42}</programlisting>
+<simpara>Notice how the metadata given in the <literal>answer-to-everything</literal> var definition is merged with the var metadata.</simpara>
+<simpara>A very common use of metadata is to set certain keys to a <literal>true</literal> value. For example we may want to add to a
+var&#8217;s metadata that the variable is dynamic or a constant. For such cases, we have a shorthand notation that
+uses a caret followed by a keyword. Here are some examples:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def ^:dynamic *foo* 42)
+;; =&gt; 42
+
+(:dynamic (meta #'*foo*))
+;; =&gt; true
+
+(def ^:foo ^:bar answer 42)
+;; =&gt; 42
+
+(select-keys (meta #'answer) [:foo :bar])
+;; =&gt; {:foo true, :bar true}</programlisting>
+<simpara>There is another shorthand notation for attaching metadata. If we use a caret followed by a symbol it will
+be added to the metadata map under the <literal>:tag</literal> key. Using tags such as <literal>^boolean</literal> gives the ClojureScript
+compiler hints about the type of expressions or function return types.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn ^boolean will-it-blend? [_] true)
+;; =&gt; #&lt;function ... &gt;
+
+(:tag (meta #'will-it-blend?))
+;; =&gt; boolean
+
+(not ^boolean (js/isNaN js/NaN))
+;; =&gt; false</programlisting>
+</section>
+<section id="functions-for-working-with-metadata">
+<title>Functions for working with metadata</title>
+<simpara>We&#8217;ve learned about <literal>meta</literal> and <literal>with-meta</literal> so far but ClojureScript offers a few functions for transforming
+metadata. There is <literal>vary-meta</literal> which is similar to <literal>with-meta</literal> in that it derives a new object with the same
+type and value as the original but it doesn&#8217;t take the metadata to attach directly. Instead, it takes a function
+to apply to the metadata of the given object to transform it for deriving new metadata. This is how it works:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def map-with-metadata ^{:foo 40} {:language "ClojureScript"})
+;; =&gt; {:language "ClojureScript"}
+
+(meta map-with-metadata)
+;; =&gt; {:foo 40}
+
+(def derived-map (vary-meta map-with-metadata update :foo + 2))
+;; =&gt; {:language "ClojureScript"}
+
+(meta derived-map)
+;; =&gt; {:foo 42}</programlisting>
+<simpara>If instead we want to change the metadata of an existing var or value we can use <literal>alter-meta!</literal> for changing it
+by applying a function or <literal>reset-meta!</literal> for replacing it with another map:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def map-with-metadata ^{:foo 40} {:language "ClojureScript"})
+;; =&gt; {:language "ClojureScript"}
+
+(meta map-with-metadata)
+;; =&gt; {:foo 40}
+
+(alter-meta! map-with-metadata update :foo + 2)
+;; =&gt; {:foo 42}
+
+(meta map-with-metadata)
+;; =&gt; {:foo 42}
+
+(reset-meta! map-with-metadata {:foo 40})
+;; =&gt; {:foo 40}
+
+(meta map-with-metadata)
+;; =&gt; {:foo 40}</programlisting>
+</section>
 </section>
 <section id="macros">
 <title>Macros</title>
@@ -3664,45 +3924,11 @@ interface although it uses mutation internally:</simpara>
 <title>Core protocols</title>
 <simpara>TBD</simpara>
 </section>
-<section id="csp-core-async">
-<title>CSP &amp; core.async</title>
-<simpara>TBD</simpara>
-</section>
 </chapter>
-<chapter id="mixed-bag">
-<title>Mixed Bag</title>
-<simpara>This chapter will cover miscellaneous topics that are not classified in the previous ones.
-This is a "catchall" section and will touch on a bunch of heterogeneous topics like:</simpara>
-<itemizedlist>
-<listitem>
-<simpara>Repl based development with figwheel.</simpara>
-</listitem>
-<listitem>
-<simpara>Working with promises.</simpara>
-</listitem>
-<listitem>
-<simpara>Error handling using the <emphasis>cats</emphasis> library.</simpara>
-</listitem>
-<listitem>
-<simpara>Pattern matching with the <emphasis>core.match</emphasis> library.</simpara>
-</listitem>
-<listitem>
-<simpara>Web development using the Om library.</simpara>
-</listitem>
-<listitem>
-<simpara>Share code between Clojure and ClojureScript.</simpara>
-</listitem>
-</itemizedlist>
-<section id="modularizing-your-code">
-<title>Modularizing your code</title>
-<simpara>TBD</simpara>
-</section>
-<section id="developing-a-library">
-<title>Developing a library</title>
-<simpara>TBD</simpara>
-</section>
-<section id="development-with-figwheel">
-<title>Development with figwheel</title>
+<chapter id="appendix">
+<title>Appendix</title>
+<section id="appendix-a-interactive-development-with-figwheel">
+<title>Appendix A: Interactive development with Figwheel</title>
 <section id="introduction-3">
 <title>Introduction</title>
 <simpara>In this project, we will <emphasis role="strong">not</emphasis> do “Hello World”&#8212; that has been done to death.
@@ -3839,25 +4065,22 @@ step up from plain ClojureScript.</simpara>
             [goog.events :as events]))</programlisting>
 <simpara>Getting an element and setting its value is slightly easier. Do this in the REPL
 and see the results in the browser window.</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">cljs.user=&gt; (in-ns 'age.core)
-age.core=&gt; (def y (dom/getElement "years"))
-#&lt;[object HTMLInputElement]&gt;
+<programlisting language="clojure" linenumbering="unnumbered">(in-ns 'age.core)
+(def y (dom/getElement "years"))
+;; =&gt; #&lt;[object HTMLInputElement]&gt;
 
-age.core=&gt; (set! (.-value y) "26")
-"26"
+(set! (.-value y) "26")
+;; =&gt; "26"
 
-age.core=&gt; (dom/setTextContent (dom/getElement "feedback") "This works!")</programlisting>
+(dom/setTextContent (dom/getElement "feedback") "This works!")</programlisting>
 <simpara>To add an event, you define a function that takes a single argument (the event to
 be handled), and then tell the appropriate HTML element to listen for it. the
 <literal>events/listen</literal> function takes three arguments: the element to listen to, the
 event to listen for, and the function that will handle the event.</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">age.core=&gt; (defn testing [evt] (js/alert "Responding to click"))
-#&lt;function age$core$testing(evt){
-return alert("Responding to click");
-}&gt;
+<programlisting language="clojure" linenumbering="unnumbered">(defn testing [evt] (js/alert "Responding to click"))
 
-age.core=&gt; (events/listen (dom/getElement "calculate") "click" testing)
-#&lt;[object Object]&gt;</programlisting>
+(events/listen (dom/getElement "calculate") "click" testing)
+;; =&gt; #&lt;[object Object]&gt;</programlisting>
 <simpara>After doing this, the browser should respond to a click on the button.
 If you would like to remove the listener, use <literal>unlisten</literal>.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(events/unlisten (dom/getElement "calculate") "click" testing)
@@ -3881,26 +4104,865 @@ If you would like to remove the listener, use <literal>unlisten</literal>.</simp
 (events/listen (dom/getElement "calculate") "click" calculate)</programlisting>
 </section>
 </section>
-<section id="working-with-promises">
-<title>Working with promises.</title>
-<simpara>TBD</simpara>
+<section id="appendix-b-csp-and-core-async">
+<title>Appendix B: CSP and core.async</title>
+<simpara>CSP stands for Communicating Sequential Processes, which is a formalism for describing
+concurrent systems pioneered by C. A. R. Hoare in 1978. It is a concurrency model based
+on message passing and synchronization through channels. An in-depth look at the
+theoretical model behind CSP is out of the scope of this book, instead we&#8217;ll focus on
+presenting the concurrency primitives that <literal>core.async</literal> offers.</simpara>
+<simpara><literal>core.async</literal> is not part of ClojureScript core but it&#8217;s implemented as a library. Even
+though is not part of the core language it&#8217;s widely used and many libraries build on top
+of its primitives so we think is worth covering in the book. It&#8217;s also a good example of
+the syntactic abstractions that can be achieved transforming code with ClojureScript
+macros, so let&#8217;s jump right in. You&#8217;ll need to have <literal>core.async</literal> installed to run the
+examples presented in this section.</simpara>
+<section id="channels">
+<title>Channels</title>
+<simpara>Channels are like conveyor belts, we can put and take a single value at a time from them.
+They can have multiple readers and writers and are the message-passing primitive of
+<literal>core.async</literal>. Let&#8217;s create a channel do some operations on it:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take!]])
+
+(enable-console-print!)
+
+(def ch (chan))
+
+(take! ch #(println "Got a value:" %))
+;; =&gt; nil
+
+;; there is a now a pending take operation, let's put something on the channel
+
+(put! ch 42)
+;; Got a value: 42
+;; =&gt; 42</programlisting>
+<simpara>In the above example we created a channel (<literal>ch</literal>) using the <literal>chan</literal> constructor. After that
+we performed a take operation on the channel, providing a callback that will be invoked
+when the take operation succeeds. After using <literal>put!</literal> to put a value on the channel the
+take operation completed and the <literal>"Got a value: 42"</literal> string was printed. Note that <literal>put!</literal>
+returned the value that was just put to the channel.</simpara>
+<simpara>The <literal>put!</literal> function also accepts a callback like <literal>take!</literal> does but we didn&#8217;t provide any in
+the last example. For puts the callback will be called whenever the value we provided has
+been taken. Puts and takes can happen in any order, let&#8217;s do a few puts followed by
+takes to illustrate the point:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan))
+
+(put! ch 42 #(println "Just put 42"))
+;; =&gt; true
+(put! ch 43 #(println "Just put 43"))
+;; =&gt; true
+
+(take! ch #(println "Got" %))
+;; Got 42
+;; Just put 42
+;; =&gt; nil
+
+(take! ch #(println "Got" %))
+;; Got 43
+;; Just put 43
+;; =&gt; nil</programlisting>
+<simpara>You may be asking yourself why the <literal>put!</literal> operations return <literal>true</literal>. It signals that the
+put operation could be performed, even though the value hasn&#8217;t yet been taken. Channels
+can be closed, which will cause the put operations to not succeed:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! close!]])
+
+(def ch (chan))
+
+(close! ch)
+;; =&gt; nil
+
+(put! ch 42)
+;; =&gt; false</programlisting>
+<simpara>The above example was the simplest possible situation but what happens with pending
+operations when a channel is closed? Let&#8217;s do a few takes and close the channel and see
+what happens:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take! close!]])
+
+(def ch (chan))
+
+(take! ch #(println "Got value:" %))
+;; =&gt; nil
+(take! ch #(println "Got value:" %))
+;; =&gt; nil
+
+(close! ch)
+;; Got value: nil
+;; Got value: nil
+;; =&gt; nil</programlisting>
+<simpara>We see that if the channel is closed all the <literal>take!</literal> operations receive a <literal>nil</literal> value.
+<literal>nil</literal> in channels is a sentinel value that signals to takers that the channel has been
+closed. Because of that, putting a <literal>nil</literal> value on a channel is not allowed:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put!]])
+
+(def ch (chan))
+
+(put! ch 42)
+;; Error: Assert failed: Can't put nil in on a channel</programlisting>
+<section id="buffers">
+<title>Buffers</title>
+<simpara>We&#8217;ve seen that pending take and put operations are enqueued in a channel but, what
+happens when there are many pending take or put operations? Let&#8217;s find out by hammering a
+channel with many puts and takes:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan))
+
+(dotimes [n 1025]
+  (put! ch n))
+;; Error: Assert failed: No more than 1024 pending puts are allowed on a single channel.
+
+(def ch (chan))
+
+(dotimes [n 1025]
+  (take! ch #(println "Got" %)))
+;; Error: Assert failed: No more than 1024 pending takes are allowed on a single channel.</programlisting>
+<simpara>As the example above shows there&#8217;s a limit of pending puts or takes on a channel, it&#8217;s
+currently 1024 but that is an implementation detail that may change. Note that there can&#8217;t
+be both pending puts and pending takes on a channel since puts will immediately succeed
+if there are pending takes and viceversa.</simpara>
+<simpara>Channels support buffering of put operations. If we create a channel with a buffer the put
+operations will succeed immediately if there&#8217;s room in the buffer and be enqueued
+otherwise. Let&#8217;s illustrate the point creating a channel with a buffer of one element. The
+<literal>chan</literal> constructors accepts a number as its first argument which will cause it to have
+a buffer with the given size:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan 1))
+
+(put! ch 42 #(println "Put succeeded!"))
+;; Put succeeded!
+;; =&gt; true
+
+(dotimes [n 1024]
+  (put! ch n))
+;; =&gt; nil
+
+(put! ch 42)
+;; Error: Assert failed: No more than 1024 pending puts are allowed on a single channel.</programlisting>
+<simpara>What happened in the example above? We created a channel with a buffer of size 1 and
+performed a put operation on it that succeeded immediately because the value was buffered.
+After that we did another 1024 puts to fill the pending put queue and, when trying to put
+one value more the channel complained about not being able to enqueue more puts.</simpara>
+<simpara>Now that we know about how channels work and what are buffers used for let&#8217;s explore the
+different buffers that <literal>core.async</literal> implements. Different buffers have different policies
+and it&#8217;s interesting to know all of them to know when to use what. Channels are unbuffered
+by default.</simpara>
+<section id="fixed">
+<title>Fixed</title>
+<simpara>The fixed size buffer is the one that is created when we give the <literal>chan</literal> constructor a
+number and it will have the size specified by the given number. It is the simplest
+possible buffer: when full, puts will be enqueued.</simpara>
+<simpara>The <literal>chan</literal> constructor accepts either a number or a buffer as its first argument. The two
+channels created in the following example both use a fixed buffer of size 32:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan buffer]])
+
+(def a-ch (chan 32))
+
+(def another-ch (chan (buffer 32)))</programlisting>
 </section>
-<section id="error-handling-using-monads-and-cats">
-<title>Error handling using monads and Cats.</title>
-<simpara>TBD</simpara>
+<section id="dropping">
+<title>Dropping</title>
+<simpara>The fixed buffer allows put operations to be enqueued. However, as we saw before, puts
+are still queued when the fixed buffer is full. If we wan&#8217;t to discard the put operations
+that happen when the buffer is full we can use a dropping buffer.</simpara>
+<simpara>Dropping buffers have a fixed size and, when they are full puts will complete but their
+value will be discarded. Let&#8217;s illustrate the point with an example:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan dropping-buffer put! take!]])
+
+(def ch (chan (dropping-buffer 2)))
+
+(put! ch 40)
+;; =&gt; true
+(put! ch 41)
+;; =&gt; true
+(put! ch 42)
+;; =&gt; true
+
+(take! ch #(println "Got" %))
+;; Got 40
+;; =&gt; nil
+(take! ch #(println "Got" %))
+;; Got 41
+;; =&gt; nil
+(take! ch #(println "Got" %))
+;; =&gt; nil</programlisting>
+<simpara>We performed three put operations and the three of them succeded but, since the dropping
+buffer of the channel has size 2, only the first two values were delivered to the takers.
+As you can observe the third take is enqueued since there is no value available, the third
+put&#8217;s value (42) was discarded.</simpara>
 </section>
-<section id="pattern-matching-using-core-match">
-<title>Pattern matching using core.match.</title>
-<simpara>TBD</simpara>
+<section id="sliding">
+<title>Sliding</title>
+<simpara>The sliding buffer has the opposite policy than the dropping buffer. When full puts will
+complete and the oldest value will be discarded in favor of the new one. The sliding
+buffer is useful when we are interested in processing the last puts only and we can afford
+discarding old values.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan sliding-buffer put! take!]])
+
+(def ch (chan (sliding-buffer 2)))
+
+(put! ch 40)
+;; =&gt; true
+(put! ch 41)
+;; =&gt; true
+(put! ch 42)
+;; =&gt; true
+
+(take! ch #(println "Got" %))
+;; Got 41
+;; =&gt; nil
+(take! ch #(println "Got" %))
+;; Got 42
+;; =&gt; nil
+(take! ch #(println "Got" %))
+;; =&gt; nil</programlisting>
+<simpara>We performed three put operations and the three of them succeded but, since the sliding
+buffer of the channel has size 2, only the last two values were delivered to the takers.
+As you can observe the third take is enqueued since there is no value available since the
+first put&#8217;s value was discarded.</simpara>
 </section>
-<section id="web-development-with-reagent">
-<title>Web development with Reagent.</title>
-<simpara>TBD</simpara>
 </section>
-<section id="writing-libraries-that-shares-code-between-clojure-and-clojurescript">
-<title>Writing libraries that shares code between Clojure and ClojureScript.</title>
-<simpara>TBD</simpara>
+<section id="transducers-2">
+<title>Transducers</title>
+<simpara>As mentioned in the section about transducers, putting values in a channel can be thought
+as a transducible process. This means that we can create channels and hand them a
+transducer, giving us the ability to transform the input values before being put in the
+channel.</simpara>
+<simpara>If we want to use a transducer with a channel we must supply a buffer since the reducing
+function that will be modified by the transducer will be the buffer&#8217;s add function.
+A buffer&#8217;s add function is a reducing function since it takes a buffer and an input and
+returns a buffer with such input incorporated.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan 1 (map inc)))
+
+(put! ch 41)
+;; =&gt; true
+
+(take! ch #(println "Got" %))
+;; Got 42
+;; =&gt; nil</programlisting>
+<simpara>You may be wondering what happens to a channel when the reducing function returns a
+reduced value. It turns out that the notion of termination for channels is being closed,
+so channels will be closed when a reduced value is encountered:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan 1 (take 2)))
+
+(take! ch #(println "Got" %))
+;; =&gt; nil
+(take! ch #(println "Got" %))
+;; =&gt; nil
+(take! ch #(println "Got" %))
+;; =&gt; nil
+
+(put! ch 41)
+;; =&gt; true
+(put! ch 42)
+;; Got 41
+;; =&gt; true
+(put! ch 43)
+;; Got 42
+;; Got nil
+;; =&gt; false</programlisting>
+<simpara>We used the <literal>take</literal> stateful transducer to allow maximum 2 puts into the channel. We then
+performed three take operations on the channel and we expect only two to receive a value.
+As you can see in the above example the third take got the sentinel <literal>nil</literal> value which
+indicates that the channel was closed. Also, the third put operation returned <literal>false</literal>
+indicating that it didn&#8217;t take place.</simpara>
 </section>
+<section id="handling-exceptions">
+<title>Handling exceptions</title>
+<simpara>If adding a value to a buffer throws an exception <literal>core.async</literal> the operation will fail and
+the exception will be logged to the console. However, channel constructors accept a third
+argument: a function for handling exceptions.</simpara>
+<simpara>When creating a channel with an exception handler it will be called with the exception
+whenever an exception occurs. If the handler returns <literal>nil</literal> the operation will fail
+silently and if it returns another value the add operation will be retried with such
+value.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take!]])
+
+(enable-console-print!)
+
+(defn exception-xform
+  [rfn]
+  (fn [acc input]
+    (throw (js/Error. "I fail!"))))
+
+(defn handle-exception
+  [ex]
+  (println "Exception message:" (.-message ex))
+  42)
+
+(def ch (chan 1 exception-xform handle-exception))
+
+(put! ch 0)
+;; Exception message: I fail!
+;; =&gt; true
+
+(take! ch #(println "Got:" %))
+;; Got: 42
+;; =&gt; nil</programlisting>
+</section>
+<section id="offer-and-poll">
+<title>Offer and Poll</title>
+<simpara>We&#8217;ve learned about the two basic operations on channels so far: <literal>put!</literal> and <literal>take!</literal>. They
+either take or put a value and are enqueued if they can&#8217;t be performed immediately. Both
+functions are asynchronous because of the nature: they can succeed but be completed at a
+later time.</simpara>
+<simpara><literal>core.async</literal> has two synchronous operations for putting or taking values: <literal>offer!</literal> and
+<literal>poll!</literal>. These two operations will only succeed if they can be completed immediately. This
+means that <literal>offer!</literal> can only succeed when there are pending takes and <literal>poll!</literal> when there
+are pending puts.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take! offer! poll!]])
+
+;; TODO: wait for core.async release for documenting offer! and poll!</programlisting>
+</section>
+</section>
+<section id="processes">
+<title>Processes</title>
+<simpara>We learned all about channels but there is still a missing piece in the puzzle: processes.
+Processes are pieces of logic that run independently and use channels for communication
+and coordination. Puts and takes inside a process will stop the process until the
+operation completes. Stopping a process doesn&#8217;t block the only thread we have in the
+environments where ClojureScript runs. Instead, it will be resumed at a later time when
+the operation is waiting for has been performed.</simpara>
+<simpara>Processes are launched using the <literal>go</literal> macro and puts and takes use the <literal>&lt;!</literal> and <literal>&gt;!</literal>
+placeholders. The <literal>go</literal> macro rewrites your code to use callbacks but inside <literal>go</literal>
+everything looks like synchronous code, which makes understanding it straightforward:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan &lt;! &gt;!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def ch (chan))
+
+(go
+  (println [:a] "Gonna take from channel")
+  (println [:a] "Got" (&lt;! ch)))
+
+(go
+  (println [:b] "Gonna put on channel")
+  (&gt;! ch 42)
+  (println [:b] "Just put 42"))
+
+;; [:a] Gonna take from channel
+;; [:b] Gonna put on channel
+;; [:b] Just put 42
+;; [:a] Got 42</programlisting>
+<simpara>In the above example we are launching a process with <literal>go</literal> that takes a value from <literal>ch</literal> and
+prints it to the console. Since the value isn&#8217;t immediately available it will park until
+it can resume. After that we launch another process that puts a value on the channel.
+Since there is a pending take the put operation succeeds and the value is delivered to
+the first process, then both processes terminate.</simpara>
+<simpara>Both <literal>go</literal> blocks run independently and, even though they are executed asynchronously, they
+look like they synchronous code. The above go blocks are fairly simple but being able to
+write concurrent processes that coordinate via channels is a very powerful tool for
+implementing complex asynchronous workflows. Channels also offer a great decoupling of
+producers and consumers.</simpara>
+<simpara>Processes can wait for an arbitrary amount of time too, there is a <literal>timeout</literal> function
+that return a channel that will be closed after the given amount of miliseconds. Combining
+a timeout channel with a take operation inside a go block gives us the ability to sleep:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [&lt;! timeout]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(defn seconds
+  []
+  (.getSeconds (js/Date.)))
+
+(println "Launching go block")
+
+(go
+  (println [:a] "Gonna take a nap" (seconds))
+  (&lt;! (timeout 1000))
+  (println [:a] "I slept one second, bye!" (seconds)))
+
+(println "Block launched")
+
+;; Launching go block
+;; Block launched
+;; [:a] Gonna take a nap 9
+;; [:a] I slept one second, bye! 10</programlisting>
+<simpara>As we can see in the messages printed, the process does nothing for one second when it
+blocks in the take operation of the timeout channel. The program continues and after one
+second the process resumes and terminates.</simpara>
+<section id="choice">
+<title>Choice</title>
+<simpara>Apart from putting and taking one value at a time inside a go block we can also make a
+non-deterministic choice on multiple channel operations using <literal>alts!</literal>. <literal>alts!</literal> is given
+a series of channel put or take operations (note that we can also try to put and take in
+a channel at the same time) and only performs one as soon as is ready; if multiple
+operations can be performed when calling <literal>alts!</literal> it will do a pseudo random choice by
+default.</simpara>
+<simpara>We can easily try an operation on a channel and cancel it after a certain amount of time
+combining the <literal>timeout</literal> function and <literal>alts!</literal>. Let&#8217;s see how:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan &lt;! timeout alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def ch (chan))
+
+(go
+  (println [:a] "Gonna take a nap")
+  (&lt;! (timeout 1000))
+  (println [:a] "I slept one second, trying to put a value on channel")
+  (&gt;! ch 42)
+  (println [:a] "I'm done!"))
+
+(go
+  (println [:b] "Gonna try taking from channel")
+  (let [cancel (timeout 300)
+        [value ch] (alts! [ch cancel])]
+    (if (= ch cancel)
+      (println [:b] "Too slow, take from channel cancelled")
+      (println [:b] "Got" value))))
+
+;; [:a] Gonna take a nap
+;; [:b] Gonna try taking from channel
+;; [:b] Too slow, take from channel cancelled
+;; [:a] I slept one second, trying to put a value on channel</programlisting>
+<simpara>In the example above we launched a go block that, after waiting for a second, puts a value
+in the <literal>ch</literal> channel. The other go block creates a <literal>cancel</literal> channel, which will be closed
+after 300 miliseconds. After that, it tries to read from both <literal>ch</literal> and <literal>cancel</literal> at the same
+time using <literal>alts!</literal>, which will succeed whenever it can take a value from either of those
+channels. Since <literal>cancel</literal> is closed after 300 miliseconds, <literal>alts!</literal> will succeed since takes
+from closed channel return the <literal>nil</literal> sentinel. Note that <literal>alts!</literal> returns a two-element
+vector with the returned value of the operation and the channel where it was performed.
+This is why we are able to detect whether the read operation was performed in the <literal>cancel</literal>
+channel or in <literal>ch</literal>. I suggest you copy this example and set the first process timeout to
+100 miliseconds to see how the read operation on <literal>ch</literal> succeeds.</simpara>
+<simpara>We&#8217;ve learned how to choose between read operations so let&#8217;s look at how to express a
+conditional write operation in <literal>alts!</literal>. Since we need to provide the channel and a value
+to try to put on it, we&#8217;ll use a two element vector with the channel and the value for
+representing write operations. Let&#8217;s see an example:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan &lt;! alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def a-ch (chan))
+(def another-ch (chan))
+
+(go
+  (println [:a] "Take a value from `a-ch`")
+  (println [:a] "Got" (&lt;! a-ch))
+  (println [:a] "I'm done!"))
+
+(go
+  (println [:b] "Take a value from `another-ch`")
+  (println [:a] "Got" (&lt;! another-ch))
+  (println [:b] "I'm done!"))
+
+(go
+  (println [:c] "Gonna try putting in both channels simultaneously")
+  (let [[value ch] (alts! [[a-ch 42]
+                           [another-ch 99]])]
+    (if (= ch a-ch)
+      (println [:c] "Put a value in `a-ch`")
+      (println [:c] "Put a value in `another-ch`"))))
+
+;; [:a] Take a value from `a-ch`
+;; [:b] Take a value from `another-ch`
+;; [:c] Gonna try putting in both channels simultaneously
+;; [:c] Put a value in `a-ch`
+;; [:a] Got 42
+;; [:a] I'm done!</programlisting>
+<simpara>When running the above example only the put operation on the <literal>a-ch</literal> channel has succeeded.
+Since both channels are ready to take a value when the <literal>alts!</literal> occurs you may get
+different results when running this code.</simpara>
+</section>
+<section id="priority">
+<title>Priority</title>
+<simpara><literal>alts!</literal> default is to make a non-deterministic choice whenever several operations are
+ready to be performed. We can instead give priority to the operations passing the
+<literal>:priority</literal> option to <literal>alts!</literal>. Whenever <literal>:priority</literal> is <literal>true</literal>, if more than one operation
+is ready they will be tried in order.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan &gt;! alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def a-ch (chan))
+(def another-ch (chan))
+
+(go
+  (println [:a] "Put a value on `a-ch`")
+  (&gt;! a-ch 42)
+  (println [:a] "I'm done!"))
+
+(go
+  (println [:b] "Put a value on `another-ch`")
+  (&gt;! another-ch 99)
+  (println [:b] "I'm done!"))
+
+(go
+  (println [:c] "Gonna try taking from both channels with priority")
+  (let [[value ch] (alts! [a-ch another-ch] :priority true)]
+    (if (= ch a-ch)
+      (println [:c] "Got" value "from `a-ch`")
+      (println [:c] "Got" value "from `another-ch`"))))
+
+;; [:a] Put a value on `a-ch`
+;; [:a] I'm done!
+;; [:b] Put a value on `another-ch`
+;; [:b] I'm done!
+;; [:c] Gonna try taking from both channels with priority
+;; [:c] Got 42 from `a-ch`</programlisting>
+<simpara>Since both <literal>a-ch</literal> and <literal>another-ch</literal> had a value to read when the <literal>alts!</literal> was executed and
+we set the <literal>:priority</literal> option to true, <literal>a-ch</literal> has preference. You can try deleting the
+<literal>:priority</literal> option and running the example multiple times to see that, without priority,
+<literal>alts!</literal> makes a non-deterministic choice.</simpara>
+</section>
+<section id="defaults">
+<title>Defaults</title>
+<simpara>Another interesting bit of <literal>alts!</literal> is that it can return immediately if no operation is
+ready and we provide a default value. We can conditionally do a choice on the operations
+if and only if any of them is ready, returning a default value if it&#8217;s not.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(def a-ch (chan))
+(def another-ch (chan))
+
+(go
+  (println [:a] "Gonna try taking from any of the channels without blocking")
+  (let [[value ch] (alts! [a-ch another-ch] :default :not-ready)]
+    (if (and (= value :not-ready)
+             (= ch :default))
+      (println [:a] "No operation is ready, aborting")
+      (println [:a] "Got" value))))
+
+;; [:a] Gonna try taking from any of the channels without blocking
+;; [:a] No operation is ready, aborting</programlisting>
+<simpara>As you can see in the above example, if no operation is ready the value returned by
+<literal>alts!</literal> is the one we supplied after the <literal>:default</literal> key when calling it and the channel is
+the <literal>:default</literal> keyword itself.</simpara>
+</section>
+</section>
+<section id="combinators">
+<title>Combinators</title>
+<simpara>Now that we&#8217;re acquainted with channels and processes it&#8217;s time to explore some interesting
+combinators for working with channels that are present in <literal>core.async</literal>. This section
+includes a brief description of all of them together with a simple example of their usage.</simpara>
+<simpara><literal>pipe</literal> takes an input and output channels and pipes all the values put on the input channel
+to the output one. The output channel is closed whenever the source is closed unless we
+provide a <literal>false</literal> third argument:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan pipe put! &lt;! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def out (chan))
+
+(pipe in out)
+
+(go-loop [value (&lt;! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (&lt;! out)))))
+
+(put! in 0)
+;; =&gt; true
+(put! in 1)
+;; =&gt; true
+(close! in)
+
+;; [:a] Got 0
+;; [:a] Waiting for a value
+;; [:a] Got 1
+;; [:a] Waiting for a value
+;; [:a] I'm done!</programlisting>
+<simpara>In the above example we used the <literal>go-loop</literal> macro for reading values recursively until the
+<literal>out</literal> channel is closed. Notice that when we close the <literal>in</literal> channel the <literal>out</literal> channel is
+closed too, making the <literal>go-loop</literal> terminate.</simpara>
+<simpara><literal>pipeline-async</literal> takes a number for controlling parallelism, an output channel, an
+asynchronous function and an input channel. The asynchronous function has two arguments:
+the value put in the input channel and a channel where it should put the result of its
+asynchronous operation, closing the result channel after finishing. The number controls
+the number of concurrent go blocks that will be used for calling the asynchronous function
+with the inputs.</simpara>
+<simpara>The output channel will receive outputs in an order relative to the input channel,
+regardless the time each asynchronous function call takes to complete. It has an optional
+last parameter that controls whether the output channel will be closed when the input
+channel is closed, which defaults to <literal>true</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan pipeline-async put! &lt;! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def out (chan))
+(def parallelism 3)
+
+(defn wait-and-put [value ch]
+  (let [wait (rand-int 1000)]
+    (js/setTimeout (fn []
+                     (println "Waiting" wait "miliseconds for value" value)
+                     (put! ch wait)
+                     (close! ch))
+                   wait)))
+
+(pipeline-async parallelism out wait-and-put in)
+
+(go-loop [value (&lt;! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (&lt;! out)))))
+
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; Waiting 164 miliseconds for value 3
+;; Waiting 304 miliseconds for value 2
+;; Waiting 908 miliseconds for value 1
+;; [:a] Got 908
+;; [:a] Waiting for a value
+;; [:a] Got 304
+;; [:a] Waiting for a value
+;; [:a] Got 164
+;; [:a] Waiting for a value
+;; [:a] I'm done!</programlisting>
+<simpara><literal>pipeline</literal> is similar to <literal>pipeline-async</literal> but instead of taking and asynchronous function
+it takes a transducer instead. The transducer will be applied independently to each input.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan pipeline put! &lt;! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def out (chan))
+(def parallelism 3)
+
+(pipeline parallelism out (map inc) in)
+
+(go-loop [value (&lt;! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (&lt;! out)))))
+
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; [:a] Got 2
+;; [:a] Waiting for a value
+;; [:a] Got 3
+;; [:a] Waiting for a value
+;; [:a] Got 4
+;; [:a] Waiting for a value
+;; [:a] I'm done!</programlisting>
+<simpara><literal>split</literal> takes a predicate and a channel and returns a vector with two channels, the first
+of which will receive the values for which the predicate is true, the second will receive
+those for which the predicate is false. We can optionally pass a buffer or number for the
+channels with the third (true channel) and fourth (false channel) arguments.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan split put! &lt;! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def chans (split even? in))
+(def even-ch (first chans))
+(def odd-ch (second chans))
+
+(go-loop [value (&lt;! even-ch)]
+  (if (nil? value)
+    (println [:evens] "I'm done!")
+    (do
+      (println [:evens] "Got" value)
+      (println [:evens] "Waiting for a value")
+      (recur (&lt;! even-ch)))))
+
+(go-loop [value (&lt;! odd-ch)]
+  (if (nil? value)
+    (println [:odds] "I'm done!")
+    (do
+      (println [:odds] "Got" value)
+      (println [:odds] "Waiting for a value")
+      (recur (&lt;! odd-ch)))))
+
+(put! in 0)
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; [:evens] Got 0
+;; [:evens] Waiting for a value
+;; [:odds] Got 1
+;; [:odds] Waiting for a value
+;; [:odds] Got 3
+;; [:odds] Waiting for a value
+;; [:evens] Got 2
+;; [:evens] Waiting for a value
+;; [:evens] I'm done!
+;; [:odds] I'm done!</programlisting>
+<simpara><literal>reduce</literal> takes a reducing function, initial value and an input channel. It returns a
+channel with the result of reducing over all the values put on the input channel before
+closing it using the given initial value as the seed.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :as async :refer [chan put! &lt;! close!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(def in (chan))
+
+(go
+  (println "Result" (&lt;! (async/reduce + (+) in))))
+
+(put! in 0)
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; Result: 6</programlisting>
+<simpara><literal>onto-chan</literal> takes a channel and a collection and puts the contents of the collection into
+the channel. It closes the channel after finishing although it accepts a third argument for
+specifying if it should close it or not. Let&#8217;s rewrite the <literal>reduce</literal> example using
+<literal>onto-chan</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :as async :refer [chan put! &lt;! close! onto-chan]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(def in (chan))
+
+(go
+  (println "Result" (&lt;! (async/reduce + (+) in))))
+
+(onto-chan in [0 1 2 3])
+
+;; Result: 6</programlisting>
+<simpara><literal>to-chan</literal> takes a collection and returns a channel where it will put every value in the
+collection, closing the channel afterwards.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! &lt;! close! to-chan]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def ch (to-chan (range 3)))
+
+(go-loop [value (&lt;! ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (&lt;! ch)))))
+
+;; [:a] Got 0
+;; [:a] Waiting for a value
+;; [:a] Got 1
+;; [:a] Waiting for a value
+;; [:a] Got 2
+;; [:a] Waiting for a value
+;; [:a] I'm done!</programlisting>
+<simpara><literal>merge</literal> takes a collection of input channels and returns a channel where it will put every
+value that is put on the input channels. The returned channel will be closed when all the
+input channels have been closed. The returned channel will be unbuffered by default but a
+number or buffer can be provided as the last argument.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! &lt;! close! merge]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in1 (chan))
+(def in2 (chan))
+(def in3 (chan))
+
+(def out (merge [in1 in2 in3]))
+
+(go-loop [value (&lt;! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (&lt;! out)))))
+
+(put! in1 1)
+(close! in1)
+(put! in2 2)
+(close! in2)
+(put! in3 3)
+(close! in3)
+
+;; [:a] Got 3
+;; [:a] Waiting for a value
+;; [:a] Got 2
+;; [:a] Waiting for a value
+;; [:a] Got 1
+;; [:a] Waiting for a value
+;; [:a] I'm done!</programlisting>
+</section>
+<section id="higher-level-abstractions">
+<title>Higher-level abstractions</title>
+<simpara>TODO</simpara>
+<section id="mixer">
+<title>Mixer</title>
+<simpara>TODO</simpara>
+</section>
+<section id="mult">
+<title>Mult</title>
+<simpara>TODO</simpara>
+</section>
+<section id="pub-sub">
+<title>Pub-sub</title>
+<simpara>TODO</simpara>
+</section>
+</section>
+<section id="a-complete-example">
+<title>A complete example</title>
+<simpara>TODO: an example of a non-trivial task accomplished using processes and channels</simpara>
+</section>
+</section>
+</chapter>
+<chapter id="acknowledgments">
+<title>Acknowledgments</title>
+<simpara>Special thanks to:</simpara>
+<itemizedlist>
+<listitem>
+<simpara><emphasis role="strong">J David Eisenberg</emphasis>: For the huge amount of time spend in fixing all kind of errors and
+writing entire sections of the book, as well as making very valuable suggestions.</simpara>
+</listitem>
+</itemizedlist>
+<simpara>And here is an inevitably incomplete list of MUCH-APPRECIATED CONTRIBUTORS&#8201;&#8212;&#8201;people who have submitted corrections, new ideas and generally made the
+<emphasis>ClojureScript Unraveled</emphasis> book much better:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Anler Hernández Peral (@anler)</simpara>
+</listitem>
+<listitem>
+<simpara>Diego Sevilla Ruiz (@dsevilla)</simpara>
+</listitem>
+<listitem>
+<simpara>Eduardo Ferro Aldama (@eferro)</simpara>
+</listitem>
+<listitem>
+<simpara>Tyler Anderson (@Tyler-Anderson)</simpara>
+</listitem>
+<listitem>
+<simpara>Chris Ulrich (@chrisulrich)</simpara>
+</listitem>
+<listitem>
+<simpara>Jean Hadrien Chabran (@jhchabran)</simpara>
+</listitem>
+<listitem>
+<simpara>Tienson Qin (@tiensonqin)</simpara>
+</listitem>
+<listitem>
+<simpara>FungusHumungus (@FungusHumungus),</simpara>
+</listitem>
+<listitem>
+<simpara>Chris Charles (@ccharles)</simpara>
+</listitem>
+<listitem>
+<simpara>Jearvon Dharrie (@iamjarvo)</simpara>
+</listitem>
+</itemizedlist>
 </chapter>
 <chapter id="further-reading">
 <title>Further Reading</title>

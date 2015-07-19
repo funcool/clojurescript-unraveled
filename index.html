@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"/><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="generator" content="Asciidoctor 1.5.2"/>
-<meta name="author" content="Andrey Antukh, Alejandro Gomez"/>
+<meta name="author" content="Andrey Antukh, Alejandro Gómez"/>
 <title>ClojureScript Unraveled</title>
 <style>
 /*! normalize.css v2.1.2 | MIT License | git.io/normalize */
@@ -847,10 +847,10 @@ p { margin-bottom: 1.25rem; }
 <div class="details">
 <span id="author" class="author">Andrey Antukh</span><br/>
 <span id="email" class="email"><a href="mailto:niwi@niwi.nz">niwi@niwi.nz</a></span><br/>
-<span id="author2" class="author">Alejandro Gomez</span><br/>
+<span id="author2" class="author">Alejandro Gómez</span><br/>
 <span id="email2" class="email"><a href="mailto:alejandro@dialelo.com">alejandro@dialelo.com</a></span><br/>
-<span id="revnumber">version 1,</span>
-<span id="revdate">2015-07-17</span>
+<span id="revnumber">version 2,</span>
+<span id="revdate">2015-07-19</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -860,171 +860,48 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#language-the-basics">3. Language (the basics)</a>
 <ul class="sectlevel2">
 <li><a href="#first-steps-with-lisp-syntax">3.1. First steps with Lisp syntax</a></li>
-<li><a href="#the-base-data-types">3.2. The base data types</a>
-<ul class="sectlevel3">
-<li><a href="#numbers">3.2.1. Numbers</a></li>
-<li><a href="#keywords">3.2.2. Keywords</a></li>
-<li><a href="#symbols">3.2.3. Symbols</a></li>
-<li><a href="#strings">3.2.4. Strings</a></li>
-<li><a href="#characters">3.2.5. Characters</a></li>
-<li><a href="#collections">3.2.6. Collections</a></li>
-</ul>
-</li>
+<li><a href="#the-base-data-types">3.2. The base data types</a></li>
 <li><a href="#vars">3.3. Vars</a></li>
-<li><a href="#function-section">3.4. Functions</a>
-<ul class="sectlevel3">
-<li><a href="#the-first-contact">3.4.1. The first contact</a></li>
-<li><a href="#defining-your-own-functions">3.4.2. Defining your own functions</a></li>
-<li><a href="#functions-with-multiple-arities">3.4.3. Functions with multiple arities</a></li>
-<li><a href="#variadic-functions">3.4.4. Variadic functions</a></li>
-<li><a href="#short-syntax-for-anonymous-functions">3.4.5. Short syntax for anonymous functions</a></li>
-</ul>
-</li>
-<li><a href="#flow-control">3.5. Flow control</a>
-<ul class="sectlevel3">
-<li><a href="#branching-with-code-if-code">3.5.1. Branching with <code>if</code></a></li>
-<li><a href="#branching-with-code-cond-code">3.5.2. Branching with <code>cond</code></a></li>
-<li><a href="#branching-with-code-case-code">3.5.3. Branching with <code>case</code></a></li>
-</ul>
-</li>
-<li><a href="#locals-blocks-and-loops">3.6. Locals, Blocks, and Loops</a>
-<ul class="sectlevel3">
-<li><a href="#locals">3.6.1. Locals</a></li>
-<li><a href="#blocks">3.6.2. Blocks</a></li>
-<li><a href="#loops">3.6.3. Loops</a></li>
-</ul>
-</li>
-<li><a href="#collection-types">3.7. Collection types</a>
-<ul class="sectlevel3">
-<li><a href="#immutable-and-persistent">3.7.1. Immutable and persistent</a></li>
-<li><a href="#the-sequence-abstraction">3.7.2. The sequence abstraction</a></li>
-<li><a href="#collections-in-depth">3.7.3. Collections in depth</a></li>
-</ul>
-</li>
+<li><a href="#function-section">3.4. Functions</a></li>
+<li><a href="#flow-control">3.5. Flow control</a></li>
+<li><a href="#locals-blocks-and-loops">3.6. Locals, Blocks, and Loops</a></li>
+<li><a href="#collection-types">3.7. Collection types</a></li>
 <li><a href="#destructuring">3.8. Destructuring</a></li>
-<li><a href="#namespace-section">3.9. Namespaces</a>
-<ul class="sectlevel3">
-<li><a href="#defining-a-namespace">3.9.1. Defining a namespace</a></li>
-<li><a href="#loading-other-namespaces">3.9.2. Loading other namespaces</a></li>
-</ul>
-</li>
-<li><a href="#abstractions-and-polymorphism">3.10. Abstractions and Polymorphism</a>
-<ul class="sectlevel3">
-<li><a href="#protocols">3.10.1. Protocols</a></li>
-<li><a href="#multimethods">3.10.2. Multimethods</a></li>
-<li><a href="#hierarchies">3.10.3. Hierarchies</a></li>
-</ul>
-</li>
-<li><a href="#data-types">3.11. Data types</a>
-<ul class="sectlevel3">
-<li><a href="#deftype">3.11.1. Deftype</a></li>
-<li><a href="#defrecord">3.11.2. Defrecord</a></li>
-<li><a href="#implementing-protocols">3.11.3. Implementing protocols</a></li>
-<li><a href="#reify">3.11.4. Reify</a></li>
-</ul>
-</li>
-<li><a href="#host-interoperability">3.12. Host interoperability</a>
-<ul class="sectlevel3">
-<li><a href="#the-types">3.12.1. The types</a></li>
-<li><a href="#interacting-with-platform-types">3.12.2. Interacting with platform types</a></li>
-</ul>
-</li>
+<li><a href="#namespace-section">3.9. Namespaces</a></li>
+<li><a href="#abstractions-and-polymorphism">3.10. Abstractions and Polymorphism</a></li>
+<li><a href="#data-types">3.11. Data types</a></li>
+<li><a href="#host-interoperability">3.12. Host interoperability</a></li>
 <li><a href="#truthiness">3.13. Truthiness</a></li>
-<li><a href="#state-management">3.14. State management</a>
-<ul class="sectlevel3">
-<li><a href="#vars-2">3.14.1. Vars</a></li>
-<li><a href="#atoms">3.14.2. Atoms</a></li>
-<li><a href="#volatiles">3.14.3. Volatiles</a></li>
-</ul>
-</li>
+<li><a href="#state-management">3.14. State management</a></li>
 </ul>
 </li>
 <li><a href="#tooling-compiler">4. Tooling &amp; Compiler</a>
 <ul class="sectlevel2">
-<li><a href="#getting-started-with-the-clojurescript-compiler">4.1. Getting Started with the ClojureScript compiler</a>
-<ul class="sectlevel3">
-<li><a href="#execution-environments">4.1.1. Execution environments</a></li>
-<li><a href="#download-the-compiler">4.1.2. Download the compiler</a></li>
-<li><a href="#compile-for-nodejs-iojs">4.1.3. Compile for nodejs/iojs</a></li>
-<li><a href="#compile-for-the-browser">4.1.4. Compile for the Browser</a></li>
-<li><a href="#watch-process">4.1.5. Watch process</a></li>
-<li><a href="#optimization-levels">4.1.6. Optimization levels</a></li>
-</ul>
-</li>
-<li><a href="#working-with-the-repl">4.2. Working with the REPL</a>
-<ul class="sectlevel3">
-<li><a href="#introduction-2">4.2.1. Introduction</a></li>
-<li><a href="#nashorn-repl">4.2.2. Nashorn REPL</a></li>
-<li><a href="#node-repl">4.2.3. Node REPL</a></li>
-<li><a href="#browser-repl">4.2.4. Browser REPL</a></li>
-</ul>
-</li>
+<li><a href="#getting-started-with-compiler">4.1. Getting Started with compiler</a></li>
+<li><a href="#working-with-the-repl">4.2. Working with the REPL</a></li>
 <li><a href="#the-closure-library">4.3. The Closure Library</a></li>
-<li><a href="#build-and-dependency-management-tools">4.4. Build and Dependency management tools</a>
-<ul class="sectlevel3">
-<li><a href="#installing-leiningen">4.4.1. Installing leiningen</a></li>
-<li><a href="#first-project">4.4.2. First project</a></li>
-<li><a href="#managing-dependencies">4.4.3. Managing dependencies</a></li>
-</ul>
-</li>
-<li><a href="#unit-testing">4.5. Unit testing</a>
-<ul class="sectlevel3">
-<li><a href="#first-steps">4.5.1. First steps</a></li>
-<li><a href="#async-testing">4.5.2. Async Testing</a></li>
-<li><a href="#fixtures">4.5.3. Fixtures</a></li>
-<li><a href="#integrating-with-ci">4.5.4. Integrating with CI</a></li>
-</ul>
-</li>
+<li><a href="#dependency-managemen">4.4. Dependency managemen</a></li>
+<li><a href="#using-javascript-libraries">4.5. Using javascript libraries</a></li>
+<li><a href="#unit-testing">4.6. Unit testing</a></li>
 </ul>
 </li>
 <li><a href="#language-advanced-topics">5. Language (advanced topics)</a>
 <ul class="sectlevel2">
-<li><a href="#transducers">5.1. Transducers</a>
-<ul class="sectlevel3">
-<li><a href="#data-transformation">5.1.1. Data transformation</a></li>
-<li><a href="#generalizing-to-process-transformations">5.1.2. Generalizing to process transformations</a></li>
-<li><a href="#transducers-in-clojurescript-core">5.1.3. Transducers in ClojureScript core</a></li>
-<li><a href="#initialisation">5.1.4. Initialisation</a></li>
-<li><a href="#stateful-transducers">5.1.5. Stateful transducers</a></li>
-<li><a href="#eductions">5.1.6. Eductions</a></li>
-<li><a href="#more-transducers-in-clojurescript-core">5.1.7. More transducers in ClojureScript core</a></li>
-<li><a href="#defining-our-own-transducers">5.1.8. Defining our own transducers</a></li>
-<li><a href="#transducible-processes">5.1.9. Transducible processes</a></li>
-</ul>
-</li>
+<li><a href="#transducers">5.1. Transducers</a></li>
 <li><a href="#transients">5.2. Transients</a></li>
-<li><a href="#metadata">5.3. Metadata</a>
-<ul class="sectlevel3">
-<li><a href="#vars-3">5.3.1. Vars</a></li>
-<li><a href="#values">5.3.2. Values</a></li>
-<li><a href="#syntax-for-metadata">5.3.3. Syntax for metadata</a></li>
-<li><a href="#functions-for-working-with-metadata">5.3.4. Functions for working with metadata</a></li>
-</ul>
-</li>
+<li><a href="#metadata">5.3. Metadata</a></li>
 <li><a href="#macros">5.4. Macros</a></li>
 <li><a href="#core-protocols">5.5. Core protocols</a></li>
-<li><a href="#csp-core-async">5.6. CSP &amp; core.async</a></li>
 </ul>
 </li>
-<li><a href="#mixed-bag">6. Mixed Bag</a>
+<li><a href="#appendix">6. Appendix</a>
 <ul class="sectlevel2">
-<li><a href="#modularizing-your-code">6.1. Modularizing your code</a></li>
-<li><a href="#developing-a-library">6.2. Developing a library</a></li>
-<li><a href="#development-with-figwheel">6.3. Development with figwheel</a>
-<ul class="sectlevel3">
-<li><a href="#introduction-3">6.3.1. Introduction</a></li>
-<li><a href="#first-steps-2">6.3.2. First steps</a></li>
-<li><a href="#interacting-with-javascript">6.3.3. Interacting with JavaScript</a></li>
+<li><a href="#appendix-a-interactive-development-with-figwheel">6.1. Appendix A: Interactive development with Figwheel</a></li>
+<li><a href="#appendix-b-csp-and-core-async">6.2. Appendix B: CSP and core.async</a></li>
 </ul>
 </li>
-<li><a href="#working-with-promises">6.4. Working with promises.</a></li>
-<li><a href="#error-handling-using-monads-and-cats">6.5. Error handling using monads and Cats.</a></li>
-<li><a href="#pattern-matching-using-core-match">6.6. Pattern matching using core.match.</a></li>
-<li><a href="#web-development-with-reagent">6.7. Web development with Reagent.</a></li>
-<li><a href="#writing-libraries-that-shares-code-between-clojure-and-clojurescript">6.8. Writing libraries that shares code between Clojure and ClojureScript.</a></li>
-</ul>
-</li>
-<li><a href="#further-reading">7. Further Reading</a></li>
+<li><a href="#acknowledgments">7. Acknowledgments</a></li>
+<li><a href="#further-reading">8. Further Reading</a></li>
 </ul>
 </div>
 </div>
@@ -1663,7 +1540,7 @@ if you call a function with the wrong number of arguments, the compiler will emi
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">myinc</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; 1</span>
+<span class="tok-c1">;; =&gt; 2</span>
 
 <span class="tok-p">(</span><span class="tok-nf">myinc</span> <span class="tok-mi">1</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; 4</span>
@@ -1852,7 +1729,7 @@ than <code>cond</code> or <code>condp</code> but has the disadvantage that the c
   <span class="tok-p">[</span><span class="tok-nv">code</span><span class="tok-p">]</span>
   <span class="tok-p">(</span><span class="tok-nf">case</span> <span class="tok-nv">code</span>
     <span class="tok-s">&quot;es&quot;</span> <span class="tok-s">&quot;Spanish&quot;</span>
-    <span class="tok-s">&quot;es&quot;</span> <span class="tok-s">&quot;English&quot;</span>
+    <span class="tok-s">&quot;en&quot;</span> <span class="tok-s">&quot;English&quot;</span>
     <span class="tok-s">&quot;Unknown&quot;</span><span class="tok-p">))</span>
 
 <span class="tok-p">(</span><span class="tok-nf">translate-lang-code</span> <span class="tok-s">&quot;en&quot;</span><span class="tok-p">)</span>
@@ -4617,7 +4494,7 @@ when developing using ClojureScript. It will cover:</p>
 independent of the other.</p>
 </div>
 <div class="sect2">
-<h3 id="getting-started-with-the-clojurescript-compiler"><a class="link" href="#getting-started-with-the-clojurescript-compiler">4.1. Getting Started with the ClojureScript compiler</a></h3>
+<h3 id="getting-started-with-compiler"><a class="link" href="#getting-started-with-compiler">4.1. Getting Started with compiler</a></h3>
 <div class="paragraph">
 <p>At this point, you are surely very bored with the constant theoretical explanations about
 the language itself and will want to write and execute some code. The goal of this section
@@ -5327,7 +5204,7 @@ directives should be used.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="build-and-dependency-management-tools"><a class="link" href="#build-and-dependency-management-tools">4.4. Build and Dependency management tools</a></h3>
+<h3 id="dependency-managemen"><a class="link" href="#dependency-managemen">4.4. Dependency managemen</a></h3>
 <div class="paragraph">
 <p>Until now, we have used the builtin <em>ClojureScript</em> toolchain to compile our sources to
 JavaScript. It is OK to start using it and to understand how it works. But it is not very
@@ -5664,7 +5541,13 @@ fact, dommy does not have documentation, so we do not recommend use it.
 </div>
 </div>
 <div class="sect2">
-<h3 id="unit-testing"><a class="link" href="#unit-testing">4.5. Unit testing</a></h3>
+<h3 id="using-javascript-libraries"><a class="link" href="#using-javascript-libraries">4.5. Using javascript libraries</a></h3>
+<div class="paragraph">
+<p>TBD</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="unit-testing"><a class="link" href="#unit-testing">4.6. Unit testing</a></h3>
 <div class="paragraph">
 <p>There’s not a lot to say here; testing in <em>ClojureScript</em> consists of the same concepts as
 you may know from any other language such as Clojure, Java, Python, JavaScript, etc.</p>
@@ -5681,7 +5564,7 @@ is that it tends to use plain data instead of complex objects. Building "mock" o
 for testing is greatly simplified.</p>
 </div>
 <div class="sect3">
-<h4 id="first-steps"><a class="link" href="#first-steps">4.5.1. First steps</a></h4>
+<h4 id="first-steps"><a class="link" href="#first-steps">4.6.1. First steps</a></h4>
 <div class="paragraph">
 <p>The "official" <em>ClojureScript</em> testing framework is built-in on its core under the "cljs.test"
 namespace. It is a very simple library, but it should be more than enough for our purposes.</p>
@@ -5852,7 +5735,7 @@ of the <code>core_tests.cljs</code> file:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="async-testing"><a class="link" href="#async-testing">4.5.2. Async Testing</a></h4>
+<h4 id="async-testing"><a class="link" href="#async-testing">4.6.2. Async Testing</a></h4>
 <div class="paragraph">
 <p>One of the peculiarities of <em>ClojureScript</em> is that is built up on asynchronous, single
 theaded execution environments, and this has its own challenges.</p>
@@ -5896,7 +5779,7 @@ is executed with the result of that predicate.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>done</code> function exposed by the <code>async</code> macro should be called after asynchronous
+<p>The <code>done</code> function exposed by the <code>async</code> macro should be called after the asynchronous
 operation is finished and all assertions have run.</p>
 </div>
 <div class="paragraph">
@@ -5906,15 +5789,15 @@ or skipping execution of some tests.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="fixtures"><a class="link" href="#fixtures">4.5.3. Fixtures</a></h4>
+<h4 id="fixtures"><a class="link" href="#fixtures">4.6.3. Fixtures</a></h4>
 <div class="paragraph">
 <p>TBD</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="integrating-with-ci"><a class="link" href="#integrating-with-ci">4.5.4. Integrating with CI</a></h4>
+<h4 id="integrating-with-ci"><a class="link" href="#integrating-with-ci">4.6.4. Integrating with CI</a></h4>
 <div class="paragraph">
-<p>Most of continuous integration tools and services expect that test scripts you provide
+<p>Most continuous integration tools and services expect that test scripts you provide
 return a standard exit code. But ClojureScript by default only runs the tests and outputs
 the results to standard output. So the compiled file can not be used directly with
 continuous integration tools because it does not return any return code when something
@@ -6118,7 +6001,7 @@ result they are building. Let&#8217;s give it a shot:</p>
     <span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[</span><span class="tok-nv">acc</span> <span class="tok-nv">input</span><span class="tok-p">]</span>           <span class="tok-c1">;; transformed reducing function, now it maps `f`!</span>
       <span class="tok-p">(</span><span class="tok-nf">rfn</span> <span class="tok-nv">acc</span> <span class="tok-p">(</span><span class="tok-nf">f</span> <span class="tok-nv">input</span><span class="tok-p">)))))</span>
 
-<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">incer</span> <span class="tok-p">(</span><span class="tok-nf">my-mapr</span> <span class="tok-nv">inc</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">incer</span> <span class="tok-p">(</span><span class="tok-nf">my-mapt</span> <span class="tok-nv">inc</span><span class="tok-p">))</span>
 
 <span class="tok-p">(</span><span class="tok-nb">reduce </span><span class="tok-p">(</span><span class="tok-nf">incer</span> <span class="tok-nv">conj</span><span class="tok-p">)</span> <span class="tok-p">[]</span> <span class="tok-p">[</span><span class="tok-mi">0</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">])</span>
 <span class="tok-c1">;; =&gt; [1 2 3]</span>
@@ -6946,19 +6829,19 @@ interface although it uses mutation internally:</p>
 <div class="paragraph">
 <p>ClojureScript symbols, vars and persistent collections support attaching metadata to them. Metadata is
 a map with information about the entity it&#8217;s attached to. The ClojureScript compiler uses metadata for
-several purposes like type hints and the metadata system can be used by tooling, library and application
+several purposes such as type hints, and the metadata system can be used by tooling, library and application
 developers too.</p>
 </div>
 <div class="paragraph">
-<p>There may not be many cases in day-to-day ClojureScript programming where you need metadata but is a
-nice language feature to have and know about, it may come in handy at some point. It makes things like
-runtime code introspection and documentation generation very easy, you&#8217;ll see why throughout this section.</p>
+<p>There may not be many cases in day-to-day ClojureScript programming where you need metadata, but it is a
+nice language feature to have and know about; it may come in handy at some point. It makes things like
+runtime code introspection and documentation generation very easy. You&#8217;ll see why throughout this section.</p>
 </div>
 <div class="sect3">
 <h4 id="vars-3"><a class="link" href="#vars-3">5.3.1. Vars</a></h4>
 <div class="paragraph">
-<p>Let&#8217;s define a var and see what metadata is attached to it by default, note that this code is executed in
-a REPL and thus the metadata of a var defined in a source file may vary. We&#8217;ll use the <code>meta</code> function to
+<p>Let&#8217;s define a var and see what metadata is attached to it by default. Note that this code is executed in
+a REPL, and thus the metadata of a var defined in a source file may vary. We&#8217;ll use the <code>meta</code> function to
 retrieve the metadata of the given value:</p>
 </div>
 <div class="listingblock">
@@ -7048,9 +6931,9 @@ by the <code>cljs.test</code> library for discovering and running tests in the n
 <h4 id="values"><a class="link" href="#values">5.3.2. Values</a></h4>
 <div class="paragraph">
 <p>We learned that vars can have metadata and what kind of metadata is added to them for consumption by the
-compiler and the <code>cljs.test</code> testing library. Persistent collections can have metadata too although they don&#8217;t
+compiler and the <code>cljs.test</code> testing library. Persistent collections can have metadata too, although they don&#8217;t
 have any by default. We can use the <code>with-meta</code> function to derive an object with the same value and type with
-the given metadata attached, let&#8217;s see how:</p>
+the given metadata attached. Let&#8217;s see how:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7082,8 +6965,8 @@ equality in ClojureScript is based on value. Another interesting thing is that <
 object of the same type and value as the given one and attaches the given metadata to it.</p>
 </div>
 <div class="paragraph">
-<p>Another open question is what happens with metadata when deriving new values from a persistent data structure,
-let&#8217;s find out:</p>
+<p>Another open question is what happens with metadata when deriving new values from a persistent data structure.
+Let&#8217;s find out:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7098,7 +6981,7 @@ let&#8217;s find out:</p>
 <p>As you can see in the example above, metadata is preserved in derived versions of persistent data structures. There
 are some subtleties, though. As long as the functions that derive new data structures return collections with the
 same type, metadata will be preserved; this is not true if the types change due to the transformation. To
-ilustrate this point let&#8217;s see what happens when we derive a seq or a subvector from a vector:</p>
+ilustrate this point, let&#8217;s see what happens when we derive a seq or a subvector from a vector:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7154,7 +7037,7 @@ metadata map:</p>
 <div class="paragraph">
 <p>A very common use of metadata is to set certain keys to a <code>true</code> value. For example we may want to add to a
 var&#8217;s metadata that the variable is dynamic or a constant. For such cases, we have a shorthand notation that
-uses a caret followed by a keyword, let&#8217;s see some examples:</p>
+uses a caret followed by a keyword. Here are some examples:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7195,7 +7078,7 @@ compiler hints about the type of expressions or function return types.</p>
 <p>We&#8217;ve learned about <code>meta</code> and <code>with-meta</code> so far but ClojureScript offers a few functions for transforming
 metadata. There is <code>vary-meta</code> which is similar to <code>with-meta</code> in that it derives a new object with the same
 type and value as the original but it doesn&#8217;t take the metadata to attach directly. Instead, it takes a function
-to apply to the metadata of the given object to transform it for deriving new metada, let&#8217;s see how it works:</p>
+to apply to the metadata of the given object to transform it for deriving new metadata. This is how it works:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7214,7 +7097,7 @@ to apply to the metadata of the given object to transform it for deriving new me
 </div>
 <div class="paragraph">
 <p>If instead we want to change the metadata of an existing var or value we can use <code>alter-meta!</code> for changing it
-applying a function or <code>reset-meta!</code> for replacing it with another map:</p>
+by applying a function or <code>reset-meta!</code> for replacing it with another map:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7251,59 +7134,15 @@ applying a function or <code>reset-meta!</code> for replacing it with another ma
 <p>TBD</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="csp-core-async"><a class="link" href="#csp-core-async">5.6. CSP &amp; core.async</a></h3>
-<div class="paragraph">
-<p>TBD</p>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="mixed-bag"><a class="link" href="#mixed-bag">6. Mixed Bag</a></h2>
+<h2 id="appendix"><a class="link" href="#appendix">6. Appendix</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This chapter will cover miscellaneous topics that are not classified in the previous ones.
-This is a "catchall" section and will touch on a bunch of heterogeneous topics like:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Repl based development with figwheel.</p>
-</li>
-<li>
-<p>Working with promises.</p>
-</li>
-<li>
-<p>Error handling using the <em>cats</em> library.</p>
-</li>
-<li>
-<p>Pattern matching with the <em>core.match</em> library.</p>
-</li>
-<li>
-<p>Web development using the Om library.</p>
-</li>
-<li>
-<p>Share code between Clojure and ClojureScript.</p>
-</li>
-</ul>
-</div>
 <div class="sect2">
-<h3 id="modularizing-your-code"><a class="link" href="#modularizing-your-code">6.1. Modularizing your code</a></h3>
-<div class="paragraph">
-<p>TBD</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="developing-a-library"><a class="link" href="#developing-a-library">6.2. Developing a library</a></h3>
-<div class="paragraph">
-<p>TBD</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="development-with-figwheel"><a class="link" href="#development-with-figwheel">6.3. Development with figwheel</a></h3>
+<h3 id="appendix-a-interactive-development-with-figwheel"><a class="link" href="#appendix-a-interactive-development-with-figwheel">6.1. Appendix A: Interactive development with Figwheel</a></h3>
 <div class="sect3">
-<h4 id="introduction-3"><a class="link" href="#introduction-3">6.3.1. Introduction</a></h4>
+<h4 id="introduction-3"><a class="link" href="#introduction-3">6.1.1. Introduction</a></h4>
 <div class="paragraph">
 <p>In this project, we will <strong>not</strong> do “Hello World”&#8212; that has been done to death.
 Instead, this project will be a web page that asks you for your age in years and
@@ -7315,7 +7154,7 @@ interactive, repl based and autoreloading experience.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="first-steps-2"><a class="link" href="#first-steps-2">6.3.2. First steps</a></h4>
+<h4 id="first-steps-2"><a class="link" href="#first-steps-2">6.1.2. First steps</a></h4>
 <div class="paragraph">
 <p>In this project, we will use the <em>figwheel</em> template to build the project structure.
 Let’s call the project <code>age</code> and create it by typing:</p>
@@ -7425,7 +7264,7 @@ you save the file, will see a compile error in the browser window.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="interacting-with-javascript"><a class="link" href="#interacting-with-javascript">6.3.3. Interacting with JavaScript</a></h4>
+<h4 id="interacting-with-javascript"><a class="link" href="#interacting-with-javascript">6.1.3. Interacting with JavaScript</a></h4>
 <div class="paragraph">
 <p>In the REPL window, type the following to invoke JavaScript’s <code>window.alert()</code>
 function:</p>
@@ -7510,14 +7349,14 @@ and see the results in the browser window.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-nv">cljs.user=&gt;</span> <span class="tok-p">(</span><span class="tok-nb">in-ns </span><span class="tok-ss">&#39;age.core</span><span class="tok-p">)</span>
-<span class="tok-nv">age.core=&gt;</span> <span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">y</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">))</span>
-<span class="tok-o">#</span><span class="tok-nv">&lt;</span><span class="tok-p">[</span><span class="tok-nv">object</span> <span class="tok-nv">HTMLInputElement</span><span class="tok-p">]</span><span class="tok-nv">&gt;</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">in-ns </span><span class="tok-ss">&#39;age.core</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">y</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&lt;[object HTMLInputElement]&gt;</span>
 
-<span class="tok-nv">age.core=&gt;</span> <span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-nv">y</span><span class="tok-p">)</span> <span class="tok-s">&quot;26&quot;</span><span class="tok-p">)</span>
-<span class="tok-s">&quot;26&quot;</span>
+<span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-nv">y</span><span class="tok-p">)</span> <span class="tok-s">&quot;26&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;26&quot;</span>
 
-<span class="tok-nv">age.core=&gt;</span> <span class="tok-p">(</span><span class="tok-nf">dom/setTextContent</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;feedback&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;This works!&quot;</span><span class="tok-p">)</span></code></pre>
+<span class="tok-p">(</span><span class="tok-nf">dom/setTextContent</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;feedback&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;This works!&quot;</span><span class="tok-p">)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7528,13 +7367,10 @@ event to listen for, and the function that will handle the event.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-nv">age.core=&gt;</span> <span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">testing</span> <span class="tok-p">[</span><span class="tok-nv">evt</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nf">js/alert</span> <span class="tok-s">&quot;Responding to click&quot;</span><span class="tok-p">))</span>
-<span class="tok-o">#</span><span class="tok-nv">&lt;function</span> <span class="tok-nv">age$core$testing</span><span class="tok-p">(</span><span class="tok-nf">evt</span><span class="tok-p">){</span>
-<span class="tok-nv">return</span> <span class="tok-nv">alert</span><span class="tok-p">(</span><span class="tok-s">&quot;Responding to click&quot;</span><span class="tok-p">)</span><span class="tok-c1">;</span>
-<span class="tok-p">}</span><span class="tok-nv">&gt;</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">testing</span> <span class="tok-p">[</span><span class="tok-nv">evt</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nf">js/alert</span> <span class="tok-s">&quot;Responding to click&quot;</span><span class="tok-p">))</span>
 
-<span class="tok-nv">age.core=&gt;</span> <span class="tok-p">(</span><span class="tok-nf">events/listen</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;calculate&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;click&quot;</span> <span class="tok-nv">testing</span><span class="tok-p">)</span>
-<span class="tok-o">#</span><span class="tok-nv">&lt;</span><span class="tok-p">[</span><span class="tok-nv">object</span> <span class="tok-nv">Object</span><span class="tok-p">]</span><span class="tok-nv">&gt;</span></code></pre>
+<span class="tok-p">(</span><span class="tok-nf">events/listen</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;calculate&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;click&quot;</span> <span class="tok-nv">testing</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #&lt;[object Object]&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7573,39 +7409,1108 @@ If you would like to remove the listener, use <code>unlisten</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="working-with-promises"><a class="link" href="#working-with-promises">6.4. Working with promises.</a></h3>
+<h3 id="appendix-b-csp-and-core-async"><a class="link" href="#appendix-b-csp-and-core-async">6.2. Appendix B: CSP and core.async</a></h3>
 <div class="paragraph">
-<p>TBD</p>
+<p>CSP stands for Communicating Sequential Processes, which is a formalism for describing
+concurrent systems pioneered by C. A. R. Hoare in 1978. It is a concurrency model based
+on message passing and synchronization through channels. An in-depth look at the
+theoretical model behind CSP is out of the scope of this book, instead we&#8217;ll focus on
+presenting the concurrency primitives that <code>core.async</code> offers.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="error-handling-using-monads-and-cats"><a class="link" href="#error-handling-using-monads-and-cats">6.5. Error handling using monads and Cats.</a></h3>
 <div class="paragraph">
-<p>TBD</p>
+<p><code>core.async</code> is not part of ClojureScript core but it&#8217;s implemented as a library. Even
+though is not part of the core language it&#8217;s widely used and many libraries build on top
+of its primitives so we think is worth covering in the book. It&#8217;s also a good example of
+the syntactic abstractions that can be achieved transforming code with ClojureScript
+macros, so let&#8217;s jump right in. You&#8217;ll need to have <code>core.async</code> installed to run the
+examples presented in this section.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="pattern-matching-using-core-match"><a class="link" href="#pattern-matching-using-core-match">6.6. Pattern matching using core.match.</a></h3>
+<div class="sect3">
+<h4 id="channels"><a class="link" href="#channels">6.2.1. Channels</a></h4>
 <div class="paragraph">
-<p>TBD</p>
+<p>Channels are like conveyor belts, we can put and take a single value at a time from them.
+They can have multiple readers and writers and are the message-passing primitive of
+<code>core.async</code>. Let&#8217;s create a channel do some operations on it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got a value:&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
+<span class="tok-c1">;; there is a now a pending take operation, let&#39;s put something on the channel</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Got a value: 42</span>
+<span class="tok-c1">;; =&gt; 42</span></code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="web-development-with-reagent"><a class="link" href="#web-development-with-reagent">6.7. Web development with Reagent.</a></h3>
 <div class="paragraph">
-<p>TBD</p>
+<p>In the above example we created a channel (<code>ch</code>) using the <code>chan</code> constructor. After that
+we performed a take operation on the channel, providing a callback that will be invoked
+when the take operation succeeds. After using <code>put!</code> to put a value on the channel the
+take operation completed and the <code>"Got a value: 42"</code> string was printed. Note that <code>put!</code>
+returned the value that was just put to the channel.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="writing-libraries-that-shares-code-between-clojure-and-clojurescript"><a class="link" href="#writing-libraries-that-shares-code-between-clojure-and-clojurescript">6.8. Writing libraries that shares code between Clojure and ClojureScript.</a></h3>
 <div class="paragraph">
-<p>TBD</p>
+<p>The <code>put!</code> function also accepts a callback like <code>take!</code> does but we didn&#8217;t provide any in
+the last example. For puts the callback will be called whenever the value we provided has
+been taken. Puts and takes can happen in any order, let&#8217;s do a few puts followed by
+takes to illustrate the point:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Just put 42&quot;</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">43</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Just put 43&quot;</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Got 42</span>
+<span class="tok-c1">;; Just put 42</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Got 43</span>
+<span class="tok-c1">;; Just put 43</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may be asking yourself why the <code>put!</code> operations return <code>true</code>. It signals that the
+put operation could be performed, even though the value hasn&#8217;t yet been taken. Channels
+can be closed, which will cause the put operations to not succeed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">close!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">ch</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; false</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above example was the simplest possible situation but what happens with pending
+operations when a channel is closed? Let&#8217;s do a few takes and close the channel and see
+what happens:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span> <span class="tok-nv">close!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got value:&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span>
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got value:&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">ch</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Got value: nil</span>
+<span class="tok-c1">;; Got value: nil</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We see that if the channel is closed all the <code>take!</code> operations receive a <code>nil</code> value.
+<code>nil</code> in channels is a sentinel value that signals to takers that the channel has been
+closed. Because of that, putting a <code>nil</code> value on a channel is not allowed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Error: Assert failed: Can&#39;t put nil in on a channel</span></code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="buffers"><a class="link" href="#buffers">Buffers</a></h5>
+<div class="paragraph">
+<p>We&#8217;ve seen that pending take and put operations are enqueued in a channel but, what
+happens when there are many pending take or put operations? Let&#8217;s find out by hammering a
+channel with many puts and takes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">dotimes </span><span class="tok-p">[</span><span class="tok-nv">n</span> <span class="tok-mi">1025</span><span class="tok-p">]</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-nv">n</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Error: Assert failed: No more than 1024 pending puts are allowed on a single channel.</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">dotimes </span><span class="tok-p">[</span><span class="tok-nv">n</span> <span class="tok-mi">1025</span><span class="tok-p">]</span>
+  <span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">)))</span>
+<span class="tok-c1">;; Error: Assert failed: No more than 1024 pending takes are allowed on a single channel.</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As the example above shows there&#8217;s a limit of pending puts or takes on a channel, it&#8217;s
+currently 1024 but that is an implementation detail that may change. Note that there can&#8217;t
+be both pending puts and pending takes on a channel since puts will immediately succeed
+if there are pending takes and viceversa.</p>
+</div>
+<div class="paragraph">
+<p>Channels support buffering of put operations. If we create a channel with a buffer the put
+operations will succeed immediately if there&#8217;s room in the buffer and be enqueued
+otherwise. Let&#8217;s illustrate the point creating a channel with a buffer of one element. The
+<code>chan</code> constructors accepts a number as its first argument which will cause it to have
+a buffer with the given size:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-mi">1</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Put succeeded!&quot;</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Put succeeded!</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nb">dotimes </span><span class="tok-p">[</span><span class="tok-nv">n</span> <span class="tok-mi">1024</span><span class="tok-p">]</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-nv">n</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Error: Assert failed: No more than 1024 pending puts are allowed on a single channel.</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What happened in the example above? We created a channel with a buffer of size 1 and
+performed a put operation on it that succeeded immediately because the value was buffered.
+After that we did another 1024 puts to fill the pending put queue and, when trying to put
+one value more the channel complained about not being able to enqueue more puts.</p>
+</div>
+<div class="paragraph">
+<p>Now that we know about how channels work and what are buffers used for let&#8217;s explore the
+different buffers that <code>core.async</code> implements. Different buffers have different policies
+and it&#8217;s interesting to know all of them to know when to use what. Channels are unbuffered
+by default.</p>
+</div>
+<div class="sect5">
+<h6 id="fixed"><a class="link" href="#fixed">Fixed</a></h6>
+<div class="paragraph">
+<p>The fixed size buffer is the one that is created when we give the <code>chan</code> constructor a
+number and it will have the size specified by the given number. It is the simplest
+possible buffer: when full, puts will be enqueued.</p>
+</div>
+<div class="paragraph">
+<p>The <code>chan</code> constructor accepts either a number or a buffer as its first argument. The two
+channels created in the following example both use a fixed buffer of size 32:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">buffer</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">a-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-mi">32</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">another-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-p">(</span><span class="tok-nf">buffer</span> <span class="tok-mi">32</span><span class="tok-p">)))</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="dropping"><a class="link" href="#dropping">Dropping</a></h6>
+<div class="paragraph">
+<p>The fixed buffer allows put operations to be enqueued. However, as we saw before, puts
+are still queued when the fixed buffer is full. If we wan&#8217;t to discard the put operations
+that happen when the buffer is full we can use a dropping buffer.</p>
+</div>
+<div class="paragraph">
+<p>Dropping buffers have a fixed size and, when they are full puts will complete but their
+value will be discarded. Let&#8217;s illustrate the point with an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">dropping-buffer</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-p">(</span><span class="tok-nf">dropping-buffer</span> <span class="tok-mi">2</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">40</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">41</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Got 40</span>
+<span class="tok-c1">;; =&gt; nil</span>
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Got 41</span>
+<span class="tok-c1">;; =&gt; nil</span>
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We performed three put operations and the three of them succeded but, since the dropping
+buffer of the channel has size 2, only the first two values were delivered to the takers.
+As you can observe the third take is enqueued since there is no value available, the third
+put&#8217;s value (42) was discarded.</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="sliding"><a class="link" href="#sliding">Sliding</a></h6>
+<div class="paragraph">
+<p>The sliding buffer has the opposite policy than the dropping buffer. When full puts will
+complete and the oldest value will be discarded in favor of the new one. The sliding
+buffer is useful when we are interested in processing the last puts only and we can afford
+discarding old values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">sliding-buffer</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-p">(</span><span class="tok-nf">sliding-buffer</span> <span class="tok-mi">2</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">40</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">41</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Got 41</span>
+<span class="tok-c1">;; =&gt; nil</span>
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Got 42</span>
+<span class="tok-c1">;; =&gt; nil</span>
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We performed three put operations and the three of them succeded but, since the sliding
+buffer of the channel has size 2, only the last two values were delivered to the takers.
+As you can observe the third take is enqueued since there is no value available since the
+first put&#8217;s value was discarded.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="transducers-2"><a class="link" href="#transducers-2">Transducers</a></h5>
+<div class="paragraph">
+<p>As mentioned in the section about transducers, putting values in a channel can be thought
+as a transducible process. This means that we can create channels and hand them a
+transducer, giving us the ability to transform the input values before being put in the
+channel.</p>
+</div>
+<div class="paragraph">
+<p>If we want to use a transducer with a channel we must supply a buffer since the reducing
+function that will be modified by the transducer will be the buffer&#8217;s add function.
+A buffer&#8217;s add function is a reducing function since it takes a buffer and an input and
+returns a buffer with such input incorporated.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-mi">1</span> <span class="tok-p">(</span><span class="tok-nb">map </span><span class="tok-nv">inc</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">41</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Got 42</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may be wondering what happens to a channel when the reducing function returns a
+reduced value. It turns out that the notion of termination for channels is being closed,
+so channels will be closed when a reduced value is encountered:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-mi">1</span> <span class="tok-p">(</span><span class="tok-nb">take </span><span class="tok-mi">2</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span>
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span>
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">41</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Got 41</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">43</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Got 42</span>
+<span class="tok-c1">;; Got nil</span>
+<span class="tok-c1">;; =&gt; false</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We used the <code>take</code> stateful transducer to allow maximum 2 puts into the channel. We then
+performed three take operations on the channel and we expect only two to receive a value.
+As you can see in the above example the third take got the sentinel <code>nil</code> value which
+indicates that the channel was closed. Also, the third put operation returned <code>false</code>
+indicating that it didn&#8217;t take place.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="handling-exceptions"><a class="link" href="#handling-exceptions">Handling exceptions</a></h5>
+<div class="paragraph">
+<p>If adding a value to a buffer throws an exception <code>core.async</code> the operation will fail and
+the exception will be logged to the console. However, channel constructors accept a third
+argument: a function for handling exceptions.</p>
+</div>
+<div class="paragraph">
+<p>When creating a channel with an exception handler it will be called with the exception
+whenever an exception occurs. If the handler returns <code>nil</code> the operation will fail
+silently and if it returns another value the add operation will be retried with such
+value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">exception-xform</span>
+  <span class="tok-p">[</span><span class="tok-nv">rfn</span><span class="tok-p">]</span>
+  <span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[</span><span class="tok-nv">acc</span> <span class="tok-nv">input</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nf">throw</span> <span class="tok-p">(</span><span class="tok-nf">js/Error.</span> <span class="tok-s">&quot;I fail!&quot;</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">handle-exception</span>
+  <span class="tok-p">[</span><span class="tok-nv">ex</span><span class="tok-p">]</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Exception message:&quot;</span> <span class="tok-p">(</span><span class="tok-nf">.-message</span> <span class="tok-nv">ex</span><span class="tok-p">))</span>
+  <span class="tok-mi">42</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-mi">1</span> <span class="tok-nv">exception-xform</span> <span class="tok-nv">handle-exception</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Exception message: I fail!</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">take!</span> <span class="tok-nv">ch</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Got:&quot;</span> <span class="tok-nv">%</span><span class="tok-p">))</span>
+<span class="tok-c1">;; Got: 42</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="offer-and-poll"><a class="link" href="#offer-and-poll">Offer and Poll</a></h5>
+<div class="paragraph">
+<p>We&#8217;ve learned about the two basic operations on channels so far: <code>put!</code> and <code>take!</code>. They
+either take or put a value and are enqueued if they can&#8217;t be performed immediately. Both
+functions are asynchronous because of the nature: they can succeed but be completed at a
+later time.</p>
+</div>
+<div class="paragraph">
+<p><code>core.async</code> has two synchronous operations for putting or taking values: <code>offer!</code> and
+<code>poll!</code>. These two operations will only succeed if they can be completed immediately. This
+means that <code>offer!</code> can only succeed when there are pending takes and <code>poll!</code> when there
+are pending puts.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span> <span class="tok-nv">offer!</span> <span class="tok-nv">poll!</span><span class="tok-p">]])</span>
+
+<span class="tok-c1">;; TODO: wait for core.async release for documenting offer! and poll!</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="processes"><a class="link" href="#processes">6.2.2. Processes</a></h4>
+<div class="paragraph">
+<p>We learned all about channels but there is still a missing piece in the puzzle: processes.
+Processes are pieces of logic that run independently and use channels for communication
+and coordination. Puts and takes inside a process will stop the process until the
+operation completes. Stopping a process doesn&#8217;t block the only thread we have in the
+environments where ClojureScript runs. Instead, it will be resumed at a later time when
+the operation is waiting for has been performed.</p>
+</div>
+<div class="paragraph">
+<p>Processes are launched using the <code>go</code> macro and puts and takes use the <code>&lt;!</code> and <code>&gt;!</code>
+placeholders. The <code>go</code> macro rewrites your code to use callbacks but inside <code>go</code>
+everything looks like synchronous code, which makes understanding it straightforward:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">&gt;!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Gonna take from channel&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">ch</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Gonna put on channel&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">&gt;!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Just put 42&quot;</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; [:a] Gonna take from channel</span>
+<span class="tok-c1">;; [:b] Gonna put on channel</span>
+<span class="tok-c1">;; [:b] Just put 42</span>
+<span class="tok-c1">;; [:a] Got 42</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above example we are launching a process with <code>go</code> that takes a value from <code>ch</code> and
+prints it to the console. Since the value isn&#8217;t immediately available it will park until
+it can resume. After that we launch another process that puts a value on the channel.
+Since there is a pending take the put operation succeeds and the value is delivered to
+the first process, then both processes terminate.</p>
+</div>
+<div class="paragraph">
+<p>Both <code>go</code> blocks run independently and, even though they are executed asynchronously, they
+look like they synchronous code. The above go blocks are fairly simple but being able to
+write concurrent processes that coordinate via channels is a very powerful tool for
+implementing complex asynchronous workflows. Channels also offer a great decoupling of
+producers and consumers.</p>
+</div>
+<div class="paragraph">
+<p>Processes can wait for an arbitrary amount of time too, there is a <code>timeout</code> function
+that return a channel that will be closed after the given amount of miliseconds. Combining
+a timeout channel with a take operation inside a go block gives us the ability to sleep:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">&lt;!</span> <span class="tok-nv">timeout</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">seconds</span>
+  <span class="tok-p">[]</span>
+  <span class="tok-p">(</span><span class="tok-nf">.getSeconds</span> <span class="tok-p">(</span><span class="tok-nf">js/Date.</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Launching go block&quot;</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Gonna take a nap&quot;</span> <span class="tok-p">(</span><span class="tok-nf">seconds</span><span class="tok-p">))</span>
+  <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-p">(</span><span class="tok-nf">timeout</span> <span class="tok-mi">1000</span><span class="tok-p">))</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I slept one second, bye!&quot;</span> <span class="tok-p">(</span><span class="tok-nf">seconds</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Block launched&quot;</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; Launching go block</span>
+<span class="tok-c1">;; Block launched</span>
+<span class="tok-c1">;; [:a] Gonna take a nap 9</span>
+<span class="tok-c1">;; [:a] I slept one second, bye! 10</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As we can see in the messages printed, the process does nothing for one second when it
+blocks in the take operation of the timeout channel. The program continues and after one
+second the process resumes and terminates.</p>
+</div>
+<div class="sect4">
+<h5 id="choice"><a class="link" href="#choice">Choice</a></h5>
+<div class="paragraph">
+<p>Apart from putting and taking one value at a time inside a go block we can also make a
+non-deterministic choice on multiple channel operations using <code>alts!</code>. <code>alts!</code> is given
+a series of channel put or take operations (note that we can also try to put and take in
+a channel at the same time) and only performs one as soon as is ready; if multiple
+operations can be performed when calling <code>alts!</code> it will do a pseudo random choice by
+default.</p>
+</div>
+<div class="paragraph">
+<p>We can easily try an operation on a channel and cancel it after a certain amount of time
+combining the <code>timeout</code> function and <code>alts!</code>. Let&#8217;s see how:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">timeout</span> <span class="tok-nv">alts!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Gonna take a nap&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-p">(</span><span class="tok-nf">timeout</span> <span class="tok-mi">1000</span><span class="tok-p">))</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I slept one second, trying to put a value on channel&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">&gt;!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Gonna try taking from channel&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">cancel</span> <span class="tok-p">(</span><span class="tok-nf">timeout</span> <span class="tok-mi">300</span><span class="tok-p">)</span>
+        <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-nv">ch</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nf">alts!</span> <span class="tok-p">[</span><span class="tok-nv">ch</span> <span class="tok-nv">cancel</span><span class="tok-p">])]</span>
+    <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-nv">ch</span> <span class="tok-nv">cancel</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Too slow, take from channel cancelled&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">))))</span>
+
+<span class="tok-c1">;; [:a] Gonna take a nap</span>
+<span class="tok-c1">;; [:b] Gonna try taking from channel</span>
+<span class="tok-c1">;; [:b] Too slow, take from channel cancelled</span>
+<span class="tok-c1">;; [:a] I slept one second, trying to put a value on channel</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above we launched a go block that, after waiting for a second, puts a value
+in the <code>ch</code> channel. The other go block creates a <code>cancel</code> channel, which will be closed
+after 300 miliseconds. After that, it tries to read from both <code>ch</code> and <code>cancel</code> at the same
+time using <code>alts!</code>, which will succeed whenever it can take a value from either of those
+channels. Since <code>cancel</code> is closed after 300 miliseconds, <code>alts!</code> will succeed since takes
+from closed channel return the <code>nil</code> sentinel. Note that <code>alts!</code> returns a two-element
+vector with the returned value of the operation and the channel where it was performed.
+This is why we are able to detect whether the read operation was performed in the <code>cancel</code>
+channel or in <code>ch</code>. I suggest you copy this example and set the first process timeout to
+100 miliseconds to see how the read operation on <code>ch</code> succeeds.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ve learned how to choose between read operations so let&#8217;s look at how to express a
+conditional write operation in <code>alts!</code>. Since we need to provide the channel and a value
+to try to put on it, we&#8217;ll use a two element vector with the channel and the value for
+representing write operations. Let&#8217;s see an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">alts!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">a-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">another-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Take a value from `a-ch`&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">a-ch</span><span class="tok-p">))</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Take a value from `another-ch`&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">another-ch</span><span class="tok-p">))</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:c</span><span class="tok-p">]</span> <span class="tok-s">&quot;Gonna try putting in both channels simultaneously&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[[</span><span class="tok-nv">value</span> <span class="tok-nv">ch</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nf">alts!</span> <span class="tok-p">[[</span><span class="tok-nv">a-ch</span> <span class="tok-mi">42</span><span class="tok-p">]</span>
+                           <span class="tok-p">[</span><span class="tok-nv">another-ch</span> <span class="tok-mi">99</span><span class="tok-p">]])]</span>
+    <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-nv">ch</span> <span class="tok-nv">a-ch</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:c</span><span class="tok-p">]</span> <span class="tok-s">&quot;Put a value in `a-ch`&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:c</span><span class="tok-p">]</span> <span class="tok-s">&quot;Put a value in `another-ch`&quot;</span><span class="tok-p">))))</span>
+
+<span class="tok-c1">;; [:a] Take a value from `a-ch`</span>
+<span class="tok-c1">;; [:b] Take a value from `another-ch`</span>
+<span class="tok-c1">;; [:c] Gonna try putting in both channels simultaneously</span>
+<span class="tok-c1">;; [:c] Put a value in `a-ch`</span>
+<span class="tok-c1">;; [:a] Got 42</span>
+<span class="tok-c1">;; [:a] I&#39;m done!</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When running the above example only the put operation on the <code>a-ch</code> channel has succeeded.
+Since both channels are ready to take a value when the <code>alts!</code> occurs you may get
+different results when running this code.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="priority"><a class="link" href="#priority">Priority</a></h5>
+<div class="paragraph">
+<p><code>alts!</code> default is to make a non-deterministic choice whenever several operations are
+ready to be performed. We can instead give priority to the operations passing the
+<code>:priority</code> option to <code>alts!</code>. Whenever <code>:priority</code> is <code>true</code>, if more than one operation
+is ready they will be tried in order.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">&gt;!</span> <span class="tok-nv">alts!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">a-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">another-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Put a value on `a-ch`&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">&gt;!</span> <span class="tok-nv">a-ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Put a value on `another-ch`&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">&gt;!</span> <span class="tok-nv">another-ch</span> <span class="tok-mi">99</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:c</span><span class="tok-p">]</span> <span class="tok-s">&quot;Gonna try taking from both channels with priority&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[[</span><span class="tok-nv">value</span> <span class="tok-nv">ch</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nf">alts!</span> <span class="tok-p">[</span><span class="tok-nv">a-ch</span> <span class="tok-nv">another-ch</span><span class="tok-p">]</span> <span class="tok-ss">:priority</span> <span class="tok-nv">true</span><span class="tok-p">)]</span>
+    <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-nv">ch</span> <span class="tok-nv">a-ch</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:c</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span> <span class="tok-s">&quot;from `a-ch`&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:c</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span> <span class="tok-s">&quot;from `another-ch`&quot;</span><span class="tok-p">))))</span>
+
+<span class="tok-c1">;; [:a] Put a value on `a-ch`</span>
+<span class="tok-c1">;; [:a] I&#39;m done!</span>
+<span class="tok-c1">;; [:b] Put a value on `another-ch`</span>
+<span class="tok-c1">;; [:b] I&#39;m done!</span>
+<span class="tok-c1">;; [:c] Gonna try taking from both channels with priority</span>
+<span class="tok-c1">;; [:c] Got 42 from `a-ch`</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since both <code>a-ch</code> and <code>another-ch</code> had a value to read when the <code>alts!</code> was executed and
+we set the <code>:priority</code> option to true, <code>a-ch</code> has preference. You can try deleting the
+<code>:priority</code> option and running the example multiple times to see that, without priority,
+<code>alts!</code> makes a non-deterministic choice.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="defaults"><a class="link" href="#defaults">Defaults</a></h5>
+<div class="paragraph">
+<p>Another interesting bit of <code>alts!</code> is that it can return immediately if no operation is
+ready and we provide a default value. We can conditionally do a choice on the operations
+if and only if any of them is ready, returning a default value if it&#8217;s not.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">alts!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">a-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">another-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Gonna try taking from any of the channels without blocking&quot;</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[[</span><span class="tok-nv">value</span> <span class="tok-nv">ch</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nf">alts!</span> <span class="tok-p">[</span><span class="tok-nv">a-ch</span> <span class="tok-nv">another-ch</span><span class="tok-p">]</span> <span class="tok-ss">:default</span> <span class="tok-ss">:not-ready</span><span class="tok-p">)]</span>
+    <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">and </span><span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-nv">value</span> <span class="tok-ss">:not-ready</span><span class="tok-p">)</span>
+             <span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-nv">ch</span> <span class="tok-ss">:default</span><span class="tok-p">))</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;No operation is ready, aborting&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">))))</span>
+
+<span class="tok-c1">;; [:a] Gonna try taking from any of the channels without blocking</span>
+<span class="tok-c1">;; [:a] No operation is ready, aborting</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see in the above example, if no operation is ready the value returned by
+<code>alts!</code> is the one we supplied after the <code>:default</code> key when calling it and the channel is
+the <code>:default</code> keyword itself.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="combinators"><a class="link" href="#combinators">6.2.3. Combinators</a></h4>
+<div class="paragraph">
+<p>Now that we&#8217;re acquainted with channels and processes it&#8217;s time to explore some interesting
+combinators for working with channels that are present in <code>core.async</code>. This section
+includes a brief description of all of them together with a simple example of their usage.</p>
+</div>
+<div class="paragraph">
+<p><code>pipe</code> takes an input and output channels and pipes all the values put on the input channel
+to the output one. The output channel is closed whenever the source is closed unless we
+provide a <code>false</code> third argument:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">pipe</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">out</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">pipe</span> <span class="tok-nv">in</span> <span class="tok-nv">out</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Waiting for a value&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)))))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">in</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; [:a] Got 0</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] Got 1</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] I&#39;m done!</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above example we used the <code>go-loop</code> macro for reading values recursively until the
+<code>out</code> channel is closed. Notice that when we close the <code>in</code> channel the <code>out</code> channel is
+closed too, making the <code>go-loop</code> terminate.</p>
+</div>
+<div class="paragraph">
+<p><code>pipeline-async</code> takes a number for controlling parallelism, an output channel, an
+asynchronous function and an input channel. The asynchronous function has two arguments:
+the value put in the input channel and a channel where it should put the result of its
+asynchronous operation, closing the result channel after finishing. The number controls
+the number of concurrent go blocks that will be used for calling the asynchronous function
+with the inputs.</p>
+</div>
+<div class="paragraph">
+<p>The output channel will receive outputs in an order relative to the input channel,
+regardless the time each asynchronous function call takes to complete. It has an optional
+last parameter that controls whether the output channel will be closed when the input
+channel is closed, which defaults to <code>true</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">pipeline-async</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">out</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">parallelism</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">wait-and-put</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-nv">ch</span><span class="tok-p">]</span>
+  <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">wait</span> <span class="tok-p">(</span><span class="tok-nb">rand-int </span><span class="tok-mi">1000</span><span class="tok-p">)]</span>
+    <span class="tok-p">(</span><span class="tok-nf">js/setTimeout</span> <span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[]</span>
+                     <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Waiting&quot;</span> <span class="tok-nv">wait</span> <span class="tok-s">&quot;miliseconds for value&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+                     <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-nv">wait</span><span class="tok-p">)</span>
+                     <span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">ch</span><span class="tok-p">))</span>
+                   <span class="tok-nv">wait</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">pipeline-async</span> <span class="tok-nv">parallelism</span> <span class="tok-nv">out</span> <span class="tok-nv">wait-and-put</span> <span class="tok-nv">in</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Waiting for a value&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)))))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">in</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; Waiting 164 miliseconds for value 3</span>
+<span class="tok-c1">;; Waiting 304 miliseconds for value 2</span>
+<span class="tok-c1">;; Waiting 908 miliseconds for value 1</span>
+<span class="tok-c1">;; [:a] Got 908</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] Got 304</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] Got 164</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] I&#39;m done!</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>pipeline</code> is similar to <code>pipeline-async</code> but instead of taking and asynchronous function
+it takes a transducer instead. The transducer will be applied independently to each input.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">pipeline</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">out</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">parallelism</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">pipeline</span> <span class="tok-nv">parallelism</span> <span class="tok-nv">out</span> <span class="tok-p">(</span><span class="tok-nb">map </span><span class="tok-nv">inc</span><span class="tok-p">)</span> <span class="tok-nv">in</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Waiting for a value&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)))))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">in</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; [:a] Got 2</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] Got 3</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] Got 4</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] I&#39;m done!</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>split</code> takes a predicate and a channel and returns a vector with two channels, the first
+of which will receive the values for which the predicate is true, the second will receive
+those for which the predicate is false. We can optionally pass a buffer or number for the
+channels with the third (true channel) and fourth (false channel) arguments.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">split</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">chans</span> <span class="tok-p">(</span><span class="tok-nf">split</span> <span class="tok-nv">even?</span> <span class="tok-nv">in</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">even-ch</span> <span class="tok-p">(</span><span class="tok-nb">first </span><span class="tok-nv">chans</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">odd-ch</span> <span class="tok-p">(</span><span class="tok-nb">second </span><span class="tok-nv">chans</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">even-ch</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:evens</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:evens</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:evens</span><span class="tok-p">]</span> <span class="tok-s">&quot;Waiting for a value&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">even-ch</span><span class="tok-p">)))))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">odd-ch</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:odds</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:odds</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:odds</span><span class="tok-p">]</span> <span class="tok-s">&quot;Waiting for a value&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">odd-ch</span><span class="tok-p">)))))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">in</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; [:evens] Got 0</span>
+<span class="tok-c1">;; [:evens] Waiting for a value</span>
+<span class="tok-c1">;; [:odds] Got 1</span>
+<span class="tok-c1">;; [:odds] Waiting for a value</span>
+<span class="tok-c1">;; [:odds] Got 3</span>
+<span class="tok-c1">;; [:odds] Waiting for a value</span>
+<span class="tok-c1">;; [:evens] Got 2</span>
+<span class="tok-c1">;; [:evens] Waiting for a value</span>
+<span class="tok-c1">;; [:evens] I&#39;m done!</span>
+<span class="tok-c1">;; [:odds] I&#39;m done!</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>reduce</code> takes a reducing function, initial value and an input channel. It returns a
+channel with the result of reducing over all the values put on the input channel before
+closing it using the given initial value as the seed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:as</span> <span class="tok-nv">async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Result&quot;</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-p">(</span><span class="tok-nf">async/reduce</span> <span class="tok-nb">+ </span><span class="tok-p">(</span><span class="tok-nf">+</span><span class="tok-p">)</span> <span class="tok-nv">in</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">in</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; Result: 6</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>onto-chan</code> takes a channel and a collection and puts the contents of the collection into
+the channel. It closes the channel after finishing although it accepts a third argument for
+specifying if it should close it or not. Let&#8217;s rewrite the <code>reduce</code> example using
+<code>onto-chan</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:as</span> <span class="tok-nv">async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span> <span class="tok-nv">onto-chan</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go</span>
+  <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Result&quot;</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-p">(</span><span class="tok-nf">async/reduce</span> <span class="tok-nb">+ </span><span class="tok-p">(</span><span class="tok-nf">+</span><span class="tok-p">)</span> <span class="tok-nv">in</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">onto-chan</span> <span class="tok-nv">in</span> <span class="tok-p">[</span><span class="tok-mi">0</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">])</span>
+
+<span class="tok-c1">;; Result: 6</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>to-chan</code> takes a collection and returns a channel where it will put every value in the
+collection, closing the channel afterwards.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span> <span class="tok-nv">to-chan</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">to-chan</span> <span class="tok-p">(</span><span class="tok-nb">range </span><span class="tok-mi">3</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">ch</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Waiting for a value&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">ch</span><span class="tok-p">)))))</span>
+
+<span class="tok-c1">;; [:a] Got 0</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] Got 1</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] Got 2</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] I&#39;m done!</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>merge</code> takes a collection of input channels and returns a channel where it will put every
+value that is put on the input channels. The returned channel will be closed when all the
+input channels have been closed. The returned channel will be unbuffered by default but a
+number or buffer can be provided as the last argument.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span> <span class="tok-nv">merge</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in1</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in2</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in3</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">out</span> <span class="tok-p">(</span><span class="tok-nb">merge </span><span class="tok-p">[</span><span class="tok-nv">in1</span> <span class="tok-nv">in2</span> <span class="tok-nv">in3</span><span class="tok-p">]))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Waiting for a value&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)))))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in1</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">in1</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in2</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">in2</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in3</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">close!</span> <span class="tok-nv">in3</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; [:a] Got 3</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] Got 2</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] Got 1</span>
+<span class="tok-c1">;; [:a] Waiting for a value</span>
+<span class="tok-c1">;; [:a] I&#39;m done!</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="higher-level-abstractions"><a class="link" href="#higher-level-abstractions">6.2.4. Higher-level abstractions</a></h4>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+<div class="sect4">
+<h5 id="mixer"><a class="link" href="#mixer">Mixer</a></h5>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="mult"><a class="link" href="#mult">Mult</a></h5>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="pub-sub"><a class="link" href="#pub-sub">Pub-sub</a></h5>
+<div class="paragraph">
+<p>TODO</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="a-complete-example"><a class="link" href="#a-complete-example">6.2.5. A complete example</a></h4>
+<div class="paragraph">
+<p>TODO: an example of a non-trivial task accomplished using processes and channels</p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="further-reading"><a class="link" href="#further-reading">7. Further Reading</a></h2>
+<h2 id="acknowledgments"><a class="link" href="#acknowledgments">7. Acknowledgments</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Special thanks to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>J David Eisenberg</strong>: For the huge amount of time spend in fixing all kind of errors and
+writing entire sections of the book, as well as making very valuable suggestions.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>And here is an inevitably incomplete list of MUCH-APPRECIATED CONTRIBUTORS&#8201;&#8212;&#8201;people who have submitted corrections, new ideas and generally made the
+<em>ClojureScript Unraveled</em> book much better:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Anler Hernández Peral (@anler)</p>
+</li>
+<li>
+<p>Diego Sevilla Ruiz (@dsevilla)</p>
+</li>
+<li>
+<p>Eduardo Ferro Aldama (@eferro)</p>
+</li>
+<li>
+<p>Tyler Anderson (@Tyler-Anderson)</p>
+</li>
+<li>
+<p>Chris Ulrich (@chrisulrich)</p>
+</li>
+<li>
+<p>Jean Hadrien Chabran (@jhchabran)</p>
+</li>
+<li>
+<p>Tienson Qin (@tiensonqin)</p>
+</li>
+<li>
+<p>FungusHumungus (@FungusHumungus),</p>
+</li>
+<li>
+<p>Chris Charles (@ccharles)</p>
+</li>
+<li>
+<p>Jearvon Dharrie (@iamjarvo)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="further-reading"><a class="link" href="#further-reading">8. Further Reading</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Here is a list of more resources about ClojureScript.</p>
@@ -7634,8 +8539,8 @@ If you would like to remove the listener, use <code>unlisten</code>.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1<br/>
-Last updated 2015-07-17 12:29:23 EEST
+Version 2<br/>
+Last updated 2015-07-19 23:40:51 CEST
 </div>
 </div>
 </body>
