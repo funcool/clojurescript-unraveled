@@ -5,7 +5,7 @@
 Date: unreleased
 
 * Add cover to the pdf output.
-* Replace mixed bag chapter with Appendix
+* Replace mixed bag chapter with Appendix.
 
 
 == Version 1
