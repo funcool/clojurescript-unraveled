@@ -1858,7 +1858,50 @@ the `:default` keyword itself.
 
 ==== Combinators
 
-- pipe, pipeline, pipeline-async, split, reduce, onto-chan, to-chan
+Now that we're acquainted with channels and processes it's time to explore some interesting
+combinators for working with channels that are present in `core.async`. This section
+includes a brief description of all of them together with a simple example of their usage.
+
+`pipe` takes an input and output channels and pipes all the values put on the input channel
+to the output one. The output channel is closed whenever the source is closed unless we
+provide a `false` third argument:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan pipe put! <! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def out (chan))
+
+(pipe in out)
+
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! out)))))
+
+(put! in 0)
+;; => true
+(put! in 1)
+;; => true
+(close! in)
+
+;; [:a] Got 0
+;; [:a] Waiting for a value
+;; [:a] Got 1
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
+
+In the above example we used the `go-loop` macro for reading values recursively until the
+`out` channel is closed. Notice that when we close the `in` channel the `out` channel is
+closed too, making the `go-loop` terminate.
+
+- pipeline, pipeline-async, split, reduce, onto-chan, to-chan
 
 ==== Higher-level abstractions
 
