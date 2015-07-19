@@ -1901,9 +1901,97 @@ In the above example we used the `go-loop` macro for reading values recursively 
 `out` channel is closed. Notice that when we close the `in` channel the `out` channel is
 closed too, making the `go-loop` terminate.
 
-TODO: `pipeline-async`
+`pipeline-async` takes a number for controlling parallelism, an output channel, an
+asynchronous function and an input channel. The asynchronous function has two arguments:
+the value put in the input channel and a channel where it should put the result of its
+asynchronous operation, closing the result channel after finishing. The number controls
+the number of concurrent go blocks that will be used for calling the asynchronous function
+with the inputs.
 
-TODO: `pipeline`
+The output channel will receive outputs in an order relative to the input channel,
+regardless the time each asynchronous function call takes to complete. It has an optional
+last parameter that controls whether the output channel will be closed when the input
+channel is closed, which defaults to `true`.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan pipeline-async put! <! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def out (chan))
+(def parallelism 3)
+
+(defn wait-and-put [value ch]
+  (let [wait (rand-int 1000)]
+    (js/setTimeout (fn []
+                     (println "Waiting" wait "miliseconds for value" value)
+                     (put! ch wait)
+                     (close! ch))
+                   wait)))
+
+(pipeline-async parallelism out wait-and-put in)
+
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! out)))))
+
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; Waiting 164 miliseconds for value 3
+;; Waiting 304 miliseconds for value 2
+;; Waiting 908 miliseconds for value 1
+;; [:a] Got 908
+;; [:a] Waiting for a value
+;; [:a] Got 304
+;; [:a] Waiting for a value
+;; [:a] Got 164
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
+
+`pipeline` is similar to `pipeline-async` but instead of taking and asynchronous function
+it takes a transducer instead. The transducer will be applied independently to each input.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan pipeline put! <! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def out (chan))
+(def parallelism 3)
+
+(pipeline parallelism out (map inc) in)
+
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! out)))))
+
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; [:a] Got 2
+;; [:a] Waiting for a value
+;; [:a] Got 3
+;; [:a] Waiting for a value
+;; [:a] Got 4
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
 
 `split` takes a predicate and a channel and returns a vector with two channels, the first
 of which will receive the values for which the predicate is true, the second will receive
