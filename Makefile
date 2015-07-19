@@ -42,3 +42,5 @@ build: copy html
 
 watch: build
 	sh ./watch.sh
+
+release: clean pdf epub mobi html
