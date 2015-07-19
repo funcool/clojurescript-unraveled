@@ -2042,7 +2042,28 @@ channels with the third (true channel) and fourth (false channel) arguments.
 ;; [:odds] I'm done!
 ----
 
-TODO: `reduce`
+`reduce` takes a reducing function, initial value and an input channel. It returns a
+channel with the result of reducing over all the values put on the input channel before
+closing it using the given initial value as the seed.
+
+[source, clojure]
+----
+(require '[cljs.core.async :as async :refer [chan put! <! close!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(def in (chan))
+
+(go
+  (println "Result" (<! (async/reduce + (+) in))))
+
+(put! in 0)
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; Result: 6
+----
 
 TODO: `onto-chan`
 
