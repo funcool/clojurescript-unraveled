@@ -1,0 +1,15 @@
+= Changelog
+
+== Version 2
+
+Date: unreleased
+
+* Add cover to the pdf output.
+* Replace mixed bag chapter with Appendix
+
+
+== Version 1
+
+Date: 2015-07-17
+
+* Initial release
