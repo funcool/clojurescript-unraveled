@@ -596,7 +596,7 @@ primitives, you should not use `:import` for import them, the standard `:require
 directives should be used.
 
 
-=== Dependency managemen
+=== Dependency management
 
 Until now, we have used the builtin _ClojureScript_ toolchain to compile our sources to
 JavaScript. It is OK to start using it and to understand how it works. But it is not very
