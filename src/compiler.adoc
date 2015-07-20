@@ -75,6 +75,12 @@ v2.3.4
 
 ===== Create the example application
 
+////
+TODO: Clarify where to put cljs.jar and show project tree structure
+Comment from @NathanSmutz:
+Having seen linengen projects, I might guess that these go above src (or at least build.clj might) but it's not obvious. We probably want a little graphic or tree-chart showing where each file goes and probably a sidebar about project structure.
+////
+
 For the first step of our practical example, we will create our application directory
 structure and populate it with example code.
 
