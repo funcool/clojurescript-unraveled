@@ -1,4 +1,4 @@
-=== Getting Started with compiler
+=== Getting Started with the Compiler
 
 At this point, you are surely very bored with the constant theoretical explanations about
 the language itself and will want to write and execute some code. The goal of this section
