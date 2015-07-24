@@ -2419,7 +2419,7 @@ the `defmulti` form:
   "A function that prints a human readable representation
   of a shape keyword."
   identity
-  :hierarchy h)
+  :hierarchy #'h)
 ----
 
 With the `:hierarchy` keyword parameter, we indicate to the multimethod what hierarchy we want to use;
