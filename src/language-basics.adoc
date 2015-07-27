@@ -6,7 +6,9 @@ is a programming language written in its own data structures — originally list
 parentheses — but Clojure(Script) has evolved the Lisp syntax with more data structures, making
 it more pleasant to write and read.
 
-A list with a function in the first position is used for calling a function in ClojureScript:
+A list with a function in the first position is used for calling a function in ClojureScript. In the
+example below, we apply the addition function to three arguments. Note that unlike in other languages
+`+` is not an operator but a function, Lisp has no operators, only functions.
 
 [source, clojure]
 ----
