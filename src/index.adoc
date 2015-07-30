@@ -33,7 +33,7 @@ well as a series of practical how-to's. This document will evolve with the Cloju
 language, both as a reference of the language features and as a sort of cookbook with
 xpractical programming recipes.
 
-You'll get the most ouf this book if you:
+You'll get the most out of this book if you:
 
 - are curious about ClojureScript or functional programming and have some programming
   experience;
