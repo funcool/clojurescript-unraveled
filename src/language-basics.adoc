@@ -1123,7 +1123,7 @@ the emptiness of a sequence in ClojureScript which is often referred to as nil-p
 ;; => nil
 ----
 
-`nil` is also both a seqable and a sequence, and thus it supports all the functions we saw so far:
+Though `nil` is neither a seqable nor a sequence, it is supported by all the functions we saw so far:
 
 [source, clojure]
 ----
