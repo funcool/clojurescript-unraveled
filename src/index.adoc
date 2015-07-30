@@ -31,7 +31,7 @@ Since the ClojureScript documentation is good but sparse, we wanted to write a c
 of reference information and extensive examples to serve as a ClojureScript primer as
 well as a series of practical how-to's. This document will evolve with the ClojureScript
 language, both as a reference of the language features and as a sort of cookbook with
-xpractical programming recipes.
+practical programming recipes.
 
 You'll get the most out of this book if you:
 
