@@ -7,8 +7,8 @@ parentheses — but Clojure(Script) has evolved the Lisp syntax with more data s
 it more pleasant to write and read.
 
 A list with a function in the first position is used for calling a function in ClojureScript. In the
-example below, we apply the addition function to three arguments. Note that unlike in other languages
-`+` is not an operator but a function, Lisp has no operators, only functions.
+example below, we apply the addition function to three arguments. Note that unlike in other languages,
+`+` is not an operator but a function. Lisp has no operators; it only has functions.
 
 [source, clojure]
 ----
@@ -25,8 +25,8 @@ allows many unusual characters like `?` or `-` in symbol names, which makes it e
 ;; => true
 ----
 
-For distinguishing function calls and lists, we can quote lists to keep them from being evaluated. The quoted
-lists will be treated as data instead of as a function call:
+To distinguish function calls from lists of data items, we can quote lists to keep them from being evaluated. 
+The quoted lists will be treated as data instead of as a function call:
 
 [source, clojure]
 ----
@@ -48,7 +48,7 @@ example of the usage of a vector (enclosed in brackets) for defining local bindi
 
 This is practically all the syntax we need to know for using not only ClojureScript, but any Lisp. Being
 written in its own data structures (often referred to as _homoiconicity_) is a great property since the
-syntax is uniform and simple; also, code generation via macros is easier than in any other language, giving
+syntax is uniform and simple; also, code generation via xref:macros-section[macros] is easier than in any other language, giving
 us plenty of power to extend the language to suit our needs.
 
 === The base data types
@@ -171,7 +171,7 @@ abstractions. _ClojureScript_ is not an exception to this rule.
 _ClojureScript_ comes with many types of collections. The main difference between _ClojureScript_
 collections and collections in other languages is that they are persistent and immutable.
 
-Before moving on to all of these (possibly) unknown concepts, we'll present a high-level overview
+Before moving on to these (possibly) unknown concepts, we'll present a high-level overview
 of existing collection types in _ClojureScript_.
 
 
@@ -228,7 +228,7 @@ elements.
 
 Like lists, *vectors* store a series of values, but in this case, with very efficient index access
 to their elements, as opposed to lists, which are evaluated in order. Don't worry; in
-the following chapters we'll go in depth with details, but at this moment, this simple explanation is
+the following sections we'll go in depth with details, but at this moment, this simple explanation is
 more than enough.
 
 Vectors use square brackets for the literal syntax; let's see some examples:
@@ -265,7 +265,7 @@ in _ClojureScript_ are written with the pairs between curly braces.
 {:alphabet [:a :b :c]}
 ----
 
-NOTE: Commas are frequently used to separate a key-value pair but are completely optional. In
+NOTE: Commas are frequently used to separate a key-value pair, but they are completely optional. In
 _ClojureScript_ syntax, commas are treated like spaces.
 
 Like vectors, every item in a map literal is evaluated before the result is stored in a map, but
@@ -278,15 +278,18 @@ And finally, *sets*.
 
 Sets store zero or more unique items of any type and are unordered. Like maps,
 they use curly braces for their literal syntax, with the difference being that they use a `#` as
-the leading character:
+the leading character. You can also use the `set` function to convert a collection to a set:
 
 [source, clojure]
 ----
 #{1 2 3 :foo :bar}
+;; => #{1 :bar 3 :foo 2}
+(set [1 2 1 3 1 4 1 5])
+;; => #{1 2 3 4 5}
 ----
 
-In subsequent chapters, we'll go in depth about sets and the other collection types you've seen in this
-chapter.
+In subsequent sections, we'll go in depth about sets and the other collection types you've seen in this
+section.
 
 
 === Vars
@@ -414,7 +417,7 @@ Let's see an example, which will explain it better:
    (+ x increment)))
 ----
 
-This line: `([x] (myinc x 1)` says that if there is only one argument, call the function
+This line: `([x] (myinc x 1))` says that if there is only one argument, call the function
 `myinc` with that argument and the number `1` as the second argument. The other function body
 `([x increment] (+ x increment))` says that if there are two arguments, return the result of
 adding them.
@@ -464,26 +467,38 @@ the `#()` reader macro (usually leads to one-liners). Reader macros are "special
 transformed to the appropriate language form at compile time; in this case, to some expression
 that uses the `fn` special form.
 
+////
+Changing this to a simpler function, since you did not explain "set"
+earlier (though I added an example)
+////
+
 [source, clojure]
 ----
-(def my-set #(set (list %1 %2)))
+(def average #(/ (+ %1 %2) 2))
 
-(my-set "x" "y")
-;; => #{"x" "y"}
+(average 3 4)
+;; => 3.5
 ----
 
 The preceding definition is shorthand for:
 
+////
+If you stay with the original example, the # should not be there
+////
+
 [source,clojure]
 ----
-(def my-set-longer (fn [a b] #(set (list a b))))
+(def average-longer (fn [a b] (/ (+ a b) 2)))
+
+(average-longer 7 8)
+;; => 7.5
 ----
 
 The `%1`, `%2`, `%N` are simple markers for parameter positions that are implicitly declared when
 the reader macro will be interpreted and converted to a `fn` expression.
 
-If a function only accepts one argument, you can omit the number after the `%` symbol, e.g., the
-function `#(set (list %1))` can be written `++#++(set (list %))`.
+If a function only accepts one argument, you can omit the number after the `%` symbol, e.g., a
+function that squares a number: `#(* %1 %1))` can be written `++#++(* % %))`.
 
 Additionally, this syntax also supports the variadic form with the `%&` symbol:
 
@@ -530,7 +545,7 @@ xref:block-section[`do` is explained in the next section].
 
 ==== Branching with `cond`
 
-Sometimes, the `if` expression can be slightly limited because it does not have the "else if" part
+Sometimes, the `if` expression can be slightly limiting because it does not have the "else if" part
 to add more than one condition. The `cond` macro comes to the rescue.
 
 With the `cond` expression, you can define multiple conditions:
@@ -576,7 +591,11 @@ will apply the `=` function to the given keyword and the `code` argument.
 
 ==== Branching with `case`
 
-The `case` branching expression has a similar use case to our previous example with
+////
+I eliminated the phrase "use case", because it is confusing when you are talking about the
+"case" expression.
+////
+The `case` branching expression has a similar use as our previous example with
 `condp`. The main differences are that `case` always uses the `=` predicate/function and its
 branching values are evaluated at compile time. This results in a more performant form
 than `cond` or `condp` but has the disadvantage that the condition value must be static.
@@ -846,7 +865,7 @@ In ClojureScript, the `for` construct isn't used for iteration but for generatin
 also known as "sequence comprehension". It offers a small domain specific language for declaratively
 building sequences.
 ////
-That previous sentence will totally lose a beginning programmer.
+Really, that previous sentence will totally lose a beginning programmer. Please consider removing it.
 ////
 
 `for` takes a vector of bindings and an expression and generates a sequence of the result of evaluating the
