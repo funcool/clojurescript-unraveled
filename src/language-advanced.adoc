@@ -1185,6 +1185,7 @@ by applying a function or `reset-meta!` for replacing it with another map:
 
 
 === Macros
+anchor:macros-section[]
 
 ////
 Intends to be a little explanation to macros (an extensive documentation is not a goal,
