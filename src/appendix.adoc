@@ -1204,3 +1204,17 @@ TODO
 ==== A complete example
 
 TODO: an example of a non-trivial task accomplished using processes and channels
+
+=== Appendix C: Setting up a ClojureScript development environment
+
+==== Cursive
+
+TODO
+
+==== Emacs
+
+TODO
+
+==== Vim
+
+TODO
