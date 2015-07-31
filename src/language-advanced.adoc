@@ -908,6 +908,7 @@ interface although it uses mutation internally:
 
 
 === Metadata
+anchor:metadata-section[]
 
 ClojureScript symbols, vars and persistent collections support attaching metadata to them. Metadata is
 a map with information about the entity it's attached to. The ClojureScript compiler uses metadata for
