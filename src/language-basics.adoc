@@ -1330,7 +1330,7 @@ Consider the `range` function, which generates a range of integers:
 
 If you just say `(range)`, you will get an infinite sequence of all the integers.
 Do *not* try this in the REPL, unless you are prepared to wait for a very, very long time, because
-the REPL wants to fully evaulate the expression.
+the REPL wants to fully evaluate the expression.
 
 Here is a contrived example. Let's say you are writing a graphing program and you are graphing the
 equation _y_= 2_x_^2^ + 5, and you want only those values of _x_ for which the _y_ value is less than 100.
@@ -1431,7 +1431,10 @@ another collection with `vec`:
 ;; => true
 
 (vector 0 1 2)
-;; => [0 1[0 1 2]
+;; => [0 1 2]
+
+(vec '(0 1 2))
+;; => [0 1 2]
 ----
 
 Vectors are, like lists, ordered collections of heterogeneous values. Unlike lists, vectors grow naturally from the tail,
@@ -1535,15 +1538,10 @@ faster than building a vector from a lazy sequence and making your intent more e
 
 ===== Maps
 
-Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a syntactic construct for attaching metadata to
-vars. 
+Maps are collections of key-and-value pairs. In addition to their normal use, they are also used as a syntactic construct for attaching xref:metadata-section[metadata] to vars.  Like vectors, maps are ubiquitous in ClojureScript.
 Any ClojureScript data structure can be used as a key in a map, although it's common to use keywords since they can
 also be called as functions.
 
-////
-Joe the Beginning Programmer asks: "What do you mean by 'attaching metadata to vars'? I'm confused."
-Really, you need a reference to the section where you discuss metadata, or you need to get rid of it in the preceding text.
-////
 
 ClojureScript maps are written literally as key-value pairs enclosed in braces `{}`. Alternatively, they can be created
 with the `hash-map` function:
