@@ -1099,8 +1099,11 @@ TODO: think about this.
 
 ===== nil-punning
 
+Since `seq` returns `nil` when the collection is empty, and `nil` evaluates to false in boolean context, you can check to see if a collection is empty by using the `seq` function. The technical term for this is nil-punning.
+////
 The above behaviour of `seq` when coupled with the falsey nature of `nil` in boolean contexts make it an idiom for checking
 the emptiness of a sequence in ClojureScript which is often referred to as nil-punning.
+////
 
 [source, clojure]
 ----
@@ -1158,6 +1161,16 @@ a variety of seqables:
 
 (map inc '(1 2 3))
 ;; => (2 3 4)
+----
+
+Note: When you use the `map` function on a map collection, your higher-order function
+will receive a two-item vector containing a key and value from the map. The following example
+uses xref:destructuring-section[destructuring] to access the key and value.
+
+[source,clojure]
+----
+(map (fn [[key value]] (* value value)) {:ten 10 :seven 7 :four 4})
+;; => (100 49 16)
 ----
 
 As you may have noticed, functions that operate on sequences are safe to use with empty collections or even
@@ -1219,7 +1232,7 @@ Similar predicates exist for checking if a value is a sequence (`seq?`) or a seq
 ;; => false
 ----
 
-For collections that can be counted in constant time, we can use the `count` operation:
+For collections that can be counted in constant time, we can use the `count` operation. This operation also works on strings, even though, as you have seen, they are not collections, sequences, or seqable.
 
 [source, clojure]
 ----
@@ -1302,6 +1315,33 @@ treating potentially infinite sequences as regular ones.
 ////
 TODO: This needs a lot more elaboration and examples showing how lazy sequences behave & how to create them.
 ////
+
+Consider the `range` function, which generates a range of integers:
+
+[source, clojure]
+----
+(range 5)
+;; => (0 1 2 3 4)
+(range 1 10)
+;; => (1 2 3 4 5 6 7 8 9)
+(range 10 100 15)
+;; (10 25 40 55 70 85)
+---
+
+If you just say `(range)`, you will get an infinite sequence of all the integers.
+Do *not* try this in the REPL, unless you are prepared to wait for a very, very long time, because
+the REPL wants to fully evaulate the expression.
+
+Here is a contrived example. Let's say you are writing a graphing program and you are graphing the
+equation _y_= 2_x_^2^ + 5, and you want only those values of _x_ for which the _y_ value is less than 100.
+You can generate all the numbers 0 through 100, which will certainly be enough, and then `take-while`
+the condition holds:
+
+[source,clojure]
+----
+(take-while (fn [x] (< (+ (* 2 x x) 5) 100)) (range 0 100))
+;; => (0 1 2 3 4 5 6)
+----
 
 ==== Collections in depth
 
@@ -1391,10 +1431,7 @@ another collection with `vec`:
 ;; => true
 
 (vector 0 1 2)
-;; => [0 1 2]
-
-(vec '(0 1 2))
-;; => [0 1 2]
+;; => [0 1[0 1 2]
 ----
 
 Vectors are, like lists, ordered collections of heterogeneous values. Unlike lists, vectors grow naturally from the tail,
@@ -1408,7 +1445,10 @@ time:
 ----
 
 Another thing that differentiates lists and vectors is that vectors are indexed collections and as such support efficient
-random index access and non-destructive updates. We can use the familiar `nth` function to retrieve values given an index:
+random index access and non-destructive updates. We can use the `nth` function to retrieve values given an index:
+////
+I got rid of the "familiar" in the preceding paragraph, because you never introduced it before.
+////
 
 [source, clojure]
 ----
@@ -1501,6 +1541,7 @@ also be called as functions.
 
 ////
 Joe the Beginning Programmer asks: "What do you mean by 'attaching metadata to vars'? I'm confused."
+Really, you need a reference to the section where you discuss metadata, or you need to get rid of it in the preceding text.
 ////
 
 ClojureScript maps are written literally as key-value pairs enclosed in braces `{}`. Alternatively, they can be created
@@ -1536,13 +1577,14 @@ In the preceding example, it just so happens that the order was preserved, but i
 the order is not preserved.
 
 Maps associate keys to values and, as such, are an associative data structure. They support adding associations with `assoc` and,
-unlike vectors, removing them with `dissoc`. Let's explore these functions:
+unlike vectors, removing them with `dissoc`. `assoc` will also update the value of an existing key. Let's explore these functions:
 
 [source,clojure]
 ----
 (assoc {:name "Cirilla"} :surname "Fiona")
 ;; => {:name "Cirilla", :surname "Fiona"}
-
+(assoc {:name "Cirilla"} :name "Alfonso")
+;; => {:name "Alfonso"}
 (dissoc {:name "Cirilla"} :name)
 ;; => {}
 ----
@@ -1572,12 +1614,13 @@ can create a sorted map with default ordering with `sorted-map`:
 ----
 
 If we need a custom ordering we can provide a comparator function to `sorted-map-by`, let's see an example inverting the value
-returned by the built-in `compare` function. Comparator functions take two elements to compare and return -1 (less than), 0 (equal)
-or 1 (greater than):
+returned by the built-in `compare` function. Comparator functions take two items to compare
+and return -1 (if the first item is less than the second), 0 (if they are equal),
+or 1 (if the first item is greater than the second).
 
 [source,clojure]
 ----
-(def reverse-compare (comp - compare))
+(defn reverse-compare [a b] (compare b a))
 
 (def sm (sorted-map-by reverse-compare :a 0 :b 1 :c 2))
 ;; => {:c 2, :b 1, :a 0}
@@ -1585,7 +1628,6 @@ or 1 (greater than):
 (keys sm)
 ;; => (:c :b :a)
 ----
-
 
 ===== Sets
 
@@ -1636,6 +1678,7 @@ we are loading a namespace called `clojure.set` and binding it to the `s` symbol
 A nice property of immutable sets is that they can be nested. Languages that have mutable sets can end up containing duplicate values,
 but that can't happen in ClojureScript. In fact, all ClojureScript data structures can be nested arbitrarily due to immutability.
 
+
 Sets also support the generic `conj` operation just like every other collection does.
 
 [source,clojure]
@@ -1666,6 +1709,9 @@ is truthy in ClojureScript, we can use sets as predicate functions:
 
 (vowels \a)
 ;; => "a"
+
+(vowels \z)
+;; => nil
 
 (filter vowels "Hound dog")
 ;; => ("o" "u" "o")
@@ -1735,6 +1781,7 @@ A thing to bear in mind about queues is that the stack operations don't follow t
 Queues are not as frequently used as lists or vectors, but it is good to know that they are available in ClojureScript, as they may occasionally come in handy.
 
 
+[[destructuring-section]]
 === Destructuring
 
 Destructuring, as its name suggests, is a way of taking apart structured data such as collections
@@ -1866,7 +1913,8 @@ after the `:as` keyword:
 ;; => ["Cirilla" {:name "Cirilla" :age 49}]
 ----
 
-Not only keywords can be the keys of associative data structures. Numbers, strings, symbols and
+Keywords aren't the only things that can be the keys of associative data structures.
+Numbers, strings, symbols and
 many other data structures can be used as keys, so we can destructure using those, too. Note that
 we need to quote the symbols to prevent them from being resolved as a var lookup:
 
@@ -1889,7 +1937,7 @@ Since the values corresponding to keys are usually bound to their equivalent sym
 (for example, when binding the value of `:language` to the symbol `language`) and keys are usually
 keywords, strings, or symbols, ClojureScript offers shorthand syntax for these cases.
 
-We'll show examples of all, starting with destructuring keywords using `:keys`:
+We'll show examples of all of these, starting with destructuring keywords using `:keys`:
 
 [source, clojure]
 ----
@@ -1917,8 +1965,8 @@ keywords respectively:
 ;; => ["Cirilla" "Fiona"]
 ----
 
-An interesting property of destructuring is that we can nest destructuring forms arbitrarily which
-makes code that accesses nested data on a collection very easy to understand as it mimics the
+An interesting property of destructuring is that we can nest destructuring forms arbitrarily, which
+makes code that accesses nested data on a collection very easy to understand, as it mimics the
 collection's structure:
 
 [source, clojure]
