@@ -1187,7 +1187,10 @@ number or buffer can be provided as the last argument.
 
 ==== Higher-level abstractions
 
-TODO
+We've learned the about the low-level primitives of `core.async` and the combinators that it offers
+for working with channels. `core.async` also offers some useful, higher-level abstractions on top of
+channels that can serve as building blocks for more advanced functionality.
+
 
 ===== Mixer
 
