@@ -1696,32 +1696,30 @@ Sets have a sorted counterpart like maps do that are created using the functions
 I'm not sure that this section is necessary for beginners, but I am OK with it.
 ////
 
-ClojureScript also provides a persistent and immutable queue. Queues don't have literal syntax since they are not used as pervasively as other collection types.
-
-There are no convenient constructor functions for creating persistent queues. Instead of that, we can get an empty instance using `PersistentQueue`s `EMPTY` attribute.
+ClojureScript also provides a persistent and immutable queue. Queues are not used as pervasively as other collection types.  They can be created using the `#queue []` literal syntax, but there are no convenient constructor functions for them.
 
 [source,clojure]
 ----
-(def pq (.-EMPTY PersistentQueue))
-;; => #queue []
+(def pq #queue [1 2 3])
+;; => #queue [1 2 3]
 ----
 
 Using `conj` to add values to a queue adds items onto the rear:
 
 [source,clojure]
 ----
-(def pq (.-EMPTY PersistentQueue))
-;; => #queue []
-
-(conj (.-EMPTY PersistentQueue) 1 2 3)
+(def pq #queue [1 2 3])
 ;; => #queue [1 2 3]
+
+(conj pq 4 5)
+;; => #queue [1 2 3 4 5]
 ----
 
 A thing to bear in mind about queues is that the stack operations don't follow the usual stack semantics (pushing and popping from the same end). `pop` takes values from the front position, and `conj` pushes (appends) elements to the back.
 
 [source,clojure]
 ----
-(def pq (conj (.-EMPTY PersistentQueue) 1 2 3))
+(def pq #queue [1 2 3])
 ;; => #queue [1 2 3]
 
 (peek pq)
