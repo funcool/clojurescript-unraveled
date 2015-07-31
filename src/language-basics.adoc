@@ -1495,7 +1495,7 @@ faster than building a vector from a lazy sequence and making your intent more e
 
 ===== Maps
 
-Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a syntactic construct for attaching metadata to
+Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a syntactic construct, particularly for attaching metadata to
 vars. Any ClojureScript data structure can be used as a key in a map, although it's common to use keywords since they can
 also be called as functions.
 
