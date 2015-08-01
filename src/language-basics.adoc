@@ -25,7 +25,7 @@ allows many unusual characters like `?` or `-` in symbol names, which makes it e
 ;; => true
 ----
 
-To distinguish function calls from lists of data items, we can quote lists to keep them from being evaluated. 
+To distinguish function calls from lists of data items, we can quote lists to keep them from being evaluated.
 The quoted lists will be treated as data instead of as a function call:
 
 [source, clojure]
@@ -1913,15 +1913,15 @@ after the `:as` keyword:
 ----
 
 Keywords aren't the only things that can be the keys of associative data structures.
-Numbers, strings, symbols and
-many other data structures can be used as keys, so we can destructure using those, too. Note that
-we need to quote the symbols to prevent them from being resolved as a var lookup:
+Numbers, strings, symbols and many other data structures can be used as keys, so we
+can destructure using those, too. Note that we need to quote the symbols to prevent
+them from being resolved as a var lookup:
 
 [source, clojure]
 ----
-(let [{tenth 10} (range 100)]
-  tenth)
-;; => 11
+(let [{one 1} {0 "zero" 1 "one"}]
+  one)
+;; => "one"
 
 (let [{name "name"} {"name" "Cirilla"}]
   name)
