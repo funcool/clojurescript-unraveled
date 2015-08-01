@@ -1313,7 +1313,163 @@ channel to multiple topics.
 ===== Mixer
 
 As we learned in the section about `core.async`'s combinators, we can use the `merge` function for combining
-multiple channels into one.
+multiple channels into one. When merging multiple channels, every value put in the input channels will end up
+in the merged channel. However, we may want more finer-grained control over which values put in the input
+channels end up in the output channel, that's where mixers come in handy.
+
+`core.async` gives us the mixer abstraction, which we can use to combine multiple input channnels into an output
+channel. The interesting part of the mixer is that we can mute, pause and listen exclusively to certain input
+channels.
+
+We can create a mixer given an output channel with `mix`. Once we have a mixer we can add input channels into the
+mix using `admix`, remove it using `unmix` or remove every input channel with `unmix-all`.
+
+For controlling the state of the input channel we use the `toggle` function giving it the mixer and a map from
+channels to their states. Note that we can add channels to the mix using `toggle`, since the map will be merged
+with the current state of the mix. The state of a channel is a map which can have the keys `:mute`, `:pause` and
+`:solo` mapped to a boolean.
+
+Let's see what muting, pausing and soloing channels means:
+
+- A muted input channel means that, while still taking values from it, they won't be forwarded to the output channel.
+  Thus, while a channel is muted, all the values put in it will be discarded.
+- A paused input channel means that no values will be taken from it. This means that values put in the channel won't
+  be forwarded to the output channel nor discarded.
+- When soloing one or more channels the output channel will only receive the values put in soloed channels. By default
+  non-soloed channels are muted but we can use `solo-mode` to decide between muting or pausing non-soloed channels.
+
+That was a lot of information so let's see an example to improve our understanding. First of all, we'll set up a mixer
+with an `out` channel and add three input channels to the mix. After that, we'll be printing all the values received
+on the `out` channel to illustrate the control over input channels:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! mix admix unmix toggle solo-mode]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Output channel and mixer
+(def out (chan))
+(def mixer (mix out))
+
+;; Input channels
+(def in-1 (chan))
+(def in-2 (chan))
+(def in-3 (chan))
+
+(admix mixer in-1)
+(admix mixer in-2)
+(admix mixer in-3)
+
+;; Let's listen to the `out` channel and print what we get from it
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done")
+    (do
+      (println [:a] "Got" value)
+      (recur (<! out)))))
+----
+
+By default, every value put in the input channels will be put in the `out` channel:
+
+[source, clojure]
+----
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 2
+;; [:a] Got 3
+----
+
+Let's pause the `in-2` channel, put a value in every input channel and resume `in-2`:
+
+[source, clojure]
+----
+(toggle mixer {in-2 {:pause true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 3
+
+(toggle mixer {in-2 {:pause false}})
+
+;; [:a] Got 2
+----
+
+As you can see in the example above, the values put in the paused channels aren't discarded.
+For discarding values put in an input channel we have to mute it, let's see an example:
+
+[source, clojure]
+----
+(toggle mixer {in-2 {:mute true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)  ;; `out` will never get this value since it's discarded
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 3
+
+(toggle mixer {in-2 {:mute false}})
+----
+
+We put a value (`2`) in the `in-2` channel and, since the channel was muted at the time, the value
+is discarded and never put into `out`. Let's look at the third state a channel can be inside a mixer:
+solo.
+
+As we mentioned before, soloing channels of a mixer implies muting the rest of them by default:
+
+[source, clojure]
+----
+(toggle mixer {in-1 {:solo true}
+               in-2 {:solo true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3)) ;; `out` will never get this value since it's discarded
+
+;; [:a] Got 1
+;; [:a] Got 2
+
+(toggle mixer {in-1 {:solo false}
+               in-2 {:solo false}})
+----
+
+However, we can set the mode the non-soloed channels will be in while there are soloed channels.
+Let's set the default non-solo mode to pause instead of the default mute:
+
+[source, clojure]
+----
+(solo-mode mixer :pause)
+;; => true
+(toggle mixer {in-1 {:solo true}
+               in-2 {:solo true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 2
+
+(toggle mixer {in-1 {:solo false}
+               in-2 {:solo false}})
+
+;; [:a] Got 3
+----
 
 ==== A complete example
 
