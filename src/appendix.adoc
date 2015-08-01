@@ -1253,9 +1253,62 @@ channels when there are still no taps such value will be dropped.
 ;; [:b] Resting for 3 seconds
 ----
 
+
 ===== Pub-sub
 
-TODO
+After learning about mults you could imagine how to implement a pub-sub abstraction on top of `mult`, `tap` and
+`untap` but since it's a widely used communication mechanism `core.async` already implements this functionality.
+Instead of creating a mult from a source channel, we create a publication with `pub` giving it a channel and a
+function that will be used for extracting the topic of the messages.
+
+We can subscribe to a publication with `sub`, giving it the publication we want to subscribe to, the topic we
+are interested in and a channel to put the messages that have the given topic. Note that we can subscribe a
+channel to multiple topics.
+
+`unsub` can be given a publication, topic and channel for unsubscribing such channel from the topic.
+`unsub-all` can be given a publication and a topic to unsubscribe every channel from the given topic.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! pub sub]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Source channel and publication
+(def in (chan))
+(def publication (pub in :action))
+
+;; Sink channels
+(def a-ch (chan))
+(def another-ch (chan))
+
+;; Channel with `:increment` action
+(sub publication :increment a-ch)
+
+(go-loop [value (<! a-ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Increment:" (inc (:value value)))
+      (recur (<! a-ch)))))
+
+;; Channel with `:double` action
+(sub publication :double another-ch)
+
+(go-loop [value (<! another-ch)]
+  (if (nil? value)
+    (println [:b] "I'm done!")
+    (do
+      (println [:b] "Double:" (* 2 (:value value)))
+      (recur (<! another-ch)))))
+
+;; See how values are delivered to `a-ch` and `another-ch` depending on their action
+(put! in {:action :increment :value 98})
+(put! in {:action :double :value 21})
+
+;; [:a] Increment: 99
+;; [:b] Double: 42
+----
+
 
 ===== Mixer
 
