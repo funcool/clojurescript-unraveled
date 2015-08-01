@@ -1192,17 +1192,75 @@ for working with channels. `core.async` also offers some useful, higher-level ab
 channels that can serve as building blocks for more advanced functionality.
 
 
-===== Mixer
-
-TODO
-
 ===== Mult
 
-TODO
+Whenever we have a channel whose values have to be broadcasted to many others, we can use `mult` for
+creating a multiple of the supplied channel. Once we have a mult, we can attach channels to it using
+`tap` and dettach them using `untap`. Mults also support removing all tapped channels at once with
+`untap-all`.
+
+Every value put in the source channel of a mult is broadcasted to all the tapped channels, and all of
+them must accept it before the next item is broadcasted. For preventing slow takers from blocking the
+mult's values we must use buffering on the tapped channels judiciously.
+
+Closed tapped channels are removed automatically from the mult. When putting a value in the source
+channels when there are still no taps such value will be dropped.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! timeout mult tap]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Source channel and mult
+(def in (chan))
+(def m-in (mult in))
+
+;; Sink channels
+(def a-ch (chan))
+(def another-ch (chan))
+
+;; Taker for `a-ch`
+(go-loop [value (<! a-ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (recur (<! a-ch)))))
+
+;; Taker for `another-ch`, which sleeps for 3 seconds between takes
+(go-loop [value (<! another-ch)]
+  (if (nil? value)
+    (println [:b] "I'm done!")
+    (do
+      (println [:b] "Got" value)
+      (println [:b] "Resting 3 seconds")
+      (<! (timeout 3000))
+      (recur (<! another-ch)))))
+
+;; Tap the two channels to the mult
+(tap m-in a-ch)
+(tap m-in another-ch)
+
+;; See how the values are delivered to `a-ch` and `another-ch`
+(put! in 1)
+(put! in 2)
+
+;; [:a] Got 1
+;; [:b] Got 2
+;; [:b] Resting for 3 seconds
+;; [:a] Got 2
+;; [:b] Got 2
+;; [:b] Resting for 3 seconds
+----
 
 ===== Pub-sub
 
 TODO
+
+===== Mixer
+
+As we learned in the section about `core.async`'s combinators, we can use the `merge` function for combining
+multiple channels into one.
 
 ==== A complete example
 
