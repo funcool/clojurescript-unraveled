@@ -620,15 +620,42 @@ functions are asynchronous because of their nature: they can succeed but be comp
 later time.
 
 `core.async` has two synchronous operations for putting or taking values: `offer!` and
-`poll!`. These two operations will only succeed if they can be completed immediately. This
-means that `offer!` can only succeed when there are pending takes and `poll!` when there
-are pending puts.
+`poll!`. Let's see how they work through examples.
+
+`offer!` puts a value in a channel if it's possible to do so immediately. It returns `true`
+if the channel received the value and `false` otherwise. Note that, unlike with `put!`, `offer!`
+cannot distinguish between closed and open channels.
 
 [source, clojure]
 ----
-(require '[cljs.core.async :refer [chan put! take! offer! poll!]])
+(require '[cljs.core.async :refer [chan offer!]])
 
-;; TODO: wait for core.async release for documenting offer! and poll!
+(def ch (chan 1))
+
+(offer! ch 42)
+;; => true
+
+(offer! ch 43)
+;; => false
+----
+
+`poll!` takes a value from a channel if it's possible to do so immediately. Returns the value if
+succesful and `nil` otherwise. Unlike `take!`, `poll!` cannot distinguish closed and open channels.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan offer! poll!]])
+
+(def ch (chan 1))
+
+(poll! ch)
+;; => nil
+
+(offer! ch 42)
+;; => true
+
+(poll! ch)
+;; => 42
 ----
 
 ==== Processes
