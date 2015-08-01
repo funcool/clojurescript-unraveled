@@ -612,6 +612,8 @@ value.
 ;; => nil
 ----
 
+////
+TODO: uncomment with next core.async release, use closed? predicate for closed channels too
 ===== Offer and Poll
 
 We've learned about the two basic operations on channels so far: `put!` and `take!`. They
@@ -657,6 +659,7 @@ succesful and `nil` otherwise. Unlike `take!`, `poll!` cannot distinguish closed
 (poll! ch)
 ;; => 42
 ----
+////
 
 ==== Processes
 
