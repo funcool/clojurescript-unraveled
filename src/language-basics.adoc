@@ -1326,7 +1326,7 @@ Consider the `range` function, which generates a range of integers:
 ;; => (1 2 3 4 5 6 7 8 9)
 (range 10 100 15)
 ;; (10 25 40 55 70 85)
----
+----
 
 If you just say `(range)`, you will get an infinite sequence of all the integers.
 Do *not* try this in the REPL, unless you are prepared to wait for a very, very long time, because

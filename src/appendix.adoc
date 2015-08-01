@@ -1312,7 +1312,7 @@ channel to multiple topics.
 
 ===== Mixer
 
-As we learned in the section about `core.async`'s combinators, we can use the `merge` function for combining
+As we learned in the section about `core.async` combinators, we can use the `merge` function for combining
 multiple channels into one. When merging multiple channels, every value put in the input channels will end up
 in the merged channel. However, we may want more finer-grained control over which values put in the input
 channels end up in the output channel, that's where mixers come in handy.
