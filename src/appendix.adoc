@@ -616,7 +616,7 @@ value.
 
 We've learned about the two basic operations on channels so far: `put!` and `take!`. They
 either take or put a value and are enqueued if they can't be performed immediately. Both
-functions are asynchronous because of the nature: they can succeed but be completed at a
+functions are asynchronous because of their nature: they can succeed but be completed at a
 later time.
 
 `core.async` has two synchronous operations for putting or taking values: `offer!` and
