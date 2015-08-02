@@ -1,5 +1,14 @@
 = Changelog
 
+== Version 3
+
+Date: 2015-08-02
+
+* Completed the core.async appendix.
+* Clarified some examples from compiler section.
+* Fix a lot of typos.
+
+
 == Version 2
 
 Date: 2015-07-19
