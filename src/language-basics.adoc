@@ -2043,18 +2043,14 @@ This is how it can be done:
 ;; => "HELLO"
 ----
 
-Additionally, _ClojureScript_ offers a simple way to refer to specific vars or functions from a concrete namespace using the `:refer` directive.
-
-The `:refer` directive has two possible arguments: the `:all` keyword or a vector of symbols that will
-refer to vars in the namespace. With `:all`, we are indicating that we want to refer all public vars from the
-namespace, and with a vector, we can specify the specific subset of vars that we want. Effectively, it is as if those vars and
+Additionally, _ClojureScript_ offers a simple way to refer to specific vars or functions from a concrete namespace using the `:refer` directive, followed by a sequence of symbols that will
+refer to vars in the namespace. Effectively, it is as if those vars and
 functions are now part of your namespace, and you do not need to qualify them at all.
 
 [source, clojure]
 ----
 (ns myapp.main
-  (:require [myapp.core :refer :all]
-            [clojure.string :refer [upper-case]]))
+  (:require [clojure.string :refer [upper-case]]))
 (upper-case x)
 ;; => "HELLO"
 ----
