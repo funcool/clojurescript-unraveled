@@ -925,6 +925,8 @@ Now that we're acquainted with channels and processes it's time to explore some 
 combinators for working with channels that are present in `core.async`. This section
 includes a brief description of all of them together with a simple example of their usage.
 
+===== pipe
+
 `pipe` takes an input and output channels and pipes all the values put on the input channel
 to the output one. The output channel is closed whenever the source is closed unless we
 provide a `false` third argument:
@@ -963,6 +965,8 @@ provide a `false` third argument:
 In the above example we used the `go-loop` macro for reading values recursively until the
 `out` channel is closed. Notice that when we close the `in` channel the `out` channel is
 closed too, making the `go-loop` terminate.
+
+===== pipeline-async
 
 `pipeline-async` takes a number for controlling parallelism, an output channel, an
 asynchronous function and an input channel. The asynchronous function has two arguments:
@@ -1020,6 +1024,8 @@ channel is closed, which defaults to `true`.
 ;; [:a] I'm done!
 ----
 
+===== pipeline
+
 `pipeline` is similar to `pipeline-async` but instead of taking and asynchronous function
 it takes a transducer instead. The transducer will be applied independently to each input.
 
@@ -1055,6 +1061,8 @@ it takes a transducer instead. The transducer will be applied independently to e
 ;; [:a] Waiting for a value
 ;; [:a] I'm done!
 ----
+
+===== split
 
 `split` takes a predicate and a channel and returns a vector with two channels, the first
 of which will receive the values for which the predicate is true, the second will receive
@@ -1105,6 +1113,8 @@ channels with the third (true channel) and fourth (false channel) arguments.
 ;; [:odds] I'm done!
 ----
 
+===== reduce
+
 `reduce` takes a reducing function, initial value and an input channel. It returns a
 channel with the result of reducing over all the values put on the input channel before
 closing it using the given initial value as the seed.
@@ -1128,6 +1138,8 @@ closing it using the given initial value as the seed.
 ;; Result: 6
 ----
 
+===== onto-chan
+
 `onto-chan` takes a channel and a collection and puts the contents of the collection into
 the channel. It closes the channel after finishing although it accepts a third argument for
 specifying if it should close it or not. Let's rewrite the `reduce` example using
@@ -1147,6 +1159,8 @@ specifying if it should close it or not. Let's rewrite the `reduce` example usin
 
 ;; Result: 6
 ----
+
+===== to-chan
 
 `to-chan` takes a collection and returns a channel where it will put every value in the
 collection, closing the channel afterwards.
@@ -1174,6 +1188,8 @@ collection, closing the channel afterwards.
 ;; [:a] Waiting for a value
 ;; [:a] I'm done!
 ----
+
+===== merge
 
 `merge` takes a collection of input channels and returns a channel where it will put every
 value that is put on the input channels. The returned channel will be closed when all the
