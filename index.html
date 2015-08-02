@@ -849,8 +849,8 @@ p { margin-bottom: 1.25rem; }
 <span id="email" class="email"><a href="mailto:niwi@niwi.nz">niwi@niwi.nz</a></span><br/>
 <span id="author2" class="author">Alejandro Gómez</span><br/>
 <span id="email2" class="email"><a href="mailto:alejandro@dialelo.com">alejandro@dialelo.com</a></span><br/>
-<span id="revnumber">version 2,</span>
-<span id="revdate">2015-07-19</span>
+<span id="revnumber">version 3,</span>
+<span id="revdate">2015-08-02</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -866,7 +866,7 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#flow-control">3.5. Flow control</a></li>
 <li><a href="#locals-blocks-and-loops">3.6. Locals, Blocks, and Loops</a></li>
 <li><a href="#collection-types">3.7. Collection types</a></li>
-<li><a href="#destructuring">3.8. Destructuring</a></li>
+<li><a href="#destructuring-section">3.8. Destructuring</a></li>
 <li><a href="#namespace-section">3.9. Namespaces</a></li>
 <li><a href="#abstractions-and-polymorphism">3.10. Abstractions and Polymorphism</a></li>
 <li><a href="#data-types">3.11. Data types</a></li>
@@ -877,10 +877,10 @@ p { margin-bottom: 1.25rem; }
 </li>
 <li><a href="#tooling-compiler">4. Tooling &amp; Compiler</a>
 <ul class="sectlevel2">
-<li><a href="#getting-started-with-compiler">4.1. Getting Started with compiler</a></li>
+<li><a href="#getting-started-with-the-compiler">4.1. Getting Started with the Compiler</a></li>
 <li><a href="#working-with-the-repl">4.2. Working with the REPL</a></li>
 <li><a href="#the-closure-library">4.3. The Closure Library</a></li>
-<li><a href="#dependency-managemen">4.4. Dependency managemen</a></li>
+<li><a href="#dependency-management">4.4. Dependency management</a></li>
 <li><a href="#using-javascript-libraries">4.5. Using javascript libraries</a></li>
 <li><a href="#unit-testing">4.6. Unit testing</a></li>
 </ul>
@@ -898,6 +898,7 @@ p { margin-bottom: 1.25rem; }
 <ul class="sectlevel2">
 <li><a href="#appendix-a-interactive-development-with-figwheel">6.1. Appendix A: Interactive development with Figwheel</a></li>
 <li><a href="#appendix-b-csp-and-core-async">6.2. Appendix B: CSP and core.async</a></li>
+<li><a href="#appendix-c-setting-up-a-clojurescript-development-environment">6.3. Appendix C: Setting up a ClojureScript development environment</a></li>
 </ul>
 </li>
 <li><a href="#acknowledgments">7. Acknowledgments</a></li>
@@ -926,10 +927,10 @@ be familiar to everyone.</p>
 of reference information and extensive examples to serve as a ClojureScript primer as
 well as a series of practical how-to&#8217;s. This document will evolve with the ClojureScript
 language, both as a reference of the language features and as a sort of cookbook with
-xpractical programming recipes.</p>
+practical programming recipes.</p>
 </div>
 <div class="paragraph">
-<p>You&#8217;ll get the most ouf this book if you:</p>
+<p>You&#8217;ll get the most out of this book if you:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1055,7 +1056,9 @@ parentheses — but Clojure(Script) has evolved the Lisp syntax with more data s
 it more pleasant to write and read.</p>
 </div>
 <div class="paragraph">
-<p>A list with a function in the first position is used for calling a function in ClojureScript:</p>
+<p>A list with a function in the first position is used for calling a function in ClojureScript. In the
+example below, we apply the addition function to three arguments. Note that unlike in other languages,
+<code>+</code> is not an operator but a function. Lisp has no operators; it only has functions.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1074,8 +1077,8 @@ allows many unusual characters like <code>?</code> or <code>-</code> in symbol n
 </div>
 </div>
 <div class="paragraph">
-<p>For distinguishing function calls and lists, we can quote lists to keep them from being evaluated. The quoted
-lists will be treated as data instead of as a function call:</p>
+<p>To distinguish function calls from lists of data items, we can quote lists to keep them from being evaluated.
+The quoted lists will be treated as data instead of as a function call:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1099,7 +1102,7 @@ example of the usage of a vector (enclosed in brackets) for defining local bindi
 <div class="paragraph">
 <p>This is practically all the syntax we need to know for using not only ClojureScript, but any Lisp. Being
 written in its own data structures (often referred to as <em>homoiconicity</em>) is a great property since the
-syntax is uniform and simple; also, code generation via macros is easier than in any other language, giving
+syntax is uniform and simple; also, code generation via <a href="#macros-section">macros</a> is easier than in any other language, giving
 us plenty of power to extend the language to suit our needs.</p>
 </div>
 </div>
@@ -1241,7 +1244,7 @@ abstractions. <em>ClojureScript</em> is not an exception to this rule.</p>
 collections and collections in other languages is that they are persistent and immutable.</p>
 </div>
 <div class="paragraph">
-<p>Before moving on to all of these (possibly) unknown concepts, we&#8217;ll present a high-level overview
+<p>Before moving on to these (possibly) unknown concepts, we&#8217;ll present a high-level overview
 of existing collection types in <em>ClojureScript</em>.</p>
 </div>
 <div class="sect4">
@@ -1304,7 +1307,7 @@ elements.</p>
 <div class="paragraph">
 <p>Like lists, <strong>vectors</strong> store a series of values, but in this case, with very efficient index access
 to their elements, as opposed to lists, which are evaluated in order. Don&#8217;t worry; in
-the following chapters we&#8217;ll go in depth with details, but at this moment, this simple explanation is
+the following sections we&#8217;ll go in depth with details, but at this moment, this simple explanation is
 more than enough.</p>
 </div>
 <div class="paragraph">
@@ -1352,7 +1355,7 @@ in <em>ClojureScript</em> are written with the pairs between curly braces.</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-Commas are frequently used to separate a key-value pair but are completely optional. In
+Commas are frequently used to separate a key-value pair, but they are completely optional. In
 <em>ClojureScript</em> syntax, commas are treated like spaces.
 </td>
 </tr>
@@ -1371,16 +1374,19 @@ the order of evaluation is not guaranteed.</p>
 <div class="paragraph">
 <p>Sets store zero or more unique items of any type and are unordered. Like maps,
 they use curly braces for their literal syntax, with the difference being that they use a <code>#</code> as
-the leading character:</p>
+the leading character. You can also use the <code>set</code> function to convert a collection to a set:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span> <span class="tok-ss">:foo</span> <span class="tok-ss">:bar</span><span class="tok-p">}</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span> <span class="tok-ss">:foo</span> <span class="tok-ss">:bar</span><span class="tok-p">}</span>
+<span class="tok-c1">;; =&gt; #{1 :bar 3 :foo 2}</span>
+<span class="tok-p">(</span><span class="tok-nb">set </span><span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">1</span> <span class="tok-mi">3</span> <span class="tok-mi">1</span> <span class="tok-mi">4</span> <span class="tok-mi">1</span> <span class="tok-mi">5</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; #{1 2 3 4 5}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In subsequent chapters, we&#8217;ll go in depth about sets and the other collection types you&#8217;ve seen in this
-chapter.</p>
+<p>In subsequent sections, we&#8217;ll go in depth about sets and the other collection types you&#8217;ve seen in this
+section.</p>
 </div>
 </div>
 </div>
@@ -1528,7 +1534,7 @@ it has more than one body.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This line: <code>([x] (myinc x 1)</code> says that if there is only one argument, call the function
+<p>This line: <code>([x] (myinc x 1))</code> says that if there is only one argument, call the function
 <code>myinc</code> with that argument and the number <code>1</code> as the second argument. The other function body
 <code>([x increment] (+ x increment))</code> says that if there are two arguments, return the result of
 adding them.</p>
@@ -1593,10 +1599,10 @@ that uses the <code>fn</code> special form.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">my-set</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">set </span><span class="tok-p">(</span><span class="tok-nb">list </span><span class="tok-nv">%1</span> <span class="tok-nv">%2</span><span class="tok-p">)))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">average</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">/ </span><span class="tok-p">(</span><span class="tok-nb">+ </span><span class="tok-nv">%1</span> <span class="tok-nv">%2</span><span class="tok-p">)</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
 
-<span class="tok-p">(</span><span class="tok-nf">my-set</span> <span class="tok-s">&quot;x&quot;</span> <span class="tok-s">&quot;y&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; #{&quot;x&quot; &quot;y&quot;}</span></code></pre>
+<span class="tok-p">(</span><span class="tok-nf">average</span> <span class="tok-mi">3</span> <span class="tok-mi">4</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 3.5</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1604,7 +1610,10 @@ that uses the <code>fn</code> special form.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">my-set-longer</span> <span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[</span><span class="tok-nv">a</span> <span class="tok-nv">b</span><span class="tok-p">]</span> <span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">set </span><span class="tok-p">(</span><span class="tok-nb">list </span><span class="tok-nv">a</span> <span class="tok-nv">b</span><span class="tok-p">))))</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">average-longer</span> <span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[</span><span class="tok-nv">a</span> <span class="tok-nv">b</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nb">/ </span><span class="tok-p">(</span><span class="tok-nb">+ </span><span class="tok-nv">a</span> <span class="tok-nv">b</span><span class="tok-p">)</span> <span class="tok-mi">2</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">average-longer</span> <span class="tok-mi">7</span> <span class="tok-mi">8</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 7.5</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1612,8 +1621,8 @@ that uses the <code>fn</code> special form.</p>
 the reader macro will be interpreted and converted to a <code>fn</code> expression.</p>
 </div>
 <div class="paragraph">
-<p>If a function only accepts one argument, you can omit the number after the <code>%</code> symbol, e.g., the
-function <code>#(set (list %1))</code> can be written <code>#(set (list %))</code>.</p>
+<p>If a function only accepts one argument, you can omit the number after the <code>%</code> symbol, e.g., a
+function that squares a number: <code>#(* %1 %1))</code> can be written <code>#(* % %))</code>.</p>
 </div>
 <div class="paragraph">
 <p>Additionally, this syntax also supports the variadic form with the <code>%&amp;</code> symbol:</p>
@@ -1665,7 +1674,7 @@ and the third expression will be evaluated otherwise.</p>
 <div class="sect3">
 <h4 id="branching-with-code-cond-code"><a class="link" href="#branching-with-code-cond-code">3.5.2. Branching with <code>cond</code></a></h4>
 <div class="paragraph">
-<p>Sometimes, the <code>if</code> expression can be slightly limited because it does not have the "else if" part
+<p>Sometimes, the <code>if</code> expression can be slightly limiting because it does not have the "else if" part
 to add more than one condition. The <code>cond</code> macro comes to the rescue.</p>
 </div>
 <div class="paragraph">
@@ -1715,7 +1724,7 @@ will apply the <code>=</code> function to the given keyword and the <code>code</
 <div class="sect3">
 <h4 id="branching-with-code-case-code"><a class="link" href="#branching-with-code-case-code">3.5.3. Branching with <code>case</code></a></h4>
 <div class="paragraph">
-<p>The <code>case</code> branching expression has a similar use case to our previous example with
+<p>The <code>case</code> branching expression has a similar use as our previous example with
 <code>condp</code>. The main differences are that <code>case</code> always uses the <code>=</code> predicate/function and its
 branching values are evaluated at compile time. This results in a more performant form
 than <code>cond</code> or <code>condp</code> but has the disadvantage that the condition value must be static.</p>
@@ -2262,8 +2271,7 @@ will evaluate as false (<a href="#truthiness-section">see the section on <em>tru
 <div class="sect4">
 <h5 id="nil-punning"><a class="link" href="#nil-punning">nil-punning</a></h5>
 <div class="paragraph">
-<p>The above behaviour of <code>seq</code> when coupled with the falsey nature of <code>nil</code> in boolean contexts make it an idiom for checking
-the emptiness of a sequence in ClojureScript which is often referred to as nil-punning.</p>
+<p>Since <code>seq</code> returns <code>nil</code> when the collection is empty, and <code>nil</code> evaluates to false in boolean context, you can check to see if a collection is empty by using the <code>seq</code> function. The technical term for this is nil-punning.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2287,7 +2295,7 @@ the emptiness of a sequence in ClojureScript which is often referred to as nil-p
 </div>
 </div>
 <div class="paragraph">
-<p><code>nil</code> is also both a seqable and a sequence, and thus it supports all the functions we saw so far:</p>
+<p>Though <code>nil</code> is neither a seqable nor a sequence, it is supported by all the functions we saw so far:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2323,6 +2331,17 @@ a variety of seqables:</p>
 
 <span class="tok-p">(</span><span class="tok-nb">map inc </span><span class="tok-o">&#39;</span><span class="tok-p">(</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">))</span>
 <span class="tok-c1">;; =&gt; (2 3 4)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note: When you use the <code>map</code> function on a map collection, your higher-order function
+will receive a two-item vector containing a key and value from the map. The following example
+uses <a href="#destructuring-section">destructuring</a> to access the key and value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">map </span><span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[[</span><span class="tok-nb">key </span><span class="tok-nv">value</span><span class="tok-p">]]</span> <span class="tok-p">(</span><span class="tok-nb">* </span><span class="tok-nv">value</span> <span class="tok-nv">value</span><span class="tok-p">))</span> <span class="tok-p">{</span><span class="tok-ss">:ten</span> <span class="tok-mi">10</span> <span class="tok-ss">:seven</span> <span class="tok-mi">7</span> <span class="tok-ss">:four</span> <span class="tok-mi">4</span><span class="tok-p">})</span>
+<span class="tok-c1">;; =&gt; (100 49 16)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2391,7 +2410,7 @@ either work with seqables or are extensible to user-defined types.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For collections that can be counted in constant time, we can use the <code>count</code> operation:</p>
+<p>For collections that can be counted in constant time, we can use the <code>count</code> operation. This operation also works on strings, even though, as you have seen, they are not collections, sequences, or seqable.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2475,6 +2494,36 @@ but note that not every collection has a defined order.</p>
 a whole new sequence. Lazy sequences generate their contents as they are requested, usually when iterating
 over them. Laziness ensures that we don&#8217;t do more work than we need to and gives us the possibility of
 treating potentially infinite sequences as regular ones.</p>
+</div>
+<div class="paragraph">
+<p>Consider the <code>range</code> function, which generates a range of integers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">range </span><span class="tok-mi">5</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; (0 1 2 3 4)</span>
+<span class="tok-p">(</span><span class="tok-nb">range </span><span class="tok-mi">1</span> <span class="tok-mi">10</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; (1 2 3 4 5 6 7 8 9)</span>
+<span class="tok-p">(</span><span class="tok-nb">range </span><span class="tok-mi">10</span> <span class="tok-mi">100</span> <span class="tok-mi">15</span><span class="tok-p">)</span>
+<span class="tok-c1">;; (10 25 40 55 70 85)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you just say <code>(range)</code>, you will get an infinite sequence of all the integers.
+Do <strong>not</strong> try this in the REPL, unless you are prepared to wait for a very, very long time, because
+the REPL wants to fully evaluate the expression.</p>
+</div>
+<div class="paragraph">
+<p>Here is a contrived example. Let&#8217;s say you are writing a graphing program and you are graphing the
+equation <em>y</em>= 2_x_<sup>2</sup> + 5, and you want only those values of <em>x</em> for which the <em>y</em> value is less than 100.
+You can generate all the numbers 0 through 100, which will certainly be enough, and then <code>take-while</code>
+the condition holds:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">take-while </span><span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[</span><span class="tok-nv">x</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nb">&lt; </span><span class="tok-p">(</span><span class="tok-nb">+ </span><span class="tok-p">(</span><span class="tok-nb">* </span><span class="tok-mi">2</span> <span class="tok-nv">x</span> <span class="tok-nv">x</span><span class="tok-p">)</span> <span class="tok-mi">5</span><span class="tok-p">)</span> <span class="tok-mi">100</span><span class="tok-p">))</span> <span class="tok-p">(</span><span class="tok-nb">range </span><span class="tok-mi">0</span> <span class="tok-mi">100</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; (0 1 2 3 4 5 6)</span></code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -2594,7 +2643,7 @@ time:</p>
 </div>
 <div class="paragraph">
 <p>Another thing that differentiates lists and vectors is that vectors are indexed collections and as such support efficient
-random index access and non-destructive updates. We can use the familiar <code>nth</code> function to retrieve values given an index:</p>
+random index access and non-destructive updates. We can use the <code>nth</code> function to retrieve values given an index:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2688,8 +2737,9 @@ faster than building a vector from a lazy sequence and making your intent more e
 <div class="sect4">
 <h5 id="maps"><a class="link" href="#maps">Maps</a></h5>
 <div class="paragraph">
-<p>Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a syntactic construct for attaching metadata to
-vars. Any ClojureScript data structure can be used as a key in a map, although it&#8217;s common to use keywords since they can
+<p>Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a syntactic construct, particularly for attaching
+<a href="#metadata-section">metadata</a> to vars. Any ClojureScript data structure can be used as a key in a map, although it&#8217;s common
+to use keywords since they can
 also be called as functions.</p>
 </div>
 <div class="paragraph">
@@ -2729,13 +2779,14 @@ the order is not preserved.</p>
 </div>
 <div class="paragraph">
 <p>Maps associate keys to values and, as such, are an associative data structure. They support adding associations with <code>assoc</code> and,
-unlike vectors, removing them with <code>dissoc</code>. Let&#8217;s explore these functions:</p>
+unlike vectors, removing them with <code>dissoc</code>. <code>assoc</code> will also update the value of an existing key. Let&#8217;s explore these functions:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-p">{</span><span class="tok-ss">:name</span> <span class="tok-s">&quot;Cirilla&quot;</span><span class="tok-p">}</span> <span class="tok-ss">:surname</span> <span class="tok-s">&quot;Fiona&quot;</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; {:name &quot;Cirilla&quot;, :surname &quot;Fiona&quot;}</span>
-
+<span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-p">{</span><span class="tok-ss">:name</span> <span class="tok-s">&quot;Cirilla&quot;</span><span class="tok-p">}</span> <span class="tok-ss">:name</span> <span class="tok-s">&quot;Alfonso&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; {:name &quot;Alfonso&quot;}</span>
 <span class="tok-p">(</span><span class="tok-nb">dissoc </span><span class="tok-p">{</span><span class="tok-ss">:name</span> <span class="tok-s">&quot;Cirilla&quot;</span><span class="tok-p">}</span> <span class="tok-ss">:name</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; {}</span></code></pre>
 </div>
@@ -2768,12 +2819,13 @@ can create a sorted map with default ordering with <code>sorted-map</code>:</p>
 </div>
 <div class="paragraph">
 <p>If we need a custom ordering we can provide a comparator function to <code>sorted-map-by</code>, let&#8217;s see an example inverting the value
-returned by the built-in <code>compare</code> function. Comparator functions take two elements to compare and return -1 (less than), 0 (equal)
-or 1 (greater than):</p>
+returned by the built-in <code>compare</code> function. Comparator functions take two items to compare
+and return -1 (if the first item is less than the second), 0 (if they are equal),
+or 1 (if the first item is greater than the second).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">reverse-compare</span> <span class="tok-p">(</span><span class="tok-nb">comp - </span><span class="tok-nv">compare</span><span class="tok-p">))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">reverse-compare</span> <span class="tok-p">[</span><span class="tok-nv">a</span> <span class="tok-nv">b</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nf">compare</span> <span class="tok-nv">b</span> <span class="tok-nv">a</span><span class="tok-p">))</span>
 
 <span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">sm</span> <span class="tok-p">(</span><span class="tok-nb">sorted-map-by </span><span class="tok-nv">reverse-compare</span> <span class="tok-ss">:a</span> <span class="tok-mi">0</span> <span class="tok-ss">:b</span> <span class="tok-mi">1</span> <span class="tok-ss">:c</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
 <span class="tok-c1">;; =&gt; {:c 2, :b 1, :a 0}</span>
@@ -2869,6 +2921,9 @@ is truthy in ClojureScript, we can use sets as predicate functions:</p>
 <span class="tok-p">(</span><span class="tok-nf">vowels</span> <span class="tok-sc">\a</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; &quot;a&quot;</span>
 
+<span class="tok-p">(</span><span class="tok-nf">vowels</span> <span class="tok-sc">\z</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
 <span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">vowels</span> <span class="tok-s">&quot;Hound dog&quot;</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; (&quot;o&quot; &quot;u&quot; &quot;o&quot;)</span></code></pre>
 </div>
@@ -2895,15 +2950,12 @@ is truthy in ClojureScript, we can use sets as predicate functions:</p>
 <div class="sect4">
 <h5 id="queues"><a class="link" href="#queues">Queues</a></h5>
 <div class="paragraph">
-<p>ClojureScript also provides a persistent and immutable queue. Queues don&#8217;t have literal syntax since they are not used as pervasively as other collection types.</p>
-</div>
-<div class="paragraph">
-<p>There are no convenient constructor functions for creating persistent queues. Instead of that, we can get an empty instance using <code>PersistentQueue`s `EMPTY</code> attribute.</p>
+<p>ClojureScript also provides a persistent and immutable queue. Queues are not used as pervasively as other collection types.  They can be created using the <code>#queue []</code> literal syntax, but there are no convenient constructor functions for them.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">pq</span> <span class="tok-p">(</span><span class="tok-nf">.-EMPTY</span> <span class="tok-nv">PersistentQueue</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; #queue []</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">pq</span> <span class="tok-o">#</span><span class="tok-nv">queue</span> <span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; #queue [1 2 3]</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2911,11 +2963,11 @@ is truthy in ClojureScript, we can use sets as predicate functions:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">pq</span> <span class="tok-p">(</span><span class="tok-nf">.-EMPTY</span> <span class="tok-nv">PersistentQueue</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; #queue []</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">pq</span> <span class="tok-o">#</span><span class="tok-nv">queue</span> <span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; #queue [1 2 3]</span>
 
-<span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-p">(</span><span class="tok-nf">.-EMPTY</span> <span class="tok-nv">PersistentQueue</span><span class="tok-p">)</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; #queue [1 2 3]</span></code></pre>
+<span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-nv">pq</span> <span class="tok-mi">4</span> <span class="tok-mi">5</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #queue [1 2 3 4 5]</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2923,7 +2975,7 @@ is truthy in ClojureScript, we can use sets as predicate functions:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">pq</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-p">(</span><span class="tok-nf">.-EMPTY</span> <span class="tok-nv">PersistentQueue</span><span class="tok-p">)</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">pq</span> <span class="tok-o">#</span><span class="tok-nv">queue</span> <span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">])</span>
 <span class="tok-c1">;; =&gt; #queue [1 2 3]</span>
 
 <span class="tok-p">(</span><span class="tok-nb">peek </span><span class="tok-nv">pq</span><span class="tok-p">)</span>
@@ -2943,7 +2995,7 @@ is truthy in ClojureScript, we can use sets as predicate functions:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="destructuring"><a class="link" href="#destructuring">3.8. Destructuring</a></h3>
+<h3 id="destructuring-section"><a class="link" href="#destructuring-section">3.8. Destructuring</a></h3>
 <div class="paragraph">
 <p>Destructuring, as its name suggests, is a way of taking apart structured data such as collections
 and focusing on individual parts of them. ClojureScript offers a concise syntax for destructuring
@@ -3086,15 +3138,16 @@ after the <code>:as</code> keyword:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Not only keywords can be the keys of associative data structures. Numbers, strings, symbols and
-many other data structures can be used as keys, so we can destructure using those, too. Note that
-we need to quote the symbols to prevent them from being resolved as a var lookup:</p>
+<p>Keywords aren&#8217;t the only things that can be the keys of associative data structures.
+Numbers, strings, symbols and many other data structures can be used as keys, so we
+can destructure using those, too. Note that we need to quote the symbols to prevent
+them from being resolved as a var lookup:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[{</span><span class="tok-nv">tenth</span> <span class="tok-mi">10</span><span class="tok-p">}</span> <span class="tok-p">(</span><span class="tok-nb">range </span><span class="tok-mi">100</span><span class="tok-p">)]</span>
-  <span class="tok-nv">tenth</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; 11</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[{</span><span class="tok-nv">one</span> <span class="tok-mi">1</span><span class="tok-p">}</span> <span class="tok-p">{</span><span class="tok-mi">0</span> <span class="tok-s">&quot;zero&quot;</span> <span class="tok-mi">1</span> <span class="tok-s">&quot;one&quot;</span><span class="tok-p">}]</span>
+  <span class="tok-nv">one</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;one&quot;</span>
 
 <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[{</span><span class="tok-nb">name </span><span class="tok-s">&quot;name&quot;</span><span class="tok-p">}</span> <span class="tok-p">{</span><span class="tok-s">&quot;name&quot;</span> <span class="tok-s">&quot;Cirilla&quot;</span><span class="tok-p">}]</span>
   <span class="tok-nv">name</span><span class="tok-p">)</span>
@@ -3111,7 +3164,7 @@ we need to quote the symbols to prevent them from being resolved as a var lookup
 keywords, strings, or symbols, ClojureScript offers shorthand syntax for these cases.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll show examples of all, starting with destructuring keywords using <code>:keys</code>:</p>
+<p>We&#8217;ll show examples of all of these, starting with destructuring keywords using <code>:keys</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3142,8 +3195,8 @@ keywords respectively:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>An interesting property of destructuring is that we can nest destructuring forms arbitrarily which
-makes code that accesses nested data on a collection very easy to understand as it mimics the
+<p>An interesting property of destructuring is that we can nest destructuring forms arbitrarily, which
+makes code that accesses nested data on a collection very easy to understand, as it mimics the
 collection&#8217;s structure:</p>
 </div>
 <div class="listingblock">
@@ -3738,7 +3791,7 @@ the <code>defmulti</code> form:</p>
   <span class="tok-s">&quot;A function that prints a human readable representation</span>
 <span class="tok-s">  of a shape keyword.&quot;</span>
   <span class="tok-nv">identity</span>
-  <span class="tok-ss">:hierarchy</span> <span class="tok-nv">h</span><span class="tok-p">)</span></code></pre>
+  <span class="tok-ss">:hierarchy</span> <span class="tok-o">#</span><span class="tok-ss">&#39;h</span><span class="tok-p">)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4494,7 +4547,7 @@ when developing using ClojureScript. It will cover:</p>
 independent of the other.</p>
 </div>
 <div class="sect2">
-<h3 id="getting-started-with-compiler"><a class="link" href="#getting-started-with-compiler">4.1. Getting Started with compiler</a></h3>
+<h3 id="getting-started-with-the-compiler"><a class="link" href="#getting-started-with-the-compiler">4.1. Getting Started with the Compiler</a></h3>
 <div class="paragraph">
 <p>At this point, you are surely very bored with the constant theoretical explanations about
 the language itself and will want to write and execute some code. The goal of this section
@@ -4540,7 +4593,7 @@ are going to use in this chapter requires JDK 8, which can be found at
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash">wget https://github.com/clojure/clojurescript/releases/download/r3308/cljs.jar</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">wget https://github.com/clojure/clojurescript/releases/download/r1.7.28/cljs.jar</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4565,8 +4618,8 @@ version manager). You can read the instructions on how to install and use nvm on
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="shell">nvm install iojs-v2.3.4
-nvm alias default iojs-v2.3.4</code></pre>
+<pre class="pygments highlight"><code data-lang="shell">nvm install iojs-v2.5.0
+nvm alias default iojs-v2.5.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4575,7 +4628,7 @@ nvm alias default iojs-v2.3.4</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="shell">$ iojs --version
-v2.3.4</code></pre>
+v2.5.0</code></pre>
 </div>
 </div>
 <div class="sect4">
@@ -4589,12 +4642,23 @@ structure and populate it with example code.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash">mkdir -p src/myapp
-touch src/myapp/core.cljs</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">mkdir -p myapp/src/myapp
+touch myapp/src/myapp/core.cljs</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Second, write the example code into the previously created <code>src/myapp/core.cljs</code> file:</p>
+<p>Resulting in this directory tree:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">myapp
+└── src
+    └── myapp
+        └── core.cljs</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Second, write the example code into the previously created <code>myapp/src/myapp/core.cljs</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4632,7 +4696,7 @@ directory structure. This is the way <em>ClojureScript</em> structures its sourc
 lot of other options, but at this moment we can ignore that.</p>
 </div>
 <div class="paragraph">
-<p>Let’s create the <em>build.clj</em> file with the following content:</p>
+<p>Let’s create the <em>myapp/build.clj</em> file with the following content:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4671,7 +4735,8 @@ parameter, the source will be compiled to run in the browser environment.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash">java -cp cljs.jar:src clojure.main build.clj</code></pre>
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nb">cd </span>myapp
+java -cp ../cljs.jar:src clojure.main build.clj</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4697,12 +4762,29 @@ this application is just a browser that can execute JavaScript.</p>
 that changes is the entry point of the application and the build script. So, start
 re-creating the directory tree from previous example in a different directory.</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash">mkdir -p mywebapp/src/mywebapp
+touch mywebapp/src/mywebapp/core.cljs</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>Then, write new content to the <code>src/myapp/core.cljs</code> file:</p>
+<p>Resulting in this directory tree:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">ns </span><span class="tok-nv">myapp.core</span><span class="tok-p">)</span>
+<pre class="pygments highlight"><code data-lang="text">mywebapp
+└── src
+    └── mywebapp
+        └── core.cljs</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, write new content to the <code>mywebapp/src/mywebapp/core.cljs</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">ns </span><span class="tok-nv">mywebapp.core</span><span class="tok-p">)</span>
 
 <span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
 
@@ -4717,7 +4799,7 @@ the entry point is the entire namespace.</p>
 <h5 id="compile-the-example-application-2"><a class="link" href="#compile-the-example-application-2">Compile the example application</a></h5>
 <div class="paragraph">
 <p>In order to compile the source code to run properly in a browser, overwrite the
-<em>build.clj</em> file with the following content:</p>
+<em>mywebapp/build.clj</em> file with the following content:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4727,7 +4809,7 @@ the entry point is the entire namespace.</p>
  <span class="tok-p">{</span><span class="tok-ss">:output-to</span> <span class="tok-s">&quot;main.js&quot;</span>
   <span class="tok-ss">:output-dir</span> <span class="tok-s">&quot;out/&quot;</span>
   <span class="tok-ss">:source-map</span> <span class="tok-s">&quot;main.js.map&quot;</span>
-  <span class="tok-ss">:main</span> <span class="tok-ss">&#39;myapp.core</span>
+  <span class="tok-ss">:main</span> <span class="tok-ss">&#39;mywebapp.core</span>
   <span class="tok-ss">:verbose</span> <span class="tok-nv">true</span>
   <span class="tok-ss">:optimizations</span> <span class="tok-ss">:none</span><span class="tok-p">})</span></code></pre>
 </div>
@@ -4766,7 +4848,8 @@ this option, but that will be covered in subsequent sections in more detail.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash">java -cp cljs.jar:src clojure.main build.clj</code></pre>
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nb">cd </span>mywebapp<span class="tok-p">;</span>
+java -cp ../cljs.jar:src clojure.main build.clj</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4777,7 +4860,7 @@ to start a watch process to avoid constantly starting and stopping this slow pro
 <div class="paragraph">
 <p>While waiting for the compilation, let&#8217;s create a dummy HTML file to make it easy to
 execute our example app in the browser. Create the <em>index.html</em> file with the following
-content; it goes in the main <em>myapp</em> directory.</p>
+content; it goes in the main <em>mywebapp</em> directory.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4819,7 +4902,7 @@ compilation.</p>
  <span class="tok-p">{</span><span class="tok-ss">:output-to</span> <span class="tok-s">&quot;main.js&quot;</span>
   <span class="tok-ss">:output-dir</span> <span class="tok-s">&quot;out/&quot;</span>
   <span class="tok-ss">:source-map</span> <span class="tok-s">&quot;main.js.map&quot;</span>
-  <span class="tok-ss">:main</span> <span class="tok-ss">&#39;myapp.core</span>
+  <span class="tok-ss">:main</span> <span class="tok-ss">&#39;mywebapp.core</span>
   <span class="tok-ss">:optimizations</span> <span class="tok-ss">:none</span><span class="tok-p">})</span></code></pre>
 </div>
 </div>
@@ -4828,19 +4911,14 @@ compilation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>java -cp cljs.jar:src clojure.main watch.clj
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>java -cp ../cljs.jar:src clojure.main watch.clj
 Building ...
 Reading analysis cache <span class="tok-k">for</span> jar:file:/home/niwi/cljsbook/playground/cljs.jar!/cljs/core.cljs
+Compiling src/mywebapp/core.cljs
 Compiling out/cljs/core.cljs
 Using cached cljs.core out/cljs/core.cljs
-... <span class="tok-k">done</span>. Elapsed 0.8354759 seconds
-Watching paths: /home/niwi/cljsbook/playground/src
-
-Change detected, recompiling ...
-Compiling src/myapp/core.cljs
-Compiling out/cljs/core.cljs
-Using cached cljs.core out/cljs/core.cljs
-... <span class="tok-k">done</span>. Elapsed 0.191963443 seconds</code></pre>
+... <span class="tok-k">done</span>. Elapsed 0.754487937 seconds
+Watching paths: /home/niwi/cljsbook/playground/mywebapp/src</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4914,7 +4992,20 @@ compiled <em>ClojureScript</em> and other JavaScript.</p>
 <div class="sect4">
 <h5 id="advanced"><a class="link" href="#advanced">advanced</a></h5>
 <div class="paragraph">
-<p>TBD</p>
+<p>The advanced compilation level implies (includes) all transformations from simple
+optimization and additionally performs more aggresive optimizations and dead
+code elimination. That results in more small output files.</p>
+</div>
+<div class="paragraph">
+<p>Compilation with the <code>:advanced</code> optimiziation implies that you all you code should
+complain the google closure compiler rules. If you code is purelly <em>ClojureScript</em>,
+you don&#8217;t worry about this because the <em>ClojureScript</em> compiler generates a valid
+compliant javascript. But if you are interacticting with third party javascript,
+some additional tasks should be done for make work everything as expected.</p>
+</div>
+<div class="paragraph">
+<p>All about interaction with third-party javascript libraries will be explained
+in below sections.</p>
 </div>
 </div>
 </div>
@@ -5204,7 +5295,7 @@ directives should be used.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="dependency-managemen"><a class="link" href="#dependency-managemen">4.4. Dependency managemen</a></h3>
+<h3 id="dependency-management"><a class="link" href="#dependency-management">4.4. Dependency management</a></h3>
 <div class="paragraph">
 <p>Until now, we have used the builtin <em>ClojureScript</em> toolchain to compile our sources to
 JavaScript. It is OK to start using it and to understand how it works. But it is not very
@@ -6827,6 +6918,9 @@ interface although it uses mutation internally:</p>
 <div class="sect2">
 <h3 id="metadata"><a class="link" href="#metadata">5.3. Metadata</a></h3>
 <div class="paragraph">
+<p><a id="metadata-section"></a></p>
+</div>
+<div class="paragraph">
 <p>ClojureScript symbols, vars and persistent collections support attaching metadata to them. Metadata is
 a map with information about the entity it&#8217;s attached to. The ClojureScript compiler uses metadata for
 several purposes such as type hints, and the metadata system can be used by tooling, library and application
@@ -7124,6 +7218,9 @@ by applying a function or <code>reset-meta!</code> for replacing it with another
 </div>
 <div class="sect2">
 <h3 id="macros"><a class="link" href="#macros">5.4. Macros</a></h3>
+<div class="paragraph">
+<p><a id="macros-section"></a></p>
+</div>
 <div class="paragraph">
 <p>TBD</p>
 </div>
@@ -7814,28 +7911,6 @@ value.</p>
 </div>
 </div>
 </div>
-<div class="sect4">
-<h5 id="offer-and-poll"><a class="link" href="#offer-and-poll">Offer and Poll</a></h5>
-<div class="paragraph">
-<p>We&#8217;ve learned about the two basic operations on channels so far: <code>put!</code> and <code>take!</code>. They
-either take or put a value and are enqueued if they can&#8217;t be performed immediately. Both
-functions are asynchronous because of the nature: they can succeed but be completed at a
-later time.</p>
-</div>
-<div class="paragraph">
-<p><code>core.async</code> has two synchronous operations for putting or taking values: <code>offer!</code> and
-<code>poll!</code>. These two operations will only succeed if they can be completed immediately. This
-means that <code>offer!</code> can only succeed when there are pending takes and <code>poll!</code> when there
-are pending puts.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">take!</span> <span class="tok-nv">offer!</span> <span class="tok-nv">poll!</span><span class="tok-p">]])</span>
-
-<span class="tok-c1">;; TODO: wait for core.async release for documenting offer! and poll!</span></code></pre>
-</div>
-</div>
-</div>
 </div>
 <div class="sect3">
 <h4 id="processes"><a class="link" href="#processes">6.2.2. Processes</a></h4>
@@ -8121,6 +8196,8 @@ the <code>:default</code> keyword itself.</p>
 combinators for working with channels that are present in <code>core.async</code>. This section
 includes a brief description of all of them together with a simple example of their usage.</p>
 </div>
+<div class="sect4">
+<h5 id="pipe"><a class="link" href="#pipe">pipe</a></h5>
 <div class="paragraph">
 <p><code>pipe</code> takes an input and output channels and pipes all the values put on the input channel
 to the output one. The output channel is closed whenever the source is closed unless we
@@ -8162,6 +8239,9 @@ provide a <code>false</code> third argument:</p>
 <code>out</code> channel is closed. Notice that when we close the <code>in</code> channel the <code>out</code> channel is
 closed too, making the <code>go-loop</code> terminate.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="pipeline-async"><a class="link" href="#pipeline-async">pipeline-async</a></h5>
 <div class="paragraph">
 <p><code>pipeline-async</code> takes a number for controlling parallelism, an output channel, an
 asynchronous function and an input channel. The asynchronous function has two arguments:
@@ -8220,6 +8300,9 @@ channel is closed, which defaults to <code>true</code>.</p>
 <span class="tok-c1">;; [:a] I&#39;m done!</span></code></pre>
 </div>
 </div>
+</div>
+<div class="sect4">
+<h5 id="pipeline"><a class="link" href="#pipeline">pipeline</a></h5>
 <div class="paragraph">
 <p><code>pipeline</code> is similar to <code>pipeline-async</code> but instead of taking and asynchronous function
 it takes a transducer instead. The transducer will be applied independently to each input.</p>
@@ -8257,6 +8340,9 @@ it takes a transducer instead. The transducer will be applied independently to e
 <span class="tok-c1">;; [:a] I&#39;m done!</span></code></pre>
 </div>
 </div>
+</div>
+<div class="sect4">
+<h5 id="split"><a class="link" href="#split">split</a></h5>
 <div class="paragraph">
 <p><code>split</code> takes a predicate and a channel and returns a vector with two channels, the first
 of which will receive the values for which the predicate is true, the second will receive
@@ -8307,6 +8393,9 @@ channels with the third (true channel) and fourth (false channel) arguments.</p>
 <span class="tok-c1">;; [:odds] I&#39;m done!</span></code></pre>
 </div>
 </div>
+</div>
+<div class="sect4">
+<h5 id="reduce"><a class="link" href="#reduce">reduce</a></h5>
 <div class="paragraph">
 <p><code>reduce</code> takes a reducing function, initial value and an input channel. It returns a
 channel with the result of reducing over all the values put on the input channel before
@@ -8331,6 +8420,9 @@ closing it using the given initial value as the seed.</p>
 <span class="tok-c1">;; Result: 6</span></code></pre>
 </div>
 </div>
+</div>
+<div class="sect4">
+<h5 id="onto-chan"><a class="link" href="#onto-chan">onto-chan</a></h5>
 <div class="paragraph">
 <p><code>onto-chan</code> takes a channel and a collection and puts the contents of the collection into
 the channel. It closes the channel after finishing although it accepts a third argument for
@@ -8352,6 +8444,9 @@ specifying if it should close it or not. Let&#8217;s rewrite the <code>reduce</c
 <span class="tok-c1">;; Result: 6</span></code></pre>
 </div>
 </div>
+</div>
+<div class="sect4">
+<h5 id="to-chan"><a class="link" href="#to-chan">to-chan</a></h5>
 <div class="paragraph">
 <p><code>to-chan</code> takes a collection and returns a channel where it will put every value in the
 collection, closing the channel afterwards.</p>
@@ -8380,6 +8475,9 @@ collection, closing the channel afterwards.</p>
 <span class="tok-c1">;; [:a] I&#39;m done!</span></code></pre>
 </div>
 </div>
+</div>
+<div class="sect4">
+<h5 id="merge"><a class="link" href="#merge">merge</a></h5>
 <div class="paragraph">
 <p><code>merge</code> takes a collection of input channels and returns a channel where it will put every
 value that is put on the input channels. The returned channel will be closed when all the
@@ -8422,34 +8520,341 @@ number or buffer can be provided as the last argument.</p>
 </div>
 </div>
 </div>
+</div>
 <div class="sect3">
 <h4 id="higher-level-abstractions"><a class="link" href="#higher-level-abstractions">6.2.4. Higher-level abstractions</a></h4>
 <div class="paragraph">
-<p>TODO</p>
-</div>
-<div class="sect4">
-<h5 id="mixer"><a class="link" href="#mixer">Mixer</a></h5>
-<div class="paragraph">
-<p>TODO</p>
-</div>
+<p>We&#8217;ve learned the about the low-level primitives of <code>core.async</code> and the combinators that it offers
+for working with channels. <code>core.async</code> also offers some useful, higher-level abstractions on top of
+channels that can serve as building blocks for more advanced functionality.</p>
 </div>
 <div class="sect4">
 <h5 id="mult"><a class="link" href="#mult">Mult</a></h5>
 <div class="paragraph">
-<p>TODO</p>
+<p>Whenever we have a channel whose values have to be broadcasted to many others, we can use <code>mult</code> for
+creating a multiple of the supplied channel. Once we have a mult, we can attach channels to it using
+<code>tap</code> and dettach them using <code>untap</code>. Mults also support removing all tapped channels at once with
+<code>untap-all</code>.</p>
+</div>
+<div class="paragraph">
+<p>Every value put in the source channel of a mult is broadcasted to all the tapped channels, and all of
+them must accept it before the next item is broadcasted. For preventing slow takers from blocking the
+mult&#8217;s values we must use buffering on the tapped channels judiciously.</p>
+</div>
+<div class="paragraph">
+<p>Closed tapped channels are removed automatically from the mult. When putting a value in the source
+channels when there are still no taps such value will be dropped.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span> <span class="tok-nv">timeout</span> <span class="tok-nv">mult</span> <span class="tok-nv">tap</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
+
+<span class="tok-c1">;; Source channel and mult</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">m-in</span> <span class="tok-p">(</span><span class="tok-nf">mult</span> <span class="tok-nv">in</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; Sink channels</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">a-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">another-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; Taker for `a-ch`</span>
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">a-ch</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">a-ch</span><span class="tok-p">)))))</span>
+
+<span class="tok-c1">;; Taker for `another-ch`, which sleeps for 3 seconds between takes</span>
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">another-ch</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Resting 3 seconds&quot;</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-p">(</span><span class="tok-nf">timeout</span> <span class="tok-mi">3000</span><span class="tok-p">))</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">another-ch</span><span class="tok-p">)))))</span>
+
+<span class="tok-c1">;; Tap the two channels to the mult</span>
+<span class="tok-p">(</span><span class="tok-nf">tap</span> <span class="tok-nv">m-in</span> <span class="tok-nv">a-ch</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">tap</span> <span class="tok-nv">m-in</span> <span class="tok-nv">another-ch</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; See how the values are delivered to `a-ch` and `another-ch`</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; [:a] Got 1</span>
+<span class="tok-c1">;; [:b] Got 2</span>
+<span class="tok-c1">;; [:b] Resting for 3 seconds</span>
+<span class="tok-c1">;; [:a] Got 2</span>
+<span class="tok-c1">;; [:b] Got 2</span>
+<span class="tok-c1">;; [:b] Resting for 3 seconds</span></code></pre>
+</div>
 </div>
 </div>
 <div class="sect4">
 <h5 id="pub-sub"><a class="link" href="#pub-sub">Pub-sub</a></h5>
 <div class="paragraph">
+<p>After learning about mults you could imagine how to implement a pub-sub abstraction on top of <code>mult</code>, <code>tap</code> and
+<code>untap</code> but since it&#8217;s a widely used communication mechanism <code>core.async</code> already implements this functionality.
+Instead of creating a mult from a source channel, we create a publication with <code>pub</code> giving it a channel and a
+function that will be used for extracting the topic of the messages.</p>
+</div>
+<div class="paragraph">
+<p>We can subscribe to a publication with <code>sub</code>, giving it the publication we want to subscribe to, the topic we
+are interested in and a channel to put the messages that have the given topic. Note that we can subscribe a
+channel to multiple topics.</p>
+</div>
+<div class="paragraph">
+<p><code>unsub</code> can be given a publication, topic and channel for unsubscribing such channel from the topic.
+<code>unsub-all</code> can be given a publication and a topic to unsubscribe every channel from the given topic.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span> <span class="tok-nv">pub</span> <span class="tok-nv">sub</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
+
+<span class="tok-c1">;; Source channel and publication</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">publication</span> <span class="tok-p">(</span><span class="tok-nf">pub</span> <span class="tok-nv">in</span> <span class="tok-ss">:action</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; Sink channels</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">a-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">another-ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; Channel with `:increment` action</span>
+<span class="tok-p">(</span><span class="tok-nf">sub</span> <span class="tok-nv">publication</span> <span class="tok-ss">:increment</span> <span class="tok-nv">a-ch</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">a-ch</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Increment:&quot;</span> <span class="tok-p">(</span><span class="tok-nb">inc </span><span class="tok-p">(</span><span class="tok-ss">:value</span> <span class="tok-nv">value</span><span class="tok-p">)))</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">a-ch</span><span class="tok-p">)))))</span>
+
+<span class="tok-c1">;; Channel with `:double` action</span>
+<span class="tok-p">(</span><span class="tok-nf">sub</span> <span class="tok-nv">publication</span> <span class="tok-ss">:double</span> <span class="tok-nv">another-ch</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">another-ch</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done!&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:b</span><span class="tok-p">]</span> <span class="tok-s">&quot;Double:&quot;</span> <span class="tok-p">(</span><span class="tok-nb">* </span><span class="tok-mi">2</span> <span class="tok-p">(</span><span class="tok-ss">:value</span> <span class="tok-nv">value</span><span class="tok-p">)))</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">another-ch</span><span class="tok-p">)))))</span>
+
+<span class="tok-c1">;; See how values are delivered to `a-ch` and `another-ch` depending on their action</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-p">{</span><span class="tok-ss">:action</span> <span class="tok-ss">:increment</span> <span class="tok-ss">:value</span> <span class="tok-mi">98</span><span class="tok-p">})</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-p">{</span><span class="tok-ss">:action</span> <span class="tok-ss">:double</span> <span class="tok-ss">:value</span> <span class="tok-mi">21</span><span class="tok-p">})</span>
+
+<span class="tok-c1">;; [:a] Increment: 99</span>
+<span class="tok-c1">;; [:b] Double: 42</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="mixer"><a class="link" href="#mixer">Mixer</a></h5>
+<div class="paragraph">
+<p>As we learned in the section about <code>core.async</code> combinators, we can use the <code>merge</code> function for combining
+multiple channels into one. When merging multiple channels, every value put in the input channels will end up
+in the merged channel. However, we may want more finer-grained control over which values put in the input
+channels end up in the output channel, that&#8217;s where mixers come in handy.</p>
+</div>
+<div class="paragraph">
+<p><code>core.async</code> gives us the mixer abstraction, which we can use to combine multiple input channnels into an output
+channel. The interesting part of the mixer is that we can mute, pause and listen exclusively to certain input
+channels.</p>
+</div>
+<div class="paragraph">
+<p>We can create a mixer given an output channel with <code>mix</code>. Once we have a mixer we can add input channels into the
+mix using <code>admix</code>, remove it using <code>unmix</code> or remove every input channel with <code>unmix-all</code>.</p>
+</div>
+<div class="paragraph">
+<p>For controlling the state of the input channel we use the <code>toggle</code> function giving it the mixer and a map from
+channels to their states. Note that we can add channels to the mix using <code>toggle</code>, since the map will be merged
+with the current state of the mix. The state of a channel is a map which can have the keys <code>:mute</code>, <code>:pause</code> and
+<code>:solo</code> mapped to a boolean.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s see what muting, pausing and soloing channels means:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A muted input channel means that, while still taking values from it, they won&#8217;t be forwarded to the output channel.
+Thus, while a channel is muted, all the values put in it will be discarded.</p>
+</li>
+<li>
+<p>A paused input channel means that no values will be taken from it. This means that values put in the channel won&#8217;t
+be forwarded to the output channel nor discarded.</p>
+</li>
+<li>
+<p>When soloing one or more channels the output channel will only receive the values put in soloed channels. By default
+non-soloed channels are muted but we can use <code>solo-mode</code> to decide between muting or pausing non-soloed channels.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>That was a lot of information so let&#8217;s see an example to improve our understanding. First of all, we&#8217;ll set up a mixer
+with an <code>out</code> channel and add three input channels to the mix. After that, we&#8217;ll be printing all the values received
+on the <code>out</code> channel to illustrate the control over input channels:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span> <span class="tok-nv">mix</span> <span class="tok-nv">admix</span> <span class="tok-nv">unmix</span> <span class="tok-nv">toggle</span> <span class="tok-nv">solo-mode</span><span class="tok-p">]])</span>
+<span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
+
+<span class="tok-c1">;; Output channel and mixer</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">out</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">mixer</span> <span class="tok-p">(</span><span class="tok-nf">mix</span> <span class="tok-nv">out</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; Input channels</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in-1</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in-2</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">in-3</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">admix</span> <span class="tok-nv">mixer</span> <span class="tok-nv">in-1</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">admix</span> <span class="tok-nv">mixer</span> <span class="tok-nv">in-2</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">admix</span> <span class="tok-nv">mixer</span> <span class="tok-nv">in-3</span><span class="tok-p">)</span>
+
+<span class="tok-c1">;; Let&#39;s listen to the `out` channel and print what we get from it</span>
+<span class="tok-p">(</span><span class="tok-nf">go-loop</span> <span class="tok-p">[</span><span class="tok-nv">value</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)]</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">nil? </span><span class="tok-nv">value</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;I&#39;m done&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">do</span>
+      <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-p">[</span><span class="tok-ss">:a</span><span class="tok-p">]</span> <span class="tok-s">&quot;Got&quot;</span> <span class="tok-nv">value</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">recur</span> <span class="tok-p">(</span><span class="tok-nf">&lt;!</span> <span class="tok-nv">out</span><span class="tok-p">)))))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, every value put in the input channels will be put in the <code>out</code> channel:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">do</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-1</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-2</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-3</span> <span class="tok-mi">3</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; [:a] Got 1</span>
+<span class="tok-c1">;; [:a] Got 2</span>
+<span class="tok-c1">;; [:a] Got 3</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s pause the <code>in-2</code> channel, put a value in every input channel and resume <code>in-2</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">toggle</span> <span class="tok-nv">mixer</span> <span class="tok-p">{</span><span class="tok-nv">in-2</span> <span class="tok-p">{</span><span class="tok-ss">:pause</span> <span class="tok-nv">true</span><span class="tok-p">}})</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">do</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-1</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-2</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-3</span> <span class="tok-mi">3</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; [:a] Got 1</span>
+<span class="tok-c1">;; [:a] Got 3</span>
+
+<span class="tok-p">(</span><span class="tok-nf">toggle</span> <span class="tok-nv">mixer</span> <span class="tok-p">{</span><span class="tok-nv">in-2</span> <span class="tok-p">{</span><span class="tok-ss">:pause</span> <span class="tok-nv">false</span><span class="tok-p">}})</span>
+
+<span class="tok-c1">;; [:a] Got 2</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see in the example above, the values put in the paused channels aren&#8217;t discarded.
+For discarding values put in an input channel we have to mute it, let&#8217;s see an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">toggle</span> <span class="tok-nv">mixer</span> <span class="tok-p">{</span><span class="tok-nv">in-2</span> <span class="tok-p">{</span><span class="tok-ss">:mute</span> <span class="tok-nv">true</span><span class="tok-p">}})</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">do</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-1</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-2</span> <span class="tok-mi">2</span><span class="tok-p">)</span>  <span class="tok-c1">;; `out` will never get this value since it&#39;s discarded</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-3</span> <span class="tok-mi">3</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; [:a] Got 1</span>
+<span class="tok-c1">;; [:a] Got 3</span>
+
+<span class="tok-p">(</span><span class="tok-nf">toggle</span> <span class="tok-nv">mixer</span> <span class="tok-p">{</span><span class="tok-nv">in-2</span> <span class="tok-p">{</span><span class="tok-ss">:mute</span> <span class="tok-nv">false</span><span class="tok-p">}})</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We put a value (<code>2</code>) in the <code>in-2</code> channel and, since the channel was muted at the time, the value
+is discarded and never put into <code>out</code>. Let&#8217;s look at the third state a channel can be inside a mixer:
+solo.</p>
+</div>
+<div class="paragraph">
+<p>As we mentioned before, soloing channels of a mixer implies muting the rest of them by default:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">toggle</span> <span class="tok-nv">mixer</span> <span class="tok-p">{</span><span class="tok-nv">in-1</span> <span class="tok-p">{</span><span class="tok-ss">:solo</span> <span class="tok-nv">true</span><span class="tok-p">}</span>
+               <span class="tok-nv">in-2</span> <span class="tok-p">{</span><span class="tok-ss">:solo</span> <span class="tok-nv">true</span><span class="tok-p">}})</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">do</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-1</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-2</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-3</span> <span class="tok-mi">3</span><span class="tok-p">))</span> <span class="tok-c1">;; `out` will never get this value since it&#39;s discarded</span>
+
+<span class="tok-c1">;; [:a] Got 1</span>
+<span class="tok-c1">;; [:a] Got 2</span>
+
+<span class="tok-p">(</span><span class="tok-nf">toggle</span> <span class="tok-nv">mixer</span> <span class="tok-p">{</span><span class="tok-nv">in-1</span> <span class="tok-p">{</span><span class="tok-ss">:solo</span> <span class="tok-nv">false</span><span class="tok-p">}</span>
+               <span class="tok-nv">in-2</span> <span class="tok-p">{</span><span class="tok-ss">:solo</span> <span class="tok-nv">false</span><span class="tok-p">}})</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, we can set the mode the non-soloed channels will be in while there are soloed channels.
+Let&#8217;s set the default non-solo mode to pause instead of the default mute:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">solo-mode</span> <span class="tok-nv">mixer</span> <span class="tok-ss">:pause</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">toggle</span> <span class="tok-nv">mixer</span> <span class="tok-p">{</span><span class="tok-nv">in-1</span> <span class="tok-p">{</span><span class="tok-ss">:solo</span> <span class="tok-nv">true</span><span class="tok-p">}</span>
+               <span class="tok-nv">in-2</span> <span class="tok-p">{</span><span class="tok-ss">:solo</span> <span class="tok-nv">true</span><span class="tok-p">}})</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">do</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-1</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-2</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in-3</span> <span class="tok-mi">3</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; [:a] Got 1</span>
+<span class="tok-c1">;; [:a] Got 2</span>
+
+<span class="tok-p">(</span><span class="tok-nf">toggle</span> <span class="tok-nv">mixer</span> <span class="tok-p">{</span><span class="tok-nv">in-1</span> <span class="tok-p">{</span><span class="tok-ss">:solo</span> <span class="tok-nv">false</span><span class="tok-p">}</span>
+               <span class="tok-nv">in-2</span> <span class="tok-p">{</span><span class="tok-ss">:solo</span> <span class="tok-nv">false</span><span class="tok-p">}})</span>
+
+<span class="tok-c1">;; [:a] Got 3</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="appendix-c-setting-up-a-clojurescript-development-environment"><a class="link" href="#appendix-c-setting-up-a-clojurescript-development-environment">6.3. Appendix C: Setting up a ClojureScript development environment</a></h3>
+<div class="sect3">
+<h4 id="cursive"><a class="link" href="#cursive">6.3.1. Cursive</a></h4>
+<div class="paragraph">
 <p>TODO</p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="emacs"><a class="link" href="#emacs">6.3.2. Emacs</a></h4>
+<div class="paragraph">
+<p>TODO</p>
+</div>
 </div>
 <div class="sect3">
-<h4 id="a-complete-example"><a class="link" href="#a-complete-example">6.2.5. A complete example</a></h4>
+<h4 id="vim"><a class="link" href="#vim">6.3.3. Vim</a></h4>
 <div class="paragraph">
-<p>TODO: an example of a non-trivial task accomplished using processes and channels</p>
+<p>TODO</p>
 </div>
 </div>
 </div>
@@ -8505,6 +8910,9 @@ writing entire sections of the book, as well as making very valuable suggestions
 <li>
 <p>Jearvon Dharrie (@iamjarvo)</p>
 </li>
+<li>
+<p>Shaun LeBron (@shaunlebron)</p>
+</li>
 </ul>
 </div>
 </div>
@@ -8539,8 +8947,8 @@ writing entire sections of the book, as well as making very valuable suggestions
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2<br/>
-Last updated 2015-07-19 23:40:51 CEST
+Version 3<br/>
+Last updated 2015-08-02 11:45:58 CEST
 </div>
 </div>
 </body>

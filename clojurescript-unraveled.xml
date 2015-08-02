@@ -5,7 +5,7 @@
 <book lang="en">
 <bookinfo>
 <title>ClojureScript Unraveled</title>
-<date>2015-07-19</date>
+<date>2015-08-02</date>
 <authorgroup>
 <author>
 <firstname>Andrey</firstname>
@@ -20,8 +20,8 @@
 </authorgroup>
 <revhistory>
 <revision>
-<revnumber>2</revnumber>
-<date>2015-07-19</date>
+<revnumber>3</revnumber>
+<date>2015-08-02</date>
 <authorinitials>AA</authorinitials>
 </revision>
 </revhistory>
@@ -40,8 +40,8 @@ be familiar to everyone.</simpara>
 of reference information and extensive examples to serve as a ClojureScript primer as
 well as a series of practical how-to&#8217;s. This document will evolve with the ClojureScript
 language, both as a reference of the language features and as a sort of cookbook with
-xpractical programming recipes.</simpara>
-<simpara>You&#8217;ll get the most ouf this book if you:</simpara>
+practical programming recipes.</simpara>
+<simpara>You&#8217;ll get the most out of this book if you:</simpara>
 <itemizedlist>
 <listitem>
 <simpara>are curious about ClojureScript or functional programming and have some programming
@@ -135,15 +135,17 @@ around. It has evolved into many derivatives called dialects, ClojureScript bein
 is a programming language written in its own data structures — originally lists enclosed in
 parentheses — but Clojure(Script) has evolved the Lisp syntax with more data structures, making
 it more pleasant to write and read.</simpara>
-<simpara>A list with a function in the first position is used for calling a function in ClojureScript:</simpara>
+<simpara>A list with a function in the first position is used for calling a function in ClojureScript. In the
+example below, we apply the addition function to three arguments. Note that unlike in other languages,
+<literal>+</literal> is not an operator but a function. Lisp has no operators; it only has functions.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(+ 1 2 3)
 ;; =&gt; 6</programlisting>
 <simpara>In the example above, we&#8217;re applying the addition function <literal>+</literal> to the arguments <literal>1</literal>, <literal>2</literal> and <literal>3</literal>. ClojureScript
 allows many unusual characters like <literal>?</literal> or <literal>-</literal> in symbol names, which makes it easier to read:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(zero? 0)
 ;; =&gt; true</programlisting>
-<simpara>For distinguishing function calls and lists, we can quote lists to keep them from being evaluated. The quoted
-lists will be treated as data instead of as a function call:</simpara>
+<simpara>To distinguish function calls from lists of data items, we can quote lists to keep them from being evaluated.
+The quoted lists will be treated as data instead of as a function call:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">'(+ 1 2 3)
 ;; =&gt; (+ 1 2 3)</programlisting>
 <simpara>ClojureScript uses more than lists for its syntax. The full details will be covered later, but here is an
@@ -155,7 +157,7 @@ example of the usage of a vector (enclosed in brackets) for defining local bindi
 ;; =&gt; 6</programlisting>
 <simpara>This is practically all the syntax we need to know for using not only ClojureScript, but any Lisp. Being
 written in its own data structures (often referred to as <emphasis>homoiconicity</emphasis>) is a great property since the
-syntax is uniform and simple; also, code generation via macros is easier than in any other language, giving
+syntax is uniform and simple; also, code generation via <link linkend="macros-section">macros</link> is easier than in any other language, giving
 us plenty of power to extend the language to suit our needs.</simpara>
 </section>
 <section id="the-base-data-types">
@@ -233,7 +235,7 @@ behind the scenes into single character JavaScript strings.</simpara>
 abstractions. <emphasis>ClojureScript</emphasis> is not an exception to this rule.</simpara>
 <simpara><emphasis>ClojureScript</emphasis> comes with many types of collections. The main difference between <emphasis>ClojureScript</emphasis>
 collections and collections in other languages is that they are persistent and immutable.</simpara>
-<simpara>Before moving on to all of these (possibly) unknown concepts, we&#8217;ll present a high-level overview
+<simpara>Before moving on to these (possibly) unknown concepts, we&#8217;ll present a high-level overview
 of existing collection types in <emphasis>ClojureScript</emphasis>.</simpara>
 <section id="lists">
 <title>Lists</title>
@@ -270,7 +272,7 @@ elements.</simpara>
 <title>Vectors</title>
 <simpara>Like lists, <emphasis role="strong">vectors</emphasis> store a series of values, but in this case, with very efficient index access
 to their elements, as opposed to lists, which are evaluated in order. Don&#8217;t worry; in
-the following chapters we&#8217;ll go in depth with details, but at this moment, this simple explanation is
+the following sections we&#8217;ll go in depth with details, but at this moment, this simple explanation is
 more than enough.</simpara>
 <simpara>Vectors use square brackets for the literal syntax; let&#8217;s see some examples:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">[:foo :bar]
@@ -291,7 +293,7 @@ in <emphasis>ClojureScript</emphasis> are written with the pairs between curly b
 <programlisting language="clojure" linenumbering="unnumbered">{:foo "bar", :baz 2}
 {:alphabet [:a :b :c]}</programlisting>
 <note>
-<simpara>Commas are frequently used to separate a key-value pair but are completely optional. In
+<simpara>Commas are frequently used to separate a key-value pair, but they are completely optional. In
 <emphasis>ClojureScript</emphasis> syntax, commas are treated like spaces.</simpara>
 </note>
 <simpara>Like vectors, every item in a map literal is evaluated before the result is stored in a map, but
@@ -302,10 +304,13 @@ the order of evaluation is not guaranteed.</simpara>
 <simpara>And finally, <emphasis role="strong">sets</emphasis>.</simpara>
 <simpara>Sets store zero or more unique items of any type and are unordered. Like maps,
 they use curly braces for their literal syntax, with the difference being that they use a <literal>#</literal> as
-the leading character:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">#{1 2 3 :foo :bar}</programlisting>
-<simpara>In subsequent chapters, we&#8217;ll go in depth about sets and the other collection types you&#8217;ve seen in this
-chapter.</simpara>
+the leading character. You can also use the <literal>set</literal> function to convert a collection to a set:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">#{1 2 3 :foo :bar}
+;; =&gt; #{1 :bar 3 :foo 2}
+(set [1 2 1 3 1 4 1 5])
+;; =&gt; #{1 2 3 4 5}</programlisting>
+<simpara>In subsequent sections, we&#8217;ll go in depth about sets and the other collection types you&#8217;ve seen in this
+section.</simpara>
 </section>
 </section>
 </section>
@@ -385,7 +390,7 @@ it has more than one body.</simpara>
   ([x] (myinc x 1))
   ([x increment]
    (+ x increment)))</programlisting>
-<simpara>This line: <literal>([x] (myinc x 1)</literal> says that if there is only one argument, call the function
+<simpara>This line: <literal>([x] (myinc x 1))</literal> says that if there is only one argument, call the function
 <literal>myinc</literal> with that argument and the number <literal>1</literal> as the second argument. The other function body
 <literal>([x increment] (+ x increment))</literal> says that if there are two arguments, return the result of
 adding them.</simpara>
@@ -422,16 +427,19 @@ are functions that accept an arbitrary number of arguments:</simpara>
 the <literal>#()</literal> reader macro (usually leads to one-liners). Reader macros are "special" expressions that will be
 transformed to the appropriate language form at compile time; in this case, to some expression
 that uses the <literal>fn</literal> special form.</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def my-set #(set (list %1 %2)))
+<programlisting language="clojure" linenumbering="unnumbered">(def average #(/ (+ %1 %2) 2))
 
-(my-set "x" "y")
-;; =&gt; #{"x" "y"}</programlisting>
+(average 3 4)
+;; =&gt; 3.5</programlisting>
 <simpara>The preceding definition is shorthand for:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def my-set-longer (fn [a b] #(set (list a b))))</programlisting>
+<programlisting language="clojure" linenumbering="unnumbered">(def average-longer (fn [a b] (/ (+ a b) 2)))
+
+(average-longer 7 8)
+;; =&gt; 7.5</programlisting>
 <simpara>The <literal>%1</literal>, <literal>%2</literal>, <literal>%N</literal> are simple markers for parameter positions that are implicitly declared when
 the reader macro will be interpreted and converted to a <literal>fn</literal> expression.</simpara>
-<simpara>If a function only accepts one argument, you can omit the number after the <literal>%</literal> symbol, e.g., the
-function <literal>#(set (list %1))</literal> can be written <literal>#(set (list %))</literal>.</simpara>
+<simpara>If a function only accepts one argument, you can omit the number after the <literal>%</literal> symbol, e.g., a
+function that squares a number: <literal>#(* %1 %1))</literal> can be written <literal>#(* % %))</literal>.</simpara>
 <simpara>Additionally, this syntax also supports the variadic form with the <literal>%&amp;</literal> symbol:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(def my-variadic-set #(set %&amp;))
 
@@ -465,7 +473,7 @@ and the third expression will be evaluated otherwise.</simpara>
 </section>
 <section id="branching-with-literal-cond-literal">
 <title>Branching with <literal>cond</literal></title>
-<simpara>Sometimes, the <literal>if</literal> expression can be slightly limited because it does not have the "else if" part
+<simpara>Sometimes, the <literal>if</literal> expression can be slightly limiting because it does not have the "else if" part
 to add more than one condition. The <literal>cond</literal> macro comes to the rescue.</simpara>
 <simpara>With the <literal>cond</literal> expression, you can define multiple conditions:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn mypos?
@@ -499,7 +507,7 @@ will apply the <literal>=</literal> function to the given keyword and the <liter
 </section>
 <section id="branching-with-literal-case-literal">
 <title>Branching with <literal>case</literal></title>
-<simpara>The <literal>case</literal> branching expression has a similar use case to our previous example with
+<simpara>The <literal>case</literal> branching expression has a similar use as our previous example with
 <literal>condp</literal>. The main differences are that <literal>case</literal> always uses the <literal>=</literal> predicate/function and its
 branching values are evaluated at compile time. This results in a more performant form
 than <literal>cond</literal> or <literal>condp</literal> but has the disadvantage that the condition value must be static.</simpara>
@@ -836,8 +844,7 @@ will evaluate as false (<link linkend="truthiness-section">see the section on <e
 ;; =&gt; (2 3)</programlisting>
 <section id="nil-punning">
 <title>nil-punning</title>
-<simpara>The above behaviour of <literal>seq</literal> when coupled with the falsey nature of <literal>nil</literal> in boolean contexts make it an idiom for checking
-the emptiness of a sequence in ClojureScript which is often referred to as nil-punning.</simpara>
+<simpara>Since <literal>seq</literal> returns <literal>nil</literal> when the collection is empty, and <literal>nil</literal> evaluates to false in boolean context, you can check to see if a collection is empty by using the <literal>seq</literal> function. The technical term for this is nil-punning.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn print-coll
   [coll]
   (when (seq coll)
@@ -855,7 +862,7 @@ the emptiness of a sequence in ClojureScript which is often referred to as nil-p
 ;; Saw 3
 ;; Saw 2
 ;; =&gt; nil</programlisting>
-<simpara><literal>nil</literal> is also both a seqable and a sequence, and thus it supports all the functions we saw so far:</simpara>
+<simpara>Though <literal>nil</literal> is neither a seqable nor a sequence, it is supported by all the functions we saw so far:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(seq nil)
 ;; =&gt; nil
 
@@ -882,6 +889,11 @@ a variety of seqables:</simpara>
 
 (map inc '(1 2 3))
 ;; =&gt; (2 3 4)</programlisting>
+<simpara>Note: When you use the <literal>map</literal> function on a map collection, your higher-order function
+will receive a two-item vector containing a key and value from the map. The following example
+uses <link linkend="destructuring-section">destructuring</link> to access the key and value.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(map (fn [[key value]] (* value value)) {:ten 10 :seven 7 :four 4})
+;; =&gt; (100 49 16)</programlisting>
 <simpara>As you may have noticed, functions that operate on sequences are safe to use with empty collections or even
 <literal>nil</literal> values since they don&#8217;t need to do anything but return an empty sequence when encountering such values.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(map inc [])
@@ -927,7 +939,7 @@ either work with seqables or are extensible to user-defined types.</simpara>
 ;; =&gt; false
 (seqable? "ClojureScript")
 ;; =&gt; false</programlisting>
-<simpara>For collections that can be counted in constant time, we can use the <literal>count</literal> operation:</simpara>
+<simpara>For collections that can be counted in constant time, we can use the <literal>count</literal> operation. This operation also works on strings, even though, as you have seen, they are not collections, sequences, or seqable.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(count nil)
 ;; =&gt; 0
 
@@ -985,6 +997,22 @@ but note that not every collection has a defined order.</simpara>
 a whole new sequence. Lazy sequences generate their contents as they are requested, usually when iterating
 over them. Laziness ensures that we don&#8217;t do more work than we need to and gives us the possibility of
 treating potentially infinite sequences as regular ones.</simpara>
+<simpara>Consider the <literal>range</literal> function, which generates a range of integers:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(range 5)
+;; =&gt; (0 1 2 3 4)
+(range 1 10)
+;; =&gt; (1 2 3 4 5 6 7 8 9)
+(range 10 100 15)
+;; (10 25 40 55 70 85)</programlisting>
+<simpara>If you just say <literal>(range)</literal>, you will get an infinite sequence of all the integers.
+Do <emphasis role="strong">not</emphasis> try this in the REPL, unless you are prepared to wait for a very, very long time, because
+the REPL wants to fully evaluate the expression.</simpara>
+<simpara>Here is a contrived example. Let&#8217;s say you are writing a graphing program and you are graphing the
+equation <emphasis>y</emphasis>= 2_x_<superscript>2</superscript> + 5, and you want only those values of <emphasis>x</emphasis> for which the <emphasis>y</emphasis> value is less than 100.
+You can generate all the numbers 0 through 100, which will certainly be enough, and then <literal>take-while</literal>
+the condition holds:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(take-while (fn [x] (&lt; (+ (* 2 x x) 5) 100)) (range 0 100))
+;; =&gt; (0 1 2 3 4 5 6)</programlisting>
 </section>
 </section>
 <section id="collections-in-depth">
@@ -1056,7 +1084,7 @@ time:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(conj [0 1] 2)
 ;; =&gt; [0 1 2]</programlisting>
 <simpara>Another thing that differentiates lists and vectors is that vectors are indexed collections and as such support efficient
-random index access and non-destructive updates. We can use the familiar <literal>nth</literal> function to retrieve values given an index:</simpara>
+random index access and non-destructive updates. We can use the <literal>nth</literal> function to retrieve values given an index:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(nth [0 1 2] 0)
 ;; =&gt; 0</programlisting>
 <simpara>Since vectors associate sequential numeric keys (indexes) to values, we can treat them as an associative data structure. ClojureScript
@@ -1114,8 +1142,9 @@ faster than building a vector from a lazy sequence and making your intent more e
 </section>
 <section id="maps">
 <title>Maps</title>
-<simpara>Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a syntactic construct for attaching metadata to
-vars. Any ClojureScript data structure can be used as a key in a map, although it&#8217;s common to use keywords since they can
+<simpara>Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a syntactic construct, particularly for attaching
+<link linkend="metadata-section">metadata</link> to vars. Any ClojureScript data structure can be used as a key in a map, although it&#8217;s common
+to use keywords since they can
 also be called as functions.</simpara>
 <simpara>ClojureScript maps are written literally as key-value pairs enclosed in braces <literal>{}</literal>. Alternatively, they can be created
 with the <literal>hash-map</literal> function:</simpara>
@@ -1139,10 +1168,11 @@ for maps expects one or more sequences of key-value pairs as its last arguments:
 <simpara>In the preceding example, it just so happens that the order was preserved, but if you have many keys, you will see that
 the order is not preserved.</simpara>
 <simpara>Maps associate keys to values and, as such, are an associative data structure. They support adding associations with <literal>assoc</literal> and,
-unlike vectors, removing them with <literal>dissoc</literal>. Let&#8217;s explore these functions:</simpara>
+unlike vectors, removing them with <literal>dissoc</literal>. <literal>assoc</literal> will also update the value of an existing key. Let&#8217;s explore these functions:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(assoc {:name "Cirilla"} :surname "Fiona")
 ;; =&gt; {:name "Cirilla", :surname "Fiona"}
-
+(assoc {:name "Cirilla"} :name "Alfonso")
+;; =&gt; {:name "Alfonso"}
 (dissoc {:name "Cirilla"} :name)
 ;; =&gt; {}</programlisting>
 <simpara>Maps are also functions of their keys, returning the values related to the given keys. Unlike vectors, they return <literal>nil</literal> if we supply
@@ -1160,9 +1190,10 @@ can create a sorted map with default ordering with <literal>sorted-map</literal>
 (keys sm)
 ;; =&gt; (:a :b :c)</programlisting>
 <simpara>If we need a custom ordering we can provide a comparator function to <literal>sorted-map-by</literal>, let&#8217;s see an example inverting the value
-returned by the built-in <literal>compare</literal> function. Comparator functions take two elements to compare and return -1 (less than), 0 (equal)
-or 1 (greater than):</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def reverse-compare (comp - compare))
+returned by the built-in <literal>compare</literal> function. Comparator functions take two items to compare
+and return -1 (if the first item is less than the second), 0 (if they are equal),
+or 1 (if the first item is greater than the second).</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn reverse-compare [a b] (compare b a))
 
 (def sm (sorted-map-by reverse-compare :a 0 :b 1 :c 2))
 ;; =&gt; {:c 2, :b 1, :a 0}
@@ -1226,6 +1257,9 @@ is truthy in ClojureScript, we can use sets as predicate functions:</simpara>
 (vowels \a)
 ;; =&gt; "a"
 
+(vowels \z)
+;; =&gt; nil
+
 (filter vowels "Hound dog")
 ;; =&gt; ("o" "u" "o")</programlisting>
 <simpara>Sets have a sorted counterpart like maps do that are created using the functions <literal>sorted-set</literal> and <literal>sorted-set-by</literal> which are analogous to map&#8217;s <literal>sorted-map</literal> and <literal>sorted-map-by</literal>.</simpara>
@@ -1243,18 +1277,17 @@ is truthy in ClojureScript, we can use sets as predicate functions:</simpara>
 </section>
 <section id="queues">
 <title>Queues</title>
-<simpara>ClojureScript also provides a persistent and immutable queue. Queues don&#8217;t have literal syntax since they are not used as pervasively as other collection types.</simpara>
-<simpara>There are no convenient constructor functions for creating persistent queues. Instead of that, we can get an empty instance using <literal>PersistentQueue`s `EMPTY</literal> attribute.</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def pq (.-EMPTY PersistentQueue))
-;; =&gt; #queue []</programlisting>
-<simpara>Using <literal>conj</literal> to add values to a queue adds items onto the rear:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def pq (.-EMPTY PersistentQueue))
-;; =&gt; #queue []
-
-(conj (.-EMPTY PersistentQueue) 1 2 3)
+<simpara>ClojureScript also provides a persistent and immutable queue. Queues are not used as pervasively as other collection types.  They can be created using the <literal>#queue []</literal> literal syntax, but there are no convenient constructor functions for them.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def pq #queue [1 2 3])
 ;; =&gt; #queue [1 2 3]</programlisting>
+<simpara>Using <literal>conj</literal> to add values to a queue adds items onto the rear:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def pq #queue [1 2 3])
+;; =&gt; #queue [1 2 3]
+
+(conj pq 4 5)
+;; =&gt; #queue [1 2 3 4 5]</programlisting>
 <simpara>A thing to bear in mind about queues is that the stack operations don&#8217;t follow the usual stack semantics (pushing and popping from the same end). <literal>pop</literal> takes values from the front position, and <literal>conj</literal> pushes (appends) elements to the back.</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(def pq (conj (.-EMPTY PersistentQueue) 1 2 3))
+<programlisting language="clojure" linenumbering="unnumbered">(def pq #queue [1 2 3])
 ;; =&gt; #queue [1 2 3]
 
 (peek pq)
@@ -1269,7 +1302,7 @@ is truthy in ClojureScript, we can use sets as predicate functions:</simpara>
 </section>
 </section>
 </section>
-<section id="destructuring">
+<section id="destructuring-section">
 <title>Destructuring</title>
 <simpara>Destructuring, as its name suggests, is a way of taking apart structured data such as collections
 and focusing on individual parts of them. ClojureScript offers a concise syntax for destructuring
@@ -1352,12 +1385,13 @@ after the <literal>:as</literal> keyword:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(let [{name :name :as person} {:name "Cirilla" :age 49}]
   [name person])
 ;; =&gt; ["Cirilla" {:name "Cirilla" :age 49}]</programlisting>
-<simpara>Not only keywords can be the keys of associative data structures. Numbers, strings, symbols and
-many other data structures can be used as keys, so we can destructure using those, too. Note that
-we need to quote the symbols to prevent them from being resolved as a var lookup:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(let [{tenth 10} (range 100)]
-  tenth)
-;; =&gt; 11
+<simpara>Keywords aren&#8217;t the only things that can be the keys of associative data structures.
+Numbers, strings, symbols and many other data structures can be used as keys, so we
+can destructure using those, too. Note that we need to quote the symbols to prevent
+them from being resolved as a var lookup:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [{one 1} {0 "zero" 1 "one"}]
+  one)
+;; =&gt; "one"
 
 (let [{name "name"} {"name" "Cirilla"}]
   name)
@@ -1369,7 +1403,7 @@ we need to quote the symbols to prevent them from being resolved as a var lookup
 <simpara>Since the values corresponding to keys are usually bound to their equivalent symbol representation
 (for example, when binding the value of <literal>:language</literal> to the symbol <literal>language</literal>) and keys are usually
 keywords, strings, or symbols, ClojureScript offers shorthand syntax for these cases.</simpara>
-<simpara>We&#8217;ll show examples of all, starting with destructuring keywords using <literal>:keys</literal>:</simpara>
+<simpara>We&#8217;ll show examples of all of these, starting with destructuring keywords using <literal>:keys</literal>:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(let [{:keys [name surname]} {:name "Cirilla" :surname "Fiona"}]
   [name surname])
 ;; =&gt; ["Cirilla" "Fiona"]</programlisting>
@@ -1386,8 +1420,8 @@ keywords respectively:</simpara>
 (let [{:syms [name surname]} {'name "Cirilla" 'surname "Fiona"}]
   [name surname])
 ;; =&gt; ["Cirilla" "Fiona"]</programlisting>
-<simpara>An interesting property of destructuring is that we can nest destructuring forms arbitrarily which
-makes code that accesses nested data on a collection very easy to understand as it mimics the
+<simpara>An interesting property of destructuring is that we can nest destructuring forms arbitrarily, which
+makes code that accesses nested data on a collection very easy to understand, as it mimics the
 collection&#8217;s structure:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(let [{[fst snd] :languages} {:languages ["ClojureScript" "Clojure"]}]
   [snd fst])
@@ -1743,7 +1777,7 @@ the <literal>defmulti</literal> form:</simpara>
   "A function that prints a human readable representation
   of a shape keyword."
   identity
-  :hierarchy h)</programlisting>
+  :hierarchy #'h)</programlisting>
 <simpara>With the <literal>:hierarchy</literal> keyword parameter, we indicate to the multimethod what hierarchy we want to use;
 if it is not specified, the global hierarchy will be used.</simpara>
 <simpara>Second, we define an implementation for our multimethod using the <literal>defmethod</literal> form:</simpara>
@@ -2194,8 +2228,8 @@ when developing using ClojureScript. It will cover:</simpara>
 </itemizedlist>
 <simpara>Unlike the previous chapter, this chapter intends to tell different stories each
 independent of the other.</simpara>
-<section id="getting-started-with-compiler">
-<title>Getting Started with compiler</title>
+<section id="getting-started-with-the-compiler">
+<title>Getting Started with the Compiler</title>
 <simpara>At this point, you are surely very bored with the constant theoretical explanations about
 the language itself and will want to write and execute some code. The goal of this section
 is to provide a little practical introduction to the <emphasis>ClojureScript</emphasis> compiler.</simpara>
@@ -2225,7 +2259,7 @@ installed. <emphasis>ClojureScript</emphasis> itself only requires JDK 7, but th
 are going to use in this chapter requires JDK 8, which can be found at
 <ulink url="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</ulink></simpara>
 <simpara>You can download the latest <emphasis>ClojureScript</emphasis> compiler using <literal>wget</literal>:</simpara>
-<programlisting language="bash" linenumbering="unnumbered">wget https://github.com/clojure/clojurescript/releases/download/r3308/cljs.jar</programlisting>
+<programlisting language="bash" linenumbering="unnumbered">wget https://github.com/clojure/clojurescript/releases/download/r1.7.28/cljs.jar</programlisting>
 <simpara>The <emphasis>ClojureScript</emphasis> compiler is packaged in a standalone executable jar file, so this is
 the only file (along with JDK 8) that you need to compile your <emphasis>ClojureScript</emphasis> source code
 to JavaScript.</simpara>
@@ -2238,19 +2272,24 @@ this example, you should have nodejs or iojs (recommended) installed.</simpara>
 version manager). You can read the instructions on how to install and use nvm on its
 <ulink url="https://github.com/creationix/nvm">home page</ulink>.</simpara>
 <simpara>Then you have installed the nvm, follow installing the latest version of the iojs:</simpara>
-<programlisting language="shell" linenumbering="unnumbered">nvm install iojs-v2.3.4
-nvm alias default iojs-v2.3.4</programlisting>
+<programlisting language="shell" linenumbering="unnumbered">nvm install iojs-v2.5.0
+nvm alias default iojs-v2.5.0</programlisting>
 <simpara>You can test if <emphasis role="strong">iojs</emphasis> is installed in your system with this command:</simpara>
 <programlisting language="shell" linenumbering="unnumbered">$ iojs --version
-v2.3.4</programlisting>
+v2.5.0</programlisting>
 <section id="create-the-example-application">
 <title>Create the example application</title>
 <simpara>For the first step of our practical example, we will create our application directory
 structure and populate it with example code.</simpara>
 <simpara>Start by creating the directory tree structure for our “hello world” application:</simpara>
-<programlisting language="bash" linenumbering="unnumbered">mkdir -p src/myapp
-touch src/myapp/core.cljs</programlisting>
-<simpara>Second, write the example code into the previously created <literal>src/myapp/core.cljs</literal> file:</simpara>
+<programlisting language="bash" linenumbering="unnumbered">mkdir -p myapp/src/myapp
+touch myapp/src/myapp/core.cljs</programlisting>
+<simpara>Resulting in this directory tree:</simpara>
+<programlisting language="text" linenumbering="unnumbered">myapp
+└── src
+    └── myapp
+        └── core.cljs</programlisting>
+<simpara>Second, write the example code into the previously created <literal>myapp/src/myapp/core.cljs</literal> file:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(ns myapp.core
   (:require [cljs.nodejs :as nodejs]))
 
@@ -2271,7 +2310,7 @@ directory structure. This is the way <emphasis>ClojureScript</emphasis> structur
 <simpara>In order to compile that source code, we need a simple build script that tells the
 <emphasis>ClojureScript</emphasis> compiler the source directory and the output file. <emphasis>ClojureScript</emphasis> has a
 lot of other options, but at this moment we can ignore that.</simpara>
-<simpara>Let’s create the <emphasis>build.clj</emphasis> file with the following content:</simpara>
+<simpara>Let’s create the <emphasis>myapp/build.clj</emphasis> file with the following content:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.build.api :as b])
 
 (b/build "src"
@@ -2297,7 +2336,8 @@ parameter, the source will be compiled to run in the browser environment.</simpa
 </listitem>
 </itemizedlist>
 <simpara>To run the compilation, just execute the following command:</simpara>
-<programlisting language="bash" linenumbering="unnumbered">java -cp cljs.jar:src clojure.main build.clj</programlisting>
+<programlisting language="bash" linenumbering="unnumbered">cd myapp
+java -cp ../cljs.jar:src clojure.main build.clj</programlisting>
 <simpara>And when it finishes, execute the compiled file using <emphasis role="strong">iojs</emphasis>:</simpara>
 <programlisting language="shell" linenumbering="unnumbered">$ iojs main.js
 Hello world!</programlisting>
@@ -2311,8 +2351,15 @@ this application is just a browser that can execute JavaScript.</simpara>
 <simpara>The process is almost the same, and the directory structure is the same. The only things
 that changes is the entry point of the application and the build script. So, start
 re-creating the directory tree from previous example in a different directory.</simpara>
-<simpara>Then, write new content to the <literal>src/myapp/core.cljs</literal> file:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(ns myapp.core)
+<programlisting language="bash" linenumbering="unnumbered">mkdir -p mywebapp/src/mywebapp
+touch mywebapp/src/mywebapp/core.cljs</programlisting>
+<simpara>Resulting in this directory tree:</simpara>
+<programlisting language="text" linenumbering="unnumbered">mywebapp
+└── src
+    └── mywebapp
+        └── core.cljs</programlisting>
+<simpara>Then, write new content to the <literal>mywebapp/src/mywebapp/core.cljs</literal> file:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(ns mywebapp.core)
 
 (enable-console-print!)
 
@@ -2322,14 +2369,14 @@ the entry point is the entire namespace.</simpara>
 <section id="compile-the-example-application-2">
 <title>Compile the example application</title>
 <simpara>In order to compile the source code to run properly in a browser, overwrite the
-<emphasis>build.clj</emphasis> file with the following content:</simpara>
+<emphasis>mywebapp/build.clj</emphasis> file with the following content:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.build.api :as b])
 
 (b/build "src"
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
-  :main 'myapp.core
+  :main 'mywebapp.core
   :verbose true
   :optimizations :none})</programlisting>
 <simpara>This is a brief explanation of the compiler options we&#8217;re using:</simpara>
@@ -2358,13 +2405,14 @@ this option, but that will be covered in subsequent sections in more detail.</si
 </listitem>
 </itemizedlist>
 <simpara>To run the compilation, just execute the following command:</simpara>
-<programlisting language="bash" linenumbering="unnumbered">java -cp cljs.jar:src clojure.main build.clj</programlisting>
+<programlisting language="bash" linenumbering="unnumbered">cd mywebapp;
+java -cp ../cljs.jar:src clojure.main build.clj</programlisting>
 <simpara>This process can take some time, so do not worry; wait a little bit. The JVM bootstrap
 with the Clojure compiler is slightly slow. In the following sections, we will explain how
 to start a watch process to avoid constantly starting and stopping this slow process.</simpara>
 <simpara>While waiting for the compilation, let&#8217;s create a dummy HTML file to make it easy to
 execute our example app in the browser. Create the <emphasis>index.html</emphasis> file with the following
-content; it goes in the main <emphasis>myapp</emphasis> directory.</simpara>
+content; it goes in the main <emphasis>mywebapp</emphasis> directory.</simpara>
 <programlisting language="html" linenumbering="unnumbered">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
   &lt;header&gt;
@@ -2393,22 +2441,17 @@ compilation.</simpara>
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
-  :main 'myapp.core
+  :main 'mywebapp.core
   :optimizations :none})</programlisting>
 <simpara>Now, execute that script like any other that you have executed in previous sections:</simpara>
-<programlisting language="bash" linenumbering="unnumbered">$ java -cp cljs.jar:src clojure.main watch.clj
+<programlisting language="bash" linenumbering="unnumbered">$ java -cp ../cljs.jar:src clojure.main watch.clj
 Building ...
 Reading analysis cache for jar:file:/home/niwi/cljsbook/playground/cljs.jar!/cljs/core.cljs
+Compiling src/mywebapp/core.cljs
 Compiling out/cljs/core.cljs
 Using cached cljs.core out/cljs/core.cljs
-... done. Elapsed 0.8354759 seconds
-Watching paths: /home/niwi/cljsbook/playground/src
-
-Change detected, recompiling ...
-Compiling src/myapp/core.cljs
-Compiling out/cljs/core.cljs
-Using cached cljs.core out/cljs/core.cljs
-... done. Elapsed 0.191963443 seconds</programlisting>
+... done. Elapsed 0.754487937 seconds
+Watching paths: /home/niwi/cljsbook/playground/mywebapp/src</programlisting>
 <simpara>You can observe that in the second compilation, the time is drastically reduced. Another
 advantage of this method is that it gives a little bit more output.</simpara>
 </section>
@@ -2459,7 +2502,16 @@ compiled <emphasis>ClojureScript</emphasis> and other JavaScript.</simpara>
 </section>
 <section id="advanced">
 <title>advanced</title>
-<simpara>TBD</simpara>
+<simpara>The advanced compilation level implies (includes) all transformations from simple
+optimization and additionally performs more aggresive optimizations and dead
+code elimination. That results in more small output files.</simpara>
+<simpara>Compilation with the <literal>:advanced</literal> optimiziation implies that you all you code should
+complain the google closure compiler rules. If you code is purelly <emphasis>ClojureScript</emphasis>,
+you don&#8217;t worry about this because the <emphasis>ClojureScript</emphasis> compiler generates a valid
+compliant javascript. But if you are interacticting with third party javascript,
+some additional tasks should be done for make work everything as expected.</simpara>
+<simpara>All about interaction with third-party javascript libraries will be explained
+in below sections.</simpara>
 </section>
 </section>
 </section>
@@ -2637,8 +2689,8 @@ the <literal>:import</literal> direcrtive. However, if you define types (classes
 primitives, you should not use <literal>:import</literal> for import them, the standard <literal>:require</literal>
 directives should be used.</simpara>
 </section>
-<section id="dependency-managemen">
-<title>Dependency managemen</title>
+<section id="dependency-management">
+<title>Dependency management</title>
 <simpara>Until now, we have used the builtin <emphasis>ClojureScript</emphasis> toolchain to compile our sources to
 JavaScript. It is OK to start using it and to understand how it works. But it is not very
 comfortable for use on big projects with dependencies to third party libraries.</simpara>
@@ -3698,6 +3750,7 @@ interface although it uses mutation internally:</simpara>
 </section>
 <section id="metadata">
 <title>Metadata</title>
+<simpara><anchor id="metadata-section" xreflabel="[metadata-section]"/></simpara>
 <simpara>ClojureScript symbols, vars and persistent collections support attaching metadata to them. Metadata is
 a map with information about the entity it&#8217;s attached to. The ClojureScript compiler uses metadata for
 several purposes such as type hints, and the metadata system can be used by tooling, library and application
@@ -3918,6 +3971,7 @@ by applying a function or <literal>reset-meta!</literal> for replacing it with a
 </section>
 <section id="macros">
 <title>Macros</title>
+<simpara><anchor id="macros-section" xreflabel="[macros-section]"/></simpara>
 <simpara>TBD</simpara>
 </section>
 <section id="core-protocols">
@@ -4406,20 +4460,6 @@ value.</simpara>
 ;; Got: 42
 ;; =&gt; nil</programlisting>
 </section>
-<section id="offer-and-poll">
-<title>Offer and Poll</title>
-<simpara>We&#8217;ve learned about the two basic operations on channels so far: <literal>put!</literal> and <literal>take!</literal>. They
-either take or put a value and are enqueued if they can&#8217;t be performed immediately. Both
-functions are asynchronous because of the nature: they can succeed but be completed at a
-later time.</simpara>
-<simpara><literal>core.async</literal> has two synchronous operations for putting or taking values: <literal>offer!</literal> and
-<literal>poll!</literal>. These two operations will only succeed if they can be completed immediately. This
-means that <literal>offer!</literal> can only succeed when there are pending takes and <literal>poll!</literal> when there
-are pending puts.</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! take! offer! poll!]])
-
-;; TODO: wait for core.async release for documenting offer! and poll!</programlisting>
-</section>
 </section>
 <section id="processes">
 <title>Processes</title>
@@ -4649,6 +4689,8 @@ the <literal>:default</literal> keyword itself.</simpara>
 <simpara>Now that we&#8217;re acquainted with channels and processes it&#8217;s time to explore some interesting
 combinators for working with channels that are present in <literal>core.async</literal>. This section
 includes a brief description of all of them together with a simple example of their usage.</simpara>
+<section id="pipe">
+<title>pipe</title>
 <simpara><literal>pipe</literal> takes an input and output channels and pipes all the values put on the input channel
 to the output one. The output channel is closed whenever the source is closed unless we
 provide a <literal>false</literal> third argument:</simpara>
@@ -4682,6 +4724,9 @@ provide a <literal>false</literal> third argument:</simpara>
 <simpara>In the above example we used the <literal>go-loop</literal> macro for reading values recursively until the
 <literal>out</literal> channel is closed. Notice that when we close the <literal>in</literal> channel the <literal>out</literal> channel is
 closed too, making the <literal>go-loop</literal> terminate.</simpara>
+</section>
+<section id="pipeline-async">
+<title>pipeline-async</title>
 <simpara><literal>pipeline-async</literal> takes a number for controlling parallelism, an output channel, an
 asynchronous function and an input channel. The asynchronous function has two arguments:
 the value put in the input channel and a channel where it should put the result of its
@@ -4732,6 +4777,9 @@ channel is closed, which defaults to <literal>true</literal>.</simpara>
 ;; [:a] Got 164
 ;; [:a] Waiting for a value
 ;; [:a] I'm done!</programlisting>
+</section>
+<section id="pipeline">
+<title>pipeline</title>
 <simpara><literal>pipeline</literal> is similar to <literal>pipeline-async</literal> but instead of taking and asynchronous function
 it takes a transducer instead. The transducer will be applied independently to each input.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan pipeline put! &lt;! close!]])
@@ -4763,6 +4811,9 @@ it takes a transducer instead. The transducer will be applied independently to e
 ;; [:a] Got 4
 ;; [:a] Waiting for a value
 ;; [:a] I'm done!</programlisting>
+</section>
+<section id="split">
+<title>split</title>
 <simpara><literal>split</literal> takes a predicate and a channel and returns a vector with two channels, the first
 of which will receive the values for which the predicate is true, the second will receive
 those for which the predicate is false. We can optionally pass a buffer or number for the
@@ -4807,6 +4858,9 @@ channels with the third (true channel) and fourth (false channel) arguments.</si
 ;; [:evens] Waiting for a value
 ;; [:evens] I'm done!
 ;; [:odds] I'm done!</programlisting>
+</section>
+<section id="reduce">
+<title>reduce</title>
 <simpara><literal>reduce</literal> takes a reducing function, initial value and an input channel. It returns a
 channel with the result of reducing over all the values put on the input channel before
 closing it using the given initial value as the seed.</simpara>
@@ -4825,6 +4879,9 @@ closing it using the given initial value as the seed.</simpara>
 (close! in)
 
 ;; Result: 6</programlisting>
+</section>
+<section id="onto-chan">
+<title>onto-chan</title>
 <simpara><literal>onto-chan</literal> takes a channel and a collection and puts the contents of the collection into
 the channel. It closes the channel after finishing although it accepts a third argument for
 specifying if it should close it or not. Let&#8217;s rewrite the <literal>reduce</literal> example using
@@ -4840,6 +4897,9 @@ specifying if it should close it or not. Let&#8217;s rewrite the <literal>reduce
 (onto-chan in [0 1 2 3])
 
 ;; Result: 6</programlisting>
+</section>
+<section id="to-chan">
+<title>to-chan</title>
 <simpara><literal>to-chan</literal> takes a collection and returns a channel where it will put every value in the
 collection, closing the channel afterwards.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! &lt;! close! to-chan]])
@@ -4862,6 +4922,9 @@ collection, closing the channel afterwards.</simpara>
 ;; [:a] Got 2
 ;; [:a] Waiting for a value
 ;; [:a] I'm done!</programlisting>
+</section>
+<section id="merge">
+<title>merge</title>
 <simpara><literal>merge</literal> takes a collection of input channels and returns a channel where it will put every
 value that is put on the input channels. The returned channel will be closed when all the
 input channels have been closed. The returned channel will be unbuffered by default but a
@@ -4898,25 +4961,264 @@ number or buffer can be provided as the last argument.</simpara>
 ;; [:a] Waiting for a value
 ;; [:a] I'm done!</programlisting>
 </section>
+</section>
 <section id="higher-level-abstractions">
 <title>Higher-level abstractions</title>
-<simpara>TODO</simpara>
-<section id="mixer">
-<title>Mixer</title>
-<simpara>TODO</simpara>
-</section>
+<simpara>We&#8217;ve learned the about the low-level primitives of <literal>core.async</literal> and the combinators that it offers
+for working with channels. <literal>core.async</literal> also offers some useful, higher-level abstractions on top of
+channels that can serve as building blocks for more advanced functionality.</simpara>
 <section id="mult">
 <title>Mult</title>
-<simpara>TODO</simpara>
+<simpara>Whenever we have a channel whose values have to be broadcasted to many others, we can use <literal>mult</literal> for
+creating a multiple of the supplied channel. Once we have a mult, we can attach channels to it using
+<literal>tap</literal> and dettach them using <literal>untap</literal>. Mults also support removing all tapped channels at once with
+<literal>untap-all</literal>.</simpara>
+<simpara>Every value put in the source channel of a mult is broadcasted to all the tapped channels, and all of
+them must accept it before the next item is broadcasted. For preventing slow takers from blocking the
+mult&#8217;s values we must use buffering on the tapped channels judiciously.</simpara>
+<simpara>Closed tapped channels are removed automatically from the mult. When putting a value in the source
+channels when there are still no taps such value will be dropped.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! &lt;! close! timeout mult tap]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Source channel and mult
+(def in (chan))
+(def m-in (mult in))
+
+;; Sink channels
+(def a-ch (chan))
+(def another-ch (chan))
+
+;; Taker for `a-ch`
+(go-loop [value (&lt;! a-ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (recur (&lt;! a-ch)))))
+
+;; Taker for `another-ch`, which sleeps for 3 seconds between takes
+(go-loop [value (&lt;! another-ch)]
+  (if (nil? value)
+    (println [:b] "I'm done!")
+    (do
+      (println [:b] "Got" value)
+      (println [:b] "Resting 3 seconds")
+      (&lt;! (timeout 3000))
+      (recur (&lt;! another-ch)))))
+
+;; Tap the two channels to the mult
+(tap m-in a-ch)
+(tap m-in another-ch)
+
+;; See how the values are delivered to `a-ch` and `another-ch`
+(put! in 1)
+(put! in 2)
+
+;; [:a] Got 1
+;; [:b] Got 2
+;; [:b] Resting for 3 seconds
+;; [:a] Got 2
+;; [:b] Got 2
+;; [:b] Resting for 3 seconds</programlisting>
 </section>
 <section id="pub-sub">
 <title>Pub-sub</title>
+<simpara>After learning about mults you could imagine how to implement a pub-sub abstraction on top of <literal>mult</literal>, <literal>tap</literal> and
+<literal>untap</literal> but since it&#8217;s a widely used communication mechanism <literal>core.async</literal> already implements this functionality.
+Instead of creating a mult from a source channel, we create a publication with <literal>pub</literal> giving it a channel and a
+function that will be used for extracting the topic of the messages.</simpara>
+<simpara>We can subscribe to a publication with <literal>sub</literal>, giving it the publication we want to subscribe to, the topic we
+are interested in and a channel to put the messages that have the given topic. Note that we can subscribe a
+channel to multiple topics.</simpara>
+<simpara><literal>unsub</literal> can be given a publication, topic and channel for unsubscribing such channel from the topic.
+<literal>unsub-all</literal> can be given a publication and a topic to unsubscribe every channel from the given topic.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! &lt;! close! pub sub]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Source channel and publication
+(def in (chan))
+(def publication (pub in :action))
+
+;; Sink channels
+(def a-ch (chan))
+(def another-ch (chan))
+
+;; Channel with `:increment` action
+(sub publication :increment a-ch)
+
+(go-loop [value (&lt;! a-ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Increment:" (inc (:value value)))
+      (recur (&lt;! a-ch)))))
+
+;; Channel with `:double` action
+(sub publication :double another-ch)
+
+(go-loop [value (&lt;! another-ch)]
+  (if (nil? value)
+    (println [:b] "I'm done!")
+    (do
+      (println [:b] "Double:" (* 2 (:value value)))
+      (recur (&lt;! another-ch)))))
+
+;; See how values are delivered to `a-ch` and `another-ch` depending on their action
+(put! in {:action :increment :value 98})
+(put! in {:action :double :value 21})
+
+;; [:a] Increment: 99
+;; [:b] Double: 42</programlisting>
+</section>
+<section id="mixer">
+<title>Mixer</title>
+<simpara>As we learned in the section about <literal>core.async</literal> combinators, we can use the <literal>merge</literal> function for combining
+multiple channels into one. When merging multiple channels, every value put in the input channels will end up
+in the merged channel. However, we may want more finer-grained control over which values put in the input
+channels end up in the output channel, that&#8217;s where mixers come in handy.</simpara>
+<simpara><literal>core.async</literal> gives us the mixer abstraction, which we can use to combine multiple input channnels into an output
+channel. The interesting part of the mixer is that we can mute, pause and listen exclusively to certain input
+channels.</simpara>
+<simpara>We can create a mixer given an output channel with <literal>mix</literal>. Once we have a mixer we can add input channels into the
+mix using <literal>admix</literal>, remove it using <literal>unmix</literal> or remove every input channel with <literal>unmix-all</literal>.</simpara>
+<simpara>For controlling the state of the input channel we use the <literal>toggle</literal> function giving it the mixer and a map from
+channels to their states. Note that we can add channels to the mix using <literal>toggle</literal>, since the map will be merged
+with the current state of the mix. The state of a channel is a map which can have the keys <literal>:mute</literal>, <literal>:pause</literal> and
+<literal>:solo</literal> mapped to a boolean.</simpara>
+<simpara>Let&#8217;s see what muting, pausing and soloing channels means:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>A muted input channel means that, while still taking values from it, they won&#8217;t be forwarded to the output channel.
+Thus, while a channel is muted, all the values put in it will be discarded.</simpara>
+</listitem>
+<listitem>
+<simpara>A paused input channel means that no values will be taken from it. This means that values put in the channel won&#8217;t
+be forwarded to the output channel nor discarded.</simpara>
+</listitem>
+<listitem>
+<simpara>When soloing one or more channels the output channel will only receive the values put in soloed channels. By default
+non-soloed channels are muted but we can use <literal>solo-mode</literal> to decide between muting or pausing non-soloed channels.</simpara>
+</listitem>
+</itemizedlist>
+<simpara>That was a lot of information so let&#8217;s see an example to improve our understanding. First of all, we&#8217;ll set up a mixer
+with an <literal>out</literal> channel and add three input channels to the mix. After that, we&#8217;ll be printing all the values received
+on the <literal>out</literal> channel to illustrate the control over input channels:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.core.async :refer [chan put! &lt;! close! mix admix unmix toggle solo-mode]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Output channel and mixer
+(def out (chan))
+(def mixer (mix out))
+
+;; Input channels
+(def in-1 (chan))
+(def in-2 (chan))
+(def in-3 (chan))
+
+(admix mixer in-1)
+(admix mixer in-2)
+(admix mixer in-3)
+
+;; Let's listen to the `out` channel and print what we get from it
+(go-loop [value (&lt;! out)]
+  (if (nil? value)
+    (println [:a] "I'm done")
+    (do
+      (println [:a] "Got" value)
+      (recur (&lt;! out)))))</programlisting>
+<simpara>By default, every value put in the input channels will be put in the <literal>out</literal> channel:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 2
+;; [:a] Got 3</programlisting>
+<simpara>Let&#8217;s pause the <literal>in-2</literal> channel, put a value in every input channel and resume <literal>in-2</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(toggle mixer {in-2 {:pause true}})
+;; =&gt; true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 3
+
+(toggle mixer {in-2 {:pause false}})
+
+;; [:a] Got 2</programlisting>
+<simpara>As you can see in the example above, the values put in the paused channels aren&#8217;t discarded.
+For discarding values put in an input channel we have to mute it, let&#8217;s see an example:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(toggle mixer {in-2 {:mute true}})
+;; =&gt; true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)  ;; `out` will never get this value since it's discarded
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 3
+
+(toggle mixer {in-2 {:mute false}})</programlisting>
+<simpara>We put a value (<literal>2</literal>) in the <literal>in-2</literal> channel and, since the channel was muted at the time, the value
+is discarded and never put into <literal>out</literal>. Let&#8217;s look at the third state a channel can be inside a mixer:
+solo.</simpara>
+<simpara>As we mentioned before, soloing channels of a mixer implies muting the rest of them by default:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(toggle mixer {in-1 {:solo true}
+               in-2 {:solo true}})
+;; =&gt; true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3)) ;; `out` will never get this value since it's discarded
+
+;; [:a] Got 1
+;; [:a] Got 2
+
+(toggle mixer {in-1 {:solo false}
+               in-2 {:solo false}})</programlisting>
+<simpara>However, we can set the mode the non-soloed channels will be in while there are soloed channels.
+Let&#8217;s set the default non-solo mode to pause instead of the default mute:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(solo-mode mixer :pause)
+;; =&gt; true
+(toggle mixer {in-1 {:solo true}
+               in-2 {:solo true}})
+;; =&gt; true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 2
+
+(toggle mixer {in-1 {:solo false}
+               in-2 {:solo false}})
+
+;; [:a] Got 3</programlisting>
+</section>
+</section>
+</section>
+<section id="appendix-c-setting-up-a-clojurescript-development-environment">
+<title>Appendix C: Setting up a ClojureScript development environment</title>
+<section id="cursive">
+<title>Cursive</title>
 <simpara>TODO</simpara>
 </section>
+<section id="emacs">
+<title>Emacs</title>
+<simpara>TODO</simpara>
 </section>
-<section id="a-complete-example">
-<title>A complete example</title>
-<simpara>TODO: an example of a non-trivial task accomplished using processes and channels</simpara>
+<section id="vim">
+<title>Vim</title>
+<simpara>TODO</simpara>
 </section>
 </section>
 </chapter>
@@ -4961,6 +5263,9 @@ writing entire sections of the book, as well as making very valuable suggestions
 </listitem>
 <listitem>
 <simpara>Jearvon Dharrie (@iamjarvo)</simpara>
+</listitem>
+<listitem>
+<simpara>Shaun LeBron (@shaunlebron)</simpara>
 </listitem>
 </itemizedlist>
 </chapter>
