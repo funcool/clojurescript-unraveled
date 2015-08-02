@@ -4,5 +4,5 @@
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
-  :main 'myapp.core
+  :main 'mywebapp.core
   :optimizations :none})

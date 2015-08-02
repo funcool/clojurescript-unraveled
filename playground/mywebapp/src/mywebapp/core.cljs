@@ -1,4 +1,4 @@
-(ns myapp.core)
+(ns mywebapp.core)
 
 (enable-console-print!)
 
