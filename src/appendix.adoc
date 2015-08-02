@@ -1501,10 +1501,6 @@ Let's set the default non-solo mode to pause instead of the default mute:
 ;; [:a] Got 3
 ----
 
-==== A complete example
-
-TODO: an example of a non-trivial task accomplished using processes and channels
-
 === Appendix C: Setting up a ClojureScript development environment
 
 ==== Cursive
