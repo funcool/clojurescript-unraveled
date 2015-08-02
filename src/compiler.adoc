@@ -69,17 +69,11 @@ You can test if *iojs* is installed in your system with this command:
 [source, shell]
 ----
 $ iojs --version
-v2.3.4
+v2.5.0
 ----
 
 
 ===== Create the example application
-
-////
-TODO: Clarify where to put cljs.jar and show project tree structure
-Comment from @NathanSmutz:
-Having seen linengen projects, I might guess that these go above src (or at least build.clj might) but it's not obvious. We probably want a little graphic or tree-chart showing where each file goes and probably a sidebar about project structure.
-////
 
 For the first step of our practical example, we will create our application directory
 structure and populate it with example code.
@@ -88,11 +82,22 @@ Start by creating the directory tree structure for our “hello world” applica
 
 [source, bash]
 ----
-mkdir -p src/myapp
-touch src/myapp/core.cljs
+mkdir -p myapp/src/myapp
+touch myapp/src/myapp/core.cljs
 ----
 
-Second, write the example code into the previously created `src/myapp/core.cljs` file:
+Resulting in this directory tree:
+
+[source, text]
+----
+myapp
+└── src
+    └── myapp
+        └── core.cljs
+----
+
+
+Second, write the example code into the previously created `myapp/src/myapp/core.cljs` file:
 
 [source, clojure]
 ----
@@ -118,7 +123,7 @@ In order to compile that source code, we need a simple build script that tells t
 _ClojureScript_ compiler the source directory and the output file. _ClojureScript_ has a
 lot of other options, but at this moment we can ignore that.
 
-Let’s create the _build.clj_ file with the following content:
+Let’s create the _myapp/build.clj_ file with the following content:
 
 [source, clojure]
 ----
@@ -146,7 +151,8 @@ To run the compilation, just execute the following command:
 
 [source, bash]
 ----
-java -cp cljs.jar:src clojure.main build.clj
+cd myapp
+java -cp ../cljs.jar:src clojure.main build.clj
 ----
 
 And when it finishes, execute the compiled file using *iojs*:
@@ -168,11 +174,27 @@ The process is almost the same, and the directory structure is the same. The onl
 that changes is the entry point of the application and the build script. So, start
 re-creating the directory tree from previous example in a different directory.
 
-Then, write new content to the `src/myapp/core.cljs` file:
+[source, bash]
+----
+mkdir -p mywebapp/src/mywebapp
+touch mywebapp/src/mywebapp/core.cljs
+----
+
+Resulting in this directory tree:
+
+[source, text]
+----
+mywebapp
+└── src
+    └── mywebapp
+        └── core.cljs
+----
+
+Then, write new content to the `mywebapp/src/mywebapp/core.cljs` file:
 
 [source, clojure]
 ----
-(ns myapp.core)
+(ns mywebapp.core)
 
 (enable-console-print!)
 
@@ -186,7 +208,7 @@ the entry point is the entire namespace.
 ===== Compile the example application
 
 In order to compile the source code to run properly in a browser, overwrite the
-_build.clj_ file with the following content:
+_mywebapp/build.clj_ file with the following content:
 
 [source, clojure]
 ----
@@ -196,7 +218,7 @@ _build.clj_ file with the following content:
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
-  :main 'myapp.core
+  :main 'mywebapp.core
   :verbose true
   :optimizations :none})
 ----
@@ -220,7 +242,8 @@ To run the compilation, just execute the following command:
 
 [source, bash]
 ----
-java -cp cljs.jar:src clojure.main build.clj
+cd mywebapp;
+java -cp ../cljs.jar:src clojure.main build.clj
 ----
 
 This process can take some time, so do not worry; wait a little bit. The JVM bootstrap
@@ -229,7 +252,7 @@ to start a watch process to avoid constantly starting and stopping this slow pro
 
 While waiting for the compilation, let's create a dummy HTML file to make it easy to
 execute our example app in the browser. Create the _index.html_ file with the following
-content; it goes in the main _myapp_ directory.
+content; it goes in the main _mywebapp_ directory.
 
 [source, html]
 ----
@@ -267,7 +290,7 @@ Start creating another build script, but in this case, name it _watch.clj_:
  {:output-to "main.js"
   :output-dir "out/"
   :source-map "main.js.map"
-  :main 'myapp.core
+  :main 'mywebapp.core
   :optimizations :none})
 ----
 
@@ -275,19 +298,14 @@ Now, execute that script like any other that you have executed in previous secti
 
 [source, bash]
 ----
-$ java -cp cljs.jar:src clojure.main watch.clj
+$ java -cp ../cljs.jar:src clojure.main watch.clj
 Building ...
 Reading analysis cache for jar:file:/home/niwi/cljsbook/playground/cljs.jar!/cljs/core.cljs
+Compiling src/mywebapp/core.cljs
 Compiling out/cljs/core.cljs
 Using cached cljs.core out/cljs/core.cljs
-... done. Elapsed 0.8354759 seconds
-Watching paths: /home/niwi/cljsbook/playground/src
-
-Change detected, recompiling ...
-Compiling src/myapp/core.cljs
-Compiling out/cljs/core.cljs
-Using cached cljs.core out/cljs/core.cljs
-... done. Elapsed 0.191963443 seconds
+... done. Elapsed 0.754487937 seconds
+Watching paths: /home/niwi/cljsbook/playground/mywebapp/src
 ----
 
 You can observe that in the second compilation, the time is drastically reduced. Another
@@ -352,7 +370,6 @@ TBD
 TODO: maybe it would be interesting to take some ideas from
 http://www.alexeberts.com/exploring-the-clojurescript-repl/
 ////
-
 
 ==== Introduction
 
