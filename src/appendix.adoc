@@ -612,24 +612,54 @@ value.
 ;; => nil
 ----
 
+////
+TODO: uncomment with next core.async release, use closed? predicate for closed channels too
 ===== Offer and Poll
 
 We've learned about the two basic operations on channels so far: `put!` and `take!`. They
 either take or put a value and are enqueued if they can't be performed immediately. Both
-functions are asynchronous because of the nature: they can succeed but be completed at a
+functions are asynchronous because of their nature: they can succeed but be completed at a
 later time.
 
 `core.async` has two synchronous operations for putting or taking values: `offer!` and
-`poll!`. These two operations will only succeed if they can be completed immediately. This
-means that `offer!` can only succeed when there are pending takes and `poll!` when there
-are pending puts.
+`poll!`. Let's see how they work through examples.
+
+`offer!` puts a value in a channel if it's possible to do so immediately. It returns `true`
+if the channel received the value and `false` otherwise. Note that, unlike with `put!`, `offer!`
+cannot distinguish between closed and open channels.
 
 [source, clojure]
 ----
-(require '[cljs.core.async :refer [chan put! take! offer! poll!]])
+(require '[cljs.core.async :refer [chan offer!]])
 
-;; TODO: wait for core.async release for documenting offer! and poll!
+(def ch (chan 1))
+
+(offer! ch 42)
+;; => true
+
+(offer! ch 43)
+;; => false
 ----
+
+`poll!` takes a value from a channel if it's possible to do so immediately. Returns the value if
+succesful and `nil` otherwise. Unlike `take!`, `poll!` cannot distinguish closed and open channels.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan offer! poll!]])
+
+(def ch (chan 1))
+
+(poll! ch)
+;; => nil
+
+(offer! ch 42)
+;; => true
+
+(poll! ch)
+;; => 42
+----
+////
 
 ==== Processes
 
@@ -895,6 +925,8 @@ Now that we're acquainted with channels and processes it's time to explore some 
 combinators for working with channels that are present in `core.async`. This section
 includes a brief description of all of them together with a simple example of their usage.
 
+===== pipe
+
 `pipe` takes an input and output channels and pipes all the values put on the input channel
 to the output one. The output channel is closed whenever the source is closed unless we
 provide a `false` third argument:
@@ -933,6 +965,8 @@ provide a `false` third argument:
 In the above example we used the `go-loop` macro for reading values recursively until the
 `out` channel is closed. Notice that when we close the `in` channel the `out` channel is
 closed too, making the `go-loop` terminate.
+
+===== pipeline-async
 
 `pipeline-async` takes a number for controlling parallelism, an output channel, an
 asynchronous function and an input channel. The asynchronous function has two arguments:
@@ -990,6 +1024,8 @@ channel is closed, which defaults to `true`.
 ;; [:a] I'm done!
 ----
 
+===== pipeline
+
 `pipeline` is similar to `pipeline-async` but instead of taking and asynchronous function
 it takes a transducer instead. The transducer will be applied independently to each input.
 
@@ -1025,6 +1061,8 @@ it takes a transducer instead. The transducer will be applied independently to e
 ;; [:a] Waiting for a value
 ;; [:a] I'm done!
 ----
+
+===== split
 
 `split` takes a predicate and a channel and returns a vector with two channels, the first
 of which will receive the values for which the predicate is true, the second will receive
@@ -1075,6 +1113,8 @@ channels with the third (true channel) and fourth (false channel) arguments.
 ;; [:odds] I'm done!
 ----
 
+===== reduce
+
 `reduce` takes a reducing function, initial value and an input channel. It returns a
 channel with the result of reducing over all the values put on the input channel before
 closing it using the given initial value as the seed.
@@ -1098,6 +1138,8 @@ closing it using the given initial value as the seed.
 ;; Result: 6
 ----
 
+===== onto-chan
+
 `onto-chan` takes a channel and a collection and puts the contents of the collection into
 the channel. It closes the channel after finishing although it accepts a third argument for
 specifying if it should close it or not. Let's rewrite the `reduce` example using
@@ -1117,6 +1159,8 @@ specifying if it should close it or not. Let's rewrite the `reduce` example usin
 
 ;; Result: 6
 ----
+
+===== to-chan
 
 `to-chan` takes a collection and returns a channel where it will put every value in the
 collection, closing the channel afterwards.
@@ -1144,6 +1188,8 @@ collection, closing the channel afterwards.
 ;; [:a] Waiting for a value
 ;; [:a] I'm done!
 ----
+
+===== merge
 
 `merge` takes a collection of input channels and returns a channel where it will put every
 value that is put on the input channels. The returned channel will be closed when all the
@@ -1187,23 +1233,289 @@ number or buffer can be provided as the last argument.
 
 ==== Higher-level abstractions
 
-TODO
+We've learned the about the low-level primitives of `core.async` and the combinators that it offers
+for working with channels. `core.async` also offers some useful, higher-level abstractions on top of
+channels that can serve as building blocks for more advanced functionality.
 
-===== Mixer
-
-TODO
 
 ===== Mult
 
-TODO
+Whenever we have a channel whose values have to be broadcasted to many others, we can use `mult` for
+creating a multiple of the supplied channel. Once we have a mult, we can attach channels to it using
+`tap` and dettach them using `untap`. Mults also support removing all tapped channels at once with
+`untap-all`.
+
+Every value put in the source channel of a mult is broadcasted to all the tapped channels, and all of
+them must accept it before the next item is broadcasted. For preventing slow takers from blocking the
+mult's values we must use buffering on the tapped channels judiciously.
+
+Closed tapped channels are removed automatically from the mult. When putting a value in the source
+channels when there are still no taps such value will be dropped.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! timeout mult tap]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Source channel and mult
+(def in (chan))
+(def m-in (mult in))
+
+;; Sink channels
+(def a-ch (chan))
+(def another-ch (chan))
+
+;; Taker for `a-ch`
+(go-loop [value (<! a-ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (recur (<! a-ch)))))
+
+;; Taker for `another-ch`, which sleeps for 3 seconds between takes
+(go-loop [value (<! another-ch)]
+  (if (nil? value)
+    (println [:b] "I'm done!")
+    (do
+      (println [:b] "Got" value)
+      (println [:b] "Resting 3 seconds")
+      (<! (timeout 3000))
+      (recur (<! another-ch)))))
+
+;; Tap the two channels to the mult
+(tap m-in a-ch)
+(tap m-in another-ch)
+
+;; See how the values are delivered to `a-ch` and `another-ch`
+(put! in 1)
+(put! in 2)
+
+;; [:a] Got 1
+;; [:b] Got 2
+;; [:b] Resting for 3 seconds
+;; [:a] Got 2
+;; [:b] Got 2
+;; [:b] Resting for 3 seconds
+----
+
 
 ===== Pub-sub
 
-TODO
+After learning about mults you could imagine how to implement a pub-sub abstraction on top of `mult`, `tap` and
+`untap` but since it's a widely used communication mechanism `core.async` already implements this functionality.
+Instead of creating a mult from a source channel, we create a publication with `pub` giving it a channel and a
+function that will be used for extracting the topic of the messages.
 
-==== A complete example
+We can subscribe to a publication with `sub`, giving it the publication we want to subscribe to, the topic we
+are interested in and a channel to put the messages that have the given topic. Note that we can subscribe a
+channel to multiple topics.
 
-TODO: an example of a non-trivial task accomplished using processes and channels
+`unsub` can be given a publication, topic and channel for unsubscribing such channel from the topic.
+`unsub-all` can be given a publication and a topic to unsubscribe every channel from the given topic.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! pub sub]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Source channel and publication
+(def in (chan))
+(def publication (pub in :action))
+
+;; Sink channels
+(def a-ch (chan))
+(def another-ch (chan))
+
+;; Channel with `:increment` action
+(sub publication :increment a-ch)
+
+(go-loop [value (<! a-ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Increment:" (inc (:value value)))
+      (recur (<! a-ch)))))
+
+;; Channel with `:double` action
+(sub publication :double another-ch)
+
+(go-loop [value (<! another-ch)]
+  (if (nil? value)
+    (println [:b] "I'm done!")
+    (do
+      (println [:b] "Double:" (* 2 (:value value)))
+      (recur (<! another-ch)))))
+
+;; See how values are delivered to `a-ch` and `another-ch` depending on their action
+(put! in {:action :increment :value 98})
+(put! in {:action :double :value 21})
+
+;; [:a] Increment: 99
+;; [:b] Double: 42
+----
+
+
+===== Mixer
+
+As we learned in the section about `core.async` combinators, we can use the `merge` function for combining
+multiple channels into one. When merging multiple channels, every value put in the input channels will end up
+in the merged channel. However, we may want more finer-grained control over which values put in the input
+channels end up in the output channel, that's where mixers come in handy.
+
+`core.async` gives us the mixer abstraction, which we can use to combine multiple input channnels into an output
+channel. The interesting part of the mixer is that we can mute, pause and listen exclusively to certain input
+channels.
+
+We can create a mixer given an output channel with `mix`. Once we have a mixer we can add input channels into the
+mix using `admix`, remove it using `unmix` or remove every input channel with `unmix-all`.
+
+For controlling the state of the input channel we use the `toggle` function giving it the mixer and a map from
+channels to their states. Note that we can add channels to the mix using `toggle`, since the map will be merged
+with the current state of the mix. The state of a channel is a map which can have the keys `:mute`, `:pause` and
+`:solo` mapped to a boolean.
+
+Let's see what muting, pausing and soloing channels means:
+
+- A muted input channel means that, while still taking values from it, they won't be forwarded to the output channel.
+  Thus, while a channel is muted, all the values put in it will be discarded.
+- A paused input channel means that no values will be taken from it. This means that values put in the channel won't
+  be forwarded to the output channel nor discarded.
+- When soloing one or more channels the output channel will only receive the values put in soloed channels. By default
+  non-soloed channels are muted but we can use `solo-mode` to decide between muting or pausing non-soloed channels.
+
+That was a lot of information so let's see an example to improve our understanding. First of all, we'll set up a mixer
+with an `out` channel and add three input channels to the mix. After that, we'll be printing all the values received
+on the `out` channel to illustrate the control over input channels:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! mix admix unmix toggle solo-mode]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Output channel and mixer
+(def out (chan))
+(def mixer (mix out))
+
+;; Input channels
+(def in-1 (chan))
+(def in-2 (chan))
+(def in-3 (chan))
+
+(admix mixer in-1)
+(admix mixer in-2)
+(admix mixer in-3)
+
+;; Let's listen to the `out` channel and print what we get from it
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done")
+    (do
+      (println [:a] "Got" value)
+      (recur (<! out)))))
+----
+
+By default, every value put in the input channels will be put in the `out` channel:
+
+[source, clojure]
+----
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 2
+;; [:a] Got 3
+----
+
+Let's pause the `in-2` channel, put a value in every input channel and resume `in-2`:
+
+[source, clojure]
+----
+(toggle mixer {in-2 {:pause true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 3
+
+(toggle mixer {in-2 {:pause false}})
+
+;; [:a] Got 2
+----
+
+As you can see in the example above, the values put in the paused channels aren't discarded.
+For discarding values put in an input channel we have to mute it, let's see an example:
+
+[source, clojure]
+----
+(toggle mixer {in-2 {:mute true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)  ;; `out` will never get this value since it's discarded
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 3
+
+(toggle mixer {in-2 {:mute false}})
+----
+
+We put a value (`2`) in the `in-2` channel and, since the channel was muted at the time, the value
+is discarded and never put into `out`. Let's look at the third state a channel can be inside a mixer:
+solo.
+
+As we mentioned before, soloing channels of a mixer implies muting the rest of them by default:
+
+[source, clojure]
+----
+(toggle mixer {in-1 {:solo true}
+               in-2 {:solo true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3)) ;; `out` will never get this value since it's discarded
+
+;; [:a] Got 1
+;; [:a] Got 2
+
+(toggle mixer {in-1 {:solo false}
+               in-2 {:solo false}})
+----
+
+However, we can set the mode the non-soloed channels will be in while there are soloed channels.
+Let's set the default non-solo mode to pause instead of the default mute:
+
+[source, clojure]
+----
+(solo-mode mixer :pause)
+;; => true
+(toggle mixer {in-1 {:solo true}
+               in-2 {:solo true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 2
+
+(toggle mixer {in-1 {:solo false}
+               in-2 {:solo false}})
+
+;; [:a] Got 3
+----
 
 === Appendix C: Setting up a ClojureScript development environment
 
