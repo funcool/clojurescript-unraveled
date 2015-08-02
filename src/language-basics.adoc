@@ -1997,13 +1997,13 @@ per file. Naturally, a namespace definition is usually at the beginning of the f
 docstring.
 
 Previously we have explained vars and symbols. Every var that you define will be associated
-with its namespace. If you do not define a concrete namespace, then the default one called "user" will be
+with its namespace. If you do not define a concrete namespace, then the default one called "cljs.user" will be
 used:
 
 [source, clojure]
 ----
 (def x "hello")
-;; => #'user/x
+;; => #'cljs.user/x
 ----
 
 
