@@ -39,7 +39,7 @@ You can download the latest _ClojureScript_ compiler using `wget`:
 
 [source, bash]
 ----
-wget https://github.com/clojure/clojurescript/releases/download/r3308/cljs.jar
+wget https://github.com/clojure/clojurescript/releases/download/r1.7.28/cljs.jar
 ----
 
 The _ClojureScript_ compiler is packaged in a standalone executable jar file, so this is
@@ -60,8 +60,8 @@ Then you have installed the nvm, follow installing the latest version of the ioj
 
 [source, shell]
 ----
-nvm install iojs-v2.3.4
-nvm alias default iojs-v2.3.4
+nvm install iojs-v2.5.0
+nvm alias default iojs-v2.5.0
 ----
 
 You can test if *iojs* is installed in your system with this command:
