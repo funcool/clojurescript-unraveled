@@ -2816,6 +2816,29 @@ instead of using the `.` you use `.-`. Let's see an example:
 ;; => 3.141592653589793
 ----
 
+===== Property access shorthand
+
+Symbols with the `js/` prefix can contain dots to denote nested property access.
+Both of the following expressions invoke the same function:
+
+[source, clojure]
+----
+(.log js/console "Hello World")
+
+(js/console.log "Hello World")
+----
+
+And both of the following expressions access the same property:
+
+[source, clojure]
+----
+(.-PI js/Math)
+;; => 3.141592653589793
+
+js/Math.PI
+;; => 3.141592653589793
+----
+
 
 ===== JavaScript objects
 
