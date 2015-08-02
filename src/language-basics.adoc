@@ -2700,8 +2700,9 @@ Now, you can define a type with inline implementation for an abstraction, in our
 
 ==== Reify
 
-The `reify` macro lets you create an anonymous type that implements protocols. In contrast to
-`deftype` and `defrecord`, it does not have accessible fields.
+The `reify` macro is an _ad hoc constructor_ you can use to create objects without pre-defining a type.
+Protocol implementations are supplied the same as `deftype` and `defrecord`, but in contrast, `reify`
+does not have accessible fields.
 
 This is how we can emulate an instance of the user type that plays well with the `IUser` abstraction:
 
@@ -2718,9 +2719,6 @@ This is how we can emulate an instance of the user type that plays well with the
 (full-name user)
 ;; => "Yennefer of Vengerberg"
 ----
-
-The real purpose of `reify` is to create an anonymous type that may implement protocols,
-but you don't want the type itself.
 
 
 === Host interoperability
