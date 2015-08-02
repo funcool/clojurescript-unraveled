@@ -2254,7 +2254,7 @@ in the _ClojureScript_ language itself can be adapted to third party libraries. 
 real life example.
 
 In previous sections, we have explained the different kinds of built-in collections. For this example we
-will use a *set*. See this snipped of code:
+will use a *set*. See this snippet of code:
 
 [source, clojure]
 ----
