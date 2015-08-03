@@ -2720,6 +2720,44 @@ This is how we can emulate an instance of the user type that plays well with the
 ;; => "Yennefer of Vengerberg"
 ----
 
+==== Specify
+
+`specify!` is an advanced alternative to `reify`, allowing you to add protocol
+implementations to an existing JavaScript object.  This can be useful if
+you want to graft protocols onto a JavaScript library's components.
+
+[source, clojure]
+----
+(def obj #js {})
+
+(specify! obj
+  IUser
+  (full-name [_]
+    "my full name"))
+
+(full-name obj)
+;; => "my full name"
+----
+
+`specify` is an immutable version of `specify!` that can be used on immutable,
+copyable values implementing `ICloneable` (e.g. ClojureScript collections).
+
+[source, clojure]
+----
+(def a {})
+
+(def b (specify a
+         IUser
+         (full-name [_]
+           "my full name")))
+
+(full-name a)
+;; Error: No protocol method IUser.full-name defined for type cljs.core/PersistentArrayMap: {}
+
+(full-name b)
+;; => "my full name"
+----
+
 
 === Host interoperability
 
