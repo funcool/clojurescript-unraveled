@@ -2990,7 +2990,7 @@ Or access in an indexed way to get its values:
 ;; => 2
 ----
 
-In JavaScript, objects are also arrays, so you can use the same functions for interacting
+In JavaScript, array index access is equivalent to object property access, so you can use the same functions for interacting
 with plain objects:
 
 [source, clojure]
