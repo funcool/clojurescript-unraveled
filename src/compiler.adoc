@@ -56,7 +56,7 @@ There are different ways to install iojs, but the recommended way is using nvm (
 version manager). You can read the instructions on how to install and use nvm on its
 link:https://github.com/creationix/nvm[home page].
 
-Then you have installed the nvm, follow installing the latest version of the iojs:
+When you have installed nvm, follow installing the latest version of iojs:
 
 [source, shell]
 ----
