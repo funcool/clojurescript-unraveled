@@ -632,7 +632,7 @@ comfortable for use on big projects with dependencies to third party libraries.
 
 This chapter intends to explain how you can use *Leiningen*, the defacto clojure build
 and dependency management tool, to build _ClojureScript_ projects. There is another
-build tool called *boot* that is growing in popularity, but at this momenent it will not be
+build tool called *boot* that is growing in popularity, but at this moment it will not be
 covered in this book.
 
 
