@@ -314,7 +314,7 @@ advantage of this method is that it gives a little bit more output.
 
 ==== Optimization levels
 
-The _ClojureScript_ compiler has different level of optimizations. Behind the scenes,
+The _ClojureScript_ compiler has different levels of optimization. Behind the scenes,
 those compilation levels are coming from Google Closure Compiler.
 
 A very simplified overview of the compilation process is:
