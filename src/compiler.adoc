@@ -585,16 +585,16 @@ result of that will be the typical browser alert dialog.
 
 === The Closure Library
 
-A google closure library is a javascript library developed by google, based on a modular
+The Google Closure Library is a javascript library developed by Google, based on a modular
 architecture and provides cross-browser functions for DOM manipulations and events, ajax
 and JSON, among other features.
 
 It's written specifically to take advantage of the Closure Compiler (that is used
 internally by the _ClojureScript_ compiler).
 
-And _ClojureScript_ is built up on Closure Compiler and Closure Library. The great example
-are the _ClojureScript_ namespaces, they are defined as closure modules. This means that
-you can interact with closure library in a very easy way:
+And _ClojureScript_ is built on Closure Compiler and Closure Library. In fact,
+_ClojureScript_ namespaces are Closure modules. This means that
+you can interact with the Closure Library in a very easy way:
 
 [source, clojure]
 ----
@@ -604,11 +604,11 @@ you can interact with closure library in a very easy way:
 (def element (dom/getElement "body"))
 ----
 
-With previous snippet of code you can observe the way you can import the *dom* module of
+With the previous snippet of code you can observe the way you can import the *dom* module of
 the closure library and use one function declared in that module.
 
-Additionally, the closure library also exposes "special" modules that behaves like a
-class or object. For import this kind of things you should use the `:import` directive.
+Additionally, the closure library also exposes "special" modules that behave like a
+class or object. For importing these kinds of things you should use the `:import` directive.
 
 [source, clojure]
 ----
@@ -618,9 +618,9 @@ class or object. For import this kind of things you should use the `:import` dir
 (def instance (History.))
 ----
 
-If you are familiar with Clojure, it uses this approach for import the Java clases using
-the `:import` direcrtive. However, if you define types (classes) using _ClojureScript_
-primitives, you should not use `:import` for import them, the standard `:require`
+If you are familiar with Clojure, it imports Java classes using
+the same `:import` directive. However, if you define types (classes) using _ClojureScript_
+primitives, you should not use `:import` to import them, the standard `:require`
 directives should be used.
 
 
