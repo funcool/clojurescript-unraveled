@@ -361,18 +361,18 @@ compiled _ClojureScript_ and other JavaScript.
 
 ===== advanced
 
-The advanced compilation level implies (includes) all transformations from simple
-optimization and additionally performs more aggresive optimizations and dead
-code elimination. That results in more small output files.
+The advanced compilation level includes all transformations from simple
+optimization and additionally performs more aggressive optimizations and dead
+code elimination. This results in significantly smaller output files.
 
-Compilation with the `:advanced` optimiziation implies that you all you code should
-complain the google closure compiler rules. If you code is purelly _ClojureScript_,
-you don't worry about this because the _ClojureScript_ compiler generates a valid
-compliant javascript. But if you are interacticting with third party javascript,
-some additional tasks should be done for make work everything as expected.
+The `:advanced` optimizations can only work for a strict subset of JavaScript
+code that follows the Google Closure Compiler rules.  _ClojureScript_ generates
+valid JavaScript within this strict subset, but if you are interacting with
+third party JavaScript code, some additional tasks should be done to make
+everything work as expected.
 
-All about interaction with third-party javascript libraries will be explained
-in below sections.
+This interaction with third party javascript libraries will be explained
+in later sections.
 
 
 === Working with the REPL
