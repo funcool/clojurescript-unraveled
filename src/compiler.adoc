@@ -626,11 +626,12 @@ directives should be used.
 
 === Dependency management
 
-Until now, we have used the builtin _ClojureScript_ toolchain to compile our sources to
-JavaScript. It is OK to start using it and to understand how it works. But it is not very
-comfortable for use on big projects with dependencies to third party libraries.
+Until now, we have used the builtin _ClojureScript_ toolchain to compile our
+sources to JavaScript.  This is the minimal setup required for working with and
+understanding the compiler, but for larger projects, we often require a larger
+build tool that can manage a project's dependencies on other libraries.
 
-This chapter intends to explain how you can use *Leiningen*, the defacto clojure build
+Thus, this chapter intends to explain how you can use *Leiningen*, the de facto clojure build
 and dependency management tool, to build _ClojureScript_ projects. There is another
 build tool called *boot* that is growing in popularity, but at this moment it will not be
 covered in this book.
