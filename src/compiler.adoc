@@ -460,7 +460,7 @@ that does not require any additional dependencies. The answer is very simple: no
 is the most used JavaScript execution environment on the backend, and it has a great
 amount of community packages around it.
 
-Well, the good notice is that start nodejs/iojs repl is very very easy once you have it
+Well, the good news is that starting a nodejs/iojs repl is very easy once you have it
 installed in your system. Start writing this content to a new `repl.clj` file:
 
 [source, clojure]
