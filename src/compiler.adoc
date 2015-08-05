@@ -668,15 +668,14 @@ version of the leiningen script at the web site.
 
 ==== First project
 
-The best way to show how a tool works is by creating a toy project with it. In this case
-we will go to create one little application that calculates if a year is leap or not. And
-for it, we will use the *mies* leiningen template.
+The best way to show how a tool works is by creating a toy project with it. In this case,
+we will create a small application that calculates if a year is a leap year or not. To
+start, we will use the *mies* leiningen template.
 
-NOTE: Templates are a way that leiningen has to provide a initial layout for an
-application or a library and clojure community has a great amount of them. In this case
-we'll use *mies* template that is maintained by the clojurescript core developer. If you
-want to know more about templates, you should read the leiningen doc. Explaining templates
-is completely out of scope of this book.
+NOTE: Templates are a facility in leiningen for creating an initial project structure.
+The clojure community has a great many of them. In this case
+we'll use the *mies* template that was started by the clojurescript core developer.  Consult
+the leiningen docs to learn more about templates.
 
 Let's start creating the project layout:
 
