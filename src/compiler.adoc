@@ -902,10 +902,10 @@ Ideas:
 
 === Unit testing
 
-There’s not a lot to say here; testing in _ClojureScript_ consists of the same concepts as
+As you may expect, testing in _ClojureScript_ consists of the same concepts as
 you may know from any other language such as Clojure, Java, Python, JavaScript, etc.
 
-Regardless of the languag,e the main objective of unit testing is to run some test code
+Regardless of the language, the main objective of unit testing is to run some test code,
 and verify that your code behaves as expected and returns without raising unexpected
 exceptions.
 
