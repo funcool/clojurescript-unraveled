@@ -755,14 +755,15 @@ code into the `src/leapyear/core.cljs`:
 (events/listen input "keyup" on-change)
 ----
 
-And finally, compile the clojurescript code with:
+Now, compile the clojurescript code with:
 
 [source, bash]
 ----
 $ ./scripts/watch
 ----
 
-That behind the scenes executes this:
+This script executes the following behind the scenes, similar to the `java`
+build commands from the previous section, but with our `lein` build tool:
 
 [source, bash]
 ----
@@ -771,11 +772,12 @@ rlwrap lein trampoline run -m clojure.main scripts/watch.clj
 
 WARNING: you should have `rlwrap` installed on your system.
 
-Additionally to `watch` script, the *mies* template also generates a bunch of other
-scripts such as `build`,`release`,... but for our purposes in this section they are
-completely useless. And probably after reading the compiler and repl sections, you already
-will be familiar with almost all the scripts that comes with *mies* template.
+Finally, open the `index.html` file in a browser.  Typing a year in the textbox
+should display an indication of its leap year status.
 
+You may have noticed other files in the scripts directory, like `build` and
+`release`.  These are the same build scripts mentioned in the previous section,
+but we will stick with `watch` here.
 
 ==== Managing dependencies
 
