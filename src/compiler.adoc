@@ -650,7 +650,7 @@ export PATH=$PATH:~/bin
 ----
 
 Make sure that the `~/bin` directory is always set on your path. To make it permanent,
-add the line starting with ` export` to your `~/.bashrc` file (we are supposing that you
+add the line starting with `export` to your `~/.bashrc` file (we are supposing that you
 are using the bash shell).
 
 Now, open another clean terminal and execute `lein version`:
