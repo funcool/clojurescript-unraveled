@@ -2077,6 +2077,19 @@ Observe the following:
 The `ns` macro also has other directives for loading host classes (`:import`) and macros
 (`:refer-macros`), but these are explained in other sections.
 
+==== Namespaces and File Names
+
+When you have a namespace like `myapp.core`, the code must be in a file named  _core.cljs_ inside the
+_myapp_ directory.  So, the preceding examples with namespaces `myapp.core` and `myapp.main` would be
+found in project with a file structure like this:
+
+----
+myapp
+└── src
+    └── myapp
+        ├── core.cljs
+        └── main.cljs
+----
 
 === Abstractions and Polymorphism
 
@@ -2469,7 +2482,7 @@ as expected.
 
 ===== Hierarchies in multimethods
 
-One of the big advantages of hierarchies is that they works very well together with multimethods.
+One of the big advantages of hierarchies is that they work very well together with multimethods.
 This is because multimethods by default use the `isa?` function for the last step of dispatching.
 
 Let's see an example to clearly understand what that means. First, we define the multimethod with
@@ -2525,6 +2538,13 @@ keyword as the parameter which does not have the direct matching dispatch value:
 The multimethod automatically resolves it using the provided hierarchy, and since `:circle` is
 a descendant of `:shape`, the `:shape` implementation is executed.
 
+Finally, if you give a keyword that isn't part of the hierarchy, you get the `:default` implementation:
+
+[source,clojure]
+----
+(stringify-shape :triangle)
+;; => "Unexpected object"
+----
 
 === Data types
 
@@ -2720,6 +2740,11 @@ This is how we can emulate an instance of the user type that plays well with the
 ;; => "Yennefer of Vengerberg"
 ----
 
+////
+I'm not sure what to make of the preceding example, and the next section seems to be something that is
+not at all useful. Let me give this some thought.
+////
+
 ==== Specify
 
 `specify!` is an advanced alternative to `reify`, allowing you to add protocol
@@ -2781,7 +2806,7 @@ platform:
 * _ClojureScript_ data types internally compile to objects in JavaScript.
 
 On top of it, _ClojureScript_ builds its own abstractions and types that do not exist in the
-platform, such as Vectors, Maps, Sets, and others that are explained in previous sections of this chapter.
+platform, such as Vectors, Maps, Sets, and others that are explained in preceding sections of this chapter.
 
 
 ==== Interacting with platform types
@@ -2838,6 +2863,17 @@ Let's see how we can call the `.test()` method of a regexp instance:
 
 (.test re "ClojureScript")
 ;; => true
+----
+
+You can invoke instance methods on JavaScript objects. The first example follows the pattern you have seen;
+the last one is a shortcut:
+
+[source,clojure]
+----
+(.sqrt js/Math 2)
+;; => 1.4142135623730951
+(js/Math.sqrt 2)
+;; => 1.4142135623730951
 ----
 
 
@@ -2932,13 +2968,33 @@ the `set!` function:
 
 The inconvenience of the previously explained forms is that they do not make recursive
 transformations, so if you have nested objects, the nested objects will not be converted.
+Consider this example that uses Clojurescript maps, then a similar one with JavaScript objects:
+
+[source, clojure]
+----
+(def clj-map {:country {:code "FR" :name "France"}})
+;; => {:country {:code "FR", :name "France"}}
+(:code (:country clj-map)
+;; => "FR"
+
+(def js-obj #js {:country {:code "FR" :name "France"}})
+;; => #js {:country {:code "FR", :name "France"}
+(.-country js-obj)
+;; => {:code "FR", :name "France"}
+(.-code (.-country js-obj)
+;; => nil
+----
+
 To solve that use case, _ClojureScript_ comes with the `clj->js` and `js->clj` functions
-that transform Clojure collection types into JavaScript and back:
+that transform Clojure collection types into JavaScript and back. Note that the conversion to
+ClojureScript changes the `:country` keyword to a string.
 
 [source, clojure]
 ----
 (clj->js {:foo {:bar "baz"}})
 ;; => #js {:foo #js {:bar "baz"}}
+(js->clj #js {:country {:code "FR" :name "France"}}))
+;; => {"country" {:code "FR", :name "France"}}
 ----
 
 In the case of arrays, there is a specialized function `into-array` that behaves as expected:
@@ -3094,7 +3150,7 @@ The `reset!` functions replaces the value contained in the atom with a new one:
 
 ===== Observation
 
-We can add and remove watcher functions to atoms. Whenever the atom's value is changed through a `swap!` or `reset!`,
+We can add and remove watcher functions for atoms. Whenever the atom's value is changed through a `swap!` or `reset!`,
 all the atom's watcher functions will be called. Watchers are added with the `add-watch` function. Notice that each
 watcher has a key associated (`:logger` in the example) to it which is later used to remove the watch from the atom.
 
@@ -3144,5 +3200,5 @@ support swapping and resetting with `vswap!` and `vreset!` respectively:
 ;; {:name "Cirilla", :lastname "Fiona", :age 22}
 ----
 
-Note that another difference with atoms is that the constructor of volatiles uses a bang at the end, you create
+Note that another difference with atoms is that the constructor of volatiles uses a bang at the end. You create
 volatiles with `volatile!` and atoms with `atom`.
