@@ -917,7 +917,7 @@ for testing is greatly simplified.
 
 ==== First steps
 
-The "official" _ClojureScript_ testing framework is built-in on its core under the "cljs.test"
+The "official" _ClojureScript_ testing framework is in the core library under the "cljs.test"
 namespace. It is a very simple library, but it should be more than enough for our purposes.
 
 There are other libraries that offer additional features or directly different approaches
@@ -962,7 +962,7 @@ test directory:
 This new script will compile and watch both directories "src" and "test", and
 sets the new entry point to the `appfortesting.core_tests` namespace.
 
-And then, write some test code into the `core_tests.cljs` file:
+Next, write some test code into the `core_tests.cljs` file:
 
 [source, clojure]
 ----
@@ -985,8 +985,8 @@ The relevant part of that code snippet is:
   (t/is (= 1 2)))
 ----
 
-The `deftest` macro is a basic primitive for define our tests. It takes a name as its first
-parameter, followed of one or multiple "asserts" using the `is` macro. In that example,
+The `deftest` macro is a basic primitive for defining our tests. It takes a name as its first
+parameter, followed by one or multiple "asserts" using the `is` macro. In that example,
 the assert tries check that `(= 1 2)` is true.
 
 Let's try to run this. First start the watch process:
@@ -1019,8 +1019,8 @@ Ran 1 tests containing 1 assertions.
 1 failures, 0 errors.
 ----
 
-You can observe that expected assert failure is successfully printed in the console. To
-fix the test, just change the `=` with `not=` and run again the file:
+You can observe that the expected assert failure is successfully printed in the console. To
+fix the test, just change the `=` with `not=` and run the file again:
 
 [source, bash]
 ----
@@ -1033,7 +1033,7 @@ Ran 1 tests containing 1 assertions.
 ----
 
 It is fine to test these kinds of assertions, but they are not very useful. Let's go to
-test some application code. For this, we will use a function to check if a year is leap
+test some application code. For this, we will use a function to check if a year is a leap year
 or not. Then, write the following content to the `src/appfortesting/core.clj` file:
 
 [source, clojure]
@@ -1067,7 +1067,8 @@ of the `core_tests.cljs` file:
 (set! *main-cli-fn* #(t/run-tests))
 ----
 
-You can again run the compiled file to check that the new test passes as expected.
+Run the compiled file again to see that there are now two tests running.  The
+first test fails as it did before, but our leap year test passes as expected.
 
 
 ==== Async Testing
