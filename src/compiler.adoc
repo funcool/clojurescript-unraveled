@@ -779,9 +779,8 @@ will be familiar with almost all the scripts that comes with *mies* template.
 
 ==== Managing dependencies
 
-The real purpose of use leiningen for the ClojureScript compilation process is managing
-dependencies. Because it makes this task more obvious in comparison to doing it
-manually.
+The real purpose of using Leiningen for the ClojureScript compilation process is to automate
+the retrieval of dependencies.  This is dramatically simpler than retrieving them manually.
 
 The dependencies, among other parameters, are declared in the `project.clj` file and have
 this form (from *mies* template):
@@ -812,7 +811,7 @@ The dependencies in ClojureScript are packaged using `jar` files. If you are com
 Clojure or any JVM language, `jar` files will be very familiar to you. But if you
 aren't familiar with them, do not worry: a .jar file is like a plain zip file that contains
 the `project.clj` for the library, some metadata, and the ClojureScript sources. The
-packaging will be explained in other section.
+packaging will be explained in another section.
 
 Clojure packages are often published on link:http://clojars.org[Clojars]; also you
 can find many different third party libraries on the
@@ -821,7 +820,7 @@ link:https://github.com/clojure/clojurescript/wiki#libraries[ClojureScript Wiki]
 To understand dependencies better, we are going to replace the DOM utiltiles of the Google Closure
 library with a third party library for interacting with the DOM.
 
-Let start adding `[prismatic/dommy "1.1.0"]` into the `:dependencies` in the
+Let's start by adding `[prismatic/dommy "1.1.0"]` at the end of the `:dependencies` vector in
 *project.clj*:
 
 [source, clojure]
@@ -833,7 +832,7 @@ Let start adding `[prismatic/dommy "1.1.0"]` into the `:dependencies` in the
                [prismatic/dommy "1.1.0"]]
 ----
 
-At this moment you should restart the watch process that we had started at the beginning
+At this moment you should restart the `watch` process that we had started at the beginning
 of this subchapter:
 
 [source, bash]
@@ -846,8 +845,9 @@ Building ...
 Watching paths: /home/niwi/cljsbook/playground/leapyears/src
 ----
 
-You can observe that dommy dependency is successfully downloaded, and then the watch
-process is started.
+You can observe that the dommy dependency is successfully downloaded, and then the
+watch process is started.  In fact, Leiningen will ensure all dependencies are
+downloaded before performing any tasks.
 
 Now it's time to write some code. Replace the contents of the `src/leapyear/core.cljs`
 with the following content:
@@ -881,10 +881,8 @@ with the following content:
 ----
 
 As you can observe, the code now looks more “Clojure-friendly.” The host
-interoperabilty calls are almost hidden.
-
-NOTE: This example does not means that we prefer `dommy` over the Google Closure library. In
-fact, dommy does not have documentation, so we do not recommend use it.
+interoperabilty calls have now been replaced by functions provided by this
+third-party library.
 
 
 === Using javascript libraries
