@@ -1073,16 +1073,16 @@ first test fails as it did before, but our leap year test passes as expected.
 
 ==== Async Testing
 
-One of the peculiarities of _ClojureScript_ is that is built up on asynchronous, single
-theaded execution environments, and this has its own challenges.
+One of the peculiarities of _ClojureScript_ is that it runs on asynchronous,
+single-threaded execution environments, and this has its own challenges.
 
-In async execution environments we should be able test asynchronous functions. So,
-in this case, the _ClojureScript_ testing library offers a simply facility to do it:
-the `async` macro. It allows you to create blocks that play well with asynchronous code.
+In async execution environments, we should be able to test asynchronous
+functions.  To this end, the _ClojureScript_ testing library offers the `async`
+macro, allowing you to create tests that play well with asynchronous code.
 
 First, we need to write a function that works in an asynchronous way. For this
-purpose we will create the `async-leap?` predicate that will do the same operation but
-return a result using a callback:
+purpose, we will create the `async-leap?` predicate that will do the same operation but
+asychronously return a result using a callback:
 
 [source, clojure]
 ----
@@ -1096,7 +1096,7 @@ return a result using a callback:
        (callback result)))))
 ----
 
-The JavaScript function `setImmediate` is used to emulate an asyncrhonous task and the callback
+The JavaScript function `setImmediate` is used to emulate an asynchronous task, and the callback
 is executed with the result of that predicate.
 
 To test it, we should write a test case using the previously mentioned `async` macro:
@@ -1113,9 +1113,8 @@ To test it, we should write a test case using the previously mentioned `async` m
 The `done` function exposed by the `async` macro should be called after the asynchronous
 operation is finished and all assertions have run.
 
-It is very important to execute that function only once. If you execute that function twice or
-never, may cause some kind of strange behavior like executing some tests more than one time
-or skipping execution of some tests.
+It is very important to execute the `done` function only once. Omitting or
+executing it twice may cause strange behavior and should be avoided.
 
 
 ==== Fixtures
