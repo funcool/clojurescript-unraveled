@@ -1125,26 +1125,36 @@ TBD
 
 ==== Integrating with CI
 
-Most continuous integration tools and services expect that test scripts you provide
-return a standard exit code. But ClojureScript by default only runs the tests and outputs
-the results to standard output. So the compiled file can not be used directly with
-continuous integration tools because it does not return any return code when something
-fails. It always return the return code `0`.
+Most continuous integration tools and services expect that test scripts you
+provide return a standard exit code. But the ClojureScript test framework
+cannot customize this exit code without some configuration, because JavaScript
+lacks a universal exit code API for ClojureScript to use.
 
-To fix this, we must instruct the _ClojureScript_ test runner that when it finishes with
-a failed state it should set `-1` as a return code. This can be done with this
-snippet of code:
+To fix this, the _ClojureScript_ test framework provides an avenue for
+executing custom code after the tests are done. This is where you are expected
+to set the environment-specific exit code depending on the final test status:
+`0` for success, `1` for failure.
+
+Insert this code at the end of `core_tests.cljs`:
 
 [source, clojure]
 ----
-(defmethod cljs.test/report [:cljs.test/default :end-run-tests]
+(defmethod t/report [::t/default :end-run-tests]
   [m]
-  (if (cljs.test/successful? m)
+  (if (t/successful? m)
     (set! (.-exitCode js/process) 0)
     (set! (.-exitCode js/process) 1)))
 ----
 
-This code snippet obviously supposes that you are running the tests using *iojs* or
+Now, you may check the exit code of the test script after running:
+
+[source, bash]
+----
+$ iojs out/appfortesting.js
+$ echo $?
+----
+
+This code snippet obviously assumes that you are running the tests using *iojs* or
 *nodejs*. If you are running your script in another execution environment, you should be
 aware of how you can set the exit code in that environment and modify the previous snippet
 accordingly.
