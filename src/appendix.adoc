@@ -358,7 +358,7 @@ closed. Because of that, putting a `nil` value on a channel is not allowed:
 
 (def ch (chan))
 
-(put! ch 42)
+(put! ch nil)
 ;; Error: Assert failed: Can't put nil in on a channel
 ----
 
