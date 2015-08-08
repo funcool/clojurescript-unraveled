@@ -1196,8 +1196,8 @@ in respect to the clojure.
 
 TBD
 
-
 === Core protocols
+anchor:core-protocols[]
 
 ////
 As clojurescript in difference with Clojure defines everything in terms of protocols and this
@@ -1205,3 +1205,6 @@ subchapter intends to expain many of these protocols and how them can be used by
 ////
 
 TBD
+
+=== The Reader
+anchor:the-reader[]
