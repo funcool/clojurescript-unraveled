@@ -566,31 +566,11 @@ We encourage you to explore ClojureScript core to see what other transducers are
 
 ==== Defining our own transducers
 
-Since most transducers are only interesting in the reducing step implementation and often delegate to the
-reducing function in arities 0 and 1, there is a little helper called `completing` that fills those arities
-for you:
 ////
-I think this needs a bit more explanation. Why does my-transducer use completing also, and how is it different from my-transducer-with-completion?
+TODO: rewrite section
+- Arity 0, 1 and 2 and their invariants
+- `completing` for making reducing functions transducible
 ////
-
-[source, clojure]
-----
-;; if a completing function is not defined, identity will be used
-(def my-transducer
-  (completing
-    (fn [acc input]
-     ;; ...
-     )))
-
-(def my-transducer-with-completion
-  (completing
-    (fn [acc input]
-     ;; ...
-     )
-    (fn [result]
-     ;; ...
-    )))
-----
 
 
 ==== Transducible processes
