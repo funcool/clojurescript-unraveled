@@ -892,6 +892,7 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#metadata">5.3. Metadata</a></li>
 <li><a href="#macros">5.4. Macros</a></li>
 <li><a href="#core-protocols">5.5. Core protocols</a></li>
+<li><a href="#the-reader">5.6. The Reader</a></li>
 </ul>
 </li>
 <li><a href="#appendix">6. Appendix</a>
@@ -3231,13 +3232,13 @@ docstring.</p>
 </div>
 <div class="paragraph">
 <p>Previously we have explained vars and symbols. Every var that you define will be associated
-with its namespace. If you do not define a concrete namespace, then the default one called "user" will be
+with its namespace. If you do not define a concrete namespace, then the default one called "cljs.user" will be
 used:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">x</span> <span class="tok-s">&quot;hello&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; #&#39;user/x</span></code></pre>
+<span class="tok-c1">;; =&gt; #&#39;cljs.user/x</span></code></pre>
 </div>
 </div>
 </div>
@@ -3282,19 +3283,14 @@ This is how it can be done:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Additionally, <em>ClojureScript</em> offers a simple way to refer to specific vars or functions from a concrete namespace using the <code>:refer</code> directive.</p>
-</div>
-<div class="paragraph">
-<p>The <code>:refer</code> directive has two possible arguments: the <code>:all</code> keyword or a vector of symbols that will
-refer to vars in the namespace. With <code>:all</code>, we are indicating that we want to refer all public vars from the
-namespace, and with a vector, we can specify the specific subset of vars that we want. Effectively, it is as if those vars and
+<p>Additionally, <em>ClojureScript</em> offers a simple way to refer to specific vars or functions from a concrete namespace using the <code>:refer</code> directive, followed by a sequence of symbols that will
+refer to vars in the namespace. Effectively, it is as if those vars and
 functions are now part of your namespace, and you do not need to qualify them at all.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">ns </span><span class="tok-nv">myapp.main</span>
-  <span class="tok-p">(</span><span class="tok-ss">:require</span> <span class="tok-p">[</span><span class="tok-nv">myapp.core</span> <span class="tok-ss">:refer</span> <span class="tok-ss">:all</span><span class="tok-p">]</span>
-            <span class="tok-p">[</span><span class="tok-nv">clojure.string</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">upper-case</span><span class="tok-p">]]))</span>
+  <span class="tok-p">(</span><span class="tok-ss">:require</span> <span class="tok-p">[</span><span class="tok-nv">clojure.string</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">upper-case</span><span class="tok-p">]]))</span>
 <span class="tok-p">(</span><span class="tok-nf">upper-case</span> <span class="tok-nv">x</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; &quot;HELLO&quot;</span></code></pre>
 </div>
@@ -3323,6 +3319,23 @@ allows you to exclude specific symbols and prevent them from being automatically
 <div class="paragraph">
 <p>The <code>ns</code> macro also has other directives for loading host classes (<code>:import</code>) and macros
 (<code>:refer-macros</code>), but these are explained in other sections.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="namespaces-and-file-names"><a class="link" href="#namespaces-and-file-names">3.9.3. Namespaces and File Names</a></h4>
+<div class="paragraph">
+<p>When you have a namespace like <code>myapp.core</code>, the code must be in a file named  <em>core.cljs</em> inside the
+<em>myapp</em> directory.  So, the preceding examples with namespaces <code>myapp.core</code> and <code>myapp.main</code> would be
+found in project with a file structure like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>myapp
+└── src
+    └── myapp
+        ├── core.cljs
+        └── main.cljs</pre>
+</div>
 </div>
 </div>
 </div>
@@ -3528,7 +3541,7 @@ real life example.</p>
 </div>
 <div class="paragraph">
 <p>In previous sections, we have explained the different kinds of built-in collections. For this example we
-will use a <strong>set</strong>. See this snipped of code:</p>
+will use a <strong>set</strong>. See this snippet of code:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3778,7 +3791,7 @@ as expected.</p>
 <div class="sect4">
 <h5 id="hierarchies-in-multimethods"><a class="link" href="#hierarchies-in-multimethods">Hierarchies in multimethods</a></h5>
 <div class="paragraph">
-<p>One of the big advantages of hierarchies is that they works very well together with multimethods.
+<p>One of the big advantages of hierarchies is that they work very well together with multimethods.
 This is because multimethods by default use the <code>isa?</code> function for the last step of dispatching.</p>
 </div>
 <div class="paragraph">
@@ -3839,6 +3852,15 @@ keyword as the parameter which does not have the direct matching dispatch value:
 <div class="paragraph">
 <p>The multimethod automatically resolves it using the provided hierarchy, and since <code>:circle</code> is
 a descendant of <code>:shape</code>, the <code>:shape</code> implementation is executed.</p>
+</div>
+<div class="paragraph">
+<p>Finally, if you give a keyword that isn&#8217;t part of the hierarchy, you get the <code>:default</code> implementation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">stringify-shape</span> <span class="tok-ss">:triangle</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;Unexpected object&quot;</span></code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -4050,8 +4072,9 @@ how they can be used:</p>
 <div class="sect3">
 <h4 id="reify"><a class="link" href="#reify">3.11.4. Reify</a></h4>
 <div class="paragraph">
-<p>The <code>reify</code> macro lets you create an anonymous type that implements protocols. In contrast to
-<code>deftype</code> and <code>defrecord</code>, it does not have accessible fields.</p>
+<p>The <code>reify</code> macro is an <em>ad hoc constructor</em> you can use to create objects without pre-defining a type.
+Protocol implementations are supplied the same as <code>deftype</code> and <code>defrecord</code>, but in contrast, <code>reify</code>
+does not have accessible fields.</p>
 </div>
 <div class="paragraph">
 <p>This is how we can emulate an instance of the user type that plays well with the <code>IUser</code> abstraction:</p>
@@ -4070,9 +4093,46 @@ how they can be used:</p>
 <span class="tok-c1">;; =&gt; &quot;Yennefer of Vengerberg&quot;</span></code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="specify"><a class="link" href="#specify">3.11.5. Specify</a></h4>
 <div class="paragraph">
-<p>The real purpose of <code>reify</code> is to create an anonymous type that may implement protocols,
-but you don&#8217;t want the type itself.</p>
+<p><code>specify!</code> is an advanced alternative to <code>reify</code>, allowing you to add protocol
+implementations to an existing JavaScript object.  This can be useful if
+you want to graft protocols onto a JavaScript library&#8217;s components.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">obj</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">{})</span>
+
+<span class="tok-p">(</span><span class="tok-nf">specify!</span> <span class="tok-nv">obj</span>
+  <span class="tok-nv">IUser</span>
+  <span class="tok-p">(</span><span class="tok-nf">full-name</span> <span class="tok-p">[</span><span class="tok-nv">_</span><span class="tok-p">]</span>
+    <span class="tok-s">&quot;my full name&quot;</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">full-name</span> <span class="tok-nv">obj</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;my full name&quot;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>specify</code> is an immutable version of <code>specify!</code> that can be used on immutable,
+copyable values implementing <code>ICloneable</code> (e.g. ClojureScript collections).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">a</span> <span class="tok-p">{})</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">b</span> <span class="tok-p">(</span><span class="tok-nf">specify</span> <span class="tok-nv">a</span>
+         <span class="tok-nv">IUser</span>
+         <span class="tok-p">(</span><span class="tok-nf">full-name</span> <span class="tok-p">[</span><span class="tok-nv">_</span><span class="tok-p">]</span>
+           <span class="tok-s">&quot;my full name&quot;</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">full-name</span> <span class="tok-nv">a</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Error: No protocol method IUser.full-name defined for type cljs.core/PersistentArrayMap: {}</span>
+
+<span class="tok-p">(</span><span class="tok-nf">full-name</span> <span class="tok-nv">b</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;my full name&quot;</span></code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -4117,7 +4177,7 @@ platform:</p>
 </div>
 <div class="paragraph">
 <p>On top of it, <em>ClojureScript</em> builds its own abstractions and types that do not exist in the
-platform, such as Vectors, Maps, Sets, and others that are explained in previous sections of this chapter.</p>
+platform, such as Vectors, Maps, Sets, and others that are explained in preceding sections of this chapter.</p>
 </div>
 </div>
 <div class="sect3">
@@ -4185,6 +4245,18 @@ but with a little variation: the function name starts with special form <code>.<
 <span class="tok-c1">;; =&gt; true</span></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>You can invoke instance methods on JavaScript objects. The first example follows the pattern you have seen;
+the last one is a shortcut:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.sqrt</span> <span class="tok-nv">js/Math</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 1.4142135623730951</span>
+<span class="tok-p">(</span><span class="tok-nf">js/Math.sqrt</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 1.4142135623730951</span></code></pre>
+</div>
+</div>
 </div>
 <div class="sect4">
 <h5 id="access-to-object-properties"><a class="link" href="#access-to-object-properties">Access to object properties</a></h5>
@@ -4197,6 +4269,32 @@ instead of using the <code>.</code> you use <code>.-</code>. Let&#8217;s see an 
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.-multiline</span> <span class="tok-nv">re</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; false</span>
 <span class="tok-p">(</span><span class="tok-nf">.-PI</span> <span class="tok-nv">js/Math</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 3.141592653589793</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="property-access-shorthand"><a class="link" href="#property-access-shorthand">Property access shorthand</a></h5>
+<div class="paragraph">
+<p>Symbols with the <code>js/</code> prefix can contain dots to denote nested property access.
+Both of the following expressions invoke the same function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.log</span> <span class="tok-nv">js/console</span> <span class="tok-s">&quot;Hello World&quot;</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">js/console.log</span> <span class="tok-s">&quot;Hello World&quot;</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And both of the following expressions access the same property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.-PI</span> <span class="tok-nv">js/Math</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 3.141592653589793</span>
+
+<span class="tok-nv">js/Math.PI</span>
 <span class="tok-c1">;; =&gt; 3.141592653589793</span></code></pre>
 </div>
 </div>
@@ -4261,13 +4359,34 @@ the <code>set!</code> function:</p>
 <div class="paragraph">
 <p>The inconvenience of the previously explained forms is that they do not make recursive
 transformations, so if you have nested objects, the nested objects will not be converted.
-To solve that use case, <em>ClojureScript</em> comes with the <code>clj&#8594;js</code> and <code>js&#8594;clj</code> functions
-that transform Clojure collection types into JavaScript and back:</p>
+Consider this example that uses Clojurescript maps, then a similar one with JavaScript objects:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">clj-map</span> <span class="tok-p">{</span><span class="tok-ss">:country</span> <span class="tok-p">{</span><span class="tok-ss">:code</span> <span class="tok-s">&quot;FR&quot;</span> <span class="tok-ss">:name</span> <span class="tok-s">&quot;France&quot;</span><span class="tok-p">}})</span>
+<span class="tok-c1">;; =&gt; {:country {:code &quot;FR&quot;, :name &quot;France&quot;}}</span>
+<span class="tok-p">(</span><span class="tok-ss">:code</span> <span class="tok-p">(</span><span class="tok-ss">:country</span> <span class="tok-nv">clj-map</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;FR&quot;</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">js-obj</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">{</span><span class="tok-ss">:country</span> <span class="tok-p">{</span><span class="tok-ss">:code</span> <span class="tok-s">&quot;FR&quot;</span> <span class="tok-ss">:name</span> <span class="tok-s">&quot;France&quot;</span><span class="tok-p">}})</span>
+<span class="tok-c1">;; =&gt; #js {:country {:code &quot;FR&quot;, :name &quot;France&quot;}</span>
+<span class="tok-p">(</span><span class="tok-nf">.-country</span> <span class="tok-nv">js-obj</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; {:code &quot;FR&quot;, :name &quot;France&quot;}</span>
+<span class="tok-p">(</span><span class="tok-nf">.-code</span> <span class="tok-p">(</span><span class="tok-nf">.-country</span> <span class="tok-nv">js-obj</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To solve that use case, <em>ClojureScript</em> comes with the <code>clj&#8594;js</code> and <code>js&#8594;clj</code> functions
+that transform Clojure collection types into JavaScript and back. Note that the conversion to
+ClojureScript changes the <code>:country</code> keyword to a string.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">clj-&gt;js</span> <span class="tok-p">{</span><span class="tok-ss">:foo</span> <span class="tok-p">{</span><span class="tok-ss">:bar</span> <span class="tok-s">&quot;baz&quot;</span><span class="tok-p">}})</span>
-<span class="tok-c1">;; =&gt; #js {:foo #js {:bar &quot;baz&quot;}}</span></code></pre>
+<span class="tok-c1">;; =&gt; #js {:foo #js {:bar &quot;baz&quot;}}</span>
+<span class="tok-p">(</span><span class="tok-nf">js-&gt;clj</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">{</span><span class="tok-ss">:country</span> <span class="tok-p">{</span><span class="tok-ss">:code</span> <span class="tok-s">&quot;FR&quot;</span> <span class="tok-ss">:name</span> <span class="tok-s">&quot;France&quot;</span><span class="tok-p">}}))</span>
+<span class="tok-c1">;; =&gt; {&quot;country&quot; {:code &quot;FR&quot;, :name &quot;France&quot;}}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4325,7 +4444,7 @@ and set the value at that position:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In JavaScript, objects are also arrays, so you can use the same functions for interacting
+<p>In JavaScript, array index access is equivalent to object property access, so you can use the same functions for interacting
 with plain objects:</p>
 </div>
 <div class="listingblock">
@@ -4445,7 +4564,7 @@ today, let&#8217;s increment her age count:</p>
 <div class="sect4">
 <h5 id="observation"><a class="link" href="#observation">Observation</a></h5>
 <div class="paragraph">
-<p>We can add and remove watcher functions to atoms. Whenever the atom&#8217;s value is changed through a <code>swap!</code> or <code>reset!</code>,
+<p>We can add and remove watcher functions for atoms. Whenever the atom&#8217;s value is changed through a <code>swap!</code> or <code>reset!</code>,
 all the atom&#8217;s watcher functions will be called. Watchers are added with the <code>add-watch</code> function. Notice that each
 watcher has a key associated (<code>:logger</code> in the example) to it which is later used to remove the watch from the atom.</p>
 </div>
@@ -4500,7 +4619,7 @@ support swapping and resetting with <code>vswap!</code> and <code>vreset!</code>
 </div>
 </div>
 <div class="paragraph">
-<p>Note that another difference with atoms is that the constructor of volatiles uses a bang at the end, you create
+<p>Note that another difference with atoms is that the constructor of volatiles uses a bang at the end. You create
 volatiles with <code>volatile!</code> and atoms with <code>atom</code>.</p>
 </div>
 </div>
@@ -4614,7 +4733,7 @@ version manager). You can read the instructions on how to install and use nvm on
 <a href="https://github.com/creationix/nvm">home page</a>.</p>
 </div>
 <div class="paragraph">
-<p>Then you have installed the nvm, follow installing the latest version of the iojs:</p>
+<p>When you have installed nvm, follow installing the latest version of iojs:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4929,7 +5048,7 @@ advantage of this method is that it gives a little bit more output.</p>
 <div class="sect3">
 <h4 id="optimization-levels"><a class="link" href="#optimization-levels">4.1.6. Optimization levels</a></h4>
 <div class="paragraph">
-<p>The <em>ClojureScript</em> compiler has different level of optimizations. Behind the scenes,
+<p>The <em>ClojureScript</em> compiler has different levels of optimization. Behind the scenes,
 those compilation levels are coming from Google Closure Compiler.</p>
 </div>
 <div class="paragraph">
@@ -4992,20 +5111,20 @@ compiled <em>ClojureScript</em> and other JavaScript.</p>
 <div class="sect4">
 <h5 id="advanced"><a class="link" href="#advanced">advanced</a></h5>
 <div class="paragraph">
-<p>The advanced compilation level implies (includes) all transformations from simple
-optimization and additionally performs more aggresive optimizations and dead
-code elimination. That results in more small output files.</p>
+<p>The advanced compilation level includes all transformations from simple
+optimization and additionally performs more aggressive optimizations and dead
+code elimination. This results in significantly smaller output files.</p>
 </div>
 <div class="paragraph">
-<p>Compilation with the <code>:advanced</code> optimiziation implies that you all you code should
-complain the google closure compiler rules. If you code is purelly <em>ClojureScript</em>,
-you don&#8217;t worry about this because the <em>ClojureScript</em> compiler generates a valid
-compliant javascript. But if you are interacticting with third party javascript,
-some additional tasks should be done for make work everything as expected.</p>
+<p>The <code>:advanced</code> optimizations can only work for a strict subset of JavaScript
+code that follows the Google Closure Compiler rules.  <em>ClojureScript</em> generates
+valid JavaScript within this strict subset, but if you are interacting with
+third party JavaScript code, some additional tasks should be done to make
+everything work as expected.</p>
 </div>
 <div class="paragraph">
-<p>All about interaction with third-party javascript libraries will be explained
-in below sections.</p>
+<p>This interaction with third party javascript libraries will be explained
+in later sections.</p>
 </div>
 </div>
 </div>
@@ -5113,7 +5232,7 @@ is the most used JavaScript execution environment on the backend, and it has a g
 amount of community packages around it.</p>
 </div>
 <div class="paragraph">
-<p>Well, the good notice is that start nodejs/iojs repl is very very easy once you have it
+<p>Well, the good news is that starting a nodejs/iojs repl is very easy once you have it
 installed in your system. Start writing this content to a new <code>repl.clj</code> file:</p>
 </div>
 <div class="listingblock">
@@ -5250,7 +5369,7 @@ result of that will be the typical browser alert dialog.</p>
 <div class="sect2">
 <h3 id="the-closure-library"><a class="link" href="#the-closure-library">4.3. The Closure Library</a></h3>
 <div class="paragraph">
-<p>A google closure library is a javascript library developed by google, based on a modular
+<p>The Google Closure Library is a javascript library developed by Google, based on a modular
 architecture and provides cross-browser functions for DOM manipulations and events, ajax
 and JSON, among other features.</p>
 </div>
@@ -5259,9 +5378,9 @@ and JSON, among other features.</p>
 internally by the <em>ClojureScript</em> compiler).</p>
 </div>
 <div class="paragraph">
-<p>And <em>ClojureScript</em> is built up on Closure Compiler and Closure Library. The great example
-are the <em>ClojureScript</em> namespaces, they are defined as closure modules. This means that
-you can interact with closure library in a very easy way:</p>
+<p>And <em>ClojureScript</em> is built on Closure Compiler and Closure Library. In fact,
+<em>ClojureScript</em> namespaces are Closure modules. This means that
+you can interact with the Closure Library in a very easy way:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5272,12 +5391,12 @@ you can interact with closure library in a very easy way:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>With previous snippet of code you can observe the way you can import the <strong>dom</strong> module of
+<p>With the previous snippet of code you can observe the way you can import the <strong>dom</strong> module of
 the closure library and use one function declared in that module.</p>
 </div>
 <div class="paragraph">
-<p>Additionally, the closure library also exposes "special" modules that behaves like a
-class or object. For import this kind of things you should use the <code>:import</code> directive.</p>
+<p>Additionally, the closure library also exposes "special" modules that behave like a
+class or object. For importing these kinds of things you should use the <code>:import</code> directive.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5288,23 +5407,24 @@ class or object. For import this kind of things you should use the <code>:import
 </div>
 </div>
 <div class="paragraph">
-<p>If you are familiar with Clojure, it uses this approach for import the Java clases using
-the <code>:import</code> direcrtive. However, if you define types (classes) using <em>ClojureScript</em>
-primitives, you should not use <code>:import</code> for import them, the standard <code>:require</code>
+<p>If you are familiar with Clojure, it imports Java classes using
+the same <code>:import</code> directive. However, if you define types (classes) using <em>ClojureScript</em>
+primitives, you should not use <code>:import</code> to import them, the standard <code>:require</code>
 directives should be used.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="dependency-management"><a class="link" href="#dependency-management">4.4. Dependency management</a></h3>
 <div class="paragraph">
-<p>Until now, we have used the builtin <em>ClojureScript</em> toolchain to compile our sources to
-JavaScript. It is OK to start using it and to understand how it works. But it is not very
-comfortable for use on big projects with dependencies to third party libraries.</p>
+<p>Until now, we have used the builtin <em>ClojureScript</em> toolchain to compile our
+sources to JavaScript.  This is the minimal setup required for working with and
+understanding the compiler, but for larger projects, we often require a larger
+build tool that can manage a project&#8217;s dependencies on other libraries.</p>
 </div>
 <div class="paragraph">
-<p>This chapter intends to explain how you can use <strong>Leiningen</strong>, the defacto clojure build
+<p>Thus, this chapter intends to explain how you can use <strong>Leiningen</strong>, the de facto clojure build
 and dependency management tool, to build <em>ClojureScript</em> projects. There is another
-build tool called <strong>boot</strong> that is growing in popularity, but at this momenent it will not be
+build tool called <strong>boot</strong> that is growing in popularity, but at this moment it will not be
 covered in this book.</p>
 </div>
 <div class="sect3">
@@ -5323,7 +5443,7 @@ chmod a+x ./lein
 </div>
 <div class="paragraph">
 <p>Make sure that the <code>~/bin</code> directory is always set on your path. To make it permanent,
-add the line starting with ` export` to your <code>~/.bashrc</code> file (we are supposing that you
+add the line starting with <code>export</code> to your <code>~/.bashrc</code> file (we are supposing that you
 are using the bash shell).</p>
 </div>
 <div class="paragraph">
@@ -5354,9 +5474,9 @@ version of the leiningen script at the web site.
 <div class="sect3">
 <h4 id="first-project"><a class="link" href="#first-project">4.4.2. First project</a></h4>
 <div class="paragraph">
-<p>The best way to show how a tool works is by creating a toy project with it. In this case
-we will go to create one little application that calculates if a year is leap or not. And
-for it, we will use the <strong>mies</strong> leiningen template.</p>
+<p>The best way to show how a tool works is by creating a toy project with it. In this case,
+we will create a small application that calculates if a year is a leap year or not. To
+start, we will use the <strong>mies</strong> leiningen template.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -5365,11 +5485,10 @@ for it, we will use the <strong>mies</strong> leiningen template.</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-Templates are a way that leiningen has to provide a initial layout for an
-application or a library and clojure community has a great amount of them. In this case
-we&#8217;ll use <strong>mies</strong> template that is maintained by the clojurescript core developer. If you
-want to know more about templates, you should read the leiningen doc. Explaining templates
-is completely out of scope of this book.
+Templates are a facility in leiningen for creating an initial project structure.
+The clojure community has a great many of them. In this case
+we&#8217;ll use the <strong>mies</strong> template that was started by the clojurescript core developer.  Consult
+the leiningen docs to learn more about templates.
 </td>
 </tr>
 </table>
@@ -5458,7 +5577,7 @@ code into the <code>src/leapyear/core.cljs</code>:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>And finally, compile the clojurescript code with:</p>
+<p>Now, compile the clojurescript code with:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5466,7 +5585,8 @@ code into the <code>src/leapyear/core.cljs</code>:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>That behind the scenes executes this:</p>
+<p>This script executes the following behind the scenes, similar to the <code>java</code>
+build commands from the previous section, but with our <code>lein</code> build tool:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5486,18 +5606,20 @@ you should have <code>rlwrap</code> installed on your system.
 </table>
 </div>
 <div class="paragraph">
-<p>Additionally to <code>watch</code> script, the <strong>mies</strong> template also generates a bunch of other
-scripts such as <code>build</code>,<code>release</code>,&#8230;&#8203; but for our purposes in this section they are
-completely useless. And probably after reading the compiler and repl sections, you already
-will be familiar with almost all the scripts that comes with <strong>mies</strong> template.</p>
+<p>Finally, open the <code>index.html</code> file in a browser.  Typing a year in the textbox
+should display an indication of its leap year status.</p>
+</div>
+<div class="paragraph">
+<p>You may have noticed other files in the scripts directory, like <code>build</code> and
+<code>release</code>.  These are the same build scripts mentioned in the previous section,
+but we will stick with <code>watch</code> here.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="managing-dependencies"><a class="link" href="#managing-dependencies">4.4.3. Managing dependencies</a></h4>
 <div class="paragraph">
-<p>The real purpose of use leiningen for the ClojureScript compilation process is managing
-dependencies. Because it makes this task more obvious in comparison to doing it
-manually.</p>
+<p>The real purpose of using Leiningen for the ClojureScript compilation process is to automate
+the retrieval of dependencies.  This is dramatically simpler than retrieving them manually.</p>
 </div>
 <div class="paragraph">
 <p>The dependencies, among other parameters, are declared in the <code>project.clj</code> file and have
@@ -5538,7 +5660,7 @@ this form (from <strong>mies</strong> template):</p>
 Clojure or any JVM language, <code>jar</code> files will be very familiar to you. But if you
 aren&#8217;t familiar with them, do not worry: a .jar file is like a plain zip file that contains
 the <code>project.clj</code> for the library, some metadata, and the ClojureScript sources. The
-packaging will be explained in other section.</p>
+packaging will be explained in another section.</p>
 </div>
 <div class="paragraph">
 <p>Clojure packages are often published on <a href="http://clojars.org">Clojars</a>; also you
@@ -5550,7 +5672,7 @@ can find many different third party libraries on the
 library with a third party library for interacting with the DOM.</p>
 </div>
 <div class="paragraph">
-<p>Let start adding <code>[prismatic/dommy "1.1.0"]</code> into the <code>:dependencies</code> in the
+<p>Let&#8217;s start by adding <code>[prismatic/dommy "1.1.0"]</code> at the end of the <code>:dependencies</code> vector in
 <strong>project.clj</strong>:</p>
 </div>
 <div class="listingblock">
@@ -5563,7 +5685,7 @@ library with a third party library for interacting with the DOM.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>At this moment you should restart the watch process that we had started at the beginning
+<p>At this moment you should restart the <code>watch</code> process that we had started at the beginning
 of this subchapter:</p>
 </div>
 <div class="listingblock">
@@ -5577,8 +5699,9 @@ Watching paths: /home/niwi/cljsbook/playground/leapyears/src</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can observe that dommy dependency is successfully downloaded, and then the watch
-process is started.</p>
+<p>You can observe that the dommy dependency is successfully downloaded, and then the
+watch process is started.  In fact, Leiningen will ensure all dependencies are
+downloaded before performing any tasks.</p>
 </div>
 <div class="paragraph">
 <p>Now it&#8217;s time to write some code. Replace the contents of the <code>src/leapyear/core.cljs</code>
@@ -5614,20 +5737,8 @@ with the following content:</p>
 </div>
 <div class="paragraph">
 <p>As you can observe, the code now looks more “Clojure-friendly.” The host
-interoperabilty calls are almost hidden.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-This example does not means that we prefer <code>dommy</code> over the Google Closure library. In
-fact, dommy does not have documentation, so we do not recommend use it.
-</td>
-</tr>
-</table>
+interoperabilty calls have now been replaced by functions provided by this
+third-party library.</p>
 </div>
 </div>
 </div>
@@ -5640,11 +5751,11 @@ fact, dommy does not have documentation, so we do not recommend use it.
 <div class="sect2">
 <h3 id="unit-testing"><a class="link" href="#unit-testing">4.6. Unit testing</a></h3>
 <div class="paragraph">
-<p>There’s not a lot to say here; testing in <em>ClojureScript</em> consists of the same concepts as
+<p>As you may expect, testing in <em>ClojureScript</em> consists of the same concepts as
 you may know from any other language such as Clojure, Java, Python, JavaScript, etc.</p>
 </div>
 <div class="paragraph">
-<p>Regardless of the languag,e the main objective of unit testing is to run some test code
+<p>Regardless of the language, the main objective of unit testing is to run some test code,
 and verify that your code behaves as expected and returns without raising unexpected
 exceptions.</p>
 </div>
@@ -5657,7 +5768,7 @@ for testing is greatly simplified.</p>
 <div class="sect3">
 <h4 id="first-steps"><a class="link" href="#first-steps">4.6.1. First steps</a></h4>
 <div class="paragraph">
-<p>The "official" <em>ClojureScript</em> testing framework is built-in on its core under the "cljs.test"
+<p>The "official" <em>ClojureScript</em> testing framework is in the core library under the "cljs.test"
 namespace. It is a very simple library, but it should be more than enough for our purposes.</p>
 </div>
 <div class="paragraph">
@@ -5709,7 +5820,7 @@ test directory:</p>
 sets the new entry point to the <code>appfortesting.core_tests</code> namespace.</p>
 </div>
 <div class="paragraph">
-<p>And then, write some test code into the <code>core_tests.cljs</code> file:</p>
+<p>Next, write some test code into the <code>core_tests.cljs</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5734,8 +5845,8 @@ sets the new entry point to the <code>appfortesting.core_tests</code> namespace.
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>deftest</code> macro is a basic primitive for define our tests. It takes a name as its first
-parameter, followed of one or multiple "asserts" using the <code>is</code> macro. In that example,
+<p>The <code>deftest</code> macro is a basic primitive for defining our tests. It takes a name as its first
+parameter, followed by one or multiple "asserts" using the <code>is</code> macro. In that example,
 the assert tries check that <code>(= 1 2)</code> is true.</p>
 </div>
 <div class="paragraph">
@@ -5771,8 +5882,8 @@ Ran <span class="tok-m">1</span> tests containing <span class="tok-m">1</span> a
 </div>
 </div>
 <div class="paragraph">
-<p>You can observe that expected assert failure is successfully printed in the console. To
-fix the test, just change the <code>=</code> with <code>not=</code> and run again the file:</p>
+<p>You can observe that the expected assert failure is successfully printed in the console. To
+fix the test, just change the <code>=</code> with <code>not=</code> and run the file again:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5786,7 +5897,7 @@ Ran <span class="tok-m">1</span> tests containing <span class="tok-m">1</span> a
 </div>
 <div class="paragraph">
 <p>It is fine to test these kinds of assertions, but they are not very useful. Let&#8217;s go to
-test some application code. For this, we will use a function to check if a year is leap
+test some application code. For this, we will use a function to check if a year is a leap year
 or not. Then, write the following content to the <code>src/appfortesting/core.clj</code> file:</p>
 </div>
 <div class="listingblock">
@@ -5822,24 +5933,25 @@ of the <code>core_tests.cljs</code> file:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>You can again run the compiled file to check that the new test passes as expected.</p>
+<p>Run the compiled file again to see that there are now two tests running.  The
+first test fails as it did before, but our leap year test passes as expected.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="async-testing"><a class="link" href="#async-testing">4.6.2. Async Testing</a></h4>
 <div class="paragraph">
-<p>One of the peculiarities of <em>ClojureScript</em> is that is built up on asynchronous, single
-theaded execution environments, and this has its own challenges.</p>
+<p>One of the peculiarities of <em>ClojureScript</em> is that it runs on asynchronous,
+single-threaded execution environments, and this has its own challenges.</p>
 </div>
 <div class="paragraph">
-<p>In async execution environments we should be able test asynchronous functions. So,
-in this case, the <em>ClojureScript</em> testing library offers a simply facility to do it:
-the <code>async</code> macro. It allows you to create blocks that play well with asynchronous code.</p>
+<p>In async execution environments, we should be able to test asynchronous
+functions.  To this end, the <em>ClojureScript</em> testing library offers the <code>async</code>
+macro, allowing you to create tests that play well with asynchronous code.</p>
 </div>
 <div class="paragraph">
 <p>First, we need to write a function that works in an asynchronous way. For this
-purpose we will create the <code>async-leap?</code> predicate that will do the same operation but
-return a result using a callback:</p>
+purpose, we will create the <code>async-leap?</code> predicate that will do the same operation but
+asychronously return a result using a callback:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5854,7 +5966,7 @@ return a result using a callback:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The JavaScript function <code>setImmediate</code> is used to emulate an asyncrhonous task and the callback
+<p>The JavaScript function <code>setImmediate</code> is used to emulate an asynchronous task, and the callback
 is executed with the result of that predicate.</p>
 </div>
 <div class="paragraph">
@@ -5874,9 +5986,8 @@ is executed with the result of that predicate.</p>
 operation is finished and all assertions have run.</p>
 </div>
 <div class="paragraph">
-<p>It is very important to execute that function only once. If you execute that function twice or
-never, may cause some kind of strange behavior like executing some tests more than one time
-or skipping execution of some tests.</p>
+<p>It is very important to execute the <code>done</code> function only once. Omitting or
+executing it twice may cause strange behavior and should be avoided.</p>
 </div>
 </div>
 <div class="sect3">
@@ -5888,28 +5999,40 @@ or skipping execution of some tests.</p>
 <div class="sect3">
 <h4 id="integrating-with-ci"><a class="link" href="#integrating-with-ci">4.6.4. Integrating with CI</a></h4>
 <div class="paragraph">
-<p>Most continuous integration tools and services expect that test scripts you provide
-return a standard exit code. But ClojureScript by default only runs the tests and outputs
-the results to standard output. So the compiled file can not be used directly with
-continuous integration tools because it does not return any return code when something
-fails. It always return the return code <code>0</code>.</p>
+<p>Most continuous integration tools and services expect that test scripts you
+provide return a standard exit code. But the ClojureScript test framework
+cannot customize this exit code without some configuration, because JavaScript
+lacks a universal exit code API for ClojureScript to use.</p>
 </div>
 <div class="paragraph">
-<p>To fix this, we must instruct the <em>ClojureScript</em> test runner that when it finishes with
-a failed state it should set <code>-1</code> as a return code. This can be done with this
-snippet of code:</p>
+<p>To fix this, the <em>ClojureScript</em> test framework provides an avenue for
+executing custom code after the tests are done. This is where you are expected
+to set the environment-specific exit code depending on the final test status:
+<code>0</code> for success, <code>1</code> for failure.</p>
+</div>
+<div class="paragraph">
+<p>Insert this code at the end of <code>core_tests.cljs</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defmethod </span><span class="tok-nv">cljs.test/report</span> <span class="tok-p">[</span><span class="tok-ss">:cljs.test/default</span> <span class="tok-ss">:end-run-tests</span><span class="tok-p">]</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defmethod </span><span class="tok-nv">t/report</span> <span class="tok-p">[</span><span class="tok-ss">::t/default</span> <span class="tok-ss">:end-run-tests</span><span class="tok-p">]</span>
   <span class="tok-p">[</span><span class="tok-nv">m</span><span class="tok-p">]</span>
-  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nf">cljs.test/successful?</span> <span class="tok-nv">m</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nf">t/successful?</span> <span class="tok-nv">m</span><span class="tok-p">)</span>
     <span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-exitCode</span> <span class="tok-nv">js/process</span><span class="tok-p">)</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
     <span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-exitCode</span> <span class="tok-nv">js/process</span><span class="tok-p">)</span> <span class="tok-mi">1</span><span class="tok-p">)))</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This code snippet obviously supposes that you are running the tests using <strong>iojs</strong> or
+<p>Now, you may check the exit code of the test script after running:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>iojs out/appfortesting.js
+<span class="tok-nv">$ </span><span class="tok-nb">echo</span> <span class="tok-nv">$?</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This code snippet obviously assumes that you are running the tests using <strong>iojs</strong> or
 <strong>nodejs</strong>. If you are running your script in another execution environment, you should be
 aware of how you can set the exit code in that environment and modify the previous snippet
 accordingly.</p>
@@ -7228,7 +7351,16 @@ by applying a function or <code>reset-meta!</code> for replacing it with another
 <div class="sect2">
 <h3 id="core-protocols"><a class="link" href="#core-protocols">5.5. Core protocols</a></h3>
 <div class="paragraph">
+<p><a id="core-protocols"></a></p>
+</div>
+<div class="paragraph">
 <p>TBD</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="the-reader"><a class="link" href="#the-reader">5.6. The Reader</a></h3>
+<div class="paragraph">
+<p><a id="the-reader"></a></p>
 </div>
 </div>
 </div>
@@ -7633,7 +7765,7 @@ closed. Because of that, putting a <code>nil</code> value on a channel is not al
 
 <span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span><span class="tok-p">))</span>
 
-<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">ch</span> <span class="tok-nv">nil</span><span class="tok-p">)</span>
 <span class="tok-c1">;; Error: Assert failed: Can&#39;t put nil in on a channel</span></code></pre>
 </div>
 </div>
@@ -8926,19 +9058,19 @@ writing entire sections of the book, as well as making very valuable suggestions
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/clojure/clojurescript/wiki">ClojureScript wiki</a> (the community-mantained wiki about ClojureScript).</p>
+<p><a href="https://github.com/clojure/clojurescript/wiki">ClojureScript wiki</a>: a community-mantained wiki about ClojureScript.</p>
 </li>
 <li>
-<p><a href="https://github.com/cljsinfo/cljs-api-docs/tree/catalog">Api Reference</a> (the community-maintained complete language api reference).</p>
+<p><a href="https://github.com/cljsinfo/cljs-api-docs/blob/catalog/INDEX.md">API Reference</a>: a community-maintained complete language api reference.</p>
 </li>
 <li>
-<p><a href="http://cljs.info/cheatsheet/">ClojureScript Cheatsheet</a> (a comprehensive reference of the ClojureScript language).</p>
+<p><a href="http://cljs.info/cheatsheet/">ClojureScript Cheatsheet</a>: a comprehensive reference of the ClojureScript language.</p>
 </li>
 <li>
-<p><a href="http://catcode.com/etudes-for-clojurescript/toc01.html">Études for ClojureScript</a> (a collection of exercises for learning ClojureScript).</p>
+<p><a href="http://catcode.com/etudes-for-clojurescript/toc01.html">Études for ClojureScript</a>: a collection of exercises for learning ClojureScript.</p>
 </li>
 <li>
-<p><a href="http://clojurescriptmadeeasy.com/">ClojureScript made easy</a> (a collection of short articles about solving problems in ClojureScript).</p>
+<p><a href="http://clojurescriptmadeeasy.com/">ClojureScript made easy</a>: a collection of short articles about solving common problems in ClojureScript.</p>
 </li>
 </ul>
 </div>
@@ -8948,7 +9080,7 @@ writing entire sections of the book, as well as making very valuable suggestions
 <div id="footer">
 <div id="footer-text">
 Version 3<br/>
-Last updated 2015-08-02 11:45:58 CEST
+Last updated 2015-08-09 15:48:43 CEST
 </div>
 </div>
 </body>
