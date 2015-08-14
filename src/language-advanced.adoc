@@ -1199,12 +1199,130 @@ TBD
 === Core protocols
 anchor:core-protocols[]
 
-////
-As clojurescript in difference with Clojure defines everything in terms of protocols and this
-subchapter intends to expain many of these protocols and how them can be used by the user.
-////
+One of the greatest qualities of the core ClojureScript functions is that they are
+implemented around protocols. This makes them open to work on any type that we
+extend with such protocols, be it defined by us or a third party.
 
-TBD
+==== Functions
+
+IFn
+
+IMultiFn
+
+==== Sequences
+
+ISeq
+
+INext
+
+ISeqable
+
+ISequential
+
+IIterable
+
+==== Collections
+
+ICollection
+
+IEmptyableCollection
+
+ICounted
+
+IIndexed
+
+IReversible
+
+ISorted
+
+=== Data types
+
+NOTE: These are marker protocols
+
+IList
+
+ISet
+
+IStack
+
+IVector
+
+IMap
+
+IRecord
+
+==== Associative
+
+ILookup
+
+IAssociative
+
+IMapEntry
+
+==== Metadata
+
+IMeta
+
+IWithMeta
+
+==== Reductions
+
+IReduce
+
+IKVReduce
+
+==== Comparison
+
+IEquiv
+
+IHash
+
+IComparable
+
+==== Printing
+
+IWriter
+
+IPrintWithWriter
+
+==== Asynchrony
+
+IPending
+
+IDeref
+
+IDerefWithtimeout
+
+==== State
+
+IWatchable
+
+IReset
+
+ISwap
+
+IVolatile
+
+==== Mutation
+
+IEditableCollection
+
+ITransientCollection
+
+ITransientAssociative
+
+ITransientMap
+
+ITransientVector
+
+ITransientSet
+
+==== Interoperability with JavaScript
+
+IEncodeJS
+
+IEncodeClojure
+
 
 === The Reader
 anchor:the-reader[]
