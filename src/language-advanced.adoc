@@ -1323,7 +1323,26 @@ Now our `Pair` type works with the plethora of ClojureScript functions for worki
 
 ==== Collections
 
-ICollection
+Collection functions are also defined in terms of protocols. For this section examples we will make
+the native JavaScript string act like a collection.
+
+The most important function for working with collection is `conj`, defined in the `ICollection` protocol.
+Strings are the only type which makes sense to `conj` to a string, so the `conj` operation for strings
+will be simply a concatenation:
+
+[source, clojure]
+----
+(extend-type string
+  ICollection
+  (-conj [this o]
+    (str this o)))
+
+(conj "foo" "bar")
+;; => "foobar"
+
+(conj "foo" "bar" "baz")
+;; => "foobarbaz"
+----
 
 IEmptyableCollection
 
