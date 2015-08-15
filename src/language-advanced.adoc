@@ -1358,6 +1358,8 @@ protocol. Let's implement it for the string type:
 ;; => ""
 ----
 
+===== Collection traits
+
 ICounted
 
 IIndexed
@@ -1366,7 +1368,7 @@ IReversible
 
 ISorted
 
-=== Data types
+==== Data types
 
 NOTE: These are marker protocols
 
