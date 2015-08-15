@@ -1344,7 +1344,19 @@ will be simply a concatenation:
 ;; => "foobarbaz"
 ----
 
-IEmptyableCollection
+Another handy function for working with collections is `empty`, which is part of the `IEmptyableCollection`
+protocol. Let's implement it for the string type:
+
+[source, clojure]
+----
+(extend-type string
+  IEmptyableCollection
+  (-empty [_]
+    ""))
+
+(empty "foo")
+;; => ""
+----
 
 ICounted
 
