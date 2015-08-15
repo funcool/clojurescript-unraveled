@@ -1502,7 +1502,35 @@ a key is present or not.
 ;; Error: Can only assoc to 0 and 1 keys
 ----
 
-IMap
+The complementary function for `assoc` is `dissoc` and it's part of the `IMap` protocol. It doesn't make much
+sense for our `Pair` type but we'll implement it nonetheless. Dissociating 0 or 1 will mean putting a `nil`
+in such position and invalid keys will be ignored.
+
+[source, clojure]
+----
+(extend-type Pair
+  IMap
+  (-dissoc [p k]
+    (case k
+      0 (Pair. nil (.-snd p))
+      1 (Pair. (.-fst p) nil)
+      p)))
+
+(def p (Pair. 1 2))
+;; => #<Pair 1,2>
+
+(dissoc p 0)
+;; => #<Pair ,2>
+
+(dissoc p 1)
+;; => #<Pair 1,>
+
+(dissoc p 2)
+;; => #<Pair 1,2>
+
+(dissoc p 0 1)
+;; => #<Pair ,>
+----
 
 IMapEntry
 
