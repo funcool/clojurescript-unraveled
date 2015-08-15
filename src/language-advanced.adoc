@@ -1203,6 +1203,8 @@ One of the greatest qualities of the core ClojureScript functions is that they a
 implemented around protocols. This makes them open to work on any type that we
 extend with such protocols, be it defined by us or a third party.
 
+
+
 ==== Functions
 
 As we've learned in previous chapters not only functions can be invoked. Vectors are
@@ -1223,6 +1225,7 @@ of their indexes:
       (nth this idx))))
 
 (def q #queue[0 1 2])
+;; => #queue [0 1 2]
 
 (q 0)
 ;; => 0
@@ -1242,8 +1245,16 @@ a `Pair` type, which will hold a pair of values.
 
 [source, clojure]
 ----
-(deftype Pair [fst snd])
+(deftype Pair [fst snd]
+  IPrintWithWriter
+  (-pr-writer [o writer _]
+    (-write writer (str "#<Pair " fst "," snd ">"))))
 ----
+
+///
+TODO: Still haven't mentioned IPrintWithWriter, maybe more Pair definition to section
+start and see how we can make it printable as the first example of the core protocols.
+////
 
 Remember the `first` and `rest` functions for working with sequences? They are defined in
 the `ISeq` protocol, so we can extend types for responding to such functions:
@@ -1259,6 +1270,7 @@ the `ISeq` protocol, so we can extend types for responding to such functions:
     (list (.-snd p))))
 
 (def p (Pair. 1 2))
+;; => #<Pair 1,2>
 
 (first p)
 ;; => 1
@@ -1310,6 +1322,7 @@ Now our `Pair` type works with the plethora of ClojureScript functions for worki
 [source, clojure]
 ----
 (def p (Pair. 1 2))
+;; => #<Pair 1,2>
 
 (map inc p)
 ;; => (2 3)
@@ -1456,7 +1469,38 @@ structure that maps the indices 0 and 1 to values.
 ;; => :default
 ----
 
-IAssociative
+For using `assoc` on a data structure it must implement the `IAssociative` protocol. For our `Pair` type only
+0 and 1 will be allowed as keys for associating values. `IAssociative` also has a function for asking whether
+a key is present or not.
+
+[source, clojure]
+----
+(extend-type Pair
+  IAssociative
+  (-contains-key? [_ k]
+    (contains? #{0 1} k))
+
+  (-assoc [p k v]
+    (case k
+      0 (Pair. v (.-snd p))
+      1 (Pair. (.-fst p) v)
+      (throw (js/Error. "Can only assoc to 0 and 1 keys")))))
+
+(def p (Pair. 1 2))
+;; => #<Pair 1,2>
+
+(assoc p 0 2)
+;; => #<Pair 2,2>
+
+(assoc p 1 1)
+;; => #<Pair 1,1>
+
+(assoc p 0 0 1 1)
+;; => #<Pair 0,1>
+
+(assoc p 2 3)
+;; Error: Can only assoc to 0 and 1 keys
+----
 
 IMap
 
