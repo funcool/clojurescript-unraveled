@@ -1605,7 +1605,7 @@ IPending
 
 IDeref
 
-IDerefWithtimeout
+IDerefWithTimeout
 
 ==== State
 
