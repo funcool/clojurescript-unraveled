@@ -1360,7 +1360,25 @@ protocol. Let's implement it for the string type:
 
 ===== Collection traits
 
-ICounted
+There are some qualities that not all collections have, such as being countable in constant time or being
+reversible. These traits are splitted into different protocols since not all of them make sense for every
+collection. For illustrating these protocols we'll use the `Pair` type we defined earlier.
+
+For types that can be counted in constant time using the `count` function we can implement the `ICounted`
+protocol. It should be easy to implement it for the `Pair` type:
+
+[source, clojure]
+----
+(extend-type Pair
+  ICounted
+  (-count [_]
+    2))
+
+(def p (Pair. 1 2))
+
+(count p)
+;; => 2
+----
 
 IIndexed
 
