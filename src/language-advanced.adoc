@@ -1288,11 +1288,38 @@ as the given argument is a sequence, we can implement it explicitly with the `IN
 ;; => (2)
 ----
 
+Finally, we can make our own types seqable implementing the `ISeqable` protocol. This means we
+can pass them to `seq` for getting a sequence back.
+
 ISeqable
+[source, clojure]
+----
+(def p (Pair. 1 2))
 
-ISequential
+(extend-type Pair
+  ISeqable
+  (-seq [p]
+    (list (.-fst p) (.-snd p))))
 
-IIterable
+(seq p)
+;; => (1 2)
+----
+
+Now our `Pair` type works with the plethora of ClojureScript functions for working with sequences:
+
+[source, clojure]
+----
+(def p (Pair. 1 2))
+
+(map inc p)
+;; => (2 3)
+
+(filter odd? p)
+;; => (1)
+
+(reduce + p)
+;; => 3
+----
 
 ==== Collections
 
