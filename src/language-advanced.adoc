@@ -1205,9 +1205,34 @@ extend with such protocols, be it defined by us or a third party.
 
 ==== Functions
 
-IFn
+As we've learned in previous chapters not only functions can be invoked. Vectors are
+functions of their indexes, maps are functions of their keys and sets are functions
+of their values.
 
-IMultiFn
+We can extend types to be callable as functions implementing the `IFn` protocol. A
+collection that doesn't support calling it as a function is the queue, let's
+implement `IFn` for the `PersistentQueue` type so we're able to call queues as functions
+of their indexes:
+
+[source, clojure]
+----
+(extend-type PersistentQueue
+  IFn
+  (-invoke
+    ([this idx]
+      (nth this idx))))
+
+(def q #queue[0 1 2])
+
+(q 0)
+;; => 0
+
+(q 1)
+;; => 1
+
+(q 2)
+;; => 2
+----
 
 ==== Sequences
 
