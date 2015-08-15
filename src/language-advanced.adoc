@@ -1245,10 +1245,12 @@ a `Pair` type, which will hold a pair of values.
 
 [source, clojure]
 ----
-(deftype Pair [fst snd]
+(deftype Pair [fst snd])
+
+(extend-type Pair
   IPrintWithWriter
-  (-pr-writer [o writer _]
-    (-write writer (str "#<Pair " fst "," snd ">"))))
+  (-pr-writer [p writer _]
+    (-write writer (str "#<Pair " (.-fst p) "," (.-snd p) ">"))))
 ----
 
 ///
@@ -1638,12 +1640,6 @@ will be the comparison of the second values. If not, we will return the result o
 ;; => (#<Pair 0,1> #<Pair 0,2> #<Pair 1,1>)
 ----
 
-==== Metadata
-
-IMeta
-
-IWithMeta
-
 ==== Reductions
 
 IReduce
@@ -1687,6 +1683,39 @@ ITransientMap
 ITransientVector
 
 ITransientSet
+
+==== Metadata
+
+The `meta` and `with-meta` functions are also based upon two protocols: `IMeta` and `IWithMeta` respectively.
+We can make our own types capable of carrying metadata adding an extra field for holding the metadata and
+implementing both protocols.
+
+Let's implement a version of `Pair` that can have metadata:
+
+[source, clojure]
+----
+(deftype Pair [fst snd meta]
+  IMeta
+  (-meta [p] meta)
+
+  IWithMeta
+  (-with-meta [p new-meta]
+    (Pair. fst snd new-meta)))
+
+
+(def p (Pair. 1 2 {:foo :bar}))
+;; => #<Pair 1,2>
+
+(meta p)
+;; => {:foo :bar}
+
+(def p' (with-meta p {:bar :baz}))
+;; => #<Pair 1,2>
+
+(meta p')
+;; => {:bar :baz}
+----
+
 
 ==== Interoperability with JavaScript
 
