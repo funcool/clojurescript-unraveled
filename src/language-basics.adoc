@@ -115,13 +115,14 @@ Symbols in _ClojureScript_ are very, very similar to *keywords* (which you now k
 instead of evaluating to themselves, symbols are evaluated to something that they refer to, which
 can be functions, variables, etc.
 
-Symbols are represented with something that does not start with a number:
+Symbols start with a non numeric character and can contain alphanumeric characters as well as *, +, !, -, _, ', and ? such as :
 
 [source, clojure]
 ----
 sample-symbol
 othersymbol
 f1
+my-special-swap!
 ----
 
 Don't worry if you don't understand right away; symbols are used in almost
