@@ -1532,7 +1532,46 @@ in such position and invalid keys will be ignored.
 ;; => #<Pair ,>
 ----
 
-IMapEntry
+Associative data structures are made of key and value pairs we can call entries. The `key` and `val` functions allow
+us to query the key and value of such entries and they are built upon the `IMapEntry` protocol. Let's see a few examples
+of `key` and `val` and how map entries can be used to build up maps:
+
+[source, clojure]
+----
+(key [:foo :bar])
+;; => :foo
+
+(val [:foo :bar])
+;; => :bar
+
+(into {} [[:foo :bar] [:baz :xyz]])
+;; => {:foo :bar, :baz :xyz}
+----
+
+Pairs can be map entries too, we treat their first element as the key and the second as the value:
+
+[source, clojure]
+----
+(extend-type Pair
+  IMapEntry
+  (-key [p]
+    (.-fst p))
+
+  (-val [p]
+    (.-snd p)))
+
+(def p (Pair. 1 2))
+;; => #<Pair 1,2>
+
+(key p)
+;; => 1
+
+(val p)
+;; => 2
+
+(into {} [p])
+;; => {1 2}
+----
 
 ==== Metadata
 
