@@ -1368,22 +1368,6 @@ IReversible
 
 ISorted
 
-==== Data types
-
-NOTE: These are marker protocols
-
-IList
-
-ISet
-
-IStack
-
-IVector
-
-IMap
-
-IRecord
-
 ==== Associative
 
 ILookup
