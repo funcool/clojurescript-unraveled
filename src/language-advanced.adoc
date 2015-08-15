@@ -1573,6 +1573,71 @@ Pairs can be map entries too, we treat their first element as the key and the se
 ;; => {1 2}
 ----
 
+==== Comparison
+
+For checking whether two or more values are equivalent with `=` we must implement the `IEquiv`
+protocol. Let's do it for our `Pair` type:
+
+[source, clojure]
+----
+(def p  (Pair. 1 2))
+(def p' (Pair. 1 2))
+(def p'' (Pair. 1 2))
+
+(= p p')
+;; => false
+
+(= p p' p'')
+;; => false
+
+(extend-type Pair
+  IEquiv
+  (-equiv [p other]
+    (and (instance? Pair other)
+         (= (.-fst p) (.-fst other))
+         (= (.-snd p) (.-snd other)))))
+
+(= p p')
+;; => true
+
+(= p p' p'')
+;; => true
+----
+
+////
+TODO: IHash?
+////
+
+We can also make types comparable. The function `compare` takes two values and returns a negative
+number if the first is less than the second, 0 if both are equal and 1 if the first is greater than
+the second. For making our types comparable we must implement the `IComparable` protocol.
+
+For pairs, comparison will mean checking if the two first values are equal. If they are, the result
+will be the comparison of the second values. If not, we will return the result of the first comparison:
+
+[source, clojure]
+----
+(extend-type Pair
+  IComparable
+  (-compare [p other]
+    (let [fc (compare (.-fst p) (.-fst other))]
+      (if (zero? fc)
+        (compare (.-snd p) (.-snd other))
+        fc))))
+
+(compare (Pair. 0 1) (Pair. 0 1))
+;; => 0
+
+(compare (Pair. 0 1) (Pair. 0 2))
+;; => -1
+
+(compare (Pair. 1 1) (Pair. 0 2))
+;; => 1
+
+(sort [(Pair. 1 1) (Pair. 0 2) (Pair. 0 1)])
+;; => (#<Pair 0,1> #<Pair 0,2> #<Pair 1,1>)
+----
+
 ==== Metadata
 
 IMeta
@@ -1584,14 +1649,6 @@ IWithMeta
 IReduce
 
 IKVReduce
-
-==== Comparison
-
-IEquiv
-
-IHash
-
-IComparable
 
 ==== Printing
 
