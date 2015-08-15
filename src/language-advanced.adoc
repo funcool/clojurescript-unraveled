@@ -1358,13 +1358,17 @@ protocol. Let's implement it for the string type:
 ;; => ""
 ----
 
+////
+TODO: IReversible?
+////
+
 ===== Collection traits
 
 There are some qualities that not all collections have, such as being countable in constant time or being
 reversible. These traits are splitted into different protocols since not all of them make sense for every
 collection. For illustrating these protocols we'll use the `Pair` type we defined earlier.
 
-For types that can be counted in constant time using the `count` function we can implement the `ICounted`
+For collections that can be counted in constant time using the `count` function we can implement the `ICounted`
 protocol. It should be easy to implement it for the `Pair` type:
 
 [source, clojure]
@@ -1380,11 +1384,41 @@ protocol. It should be easy to implement it for the `Pair` type:
 ;; => 2
 ----
 
-IIndexed
+Some collection types such as vectors and lists can be indexed by a number using the `nth` function. If our
+types are indexed we can implement the `IIndexed` protocol:
 
-IReversible
+[source, clojure]
+----
+(extend-type Pair
+  IIndexed
+  (-nth
+    ([p idx]
+      (case idx
+        0 (.-fst p)
+        1 (.-snd p)
+        (throw (js/Error. "Index out of bounds"))))
+    ([p idx default]
+      (case idx
+        0 (.-fst p)
+        1 (.-snd p)
+        default))))
 
-ISorted
+(nth p 0)
+;; => 1
+
+(nth p 1)
+;; => 2
+
+(nth p 2)
+;; Error: Index out of bounds
+
+(nth p 2 :default)
+;; => :default
+----
+
+////
+TODO: ISorted?
+////
 
 ==== Associative
 
