@@ -1236,9 +1236,57 @@ of their indexes:
 
 ==== Sequences
 
-ISeq
+In a xref:the-sequence-abstraction[previous section] we learned about sequences, one of
+ClojureScript's main abstractions. For learning about the sequence procols we'll define
+a `Pair` type, which will hold a pair of values.
 
-INext
+[source, clojure]
+----
+(deftype Pair [fst snd])
+----
+
+Remember the `first` and `rest` functions for working with sequences? They are defined in
+the `ISeq` protocol, so we can extend types for responding to such functions:
+
+[source, clojure]
+----
+(extend-type Pair
+  ISeq
+  (-first [p]
+    (.-fst p))
+
+  (-rest [p]
+    (list (.-snd p))))
+
+(def p (Pair. 1 2))
+
+(first p)
+;; => 1
+
+(rest p)
+;; => (2)
+----
+
+Another handy function for working with sequences is `next`. Although `next` works as long
+as the given argument is a sequence, we can implement it explicitly with the `INext` protocol:
+
+[source, clojure]
+----
+(def p (Pair. 1 2))
+
+(next p)
+;; => (2)
+
+(extend-type Pair
+  INext
+  (-next [p]
+    (println "Our next")
+    (list (.-snd p))))
+
+(next p)
+;; Our next
+;; => (2)
+----
 
 ISeqable
 
