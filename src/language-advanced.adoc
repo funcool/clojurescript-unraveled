@@ -1422,9 +1422,43 @@ TODO: ISorted?
 
 ==== Associative
 
-ILookup
+There are many data structures that are associative: they map keys to values. We've encountered a few of them
+already and we know many functions for working with them like `get`, `assoc` or `dissoc`. Let's explore the
+protocols that these functions build upon.
+
+First of all, we need a way to look up keys on an associative data structure. The `ILookup` protocol defines
+a function for doing so, let's add the ability to look up keys in our `Pair` type since is an associative data
+structure that maps the indices 0 and 1 to values.
+
+[source, clojure]
+----
+(extend-type Pair
+  ILookup
+  (-lookup
+    ([p k]
+      (-lookup p k nil))
+    ([p k default]
+      (case k
+        0 (.-fst p)
+        1 (.-snd p)
+        default))))
+
+(get p 0)
+;; => 1
+
+(get p 1)
+;; => 2
+
+(get p :foo)
+;; => nil
+
+(get p 2 :default)
+;; => :default
+----
 
 IAssociative
+
+IMap
 
 IMapEntry
 
