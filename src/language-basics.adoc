@@ -587,7 +587,7 @@ but looks cleaner when the condition (also called a predicate) is the same for a
 ----
 
 The line `condp = (keyword code)` means that, in each of the following lines, _ClojureScript_
-will apply the `=` function to the given keyword and the `code` argument.
+will apply the `=` function to the result of evaluating `(keyword code)`.
 
 
 ==== Branching with `case`
