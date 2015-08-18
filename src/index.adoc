@@ -85,7 +85,7 @@ clear throughout the book.
   structures, a property known as _homoiconicity_ that makes metaprogramming (programs
   that write programs) as simple as it can be.
 
-These ideas together hava a great influence in the way you design and implement software,
+These ideas together have a great influence in the way you design and implement software,
 even if you are not using Clojure. Functional programming, decoupling of data (which is
 immutable) from the operations to transform it, explicit idioms for managing change
 over time and polymorphic constructs for programming to abstractions greatly simplify the
