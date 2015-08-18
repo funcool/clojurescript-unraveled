@@ -495,7 +495,7 @@ If you stay with the original example, the # should not be there
 ;; => 7.5
 ----
 
-The `%1`, `%2`, `%N` are simple markers for parameter positions that are implicitly declared when
+The `%1`, `%2`... `%N` are simple markers for parameter positions that are implicitly declared when
 the reader macro will be interpreted and converted to a `fn` expression.
 
 If a function only accepts one argument, you can omit the number after the `%` symbol, e.g., a
