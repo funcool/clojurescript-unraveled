@@ -399,7 +399,7 @@ _ClojureScript_ comes with support for executing the REPL in different execution
 environments, each one has its own advantages or disadvantages. For example, you can run a
 REPL in nodejs but in that environment you don't have access to the DOM.
 
-In summary: everthing really depends on your needs or requirements.
+In summary: everything really depends on your needs or requirements.
 
 
 ==== Nashorn REPL
