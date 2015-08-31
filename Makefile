@@ -7,7 +7,7 @@ copy: setup
 	cp -r ./images dist/
 
 html: setup
-	asciidoctor -b xhtml -a docinfo -a stylesheet=../assets/stylesheet2.css  src/index.adoc -o dist/index.html
+	asciidoctor -b xhtml -a docinfo -a stylesheet=../assets/stylesheet.css  src/index.adoc -o dist/index.html
 
 git:
 	git submodule init
