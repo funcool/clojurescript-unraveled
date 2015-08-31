@@ -9,6 +9,9 @@ copy: setup
 html: setup
 	asciidoctor -b xhtml -a docinfo -a stylesheet=../assets/stylesheet.css  src/index.adoc -o dist/index.html
 
+htmlcljsinfo: setup
+	asciidoctor -b xhtml -a docinfo -a stylesheet=../assets/stylesheet.cljsinfo.css  src/index.adoc -o dist/index.html
+
 git:
 	git submodule init
 	git submodule update
@@ -40,7 +43,12 @@ clean:
 
 build: copy html
 
+buildcljsinfo: copy htmlcljsinfo
+
 watch: build
 	sh ./watch.sh
+
+watchcljsinfo: buildcljsinfo
+	sh ./watch.sh htmlcljsinfo
 
 release: clean pdf epub mobi html github
