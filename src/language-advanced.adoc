@@ -1204,7 +1204,6 @@ implemented around protocols. This makes them open to work on any type that we
 extend with such protocols, be it defined by us or a third party.
 
 
-
 ==== Functions
 
 As we've learned in previous chapters not only functions can be invoked. Vectors are
@@ -1237,12 +1236,22 @@ of their indexes:
 ;; => 2
 ----
 
-==== Sequences
 
-In a xref:the-sequence-abstraction[previous section] we learned about sequences, one of
-ClojureScript's main abstractions. For learning about the sequence procols we'll define
-a `Pair` type, which will hold a pair of values.
+==== Printing
 
+
+////
+TODO: IWriter?
+////
+
+For learning about some of the core protocols we'll define a `Pair` type, which will hold a pair
+of values. If we want to customize how types are printed we can implement the `IPrintWithWriter`
+protocol. It defines a function called `-pr-writer` that receives the value to print, a writer
+object and options; this function uses the writer object's `-write` function to write the desired
+`Pair` string representation:
+
+
+IPrintWithWriter
 [source, clojure]
 ----
 (deftype Pair [fst snd])
@@ -1253,13 +1262,14 @@ a `Pair` type, which will hold a pair of values.
     (-write writer (str "#<Pair " (.-fst p) "," (.-snd p) ">"))))
 ----
 
-///
-TODO: Still haven't mentioned IPrintWithWriter, maybe more Pair definition to section
-start and see how we can make it printable as the first example of the core protocols.
-////
 
-Remember the `first` and `rest` functions for working with sequences? They are defined in
-the `ISeq` protocol, so we can extend types for responding to such functions:
+
+==== Sequences
+
+In a xref:the-sequence-abstraction[previous section] we learned about sequences, one of
+ClojureScript's main abstractions. Remember the `first` and `rest` functions for working
+with sequences? They are defined in the `ISeq` protocol, so we can extend types for
+responding to such functions:
 
 [source, clojure]
 ----
@@ -1336,6 +1346,7 @@ Now our `Pair` type works with the plethora of ClojureScript functions for worki
 ;; => 3
 ----
 
+
 ==== Collections
 
 Collection functions are also defined in terms of protocols. For this section examples we will make
@@ -1373,9 +1384,6 @@ protocol. Let's implement it for the string type:
 ;; => ""
 ----
 
-////
-TODO: IReversible?
-////
 
 ===== Collection traits
 
@@ -1434,6 +1442,11 @@ types are indexed we can implement the `IIndexed` protocol:
 ////
 TODO: ISorted?
 ////
+
+////
+TODO: IReversible?
+////
+
 
 ==== Associative
 
@@ -1575,6 +1588,7 @@ Pairs can be map entries too, we treat their first element as the key and the se
 ;; => {1 2}
 ----
 
+
 ==== Comparison
 
 For checking whether two or more values are equivalent with `=` we must implement the `IEquiv`
@@ -1640,17 +1654,13 @@ will be the comparison of the second values. If not, we will return the result o
 ;; => (#<Pair 0,1> #<Pair 0,2> #<Pair 1,1>)
 ----
 
+
 ==== Reductions
 
 IReduce
 
 IKVReduce
 
-==== Printing
-
-IWriter
-
-IPrintWithWriter
 
 ==== Asynchrony
 
@@ -1659,6 +1669,7 @@ IPending
 IDeref
 
 IDerefWithTimeout
+
 
 ==== State
 
@@ -1669,6 +1680,7 @@ IReset
 ISwap
 
 IVolatile
+
 
 ==== Mutation
 
@@ -1683,6 +1695,7 @@ ITransientMap
 ITransientVector
 
 ITransientSet
+
 
 ==== Metadata
 
