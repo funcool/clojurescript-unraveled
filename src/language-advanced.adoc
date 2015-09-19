@@ -1245,13 +1245,19 @@ TODO: IWriter?
 ////
 
 For learning about some of the core protocols we'll define a `Pair` type, which will hold a pair
-of values. If we want to customize how types are printed we can implement the `IPrintWithWriter`
+of values.
+
+[source, clojure]
+----
+(deftype Pair [fst snd])
+----
+
+If we want to customize how types are printed we can implement the `IPrintWithWriter`
 protocol. It defines a function called `-pr-writer` that receives the value to print, a writer
 object and options; this function uses the writer object's `-write` function to write the desired
 `Pair` string representation:
 
 
-IPrintWithWriter
 [source, clojure]
 ----
 (deftype Pair [fst snd])
@@ -1261,7 +1267,6 @@ IPrintWithWriter
   (-pr-writer [p writer _]
     (-write writer (str "#<Pair " (.-fst p) "," (.-snd p) ">"))))
 ----
-
 
 
 ==== Sequences
