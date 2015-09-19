@@ -1260,8 +1260,6 @@ object and options; this function uses the writer object's `-write` function to 
 
 [source, clojure]
 ----
-(deftype Pair [fst snd])
-
 (extend-type Pair
   IPrintWithWriter
   (-pr-writer [p writer _]
@@ -1661,50 +1659,6 @@ will be the comparison of the second values. If not, we will return the result o
 (sort [(Pair. 1 1) (Pair. 0 2) (Pair. 0 1)])
 ;; => (#<Pair 0,1> #<Pair 0,2> #<Pair 1,1>)
 ----
-
-
-==== Reductions
-
-IReduce
-
-IKVReduce
-
-
-==== Asynchrony
-
-IPending
-
-IDeref
-
-IDerefWithTimeout
-
-
-==== State
-
-IWatchable
-
-IReset
-
-ISwap
-
-IVolatile
-
-
-==== Mutation
-
-IEditableCollection
-
-ITransientCollection
-
-ITransientAssociative
-
-ITransientMap
-
-ITransientVector
-
-ITransientSet
-
-
 ==== Metadata
 
 The `meta` and `with-meta` functions are also based upon two protocols: `IMeta` and `IWithMeta` respectively.
@@ -1899,6 +1853,46 @@ Note that there is no one-to-one mapping between ClojureScript and JavaScript va
 keywords are converted to JavaScript strings when passed to `clj->js`.
 
 
+==== Reductions
+
+IReduce
+
+IKVReduce
+
+
+==== Asynchrony
+
+IPending
+
+IDeref
+
+IDerefWithTimeout
+
+
+==== State
+
+IWatchable
+
+IReset
+
+ISwap
+
+IVolatile
+
+
+==== Mutation
+
+IEditableCollection
+
+ITransientCollection
+
+ITransientAssociative
+
+ITransientMap
+
+ITransientVector
+
+ITransientSet
 
 
 === The Reader
