@@ -1389,6 +1389,9 @@ protocol. Let's implement it for the string type:
 ;; => ""
 ----
 
+We used the `string` special symbol for extending the native JavaScript string. If you want to learn more about
+it check the xref:extending-javascript-types[section about extending JavaScript types].
+
 
 ===== Collection traits
 
@@ -1737,7 +1740,97 @@ Let's implement a version of `Pair` that can have metadata:
 
 ==== Interoperability with JavaScript
 
+
+Since ClojureScript is hosted in a JavaScript VM we often need to convert ClojureScript
+data structures to JavaScript ones and viceversa. We also may want to make native JS
+types participate in an abstraction represented by a protocol.
+
+
+===== Extending JavaScript types
+anchor:extending-javascript-types[]
+
+When extending JavaScript objects instead of using JS globals like `js/String`, `js/Date`
+and such, special symbols are used. This is done for avoiding mutating global JS objects.
+
+The symbols for extending JS types are: `object`, `array`, `number`, `string`,
+`function`, `boolean` and `nil` is used for the null object. The dispatch of the
+protocol to native objects uses Google Closure's
+link:https://google.github.io/closure-library/api/namespace_goog.html#typeOf[goog.typeOf]
+function. There's a special `default` symbol that can be used for making a default
+implementation of a protocol for every type.
+
+For illustrating the extension of JS types we are going to define a `MaybeMutable` protocol
+that'll have a `mutable?` predicate as its only function. Since in JavaScript mutability
+is the default we'll extend the default JS type returning true from `mutable?`:
+
+[source, clojure]
+----
+(defprotocol MaybeMutable
+  (mutable? [this] "Returns true if the value is mutable."))
+
+(extend-type default
+  MaybeMutable
+  (mutable? [_] true))
+
+;; object
+(mutable? #js {})
+;; => true
+
+;; array
+(mutable? #js [])
+;; => true
+
+;; string
+(mutable? "")
+;; => true
+
+;; function
+(mutable? (fn [x] x))
+;; => true
+----
+
+Since fortunately not all JS object's values are mutable we can refine the implementation of
+`MaybeMutable` for returning `false` for strings and functions.
+
+[source, clojure]
+----
+(extend-protocol MaybeMutable
+  string
+  (mutable? [_] false)
+
+  function
+  (mutable? [_] false))
+
+
+;; object
+(mutable? #js {})
+;; => true
+
+;; array
+(mutable? #js [])
+;; => true
+
+;; string
+(mutable? "")
+;; => false
+
+;; function
+(mutable? (fn [x] x))
+;; => false
+----
+
+There is no special symbol for JavaScript dates so we have to extend `js/Date` directly. The same
+applies to the rest of the types found in the global `js` namespace.
+
+
+===== Converting data
+
+====== From ClojureScript to JS
+
 IEncodeJS
+
+
+====== From JS to ClojureScript
 
 IEncodeClojure
 
