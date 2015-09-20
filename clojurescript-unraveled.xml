@@ -5,7 +5,7 @@
 <book lang="en">
 <bookinfo>
 <title>ClojureScript Unraveled</title>
-<date>2015-08-02</date>
+<date>2015-09-20</date>
 <authorgroup>
 <author>
 <firstname>Andrey</firstname>
@@ -20,8 +20,8 @@
 </authorgroup>
 <revhistory>
 <revision>
-<revnumber>3</revnumber>
-<date>2015-08-02</date>
+<revnumber>4</revnumber>
+<date>2015-09-20</date>
 <authorinitials>AA</authorinitials>
 </revision>
 </revhistory>
@@ -108,7 +108,7 @@ structures, a property known as <emphasis>homoiconicity</emphasis> that makes me
 that write programs) as simple as it can be.</simpara>
 </listitem>
 </itemizedlist>
-<simpara>These ideas together hava a great influence in the way you design and implement software,
+<simpara>These ideas together have a great influence in the way you design and implement software,
 even if you are not using Clojure. Functional programming, decoupling of data (which is
 immutable) from the operations to transform it, explicit idioms for managing change
 over time and polymorphic constructs for programming to abstractions greatly simplify the
@@ -203,10 +203,11 @@ or are unclear about anything in the following example; <link linkend="function-
 <simpara>Symbols in <emphasis>ClojureScript</emphasis> are very, very similar to <emphasis role="strong">keywords</emphasis> (which you now know about). But
 instead of evaluating to themselves, symbols are evaluated to something that they refer to, which
 can be functions, variables, etc.</simpara>
-<simpara>Symbols are represented with something that does not start with a number:</simpara>
+<simpara>Symbols start with a non numeric character and can contain alphanumeric characters as well as *, +, !, -, _, ', and ? such as :</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">sample-symbol
 othersymbol
-f1</programlisting>
+f1
+my-special-swap!</programlisting>
 <simpara>Don&#8217;t worry if you don&#8217;t understand right away; symbols are used in almost
 all of our examples, which will give you the opportunity to learn more as we go on.</simpara>
 </section>
@@ -436,7 +437,7 @@ that uses the <literal>fn</literal> special form.</simpara>
 
 (average-longer 7 8)
 ;; =&gt; 7.5</programlisting>
-<simpara>The <literal>%1</literal>, <literal>%2</literal>, <literal>%N</literal> are simple markers for parameter positions that are implicitly declared when
+<simpara>The <literal>%1</literal>, <literal>%2</literal>&#8230;&#8203; <literal>%N</literal> are simple markers for parameter positions that are implicitly declared when
 the reader macro will be interpreted and converted to a <literal>fn</literal> expression.</simpara>
 <simpara>If a function only accepts one argument, you can omit the number after the <literal>%</literal> symbol, e.g., a
 function that squares a number: <literal>#(* %1 %1))</literal> can be written <literal>#(* % %))</literal>.</simpara>
@@ -503,7 +504,7 @@ but looks cleaner when the condition (also called a predicate) is the same for a
 (translate-lang-code "fr")
 ;; =&gt; "Unknown"</programlisting>
 <simpara>The line <literal>condp = (keyword code)</literal> means that, in each of the following lines, <emphasis>ClojureScript</emphasis>
-will apply the <literal>=</literal> function to the given keyword and the <literal>code</literal> argument.</simpara>
+will apply the <literal>=</literal> function to the result of evaluating <literal>(keyword code)</literal>.</simpara>
 </section>
 <section id="branching-with-literal-case-literal">
 <title>Branching with <literal>case</literal></title>
@@ -1442,10 +1443,10 @@ ClojureScript source, you may have noticed something like this at the beginning 
 per file. Naturally, a namespace definition is usually at the beginning of the file, followed by an optional
 docstring.</simpara>
 <simpara>Previously we have explained vars and symbols. Every var that you define will be associated
-with its namespace. If you do not define a concrete namespace, then the default one called "user" will be
+with its namespace. If you do not define a concrete namespace, then the default one called "cljs.user" will be
 used:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(def x "hello")
-;; =&gt; #'user/x</programlisting>
+;; =&gt; #'cljs.user/x</programlisting>
 </section>
 <section id="loading-other-namespaces">
 <title>Loading other namespaces</title>
@@ -1471,14 +1472,11 @@ This is how it can be done:</simpara>
 
 (str/upper-case core/x)
 ;; =&gt; "HELLO"</programlisting>
-<simpara>Additionally, <emphasis>ClojureScript</emphasis> offers a simple way to refer to specific vars or functions from a concrete namespace using the <literal>:refer</literal> directive.</simpara>
-<simpara>The <literal>:refer</literal> directive has two possible arguments: the <literal>:all</literal> keyword or a vector of symbols that will
-refer to vars in the namespace. With <literal>:all</literal>, we are indicating that we want to refer all public vars from the
-namespace, and with a vector, we can specify the specific subset of vars that we want. Effectively, it is as if those vars and
+<simpara>Additionally, <emphasis>ClojureScript</emphasis> offers a simple way to refer to specific vars or functions from a concrete namespace using the <literal>:refer</literal> directive, followed by a sequence of symbols that will
+refer to vars in the namespace. Effectively, it is as if those vars and
 functions are now part of your namespace, and you do not need to qualify them at all.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(ns myapp.main
-  (:require [myapp.core :refer :all]
-            [clojure.string :refer [upper-case]]))
+  (:require [clojure.string :refer [upper-case]]))
 (upper-case x)
 ;; =&gt; "HELLO"</programlisting>
 <simpara>And finally, you should know that everything located in the <literal>cljs.core</literal> namespace is automatically
@@ -1496,6 +1494,17 @@ allows you to exclude specific symbols and prevent them from being automatically
     x))</programlisting>
 <simpara>The <literal>ns</literal> macro also has other directives for loading host classes (<literal>:import</literal>) and macros
 (<literal>:refer-macros</literal>), but these are explained in other sections.</simpara>
+</section>
+<section id="namespaces-and-file-names">
+<title>Namespaces and File Names</title>
+<simpara>When you have a namespace like <literal>myapp.core</literal>, the code must be in a file named  <emphasis>core.cljs</emphasis> inside the
+<emphasis>myapp</emphasis> directory.  So, the preceding examples with namespaces <literal>myapp.core</literal> and <literal>myapp.main</literal> would be
+found in project with a file structure like this:</simpara>
+<screen>myapp
+└── src
+    └── myapp
+        ├── core.cljs
+        └── main.cljs</screen>
 </section>
 </section>
 <section id="abstractions-and-polymorphism">
@@ -1626,7 +1635,7 @@ in another section of this book.</simpara>
 in the <emphasis>ClojureScript</emphasis> language itself can be adapted to third party libraries. Let&#8217;s look at a
 real life example.</simpara>
 <simpara>In previous sections, we have explained the different kinds of built-in collections. For this example we
-will use a <emphasis role="strong">set</emphasis>. See this snipped of code:</simpara>
+will use a <emphasis role="strong">set</emphasis>. See this snippet of code:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(def mynums #{1 2})
 
 (filter mynums [1 2 4 5 1 3 4 5])
@@ -1769,7 +1778,7 @@ as expected.</simpara>
 </section>
 <section id="hierarchies-in-multimethods">
 <title>Hierarchies in multimethods</title>
-<simpara>One of the big advantages of hierarchies is that they works very well together with multimethods.
+<simpara>One of the big advantages of hierarchies is that they work very well together with multimethods.
 This is because multimethods by default use the <literal>isa?</literal> function for the last step of dispatching.</simpara>
 <simpara>Let&#8217;s see an example to clearly understand what that means. First, we define the multimethod with
 the <literal>defmulti</literal> form:</simpara>
@@ -1802,6 +1811,9 @@ keyword as the parameter which does not have the direct matching dispatch value:
 ;; =&gt; "A generic shape"</programlisting>
 <simpara>The multimethod automatically resolves it using the provided hierarchy, and since <literal>:circle</literal> is
 a descendant of <literal>:shape</literal>, the <literal>:shape</literal> implementation is executed.</simpara>
+<simpara>Finally, if you give a keyword that isn&#8217;t part of the hierarchy, you get the <literal>:default</literal> implementation:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(stringify-shape :triangle)
+;; =&gt; "Unexpected object"</programlisting>
 </section>
 </section>
 </section>
@@ -1917,8 +1929,9 @@ how they can be used:</simpara>
 </section>
 <section id="reify">
 <title>Reify</title>
-<simpara>The <literal>reify</literal> macro lets you create an anonymous type that implements protocols. In contrast to
-<literal>deftype</literal> and <literal>defrecord</literal>, it does not have accessible fields.</simpara>
+<simpara>The <literal>reify</literal> macro is an <emphasis>ad hoc constructor</emphasis> you can use to create objects without pre-defining a type.
+Protocol implementations are supplied the same as <literal>deftype</literal> and <literal>defrecord</literal>, but in contrast, <literal>reify</literal>
+does not have accessible fields.</simpara>
 <simpara>This is how we can emulate an instance of the user type that plays well with the <literal>IUser</literal> abstraction:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn user
   [firstname lastname]
@@ -1930,8 +1943,35 @@ how they can be used:</simpara>
 (def yen (user "Yennefer" "of Vengerberg"))
 (full-name user)
 ;; =&gt; "Yennefer of Vengerberg"</programlisting>
-<simpara>The real purpose of <literal>reify</literal> is to create an anonymous type that may implement protocols,
-but you don&#8217;t want the type itself.</simpara>
+</section>
+<section id="specify">
+<title>Specify</title>
+<simpara><literal>specify!</literal> is an advanced alternative to <literal>reify</literal>, allowing you to add protocol
+implementations to an existing JavaScript object.  This can be useful if
+you want to graft protocols onto a JavaScript library&#8217;s components.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def obj #js {})
+
+(specify! obj
+  IUser
+  (full-name [_]
+    "my full name"))
+
+(full-name obj)
+;; =&gt; "my full name"</programlisting>
+<simpara><literal>specify</literal> is an immutable version of <literal>specify!</literal> that can be used on immutable,
+copyable values implementing <literal>ICloneable</literal> (e.g. ClojureScript collections).</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def a {})
+
+(def b (specify a
+         IUser
+         (full-name [_]
+           "my full name")))
+
+(full-name a)
+;; Error: No protocol method IUser.full-name defined for type cljs.core/PersistentArrayMap: {}
+
+(full-name b)
+;; =&gt; "my full name"</programlisting>
 </section>
 </section>
 <section id="host-interoperability">
@@ -1968,7 +2008,7 @@ platform:</simpara>
 </listitem>
 </itemizedlist>
 <simpara>On top of it, <emphasis>ClojureScript</emphasis> builds its own abstractions and types that do not exist in the
-platform, such as Vectors, Maps, Sets, and others that are explained in previous sections of this chapter.</simpara>
+platform, such as Vectors, Maps, Sets, and others that are explained in preceding sections of this chapter.</simpara>
 </section>
 <section id="interacting-with-platform-types">
 <title>Interacting with platform types</title>
@@ -2003,6 +2043,12 @@ but with a little variation: the function name starts with special form <literal
 
 (.test re "ClojureScript")
 ;; =&gt; true</programlisting>
+<simpara>You can invoke instance methods on JavaScript objects. The first example follows the pattern you have seen;
+the last one is a shortcut:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(.sqrt js/Math 2)
+;; =&gt; 1.4142135623730951
+(js/Math.sqrt 2)
+;; =&gt; 1.4142135623730951</programlisting>
 </section>
 <section id="access-to-object-properties">
 <title>Access to object properties</title>
@@ -2011,6 +2057,20 @@ instead of using the <literal>.</literal> you use <literal>.-</literal>. Let&#82
 <programlisting language="clojure" linenumbering="unnumbered">(.-multiline re)
 ;; =&gt; false
 (.-PI js/Math)
+;; =&gt; 3.141592653589793</programlisting>
+</section>
+<section id="property-access-shorthand">
+<title>Property access shorthand</title>
+<simpara>Symbols with the <literal>js/</literal> prefix can contain dots to denote nested property access.
+Both of the following expressions invoke the same function:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(.log js/console "Hello World")
+
+(js/console.log "Hello World")</programlisting>
+<simpara>And both of the following expressions access the same property:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(.-PI js/Math)
+;; =&gt; 3.141592653589793
+
+js/Math.PI
 ;; =&gt; 3.141592653589793</programlisting>
 </section>
 <section id="javascript-objects">
@@ -2040,10 +2100,25 @@ the <literal>set!</literal> function:</simpara>
 <title>Conversions</title>
 <simpara>The inconvenience of the previously explained forms is that they do not make recursive
 transformations, so if you have nested objects, the nested objects will not be converted.
-To solve that use case, <emphasis>ClojureScript</emphasis> comes with the <literal>clj&#8594;js</literal> and <literal>js&#8594;clj</literal> functions
-that transform Clojure collection types into JavaScript and back:</simpara>
+Consider this example that uses Clojurescript maps, then a similar one with JavaScript objects:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def clj-map {:country {:code "FR" :name "France"}})
+;; =&gt; {:country {:code "FR", :name "France"}}
+(:code (:country clj-map)
+;; =&gt; "FR"
+
+(def js-obj #js {:country {:code "FR" :name "France"}})
+;; =&gt; #js {:country {:code "FR", :name "France"}
+(.-country js-obj)
+;; =&gt; {:code "FR", :name "France"}
+(.-code (.-country js-obj)
+;; =&gt; nil</programlisting>
+<simpara>To solve that use case, <emphasis>ClojureScript</emphasis> comes with the <literal>clj&#8594;js</literal> and <literal>js&#8594;clj</literal> functions
+that transform Clojure collection types into JavaScript and back. Note that the conversion to
+ClojureScript changes the <literal>:country</literal> keyword to a string.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(clj-&gt;js {:foo {:bar "baz"}})
-;; =&gt; #js {:foo #js {:bar "baz"}}</programlisting>
+;; =&gt; #js {:foo #js {:bar "baz"}}
+(js-&gt;clj #js {:country {:code "FR" :name "France"}}))
+;; =&gt; {"country" {:code "FR", :name "France"}}</programlisting>
 <simpara>In the case of arrays, there is a specialized function <literal>into-array</literal> that behaves as expected:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(into-array ["France" "Korea" "Peru"])
 ;; =&gt; #js ["France" "Korea" "Peru"]</programlisting>
@@ -2072,7 +2147,7 @@ a
 <simpara>Or access in an indexed way to get its values:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(aget a 0)
 ;; =&gt; 2</programlisting>
-<simpara>In JavaScript, objects are also arrays, so you can use the same functions for interacting
+<simpara>In JavaScript, array index access is equivalent to object property access, so you can use the same functions for interacting
 with plain objects:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(def b #js {:hour 16})
 ;; =&gt; #js {:hour 16}
@@ -2088,9 +2163,8 @@ b
 </section>
 </section>
 </section>
-<section id="truthiness">
+<section id="truthiness-section">
 <title>Truthiness</title>
-<simpara><anchor id="truthiness-section" xreflabel="[truthiness-section]"/></simpara>
 <simpara>This is the aspect where each language has its own semantics. The majority of languages
 consider empty collections, the integer 0, and other things like this to be false.
 In <emphasis>ClojureScript</emphasis>, unlike in other languages, only two values are considered as false: <literal>nil</literal>
@@ -2150,7 +2224,7 @@ today, let&#8217;s increment her age count:</simpara>
 ;; {:name "Cirilla", :lastname "Fiona", :age 22}</programlisting>
 <section id="observation">
 <title>Observation</title>
-<simpara>We can add and remove watcher functions to atoms. Whenever the atom&#8217;s value is changed through a <literal>swap!</literal> or <literal>reset!</literal>,
+<simpara>We can add and remove watcher functions for atoms. Whenever the atom&#8217;s value is changed through a <literal>swap!</literal> or <literal>reset!</literal>,
 all the atom&#8217;s watcher functions will be called. Watchers are added with the <literal>add-watch</literal> function. Notice that each
 watcher has a key associated (<literal>:logger</literal> in the example) to it which is later used to remove the watch from the atom.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(def a (atom))
@@ -2191,7 +2265,7 @@ support swapping and resetting with <literal>vswap!</literal> and <literal>vrese
 
 (vreset! ciri {:name "Cirilla", :lastname "Fiona", :age 22})
 ;; {:name "Cirilla", :lastname "Fiona", :age 22}</programlisting>
-<simpara>Note that another difference with atoms is that the constructor of volatiles uses a bang at the end, you create
+<simpara>Note that another difference with atoms is that the constructor of volatiles uses a bang at the end. You create
 volatiles with <literal>volatile!</literal> and atoms with <literal>atom</literal>.</simpara>
 </section>
 </section>
@@ -2271,7 +2345,7 @@ this example, you should have nodejs or iojs (recommended) installed.</simpara>
 <simpara>There are different ways to install iojs, but the recommended way is using nvm (node
 version manager). You can read the instructions on how to install and use nvm on its
 <ulink url="https://github.com/creationix/nvm">home page</ulink>.</simpara>
-<simpara>Then you have installed the nvm, follow installing the latest version of the iojs:</simpara>
+<simpara>When you have installed nvm, follow installing the latest version of iojs:</simpara>
 <programlisting language="shell" linenumbering="unnumbered">nvm install iojs-v2.5.0
 nvm alias default iojs-v2.5.0</programlisting>
 <simpara>You can test if <emphasis role="strong">iojs</emphasis> is installed in your system with this command:</simpara>
@@ -2457,7 +2531,7 @@ advantage of this method is that it gives a little bit more output.</simpara>
 </section>
 <section id="optimization-levels">
 <title>Optimization levels</title>
-<simpara>The <emphasis>ClojureScript</emphasis> compiler has different level of optimizations. Behind the scenes,
+<simpara>The <emphasis>ClojureScript</emphasis> compiler has different levels of optimization. Behind the scenes,
 those compilation levels are coming from Google Closure Compiler.</simpara>
 <simpara>A very simplified overview of the compilation process is:</simpara>
 <orderedlist numeration="arabic">
@@ -2502,16 +2576,16 @@ compiled <emphasis>ClojureScript</emphasis> and other JavaScript.</simpara>
 </section>
 <section id="advanced">
 <title>advanced</title>
-<simpara>The advanced compilation level implies (includes) all transformations from simple
-optimization and additionally performs more aggresive optimizations and dead
-code elimination. That results in more small output files.</simpara>
-<simpara>Compilation with the <literal>:advanced</literal> optimiziation implies that you all you code should
-complain the google closure compiler rules. If you code is purelly <emphasis>ClojureScript</emphasis>,
-you don&#8217;t worry about this because the <emphasis>ClojureScript</emphasis> compiler generates a valid
-compliant javascript. But if you are interacticting with third party javascript,
-some additional tasks should be done for make work everything as expected.</simpara>
-<simpara>All about interaction with third-party javascript libraries will be explained
-in below sections.</simpara>
+<simpara>The advanced compilation level includes all transformations from simple
+optimization and additionally performs more aggressive optimizations and dead
+code elimination. This results in significantly smaller output files.</simpara>
+<simpara>The <literal>:advanced</literal> optimizations can only work for a strict subset of JavaScript
+code that follows the Google Closure Compiler rules.  <emphasis>ClojureScript</emphasis> generates
+valid JavaScript within this strict subset, but if you are interacting with
+third party JavaScript code, some additional tasks should be done to make
+everything work as expected.</simpara>
+<simpara>This interaction with third party javascript libraries will be explained
+in later sections.</simpara>
 </section>
 </section>
 </section>
@@ -2540,7 +2614,7 @@ feedback.</simpara>
 <simpara><emphasis>ClojureScript</emphasis> comes with support for executing the REPL in different execution
 environments, each one has its own advantages or disadvantages. For example, you can run a
 REPL in nodejs but in that environment you don&#8217;t have access to the DOM.</simpara>
-<simpara>In summary: everthing really depends on your needs or requirements.</simpara>
+<simpara>In summary: everything really depends on your needs or requirements.</simpara>
 </section>
 <section id="nashorn-repl">
 <title>Nashorn REPL</title>
@@ -2581,7 +2655,7 @@ or iojs will be installed in your system.</simpara>
 that does not require any additional dependencies. The answer is very simple: node/iojs
 is the most used JavaScript execution environment on the backend, and it has a great
 amount of community packages around it.</simpara>
-<simpara>Well, the good notice is that start nodejs/iojs repl is very very easy once you have it
+<simpara>Well, the good news is that starting a nodejs/iojs repl is very easy once you have it
 installed in your system. Start writing this content to a new <literal>repl.clj</literal> file:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.repl]
          '[cljs.repl.node])
@@ -2664,39 +2738,40 @@ result of that will be the typical browser alert dialog.</simpara>
 </section>
 <section id="the-closure-library">
 <title>The Closure Library</title>
-<simpara>A google closure library is a javascript library developed by google, based on a modular
+<simpara>The Google Closure Library is a javascript library developed by Google, based on a modular
 architecture and provides cross-browser functions for DOM manipulations and events, ajax
 and JSON, among other features.</simpara>
 <simpara>It&#8217;s written specifically to take advantage of the Closure Compiler (that is used
 internally by the <emphasis>ClojureScript</emphasis> compiler).</simpara>
-<simpara>And <emphasis>ClojureScript</emphasis> is built up on Closure Compiler and Closure Library. The great example
-are the <emphasis>ClojureScript</emphasis> namespaces, they are defined as closure modules. This means that
-you can interact with closure library in a very easy way:</simpara>
+<simpara>And <emphasis>ClojureScript</emphasis> is built on Closure Compiler and Closure Library. In fact,
+<emphasis>ClojureScript</emphasis> namespaces are Closure modules. This means that
+you can interact with the Closure Library in a very easy way:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(ns yourapp.core
   (:require [goog.dom :as dom]))
 
 (def element (dom/getElement "body"))</programlisting>
-<simpara>With previous snippet of code you can observe the way you can import the <emphasis role="strong">dom</emphasis> module of
+<simpara>With the previous snippet of code you can observe the way you can import the <emphasis role="strong">dom</emphasis> module of
 the closure library and use one function declared in that module.</simpara>
-<simpara>Additionally, the closure library also exposes "special" modules that behaves like a
-class or object. For import this kind of things you should use the <literal>:import</literal> directive.</simpara>
+<simpara>Additionally, the closure library also exposes "special" modules that behave like a
+class or object. For importing these kinds of things you should use the <literal>:import</literal> directive.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(ns yourapp.core
   (:import goog.History))
 
 (def instance (History.))</programlisting>
-<simpara>If you are familiar with Clojure, it uses this approach for import the Java clases using
-the <literal>:import</literal> direcrtive. However, if you define types (classes) using <emphasis>ClojureScript</emphasis>
-primitives, you should not use <literal>:import</literal> for import them, the standard <literal>:require</literal>
+<simpara>If you are familiar with Clojure, it imports Java classes using
+the same <literal>:import</literal> directive. However, if you define types (classes) using <emphasis>ClojureScript</emphasis>
+primitives, you should not use <literal>:import</literal> to import them, the standard <literal>:require</literal>
 directives should be used.</simpara>
 </section>
 <section id="dependency-management">
 <title>Dependency management</title>
-<simpara>Until now, we have used the builtin <emphasis>ClojureScript</emphasis> toolchain to compile our sources to
-JavaScript. It is OK to start using it and to understand how it works. But it is not very
-comfortable for use on big projects with dependencies to third party libraries.</simpara>
-<simpara>This chapter intends to explain how you can use <emphasis role="strong">Leiningen</emphasis>, the defacto clojure build
+<simpara>Until now, we have used the builtin <emphasis>ClojureScript</emphasis> toolchain to compile our
+sources to JavaScript.  This is the minimal setup required for working with and
+understanding the compiler, but for larger projects, we often require a larger
+build tool that can manage a project&#8217;s dependencies on other libraries.</simpara>
+<simpara>Thus, this chapter intends to explain how you can use <emphasis role="strong">Leiningen</emphasis>, the de facto clojure build
 and dependency management tool, to build <emphasis>ClojureScript</emphasis> projects. There is another
-build tool called <emphasis role="strong">boot</emphasis> that is growing in popularity, but at this momenent it will not be
+build tool called <emphasis role="strong">boot</emphasis> that is growing in popularity, but at this moment it will not be
 covered in this book.</simpara>
 <section id="installing-leiningen">
 <title>Installing leiningen</title>
@@ -2707,7 +2782,7 @@ wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 chmod a+x ./lein
 export PATH=$PATH:~/bin</programlisting>
 <simpara>Make sure that the <literal>~/bin</literal> directory is always set on your path. To make it permanent,
-add the line starting with ` export` to your <literal>~/.bashrc</literal> file (we are supposing that you
+add the line starting with <literal>export</literal> to your <literal>~/.bashrc</literal> file (we are supposing that you
 are using the bash shell).</simpara>
 <simpara>Now, open another clean terminal and execute <literal>lein version</literal>:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ lein version
@@ -2721,15 +2796,14 @@ version of the leiningen script at the web site.</simpara>
 </section>
 <section id="first-project">
 <title>First project</title>
-<simpara>The best way to show how a tool works is by creating a toy project with it. In this case
-we will go to create one little application that calculates if a year is leap or not. And
-for it, we will use the <emphasis role="strong">mies</emphasis> leiningen template.</simpara>
+<simpara>The best way to show how a tool works is by creating a toy project with it. In this case,
+we will create a small application that calculates if a year is a leap year or not. To
+start, we will use the <emphasis role="strong">mies</emphasis> leiningen template.</simpara>
 <note>
-<simpara>Templates are a way that leiningen has to provide a initial layout for an
-application or a library and clojure community has a great amount of them. In this case
-we&#8217;ll use <emphasis role="strong">mies</emphasis> template that is maintained by the clojurescript core developer. If you
-want to know more about templates, you should read the leiningen doc. Explaining templates
-is completely out of scope of this book.</simpara>
+<simpara>Templates are a facility in leiningen for creating an initial project structure.
+The clojure community has a great many of them. In this case
+we&#8217;ll use the <emphasis role="strong">mies</emphasis> template that was started by the clojurescript core developer.  Consult
+the leiningen docs to learn more about templates.</simpara>
 </note>
 <simpara>Let&#8217;s start creating the project layout:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ lein new mies leapyears
@@ -2788,23 +2862,24 @@ code into the <literal>src/leapyear/core.cljs</literal>:</simpara>
       (set! (.-innerHTML result) "NO"))))
 
 (events/listen input "keyup" on-change)</programlisting>
-<simpara>And finally, compile the clojurescript code with:</simpara>
+<simpara>Now, compile the clojurescript code with:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ ./scripts/watch</programlisting>
-<simpara>That behind the scenes executes this:</simpara>
+<simpara>This script executes the following behind the scenes, similar to the <literal>java</literal>
+build commands from the previous section, but with our <literal>lein</literal> build tool:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">rlwrap lein trampoline run -m clojure.main scripts/watch.clj</programlisting>
 <warning>
 <simpara>you should have <literal>rlwrap</literal> installed on your system.</simpara>
 </warning>
-<simpara>Additionally to <literal>watch</literal> script, the <emphasis role="strong">mies</emphasis> template also generates a bunch of other
-scripts such as <literal>build</literal>,<literal>release</literal>,&#8230;&#8203; but for our purposes in this section they are
-completely useless. And probably after reading the compiler and repl sections, you already
-will be familiar with almost all the scripts that comes with <emphasis role="strong">mies</emphasis> template.</simpara>
+<simpara>Finally, open the <literal>index.html</literal> file in a browser.  Typing a year in the textbox
+should display an indication of its leap year status.</simpara>
+<simpara>You may have noticed other files in the scripts directory, like <literal>build</literal> and
+<literal>release</literal>.  These are the same build scripts mentioned in the previous section,
+but we will stick with <literal>watch</literal> here.</simpara>
 </section>
 <section id="managing-dependencies">
 <title>Managing dependencies</title>
-<simpara>The real purpose of use leiningen for the ClojureScript compilation process is managing
-dependencies. Because it makes this task more obvious in comparison to doing it
-manually.</simpara>
+<simpara>The real purpose of using Leiningen for the ClojureScript compilation process is to automate
+the retrieval of dependencies.  This is dramatically simpler than retrieving them manually.</simpara>
 <simpara>The dependencies, among other parameters, are declared in the <literal>project.clj</literal> file and have
 this form (from <emphasis role="strong">mies</emphasis> template):</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defproject leapyears "0.1.0-SNAPSHOT"
@@ -2833,20 +2908,20 @@ this form (from <emphasis role="strong">mies</emphasis> template):</simpara>
 Clojure or any JVM language, <literal>jar</literal> files will be very familiar to you. But if you
 aren&#8217;t familiar with them, do not worry: a .jar file is like a plain zip file that contains
 the <literal>project.clj</literal> for the library, some metadata, and the ClojureScript sources. The
-packaging will be explained in other section.</simpara>
+packaging will be explained in another section.</simpara>
 <simpara>Clojure packages are often published on <ulink url="http://clojars.org">Clojars</ulink>; also you
 can find many different third party libraries on the
 <ulink url="https://github.com/clojure/clojurescript/wiki#libraries">ClojureScript Wiki</ulink>.</simpara>
 <simpara>To understand dependencies better, we are going to replace the DOM utiltiles of the Google Closure
 library with a third party library for interacting with the DOM.</simpara>
-<simpara>Let start adding <literal>[prismatic/dommy "1.1.0"]</literal> into the <literal>:dependencies</literal> in the
+<simpara>Let&#8217;s start by adding <literal>[prismatic/dommy "1.1.0"]</literal> at the end of the <literal>:dependencies</literal> vector in
 <emphasis role="strong">project.clj</emphasis>:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">:dependencies [[org.clojure/clojure "1.7.0"]
                [org.clojure/clojurescript "0.0-3308" :classifier "aot"
                 :exclusion [org.clojure/data.json]]
                [org.clojure/data.json "0.2.6" :classifier "aot"]
                [prismatic/dommy "1.1.0"]]</programlisting>
-<simpara>At this moment you should restart the watch process that we had started at the beginning
+<simpara>At this moment you should restart the <literal>watch</literal> process that we had started at the beginning
 of this subchapter:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ ./scripts/watch
 Retrieving prismatic/dommy/1.1.0/dommy-1.1.0.pom from clojars
@@ -2854,8 +2929,9 @@ Retrieving prismatic/dommy/1.1.0/dommy-1.1.0.jar from clojars
 Building ...
 ... done. Elapsed 0.227999601 seconds
 Watching paths: /home/niwi/cljsbook/playground/leapyears/src</programlisting>
-<simpara>You can observe that dommy dependency is successfully downloaded, and then the watch
-process is started.</simpara>
+<simpara>You can observe that the dommy dependency is successfully downloaded, and then the
+watch process is started.  In fact, Leiningen will ensure all dependencies are
+downloaded before performing any tasks.</simpara>
 <simpara>Now it&#8217;s time to write some code. Replace the contents of the <literal>src/leapyear/core.cljs</literal>
 with the following content:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(ns leapyears.core
@@ -2883,11 +2959,8 @@ with the following content:</simpara>
 
 (dom/listen! input :keyup on-change)</programlisting>
 <simpara>As you can observe, the code now looks more “Clojure-friendly.” The host
-interoperabilty calls are almost hidden.</simpara>
-<note>
-<simpara>This example does not means that we prefer <literal>dommy</literal> over the Google Closure library. In
-fact, dommy does not have documentation, so we do not recommend use it.</simpara>
-</note>
+interoperabilty calls have now been replaced by functions provided by this
+third-party library.</simpara>
 </section>
 </section>
 <section id="using-javascript-libraries">
@@ -2896,9 +2969,9 @@ fact, dommy does not have documentation, so we do not recommend use it.</simpara
 </section>
 <section id="unit-testing">
 <title>Unit testing</title>
-<simpara>There’s not a lot to say here; testing in <emphasis>ClojureScript</emphasis> consists of the same concepts as
+<simpara>As you may expect, testing in <emphasis>ClojureScript</emphasis> consists of the same concepts as
 you may know from any other language such as Clojure, Java, Python, JavaScript, etc.</simpara>
-<simpara>Regardless of the languag,e the main objective of unit testing is to run some test code
+<simpara>Regardless of the language, the main objective of unit testing is to run some test code,
 and verify that your code behaves as expected and returns without raising unexpected
 exceptions.</simpara>
 <simpara>The immutablity of <emphasis>ClojureScript</emphasis> in fact helps your program to be less
@@ -2907,7 +2980,7 @@ is that it tends to use plain data instead of complex objects. Building "mock" o
 for testing is greatly simplified.</simpara>
 <section id="first-steps">
 <title>First steps</title>
-<simpara>The "official" <emphasis>ClojureScript</emphasis> testing framework is built-in on its core under the "cljs.test"
+<simpara>The "official" <emphasis>ClojureScript</emphasis> testing framework is in the core library under the "cljs.test"
 namespace. It is a very simple library, but it should be more than enough for our purposes.</simpara>
 <simpara>There are other libraries that offer additional features or directly different approaches
 for testing, such as <ulink url="https://github.com/clojure/test.check">test.check</ulink>. However, they
@@ -2933,7 +3006,7 @@ test directory:</simpara>
    :verbose true})</programlisting>
 <simpara>This new script will compile and watch both directories "src" and "test", and
 sets the new entry point to the <literal>appfortesting.core_tests</literal> namespace.</simpara>
-<simpara>And then, write some test code into the <literal>core_tests.cljs</literal> file:</simpara>
+<simpara>Next, write some test code into the <literal>core_tests.cljs</literal> file:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(ns appfortesting.core-tests
   (:require [cljs.test :as t]))
 
@@ -2946,8 +3019,8 @@ sets the new entry point to the <literal>appfortesting.core_tests</literal> name
 <simpara>The relevant part of that code snippet is:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(t/deftest my-first-test
   (t/is (= 1 2)))</programlisting>
-<simpara>The <literal>deftest</literal> macro is a basic primitive for define our tests. It takes a name as its first
-parameter, followed of one or multiple "asserts" using the <literal>is</literal> macro. In that example,
+<simpara>The <literal>deftest</literal> macro is a basic primitive for defining our tests. It takes a name as its first
+parameter, followed by one or multiple "asserts" using the <literal>is</literal> macro. In that example,
 the assert tries check that <literal>(= 1 2)</literal> is true.</simpara>
 <simpara>Let&#8217;s try to run this. First start the watch process:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ ./scripts/watch
@@ -2969,8 +3042,8 @@ expected: (= 1 2)
 
 Ran 1 tests containing 1 assertions.
 1 failures, 0 errors.</programlisting>
-<simpara>You can observe that expected assert failure is successfully printed in the console. To
-fix the test, just change the <literal>=</literal> with <literal>not=</literal> and run again the file:</simpara>
+<simpara>You can observe that the expected assert failure is successfully printed in the console. To
+fix the test, just change the <literal>=</literal> with <literal>not=</literal> and run the file again:</simpara>
 <programlisting language="bash" linenumbering="unnumbered">$ iojs out/appfortesting.js
 
 Testing appfortesting.core-tests
@@ -2978,7 +3051,7 @@ Testing appfortesting.core-tests
 Ran 1 tests containing 1 assertions.
 0 failures, 0 errors.</programlisting>
 <simpara>It is fine to test these kinds of assertions, but they are not very useful. Let&#8217;s go to
-test some application code. For this, we will use a function to check if a year is leap
+test some application code. For this, we will use a function to check if a year is a leap year
 or not. Then, write the following content to the <literal>src/appfortesting/core.clj</literal> file:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn leap?
   [year]
@@ -3002,18 +3075,19 @@ of the <literal>core_tests.cljs</literal> file:</simpara>
   (t/is (not (core/leap? 1981))))
 
 (set! *main-cli-fn* #(t/run-tests))</programlisting>
-<simpara>You can again run the compiled file to check that the new test passes as expected.</simpara>
+<simpara>Run the compiled file again to see that there are now two tests running.  The
+first test fails as it did before, but our leap year test passes as expected.</simpara>
 </section>
 <section id="async-testing">
 <title>Async Testing</title>
-<simpara>One of the peculiarities of <emphasis>ClojureScript</emphasis> is that is built up on asynchronous, single
-theaded execution environments, and this has its own challenges.</simpara>
-<simpara>In async execution environments we should be able test asynchronous functions. So,
-in this case, the <emphasis>ClojureScript</emphasis> testing library offers a simply facility to do it:
-the <literal>async</literal> macro. It allows you to create blocks that play well with asynchronous code.</simpara>
+<simpara>One of the peculiarities of <emphasis>ClojureScript</emphasis> is that it runs on asynchronous,
+single-threaded execution environments, and this has its own challenges.</simpara>
+<simpara>In async execution environments, we should be able to test asynchronous
+functions.  To this end, the <emphasis>ClojureScript</emphasis> testing library offers the <literal>async</literal>
+macro, allowing you to create tests that play well with asynchronous code.</simpara>
 <simpara>First, we need to write a function that works in an asynchronous way. For this
-purpose we will create the <literal>async-leap?</literal> predicate that will do the same operation but
-return a result using a callback:</simpara>
+purpose, we will create the <literal>async-leap?</literal> predicate that will do the same operation but
+asychronously return a result using a callback:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn async-leap?
   [year callback]
   (js/setImmediate
@@ -3022,7 +3096,7 @@ return a result using a callback:</simpara>
                        (pos? (js-mod year 100))
                        (pos? (js-mod year 400)))]
        (callback result)))))</programlisting>
-<simpara>The JavaScript function <literal>setImmediate</literal> is used to emulate an asyncrhonous task and the callback
+<simpara>The JavaScript function <literal>setImmediate</literal> is used to emulate an asynchronous task, and the callback
 is executed with the result of that predicate.</simpara>
 <simpara>To test it, we should write a test case using the previously mentioned <literal>async</literal> macro:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(t/deftest my-async-test
@@ -3032,9 +3106,8 @@ is executed with the result of that predicate.</simpara>
                              (done)))))</programlisting>
 <simpara>The <literal>done</literal> function exposed by the <literal>async</literal> macro should be called after the asynchronous
 operation is finished and all assertions have run.</simpara>
-<simpara>It is very important to execute that function only once. If you execute that function twice or
-never, may cause some kind of strange behavior like executing some tests more than one time
-or skipping execution of some tests.</simpara>
+<simpara>It is very important to execute the <literal>done</literal> function only once. Omitting or
+executing it twice may cause strange behavior and should be avoided.</simpara>
 </section>
 <section id="fixtures">
 <title>Fixtures</title>
@@ -3042,20 +3115,24 @@ or skipping execution of some tests.</simpara>
 </section>
 <section id="integrating-with-ci">
 <title>Integrating with CI</title>
-<simpara>Most continuous integration tools and services expect that test scripts you provide
-return a standard exit code. But ClojureScript by default only runs the tests and outputs
-the results to standard output. So the compiled file can not be used directly with
-continuous integration tools because it does not return any return code when something
-fails. It always return the return code <literal>0</literal>.</simpara>
-<simpara>To fix this, we must instruct the <emphasis>ClojureScript</emphasis> test runner that when it finishes with
-a failed state it should set <literal>-1</literal> as a return code. This can be done with this
-snippet of code:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">(defmethod cljs.test/report [:cljs.test/default :end-run-tests]
+<simpara>Most continuous integration tools and services expect that test scripts you
+provide return a standard exit code. But the ClojureScript test framework
+cannot customize this exit code without some configuration, because JavaScript
+lacks a universal exit code API for ClojureScript to use.</simpara>
+<simpara>To fix this, the <emphasis>ClojureScript</emphasis> test framework provides an avenue for
+executing custom code after the tests are done. This is where you are expected
+to set the environment-specific exit code depending on the final test status:
+<literal>0</literal> for success, <literal>1</literal> for failure.</simpara>
+<simpara>Insert this code at the end of <literal>core_tests.cljs</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defmethod t/report [::t/default :end-run-tests]
   [m]
-  (if (cljs.test/successful? m)
+  (if (t/successful? m)
     (set! (.-exitCode js/process) 0)
     (set! (.-exitCode js/process) 1)))</programlisting>
-<simpara>This code snippet obviously supposes that you are running the tests using <emphasis role="strong">iojs</emphasis> or
+<simpara>Now, you may check the exit code of the test script after running:</simpara>
+<programlisting language="bash" linenumbering="unnumbered">$ iojs out/appfortesting.js
+$ echo $?</programlisting>
+<simpara>This code snippet obviously assumes that you are running the tests using <emphasis role="strong">iojs</emphasis> or
 <emphasis role="strong">nodejs</emphasis>. If you are running your script in another execution environment, you should be
 aware of how you can set the exit code in that environment and modify the previous snippet
 accordingly.</simpara>
@@ -3748,9 +3825,8 @@ interface although it uses mutation internally:</simpara>
 (my-into [] (range 100))
 ;; =&gt; [0 1 2 ... 98 99]</programlisting>
 </section>
-<section id="metadata">
+<section id="metadata-section">
 <title>Metadata</title>
-<simpara><anchor id="metadata-section" xreflabel="[metadata-section]"/></simpara>
 <simpara>ClojureScript symbols, vars and persistent collections support attaching metadata to them. Metadata is
 a map with information about the entity it&#8217;s attached to. The ClojureScript compiler uses metadata for
 several purposes such as type hints, and the metadata system can be used by tooling, library and application
@@ -3969,14 +4045,541 @@ by applying a function or <literal>reset-meta!</literal> for replacing it with a
 ;; =&gt; {:foo 40}</programlisting>
 </section>
 </section>
-<section id="macros">
+<section id="macros-section">
 <title>Macros</title>
-<simpara><anchor id="macros-section" xreflabel="[macros-section]"/></simpara>
 <simpara>TBD</simpara>
 </section>
-<section id="core-protocols">
+<section id="core-protocols-section">
 <title>Core protocols</title>
-<simpara>TBD</simpara>
+<simpara>One of the greatest qualities of the core ClojureScript functions is that they are
+implemented around protocols. This makes them open to work on any type that we
+extend with such protocols, be it defined by us or a third party.</simpara>
+<section id="functions">
+<title>Functions</title>
+<simpara>As we&#8217;ve learned in previous chapters not only functions can be invoked. Vectors are
+functions of their indexes, maps are functions of their keys and sets are functions
+of their values.</simpara>
+<simpara>We can extend types to be callable as functions implementing the <literal>IFn</literal> protocol. A
+collection that doesn&#8217;t support calling it as a function is the queue, let&#8217;s
+implement <literal>IFn</literal> for the <literal>PersistentQueue</literal> type so we&#8217;re able to call queues as functions
+of their indexes:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type PersistentQueue
+  IFn
+  (-invoke
+    ([this idx]
+      (nth this idx))))
+
+(def q #queue[:a :b :c])
+;; =&gt; #queue [:a :b :c]
+
+(q 0)
+;; =&gt; :a
+
+(q 1)
+;; =&gt; :b
+
+(q 2)
+;; =&gt; :c</programlisting>
+</section>
+<section id="printing">
+<title>Printing</title>
+<simpara>For learning about some of the core protocols we&#8217;ll define a <literal>Pair</literal> type, which will hold a pair
+of values.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(deftype Pair [fst snd])</programlisting>
+<simpara>If we want to customize how types are printed we can implement the <literal>IPrintWithWriter</literal>
+protocol. It defines a function called <literal>-pr-writer</literal> that receives the value to print, a writer
+object and options; this function uses the writer object&#8217;s <literal>-write</literal> function to write the desired
+<literal>Pair</literal> string representation:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type Pair
+  IPrintWithWriter
+  (-pr-writer [p writer _]
+    (-write writer (str "#&lt;Pair " (.-fst p) "," (.-snd p) "&gt;"))))</programlisting>
+</section>
+<section id="sequences">
+<title>Sequences</title>
+<simpara>In a <link linkend="the-sequence-abstraction">previous section</link> we learned about sequences, one of
+ClojureScript&#8217;s main abstractions. Remember the <literal>first</literal> and <literal>rest</literal> functions for working
+with sequences? They are defined in the <literal>ISeq</literal> protocol, so we can extend types for
+responding to such functions:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type Pair
+  ISeq
+  (-first [p]
+    (.-fst p))
+
+  (-rest [p]
+    (list (.-snd p))))
+
+(def p (Pair. 1 2))
+;; =&gt; #&lt;Pair 1,2&gt;
+
+(first p)
+;; =&gt; 1
+
+(rest p)
+;; =&gt; (2)</programlisting>
+<simpara>Another handy function for working with sequences is <literal>next</literal>. Although <literal>next</literal> works as long
+as the given argument is a sequence, we can implement it explicitly with the <literal>INext</literal> protocol:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def p (Pair. 1 2))
+
+(next p)
+;; =&gt; (2)
+
+(extend-type Pair
+  INext
+  (-next [p]
+    (println "Our next")
+    (list (.-snd p))))
+
+(next p)
+;; Our next
+;; =&gt; (2)</programlisting>
+<simpara>Finally, we can make our own types seqable implementing the <literal>ISeqable</literal> protocol. This means we
+can pass them to <literal>seq</literal> for getting a sequence back.</simpara>
+<simpara>ISeqable</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def p (Pair. 1 2))
+
+(extend-type Pair
+  ISeqable
+  (-seq [p]
+    (list (.-fst p) (.-snd p))))
+
+(seq p)
+;; =&gt; (1 2)</programlisting>
+<simpara>Now our <literal>Pair</literal> type works with the plethora of ClojureScript functions for working with sequences:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def p (Pair. 1 2))
+;; =&gt; #&lt;Pair 1,2&gt;
+
+(map inc p)
+;; =&gt; (2 3)
+
+(filter odd? p)
+;; =&gt; (1)
+
+(reduce + p)
+;; =&gt; 3</programlisting>
+</section>
+<section id="collections-2">
+<title>Collections</title>
+<simpara>Collection functions are also defined in terms of protocols. For this section examples we will make
+the native JavaScript string act like a collection.</simpara>
+<simpara>The most important function for working with collection is <literal>conj</literal>, defined in the <literal>ICollection</literal> protocol.
+Strings are the only type which makes sense to <literal>conj</literal> to a string, so the <literal>conj</literal> operation for strings
+will be simply a concatenation:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type string
+  ICollection
+  (-conj [this o]
+    (str this o)))
+
+(conj "foo" "bar")
+;; =&gt; "foobar"
+
+(conj "foo" "bar" "baz")
+;; =&gt; "foobarbaz"</programlisting>
+<simpara>Another handy function for working with collections is <literal>empty</literal>, which is part of the <literal>IEmptyableCollection</literal>
+protocol. Let&#8217;s implement it for the string type:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type string
+  IEmptyableCollection
+  (-empty [_]
+    ""))
+
+(empty "foo")
+;; =&gt; ""</programlisting>
+<simpara>We used the <literal>string</literal> special symbol for extending the native JavaScript string. If you want to learn more about
+it check the <link linkend="extending-javascript-types">section about extending JavaScript types</link>.</simpara>
+<section id="collection-traits">
+<title>Collection traits</title>
+<simpara>There are some qualities that not all collections have, such as being countable in constant time or being
+reversible. These traits are splitted into different protocols since not all of them make sense for every
+collection. For illustrating these protocols we&#8217;ll use the <literal>Pair</literal> type we defined earlier.</simpara>
+<simpara>For collections that can be counted in constant time using the <literal>count</literal> function we can implement the <literal>ICounted</literal>
+protocol. It should be easy to implement it for the <literal>Pair</literal> type:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type Pair
+  ICounted
+  (-count [_]
+    2))
+
+(def p (Pair. 1 2))
+
+(count p)
+;; =&gt; 2</programlisting>
+<simpara>Some collection types such as vectors and lists can be indexed by a number using the <literal>nth</literal> function. If our
+types are indexed we can implement the <literal>IIndexed</literal> protocol:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type Pair
+  IIndexed
+  (-nth
+    ([p idx]
+      (case idx
+        0 (.-fst p)
+        1 (.-snd p)
+        (throw (js/Error. "Index out of bounds"))))
+    ([p idx default]
+      (case idx
+        0 (.-fst p)
+        1 (.-snd p)
+        default))))
+
+(nth p 0)
+;; =&gt; 1
+
+(nth p 1)
+;; =&gt; 2
+
+(nth p 2)
+;; Error: Index out of bounds
+
+(nth p 2 :default)
+;; =&gt; :default</programlisting>
+</section>
+</section>
+<section id="associative">
+<title>Associative</title>
+<simpara>There are many data structures that are associative: they map keys to values. We&#8217;ve encountered a few of them
+already and we know many functions for working with them like <literal>get</literal>, <literal>assoc</literal> or <literal>dissoc</literal>. Let&#8217;s explore the
+protocols that these functions build upon.</simpara>
+<simpara>First of all, we need a way to look up keys on an associative data structure. The <literal>ILookup</literal> protocol defines
+a function for doing so, let&#8217;s add the ability to look up keys in our <literal>Pair</literal> type since is an associative data
+structure that maps the indices 0 and 1 to values.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type Pair
+  ILookup
+  (-lookup
+    ([p k]
+      (-lookup p k nil))
+    ([p k default]
+      (case k
+        0 (.-fst p)
+        1 (.-snd p)
+        default))))
+
+(get p 0)
+;; =&gt; 1
+
+(get p 1)
+;; =&gt; 2
+
+(get p :foo)
+;; =&gt; nil
+
+(get p 2 :default)
+;; =&gt; :default</programlisting>
+<simpara>For using <literal>assoc</literal> on a data structure it must implement the <literal>IAssociative</literal> protocol. For our <literal>Pair</literal> type only
+0 and 1 will be allowed as keys for associating values. <literal>IAssociative</literal> also has a function for asking whether
+a key is present or not.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type Pair
+  IAssociative
+  (-contains-key? [_ k]
+    (contains? #{0 1} k))
+
+  (-assoc [p k v]
+    (case k
+      0 (Pair. v (.-snd p))
+      1 (Pair. (.-fst p) v)
+      (throw (js/Error. "Can only assoc to 0 and 1 keys")))))
+
+(def p (Pair. 1 2))
+;; =&gt; #&lt;Pair 1,2&gt;
+
+(assoc p 0 2)
+;; =&gt; #&lt;Pair 2,2&gt;
+
+(assoc p 1 1)
+;; =&gt; #&lt;Pair 1,1&gt;
+
+(assoc p 0 0 1 1)
+;; =&gt; #&lt;Pair 0,1&gt;
+
+(assoc p 2 3)
+;; Error: Can only assoc to 0 and 1 keys</programlisting>
+<simpara>The complementary function for <literal>assoc</literal> is <literal>dissoc</literal> and it&#8217;s part of the <literal>IMap</literal> protocol. It doesn&#8217;t make much
+sense for our <literal>Pair</literal> type but we&#8217;ll implement it nonetheless. Dissociating 0 or 1 will mean putting a <literal>nil</literal>
+in such position and invalid keys will be ignored.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type Pair
+  IMap
+  (-dissoc [p k]
+    (case k
+      0 (Pair. nil (.-snd p))
+      1 (Pair. (.-fst p) nil)
+      p)))
+
+(def p (Pair. 1 2))
+;; =&gt; #&lt;Pair 1,2&gt;
+
+(dissoc p 0)
+;; =&gt; #&lt;Pair ,2&gt;
+
+(dissoc p 1)
+;; =&gt; #&lt;Pair 1,&gt;
+
+(dissoc p 2)
+;; =&gt; #&lt;Pair 1,2&gt;
+
+(dissoc p 0 1)
+;; =&gt; #&lt;Pair ,&gt;</programlisting>
+<simpara>Associative data structures are made of key and value pairs we can call entries. The <literal>key</literal> and <literal>val</literal> functions allow
+us to query the key and value of such entries and they are built upon the <literal>IMapEntry</literal> protocol. Let&#8217;s see a few examples
+of <literal>key</literal> and <literal>val</literal> and how map entries can be used to build up maps:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(key [:foo :bar])
+;; =&gt; :foo
+
+(val [:foo :bar])
+;; =&gt; :bar
+
+(into {} [[:foo :bar] [:baz :xyz]])
+;; =&gt; {:foo :bar, :baz :xyz}</programlisting>
+<simpara>Pairs can be map entries too, we treat their first element as the key and the second as the value:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type Pair
+  IMapEntry
+  (-key [p]
+    (.-fst p))
+
+  (-val [p]
+    (.-snd p)))
+
+(def p (Pair. 1 2))
+;; =&gt; #&lt;Pair 1,2&gt;
+
+(key p)
+;; =&gt; 1
+
+(val p)
+;; =&gt; 2
+
+(into {} [p])
+;; =&gt; {1 2}</programlisting>
+</section>
+<section id="comparison">
+<title>Comparison</title>
+<simpara>For checking whether two or more values are equivalent with <literal>=</literal> we must implement the <literal>IEquiv</literal>
+protocol. Let&#8217;s do it for our <literal>Pair</literal> type:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def p  (Pair. 1 2))
+(def p' (Pair. 1 2))
+(def p'' (Pair. 1 2))
+
+(= p p')
+;; =&gt; false
+
+(= p p' p'')
+;; =&gt; false
+
+(extend-type Pair
+  IEquiv
+  (-equiv [p other]
+    (and (instance? Pair other)
+         (= (.-fst p) (.-fst other))
+         (= (.-snd p) (.-snd other)))))
+
+(= p p')
+;; =&gt; true
+
+(= p p' p'')
+;; =&gt; true</programlisting>
+<simpara>We can also make types comparable. The function <literal>compare</literal> takes two values and returns a negative
+number if the first is less than the second, 0 if both are equal and 1 if the first is greater than
+the second. For making our types comparable we must implement the <literal>IComparable</literal> protocol.</simpara>
+<simpara>For pairs, comparison will mean checking if the two first values are equal. If they are, the result
+will be the comparison of the second values. If not, we will return the result of the first comparison:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type Pair
+  IComparable
+  (-compare [p other]
+    (let [fc (compare (.-fst p) (.-fst other))]
+      (if (zero? fc)
+        (compare (.-snd p) (.-snd other))
+        fc))))
+
+(compare (Pair. 0 1) (Pair. 0 1))
+;; =&gt; 0
+
+(compare (Pair. 0 1) (Pair. 0 2))
+;; =&gt; -1
+
+(compare (Pair. 1 1) (Pair. 0 2))
+;; =&gt; 1
+
+(sort [(Pair. 1 1) (Pair. 0 2) (Pair. 0 1)])
+;; =&gt; (#&lt;Pair 0,1&gt; #&lt;Pair 0,2&gt; #&lt;Pair 1,1&gt;)</programlisting>
+</section>
+<section id="metadata">
+<title>Metadata</title>
+<simpara>The <literal>meta</literal> and <literal>with-meta</literal> functions are also based upon two protocols: <literal>IMeta</literal> and <literal>IWithMeta</literal> respectively.
+We can make our own types capable of carrying metadata adding an extra field for holding the metadata and
+implementing both protocols.</simpara>
+<simpara>Let&#8217;s implement a version of <literal>Pair</literal> that can have metadata:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(deftype Pair [fst snd meta]
+  IMeta
+  (-meta [p] meta)
+
+  IWithMeta
+  (-with-meta [p new-meta]
+    (Pair. fst snd new-meta)))
+
+
+(def p (Pair. 1 2 {:foo :bar}))
+;; =&gt; #&lt;Pair 1,2&gt;
+
+(meta p)
+;; =&gt; {:foo :bar}
+
+(def p' (with-meta p {:bar :baz}))
+;; =&gt; #&lt;Pair 1,2&gt;
+
+(meta p')
+;; =&gt; {:bar :baz}</programlisting>
+</section>
+<section id="interoperability-with-javascript">
+<title>Interoperability with JavaScript</title>
+<simpara>Since ClojureScript is hosted in a JavaScript VM we often need to convert ClojureScript
+data structures to JavaScript ones and viceversa. We also may want to make native JS
+types participate in an abstraction represented by a protocol.</simpara>
+<section id="extending-javascript-types">
+<title>Extending JavaScript types</title>
+<simpara>When extending JavaScript objects instead of using JS globals like <literal>js/String</literal>, <literal>js/Date</literal>
+and such, special symbols are used. This is done for avoiding mutating global JS objects.</simpara>
+<simpara>The symbols for extending JS types are: <literal>object</literal>, <literal>array</literal>, <literal>number</literal>, <literal>string</literal>,
+<literal>function</literal>, <literal>boolean</literal> and <literal>nil</literal> is used for the null object. The dispatch of the
+protocol to native objects uses Google Closure&#8217;s
+<ulink url="https://google.github.io/closure-library/api/namespace_goog.html#typeOf">goog.typeOf</ulink>
+function. There&#8217;s a special <literal>default</literal> symbol that can be used for making a default
+implementation of a protocol for every type.</simpara>
+<simpara>For illustrating the extension of JS types we are going to define a <literal>MaybeMutable</literal> protocol
+that&#8217;ll have a <literal>mutable?</literal> predicate as its only function. Since in JavaScript mutability
+is the default we&#8217;ll extend the default JS type returning true from <literal>mutable?</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defprotocol MaybeMutable
+  (mutable? [this] "Returns true if the value is mutable."))
+
+(extend-type default
+  MaybeMutable
+  (mutable? [_] true))
+
+;; object
+(mutable? #js {})
+;; =&gt; true
+
+;; array
+(mutable? #js [])
+;; =&gt; true
+
+;; string
+(mutable? "")
+;; =&gt; true
+
+;; function
+(mutable? (fn [x] x))
+;; =&gt; true</programlisting>
+<simpara>Since fortunately not all JS object&#8217;s values are mutable we can refine the implementation of
+<literal>MaybeMutable</literal> for returning <literal>false</literal> for strings and functions.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-protocol MaybeMutable
+  string
+  (mutable? [_] false)
+
+  function
+  (mutable? [_] false))
+
+
+;; object
+(mutable? #js {})
+;; =&gt; true
+
+;; array
+(mutable? #js [])
+;; =&gt; true
+
+;; string
+(mutable? "")
+;; =&gt; false
+
+;; function
+(mutable? (fn [x] x))
+;; =&gt; false</programlisting>
+<simpara>There is no special symbol for JavaScript dates so we have to extend <literal>js/Date</literal> directly. The same
+applies to the rest of the types found in the global <literal>js</literal> namespace.</simpara>
+</section>
+<section id="converting-data">
+<title>Converting data</title>
+<simpara>For converting values from ClojureScript types to JavaScript ones and viceversa we use the <literal>clj&#8594;js</literal>
+and <literal>js&#8594;clj</literal> functions, which are based in the <literal>IEncodeJS</literal> and <literal>IEncodeClojure</literal> protocols respectively.</simpara>
+<simpara>For the examples we&#8217;ll use the Set type introduced in ES6. Note that is not available in every JS runtime.</simpara>
+<section id="from-clojurescript-to-js">
+<title>From ClojureScript to JS</title>
+<simpara>First of all we&#8217;ll extend ClojureScript&#8217;s set type for being able to convert it to JS. By default sets
+are converted to JavaScript arrays:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(clj-&gt;js #{1 2 3})
+;; =&gt; #js [1 3 2]</programlisting>
+<simpara>Let&#8217;s fix it, <literal>clj&#8594;js</literal> is supposed to convert values recursively so we&#8217;ll make sure to convert all the
+set contents to JS and creating the set with the converted values:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type PersistentHashSet
+  IEncodeJS
+  (-clj-&gt;js [s]
+    (js/Set. (into-array (map clj-&gt;js s)))))
+
+(def s (clj-&gt;js #{1 2 3}))
+(es6-iterator-seq (.values s))
+;; =&gt; (1 3 2)
+
+(instance? js/Set s)
+;; =&gt; true
+
+(.has s 1)
+;; =&gt; true
+(.has s 2)
+;; =&gt; true
+(.has s 3)
+;; =&gt; true
+(.has s 4)
+;; =&gt; false</programlisting>
+<simpara>The <literal>es6-iterator-seq</literal> is an experimental function in ClojureScript core for obtaining a seq from an ES6
+iterable.</simpara>
+</section>
+<section id="from-js-to-clojurescript">
+<title>From JS to ClojureScript</title>
+<simpara>Now it&#8217;s time to extend the JS set to convert to ClojureScript. As with <literal>clj&#8594;js</literal>, <literal>js&#8594;clj</literal> recursively converts
+the value of the data structure:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type js/Set
+  IEncodeClojure
+  (-js-&gt;clj [s options]
+    (into #{} (map js-&gt;clj (es6-iterator-seq (.values s))))))
+
+(= #{1 2 3}
+   (js-&gt;clj (clj-&gt;js #{1 2 3})))
+;; =&gt; true
+
+(= #{[1 2 3] [4 5] [6]}
+   (js-&gt;clj (clj-&gt;js #{[1 2 3] [4 5] [6]})))
+;; =&gt; true</programlisting>
+<simpara>Note that there is no one-to-one mapping between ClojureScript and JavaScript values. For example, ClojureScript
+keywords are converted to JavaScript strings when passed to <literal>clj&#8594;js</literal>.</simpara>
+</section>
+</section>
+</section>
+<section id="reductions">
+<title>Reductions</title>
+<simpara>IReduce</simpara>
+<simpara>IKVReduce</simpara>
+</section>
+<section id="asynchrony">
+<title>Asynchrony</title>
+<simpara>IPending</simpara>
+<simpara>IDeref</simpara>
+<simpara>IDerefWithTimeout</simpara>
+</section>
+<section id="state">
+<title>State</title>
+<simpara>IWatchable</simpara>
+<simpara>IReset</simpara>
+<simpara>ISwap</simpara>
+<simpara>IVolatile</simpara>
+</section>
+<section id="mutation">
+<title>Mutation</title>
+<simpara>IEditableCollection</simpara>
+<simpara>ITransientCollection</simpara>
+<simpara>ITransientAssociative</simpara>
+<simpara>ITransientMap</simpara>
+<simpara>ITransientVector</simpara>
+<simpara>ITransientSet</simpara>
+</section>
+</section>
+<section id="the-reader">
+<title>The Reader</title>
+
 </section>
 </chapter>
 <chapter id="appendix">
@@ -4252,7 +4855,7 @@ closed. Because of that, putting a <literal>nil</literal> value on a channel is 
 
 (def ch (chan))
 
-(put! ch 42)
+(put! ch nil)
 ;; Error: Assert failed: Can't put nil in on a channel</programlisting>
 <section id="buffers">
 <title>Buffers</title>
@@ -5267,6 +5870,9 @@ writing entire sections of the book, as well as making very valuable suggestions
 <listitem>
 <simpara>Shaun LeBron (@shaunlebron)</simpara>
 </listitem>
+<listitem>
+<simpara>Wodin (@wodin)</simpara>
+</listitem>
 </itemizedlist>
 </chapter>
 <chapter id="further-reading">
@@ -5274,19 +5880,22 @@ writing entire sections of the book, as well as making very valuable suggestions
 <simpara>Here is a list of more resources about ClojureScript.</simpara>
 <itemizedlist>
 <listitem>
-<simpara><ulink url="https://github.com/clojure/clojurescript/wiki">ClojureScript wiki</ulink> (the community-mantained wiki about ClojureScript).</simpara>
+<simpara><ulink url="https://github.com/clojure/clojurescript/wiki">ClojureScript wiki</ulink>: a community-mantained wiki about ClojureScript.</simpara>
 </listitem>
 <listitem>
-<simpara><ulink url="https://github.com/cljsinfo/cljs-api-docs/tree/catalog">Api Reference</ulink> (the community-maintained complete language api reference).</simpara>
+<simpara><ulink url="https://github.com/cljsinfo/cljs-api-docs/blob/catalog/INDEX.md">API Reference</ulink>: a community-maintained complete language api reference.</simpara>
 </listitem>
 <listitem>
-<simpara><ulink url="http://cljs.info/cheatsheet/">ClojureScript Cheatsheet</ulink> (a comprehensive reference of the ClojureScript language).</simpara>
+<simpara><ulink url="http://cljs.info/cheatsheet/">ClojureScript Cheatsheet</ulink>: a comprehensive reference of the ClojureScript language.</simpara>
 </listitem>
 <listitem>
-<simpara><ulink url="http://catcode.com/etudes-for-clojurescript/toc01.html">Études for ClojureScript</ulink> (a collection of exercises for learning ClojureScript).</simpara>
+<simpara><ulink url="http://catcode.com/etudes-for-clojurescript/toc01.html">Études for ClojureScript</ulink>: a collection of exercises for learning ClojureScript.</simpara>
 </listitem>
 <listitem>
-<simpara><ulink url="http://clojurescriptmadeeasy.com/">ClojureScript made easy</ulink> (a collection of short articles about solving problems in ClojureScript).</simpara>
+<simpara><ulink url="http://clojurescriptmadeeasy.com/">ClojureScript made easy</ulink>: a collection of short articles about solving common problems in ClojureScript.</simpara>
+</listitem>
+<listitem>
+<simpara><ulink url="http://google.github.io/closure-library/api/">The Google Closure Library API reference</ulink></simpara>
 </listitem>
 </itemizedlist>
 </chapter>

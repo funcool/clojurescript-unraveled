@@ -849,8 +849,8 @@ p { margin-bottom: 1.25rem; }
 <span id="email" class="email"><a href="mailto:niwi@niwi.nz">niwi@niwi.nz</a></span><br/>
 <span id="author2" class="author">Alejandro Gómez</span><br/>
 <span id="email2" class="email"><a href="mailto:alejandro@dialelo.com">alejandro@dialelo.com</a></span><br/>
-<span id="revnumber">version 3,</span>
-<span id="revdate">2015-08-02</span>
+<span id="revnumber">version 4,</span>
+<span id="revdate">2015-09-20</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -871,7 +871,7 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#abstractions-and-polymorphism">3.10. Abstractions and Polymorphism</a></li>
 <li><a href="#data-types">3.11. Data types</a></li>
 <li><a href="#host-interoperability">3.12. Host interoperability</a></li>
-<li><a href="#truthiness">3.13. Truthiness</a></li>
+<li><a href="#truthiness-section">3.13. Truthiness</a></li>
 <li><a href="#state-management">3.14. State management</a></li>
 </ul>
 </li>
@@ -889,9 +889,9 @@ p { margin-bottom: 1.25rem; }
 <ul class="sectlevel2">
 <li><a href="#transducers">5.1. Transducers</a></li>
 <li><a href="#transients">5.2. Transients</a></li>
-<li><a href="#metadata">5.3. Metadata</a></li>
-<li><a href="#macros">5.4. Macros</a></li>
-<li><a href="#core-protocols">5.5. Core protocols</a></li>
+<li><a href="#metadata-section">5.3. Metadata</a></li>
+<li><a href="#macros-section">5.4. Macros</a></li>
+<li><a href="#core-protocols-section">5.5. Core protocols</a></li>
 <li><a href="#the-reader">5.6. The Reader</a></li>
 </ul>
 </li>
@@ -1018,7 +1018,7 @@ that write programs) as simple as it can be.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>These ideas together hava a great influence in the way you design and implement software,
+<p>These ideas together have a great influence in the way you design and implement software,
 even if you are not using Clojure. Functional programming, decoupling of data (which is
 immutable) from the operations to transform it, explicit idioms for managing change
 over time and polymorphic constructs for programming to abstractions greatly simplify the
@@ -1179,13 +1179,14 @@ instead of evaluating to themselves, symbols are evaluated to something that the
 can be functions, variables, etc.</p>
 </div>
 <div class="paragraph">
-<p>Symbols are represented with something that does not start with a number:</p>
+<p>Symbols start with a non numeric character and can contain alphanumeric characters as well as *, +, !, -, _, ', and ? such as :</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-nv">sample-symbol</span>
 <span class="tok-nv">othersymbol</span>
-<span class="tok-nv">f1</span></code></pre>
+<span class="tok-nv">f1</span>
+<span class="tok-nv">my-special-swap!</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1618,7 +1619,7 @@ that uses the <code>fn</code> special form.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>%1</code>, <code>%2</code>, <code>%N</code> are simple markers for parameter positions that are implicitly declared when
+<p>The <code>%1</code>, <code>%2</code>&#8230;&#8203; <code>%N</code> are simple markers for parameter positions that are implicitly declared when
 the reader macro will be interpreted and converted to a <code>fn</code> expression.</p>
 </div>
 <div class="paragraph">
@@ -1719,7 +1720,7 @@ but looks cleaner when the condition (also called a predicate) is the same for a
 </div>
 <div class="paragraph">
 <p>The line <code>condp = (keyword code)</code> means that, in each of the following lines, <em>ClojureScript</em>
-will apply the <code>=</code> function to the given keyword and the <code>code</code> argument.</p>
+will apply the <code>=</code> function to the result of evaluating <code>(keyword code)</code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -4466,10 +4467,7 @@ with plain objects:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="truthiness"><a class="link" href="#truthiness">3.13. Truthiness</a></h3>
-<div class="paragraph">
-<p><a id="truthiness-section"></a></p>
-</div>
+<h3 id="truthiness-section"><a class="link" href="#truthiness-section">3.13. Truthiness</a></h3>
 <div class="paragraph">
 <p>This is the aspect where each language has its own semantics. The majority of languages
 consider empty collections, the integer 0, and other things like this to be false.
@@ -5163,7 +5161,7 @@ environments, each one has its own advantages or disadvantages. For example, you
 REPL in nodejs but in that environment you don&#8217;t have access to the DOM.</p>
 </div>
 <div class="paragraph">
-<p>In summary: everthing really depends on your needs or requirements.</p>
+<p>In summary: everything really depends on your needs or requirements.</p>
 </div>
 </div>
 <div class="sect3">
@@ -7039,10 +7037,7 @@ interface although it uses mutation internally:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="metadata"><a class="link" href="#metadata">5.3. Metadata</a></h3>
-<div class="paragraph">
-<p><a id="metadata-section"></a></p>
-</div>
+<h3 id="metadata-section"><a class="link" href="#metadata-section">5.3. Metadata</a></h3>
 <div class="paragraph">
 <p>ClojureScript symbols, vars and persistent collections support attaching metadata to them. Metadata is
 a map with information about the entity it&#8217;s attached to. The ClojureScript compiler uses metadata for
@@ -7340,28 +7335,750 @@ by applying a function or <code>reset-meta!</code> for replacing it with another
 </div>
 </div>
 <div class="sect2">
-<h3 id="macros"><a class="link" href="#macros">5.4. Macros</a></h3>
-<div class="paragraph">
-<p><a id="macros-section"></a></p>
-</div>
+<h3 id="macros-section"><a class="link" href="#macros-section">5.4. Macros</a></h3>
 <div class="paragraph">
 <p>TBD</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="core-protocols"><a class="link" href="#core-protocols">5.5. Core protocols</a></h3>
+<h3 id="core-protocols-section"><a class="link" href="#core-protocols-section">5.5. Core protocols</a></h3>
 <div class="paragraph">
-<p><a id="core-protocols"></a></p>
+<p>One of the greatest qualities of the core ClojureScript functions is that they are
+implemented around protocols. This makes them open to work on any type that we
+extend with such protocols, be it defined by us or a third party.</p>
+</div>
+<div class="sect3">
+<h4 id="functions"><a class="link" href="#functions">5.5.1. Functions</a></h4>
+<div class="paragraph">
+<p>As we&#8217;ve learned in previous chapters not only functions can be invoked. Vectors are
+functions of their indexes, maps are functions of their keys and sets are functions
+of their values.</p>
 </div>
 <div class="paragraph">
-<p>TBD</p>
+<p>We can extend types to be callable as functions implementing the <code>IFn</code> protocol. A
+collection that doesn&#8217;t support calling it as a function is the queue, let&#8217;s
+implement <code>IFn</code> for the <code>PersistentQueue</code> type so we&#8217;re able to call queues as functions
+of their indexes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">PersistentQueue</span>
+  <span class="tok-nv">IFn</span>
+  <span class="tok-p">(</span><span class="tok-nf">-invoke</span>
+    <span class="tok-p">([</span><span class="tok-nv">this</span> <span class="tok-nv">idx</span><span class="tok-p">]</span>
+      <span class="tok-p">(</span><span class="tok-nb">nth </span><span class="tok-nv">this</span> <span class="tok-nv">idx</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">q</span> <span class="tok-o">#</span><span class="tok-nv">queue</span><span class="tok-p">[</span><span class="tok-ss">:a</span> <span class="tok-ss">:b</span> <span class="tok-ss">:c</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; #queue [:a :b :c]</span>
+
+<span class="tok-p">(</span><span class="tok-nf">q</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; :a</span>
+
+<span class="tok-p">(</span><span class="tok-nf">q</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; :b</span>
+
+<span class="tok-p">(</span><span class="tok-nf">q</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; :c</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="printing"><a class="link" href="#printing">5.5.2. Printing</a></h4>
+<div class="paragraph">
+<p>For learning about some of the core protocols we&#8217;ll define a <code>Pair</code> type, which will hold a pair
+of values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">deftype </span><span class="tok-nv">Pair</span> <span class="tok-p">[</span><span class="tok-nv">fst</span> <span class="tok-nv">snd</span><span class="tok-p">])</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we want to customize how types are printed we can implement the <code>IPrintWithWriter</code>
+protocol. It defines a function called <code>-pr-writer</code> that receives the value to print, a writer
+object and options; this function uses the writer object&#8217;s <code>-write</code> function to write the desired
+<code>Pair</code> string representation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">IPrintWithWriter</span>
+  <span class="tok-p">(</span><span class="tok-nf">-pr-writer</span> <span class="tok-p">[</span><span class="tok-nv">p</span> <span class="tok-nv">writer</span> <span class="tok-nv">_</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nf">-write</span> <span class="tok-nv">writer</span> <span class="tok-p">(</span><span class="tok-nb">str </span><span class="tok-s">&quot;#&lt;Pair &quot;</span> <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">)</span> <span class="tok-s">&quot;,&quot;</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">)</span> <span class="tok-s">&quot;&gt;&quot;</span><span class="tok-p">))))</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sequences"><a class="link" href="#sequences">5.5.3. Sequences</a></h4>
+<div class="paragraph">
+<p>In a <a href="#the-sequence-abstraction">previous section</a> we learned about sequences, one of
+ClojureScript&#8217;s main abstractions. Remember the <code>first</code> and <code>rest</code> functions for working
+with sequences? They are defined in the <code>ISeq</code> protocol, so we can extend types for
+responding to such functions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">ISeq</span>
+  <span class="tok-p">(</span><span class="tok-nf">-first</span> <span class="tok-p">[</span><span class="tok-nv">p</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">))</span>
+
+  <span class="tok-p">(</span><span class="tok-nf">-rest</span> <span class="tok-p">[</span><span class="tok-nv">p</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nb">list </span><span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">first </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 1</span>
+
+<span class="tok-p">(</span><span class="tok-nb">rest </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; (2)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another handy function for working with sequences is <code>next</code>. Although <code>next</code> works as long
+as the given argument is a sequence, we can implement it explicitly with the <code>INext</code> protocol:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">next </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; (2)</span>
+
+<span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">INext</span>
+  <span class="tok-p">(</span><span class="tok-nf">-next</span> <span class="tok-p">[</span><span class="tok-nv">p</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nb">println </span><span class="tok-s">&quot;Our next&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">list </span><span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">next </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Our next</span>
+<span class="tok-c1">;; =&gt; (2)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, we can make our own types seqable implementing the <code>ISeqable</code> protocol. This means we
+can pass them to <code>seq</code> for getting a sequence back.</p>
+</div>
+<div class="paragraph">
+<p>ISeqable</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">ISeqable</span>
+  <span class="tok-p">(</span><span class="tok-nf">-seq</span> <span class="tok-p">[</span><span class="tok-nv">p</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nb">list </span><span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">seq </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; (1 2)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now our <code>Pair</code> type works with the plethora of ClojureScript functions for working with sequences:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">map inc </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; (2 3)</span>
+
+<span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">odd?</span> <span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; (1)</span>
+
+<span class="tok-p">(</span><span class="tok-nb">reduce + </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 3</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="collections-2"><a class="link" href="#collections-2">5.5.4. Collections</a></h4>
+<div class="paragraph">
+<p>Collection functions are also defined in terms of protocols. For this section examples we will make
+the native JavaScript string act like a collection.</p>
+</div>
+<div class="paragraph">
+<p>The most important function for working with collection is <code>conj</code>, defined in the <code>ICollection</code> protocol.
+Strings are the only type which makes sense to <code>conj</code> to a string, so the <code>conj</code> operation for strings
+will be simply a concatenation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">string</span>
+  <span class="tok-nv">ICollection</span>
+  <span class="tok-p">(</span><span class="tok-nf">-conj</span> <span class="tok-p">[</span><span class="tok-nv">this</span> <span class="tok-nv">o</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nb">str </span><span class="tok-nv">this</span> <span class="tok-nv">o</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;foo&quot;</span> <span class="tok-s">&quot;bar&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;foobar&quot;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;foo&quot;</span> <span class="tok-s">&quot;bar&quot;</span> <span class="tok-s">&quot;baz&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;foobarbaz&quot;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another handy function for working with collections is <code>empty</code>, which is part of the <code>IEmptyableCollection</code>
+protocol. Let&#8217;s implement it for the string type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">string</span>
+  <span class="tok-nv">IEmptyableCollection</span>
+  <span class="tok-p">(</span><span class="tok-nf">-empty</span> <span class="tok-p">[</span><span class="tok-nv">_</span><span class="tok-p">]</span>
+    <span class="tok-s">&quot;&quot;</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">empty</span> <span class="tok-s">&quot;foo&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;&quot;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We used the <code>string</code> special symbol for extending the native JavaScript string. If you want to learn more about
+it check the <a href="#extending-javascript-types">section about extending JavaScript types</a>.</p>
+</div>
+<div class="sect4">
+<h5 id="collection-traits"><a class="link" href="#collection-traits">Collection traits</a></h5>
+<div class="paragraph">
+<p>There are some qualities that not all collections have, such as being countable in constant time or being
+reversible. These traits are splitted into different protocols since not all of them make sense for every
+collection. For illustrating these protocols we&#8217;ll use the <code>Pair</code> type we defined earlier.</p>
+</div>
+<div class="paragraph">
+<p>For collections that can be counted in constant time using the <code>count</code> function we can implement the <code>ICounted</code>
+protocol. It should be easy to implement it for the <code>Pair</code> type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">ICounted</span>
+  <span class="tok-p">(</span><span class="tok-nf">-count</span> <span class="tok-p">[</span><span class="tok-nv">_</span><span class="tok-p">]</span>
+    <span class="tok-mi">2</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">count </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 2</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Some collection types such as vectors and lists can be indexed by a number using the <code>nth</code> function. If our
+types are indexed we can implement the <code>IIndexed</code> protocol:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">IIndexed</span>
+  <span class="tok-p">(</span><span class="tok-nf">-nth</span>
+    <span class="tok-p">([</span><span class="tok-nv">p</span> <span class="tok-nv">idx</span><span class="tok-p">]</span>
+      <span class="tok-p">(</span><span class="tok-nf">case</span> <span class="tok-nv">idx</span>
+        <span class="tok-mi">0</span> <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">)</span>
+        <span class="tok-mi">1</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">)</span>
+        <span class="tok-p">(</span><span class="tok-nf">throw</span> <span class="tok-p">(</span><span class="tok-nf">js/Error.</span> <span class="tok-s">&quot;Index out of bounds&quot;</span><span class="tok-p">))))</span>
+    <span class="tok-p">([</span><span class="tok-nv">p</span> <span class="tok-nv">idx</span> <span class="tok-nv">default</span><span class="tok-p">]</span>
+      <span class="tok-p">(</span><span class="tok-nf">case</span> <span class="tok-nv">idx</span>
+        <span class="tok-mi">0</span> <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">)</span>
+        <span class="tok-mi">1</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">)</span>
+        <span class="tok-nv">default</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">nth </span><span class="tok-nv">p</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 1</span>
+
+<span class="tok-p">(</span><span class="tok-nb">nth </span><span class="tok-nv">p</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 2</span>
+
+<span class="tok-p">(</span><span class="tok-nb">nth </span><span class="tok-nv">p</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Error: Index out of bounds</span>
+
+<span class="tok-p">(</span><span class="tok-nb">nth </span><span class="tok-nv">p</span> <span class="tok-mi">2</span> <span class="tok-ss">:default</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; :default</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="associative"><a class="link" href="#associative">5.5.5. Associative</a></h4>
+<div class="paragraph">
+<p>There are many data structures that are associative: they map keys to values. We&#8217;ve encountered a few of them
+already and we know many functions for working with them like <code>get</code>, <code>assoc</code> or <code>dissoc</code>. Let&#8217;s explore the
+protocols that these functions build upon.</p>
+</div>
+<div class="paragraph">
+<p>First of all, we need a way to look up keys on an associative data structure. The <code>ILookup</code> protocol defines
+a function for doing so, let&#8217;s add the ability to look up keys in our <code>Pair</code> type since is an associative data
+structure that maps the indices 0 and 1 to values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">ILookup</span>
+  <span class="tok-p">(</span><span class="tok-nf">-lookup</span>
+    <span class="tok-p">([</span><span class="tok-nv">p</span> <span class="tok-nv">k</span><span class="tok-p">]</span>
+      <span class="tok-p">(</span><span class="tok-nf">-lookup</span> <span class="tok-nv">p</span> <span class="tok-nv">k</span> <span class="tok-nv">nil</span><span class="tok-p">))</span>
+    <span class="tok-p">([</span><span class="tok-nv">p</span> <span class="tok-nv">k</span> <span class="tok-nv">default</span><span class="tok-p">]</span>
+      <span class="tok-p">(</span><span class="tok-nf">case</span> <span class="tok-nv">k</span>
+        <span class="tok-mi">0</span> <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">)</span>
+        <span class="tok-mi">1</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">)</span>
+        <span class="tok-nv">default</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">get </span><span class="tok-nv">p</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 1</span>
+
+<span class="tok-p">(</span><span class="tok-nb">get </span><span class="tok-nv">p</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 2</span>
+
+<span class="tok-p">(</span><span class="tok-nb">get </span><span class="tok-nv">p</span> <span class="tok-ss">:foo</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
+<span class="tok-p">(</span><span class="tok-nb">get </span><span class="tok-nv">p</span> <span class="tok-mi">2</span> <span class="tok-ss">:default</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; :default</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For using <code>assoc</code> on a data structure it must implement the <code>IAssociative</code> protocol. For our <code>Pair</code> type only
+0 and 1 will be allowed as keys for associating values. <code>IAssociative</code> also has a function for asking whether
+a key is present or not.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">IAssociative</span>
+  <span class="tok-p">(</span><span class="tok-nf">-contains-key?</span> <span class="tok-p">[</span><span class="tok-nv">_</span> <span class="tok-nv">k</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nb">contains? </span><span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">0</span> <span class="tok-mi">1</span><span class="tok-p">}</span> <span class="tok-nv">k</span><span class="tok-p">))</span>
+
+  <span class="tok-p">(</span><span class="tok-nf">-assoc</span> <span class="tok-p">[</span><span class="tok-nv">p</span> <span class="tok-nv">k</span> <span class="tok-nv">v</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nf">case</span> <span class="tok-nv">k</span>
+      <span class="tok-mi">0</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-nv">v</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">))</span>
+      <span class="tok-mi">1</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">)</span> <span class="tok-nv">v</span><span class="tok-p">)</span>
+      <span class="tok-p">(</span><span class="tok-nf">throw</span> <span class="tok-p">(</span><span class="tok-nf">js/Error.</span> <span class="tok-s">&quot;Can only assoc to 0 and 1 keys&quot;</span><span class="tok-p">)))))</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-nv">p</span> <span class="tok-mi">0</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 2,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-nv">p</span> <span class="tok-mi">1</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,1&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-nv">p</span> <span class="tok-mi">0</span> <span class="tok-mi">0</span> <span class="tok-mi">1</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 0,1&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-nv">p</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-c1">;; Error: Can only assoc to 0 and 1 keys</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The complementary function for <code>assoc</code> is <code>dissoc</code> and it&#8217;s part of the <code>IMap</code> protocol. It doesn&#8217;t make much
+sense for our <code>Pair</code> type but we&#8217;ll implement it nonetheless. Dissociating 0 or 1 will mean putting a <code>nil</code>
+in such position and invalid keys will be ignored.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">IMap</span>
+  <span class="tok-p">(</span><span class="tok-nf">-dissoc</span> <span class="tok-p">[</span><span class="tok-nv">p</span> <span class="tok-nv">k</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nf">case</span> <span class="tok-nv">k</span>
+      <span class="tok-mi">0</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-nv">nil</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">))</span>
+      <span class="tok-mi">1</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">)</span> <span class="tok-nv">nil</span><span class="tok-p">)</span>
+      <span class="tok-nv">p</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">dissoc </span><span class="tok-nv">p</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair ,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">dissoc </span><span class="tok-nv">p</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">dissoc </span><span class="tok-nv">p</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">dissoc </span><span class="tok-nv">p</span> <span class="tok-mi">0</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair ,&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Associative data structures are made of key and value pairs we can call entries. The <code>key</code> and <code>val</code> functions allow
+us to query the key and value of such entries and they are built upon the <code>IMapEntry</code> protocol. Let&#8217;s see a few examples
+of <code>key</code> and <code>val</code> and how map entries can be used to build up maps:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">key </span><span class="tok-p">[</span><span class="tok-ss">:foo</span> <span class="tok-ss">:bar</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; :foo</span>
+
+<span class="tok-p">(</span><span class="tok-nb">val </span><span class="tok-p">[</span><span class="tok-ss">:foo</span> <span class="tok-ss">:bar</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; :bar</span>
+
+<span class="tok-p">(</span><span class="tok-nb">into </span><span class="tok-p">{}</span> <span class="tok-p">[[</span><span class="tok-ss">:foo</span> <span class="tok-ss">:bar</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-ss">:baz</span> <span class="tok-ss">:xyz</span><span class="tok-p">]])</span>
+<span class="tok-c1">;; =&gt; {:foo :bar, :baz :xyz}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Pairs can be map entries too, we treat their first element as the key and the second as the value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">IMapEntry</span>
+  <span class="tok-p">(</span><span class="tok-nf">-key</span> <span class="tok-p">[</span><span class="tok-nv">p</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">))</span>
+
+  <span class="tok-p">(</span><span class="tok-nf">-val</span> <span class="tok-p">[</span><span class="tok-nv">p</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">key </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 1</span>
+
+<span class="tok-p">(</span><span class="tok-nb">val </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 2</span>
+
+<span class="tok-p">(</span><span class="tok-nb">into </span><span class="tok-p">{}</span> <span class="tok-p">[</span><span class="tok-nv">p</span><span class="tok-p">])</span>
+<span class="tok-c1">;; =&gt; {1 2}</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="comparison"><a class="link" href="#comparison">5.5.6. Comparison</a></h4>
+<div class="paragraph">
+<p>For checking whether two or more values are equivalent with <code>=</code> we must implement the <code>IEquiv</code>
+protocol. Let&#8217;s do it for our <code>Pair</code> type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span>  <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span><span class="tok-o">&#39;</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span><span class="tok-o">&#39;&#39;</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-nv">p</span> <span class="tok-nv">p</span><span class="tok-o">&#39;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; false</span>
+
+<span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-nv">p</span> <span class="tok-nv">p</span><span class="tok-o">&#39;</span> <span class="tok-nv">p</span><span class="tok-o">&#39;&#39;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; false</span>
+
+<span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">IEquiv</span>
+  <span class="tok-p">(</span><span class="tok-nf">-equiv</span> <span class="tok-p">[</span><span class="tok-nv">p</span> <span class="tok-nv">other</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nb">and </span><span class="tok-p">(</span><span class="tok-nb">instance? </span><span class="tok-nv">Pair</span> <span class="tok-nv">other</span><span class="tok-p">)</span>
+         <span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">other</span><span class="tok-p">))</span>
+         <span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">other</span><span class="tok-p">)))))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-nv">p</span> <span class="tok-nv">p</span><span class="tok-o">&#39;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-nv">p</span> <span class="tok-nv">p</span><span class="tok-o">&#39;</span> <span class="tok-nv">p</span><span class="tok-o">&#39;&#39;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also make types comparable. The function <code>compare</code> takes two values and returns a negative
+number if the first is less than the second, 0 if both are equal and 1 if the first is greater than
+the second. For making our types comparable we must implement the <code>IComparable</code> protocol.</p>
+</div>
+<div class="paragraph">
+<p>For pairs, comparison will mean checking if the two first values are equal. If they are, the result
+will be the comparison of the second values. If not, we will return the result of the first comparison:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">Pair</span>
+  <span class="tok-nv">IComparable</span>
+  <span class="tok-p">(</span><span class="tok-nf">-compare</span> <span class="tok-p">[</span><span class="tok-nv">p</span> <span class="tok-nv">other</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">fc</span> <span class="tok-p">(</span><span class="tok-nf">compare</span> <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">p</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">.-fst</span> <span class="tok-nv">other</span><span class="tok-p">))]</span>
+      <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-nv">fc</span><span class="tok-p">)</span>
+        <span class="tok-p">(</span><span class="tok-nf">compare</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">p</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">.-snd</span> <span class="tok-nv">other</span><span class="tok-p">))</span>
+        <span class="tok-nv">fc</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">compare</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">0</span> <span class="tok-mi">1</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">0</span> <span class="tok-mi">1</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; 0</span>
+
+<span class="tok-p">(</span><span class="tok-nf">compare</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">0</span> <span class="tok-mi">1</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">0</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; -1</span>
+
+<span class="tok-p">(</span><span class="tok-nf">compare</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">1</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">0</span> <span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; 1</span>
+
+<span class="tok-p">(</span><span class="tok-nb">sort </span><span class="tok-p">[(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">1</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">0</span> <span class="tok-mi">2</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">0</span> <span class="tok-mi">1</span><span class="tok-p">)])</span>
+<span class="tok-c1">;; =&gt; (#&lt;Pair 0,1&gt; #&lt;Pair 0,2&gt; #&lt;Pair 1,1&gt;)</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="metadata"><a class="link" href="#metadata">5.5.7. Metadata</a></h4>
+<div class="paragraph">
+<p>The <code>meta</code> and <code>with-meta</code> functions are also based upon two protocols: <code>IMeta</code> and <code>IWithMeta</code> respectively.
+We can make our own types capable of carrying metadata adding an extra field for holding the metadata and
+implementing both protocols.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s implement a version of <code>Pair</code> that can have metadata:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">deftype </span><span class="tok-nv">Pair</span> <span class="tok-p">[</span><span class="tok-nv">fst</span> <span class="tok-nv">snd</span> <span class="tok-nv">meta</span><span class="tok-p">]</span>
+  <span class="tok-nv">IMeta</span>
+  <span class="tok-p">(</span><span class="tok-nf">-meta</span> <span class="tok-p">[</span><span class="tok-nv">p</span><span class="tok-p">]</span> <span class="tok-nv">meta</span><span class="tok-p">)</span>
+
+  <span class="tok-nv">IWithMeta</span>
+  <span class="tok-p">(</span><span class="tok-nf">-with-meta</span> <span class="tok-p">[</span><span class="tok-nv">p</span> <span class="tok-nv">new-meta</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-nv">fst</span> <span class="tok-nv">snd</span> <span class="tok-nv">new-meta</span><span class="tok-p">)))</span>
+
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span> <span class="tok-p">(</span><span class="tok-nf">Pair.</span> <span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-p">{</span><span class="tok-ss">:foo</span> <span class="tok-ss">:bar</span><span class="tok-p">}))</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">meta </span><span class="tok-nv">p</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; {:foo :bar}</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">p</span><span class="tok-o">&#39;</span> <span class="tok-p">(</span><span class="tok-nb">with-meta </span><span class="tok-nv">p</span> <span class="tok-p">{</span><span class="tok-ss">:bar</span> <span class="tok-ss">:baz</span><span class="tok-p">}))</span>
+<span class="tok-c1">;; =&gt; #&lt;Pair 1,2&gt;</span>
+
+<span class="tok-p">(</span><span class="tok-nb">meta </span><span class="tok-nv">p</span><span class="tok-o">&#39;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; {:bar :baz}</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="interoperability-with-javascript"><a class="link" href="#interoperability-with-javascript">5.5.8. Interoperability with JavaScript</a></h4>
+<div class="paragraph">
+<p>Since ClojureScript is hosted in a JavaScript VM we often need to convert ClojureScript
+data structures to JavaScript ones and viceversa. We also may want to make native JS
+types participate in an abstraction represented by a protocol.</p>
+</div>
+<div class="sect4">
+<h5 id="extending-javascript-types"><a class="link" href="#extending-javascript-types">Extending JavaScript types</a></h5>
+<div class="paragraph">
+<p>When extending JavaScript objects instead of using JS globals like <code>js/String</code>, <code>js/Date</code>
+and such, special symbols are used. This is done for avoiding mutating global JS objects.</p>
+</div>
+<div class="paragraph">
+<p>The symbols for extending JS types are: <code>object</code>, <code>array</code>, <code>number</code>, <code>string</code>,
+<code>function</code>, <code>boolean</code> and <code>nil</code> is used for the null object. The dispatch of the
+protocol to native objects uses Google Closure&#8217;s
+<a href="https://google.github.io/closure-library/api/namespace_goog.html#typeOf">goog.typeOf</a>
+function. There&#8217;s a special <code>default</code> symbol that can be used for making a default
+implementation of a protocol for every type.</p>
+</div>
+<div class="paragraph">
+<p>For illustrating the extension of JS types we are going to define a <code>MaybeMutable</code> protocol
+that&#8217;ll have a <code>mutable?</code> predicate as its only function. Since in JavaScript mutability
+is the default we&#8217;ll extend the default JS type returning true from <code>mutable?</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defprotocol </span><span class="tok-nv">MaybeMutable</span>
+  <span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-p">[</span><span class="tok-nv">this</span><span class="tok-p">]</span> <span class="tok-s">&quot;Returns true if the value is mutable.&quot;</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">default</span>
+  <span class="tok-nv">MaybeMutable</span>
+  <span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-p">[</span><span class="tok-nv">_</span><span class="tok-p">]</span> <span class="tok-nv">true</span><span class="tok-p">))</span>
+
+<span class="tok-c1">;; object</span>
+<span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">{})</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-c1">;; array</span>
+<span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">[])</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-c1">;; string</span>
+<span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-s">&quot;&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-c1">;; function</span>
+<span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[</span><span class="tok-nv">x</span><span class="tok-p">]</span> <span class="tok-nv">x</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; true</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since fortunately not all JS object&#8217;s values are mutable we can refine the implementation of
+<code>MaybeMutable</code> for returning <code>false</code> for strings and functions.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-protocol</span> <span class="tok-nv">MaybeMutable</span>
+  <span class="tok-nv">string</span>
+  <span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-p">[</span><span class="tok-nv">_</span><span class="tok-p">]</span> <span class="tok-nv">false</span><span class="tok-p">)</span>
+
+  <span class="tok-nv">function</span>
+  <span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-p">[</span><span class="tok-nv">_</span><span class="tok-p">]</span> <span class="tok-nv">false</span><span class="tok-p">))</span>
+
+
+<span class="tok-c1">;; object</span>
+<span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">{})</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-c1">;; array</span>
+<span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-o">#</span><span class="tok-nv">js</span> <span class="tok-p">[])</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-c1">;; string</span>
+<span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-s">&quot;&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; false</span>
+
+<span class="tok-c1">;; function</span>
+<span class="tok-p">(</span><span class="tok-nf">mutable?</span> <span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[</span><span class="tok-nv">x</span><span class="tok-p">]</span> <span class="tok-nv">x</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; false</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is no special symbol for JavaScript dates so we have to extend <code>js/Date</code> directly. The same
+applies to the rest of the types found in the global <code>js</code> namespace.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="converting-data"><a class="link" href="#converting-data">Converting data</a></h5>
+<div class="paragraph">
+<p>For converting values from ClojureScript types to JavaScript ones and viceversa we use the <code>clj&#8594;js</code>
+and <code>js&#8594;clj</code> functions, which are based in the <code>IEncodeJS</code> and <code>IEncodeClojure</code> protocols respectively.</p>
+</div>
+<div class="paragraph">
+<p>For the examples we&#8217;ll use the Set type introduced in ES6. Note that is not available in every JS runtime.</p>
+</div>
+<div class="sect5">
+<h6 id="from-clojurescript-to-js"><a class="link" href="#from-clojurescript-to-js">From ClojureScript to JS</a></h6>
+<div class="paragraph">
+<p>First of all we&#8217;ll extend ClojureScript&#8217;s set type for being able to convert it to JS. By default sets
+are converted to JavaScript arrays:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">clj-&gt;js</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">})</span>
+<span class="tok-c1">;; =&gt; #js [1 3 2]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s fix it, <code>clj&#8594;js</code> is supposed to convert values recursively so we&#8217;ll make sure to convert all the
+set contents to JS and creating the set with the converted values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">PersistentHashSet</span>
+  <span class="tok-nv">IEncodeJS</span>
+  <span class="tok-p">(</span><span class="tok-nf">-clj-&gt;js</span> <span class="tok-p">[</span><span class="tok-nv">s</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nf">js/Set.</span> <span class="tok-p">(</span><span class="tok-nb">into-array </span><span class="tok-p">(</span><span class="tok-nb">map </span><span class="tok-nv">clj-&gt;js</span> <span class="tok-nv">s</span><span class="tok-p">)))))</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">s</span> <span class="tok-p">(</span><span class="tok-nf">clj-&gt;js</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">}))</span>
+<span class="tok-p">(</span><span class="tok-nf">es6-iterator-seq</span> <span class="tok-p">(</span><span class="tok-nf">.values</span> <span class="tok-nv">s</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; (1 3 2)</span>
+
+<span class="tok-p">(</span><span class="tok-nb">instance? </span><span class="tok-nv">js/Set</span> <span class="tok-nv">s</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">.has</span> <span class="tok-nv">s</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">.has</span> <span class="tok-nv">s</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">.has</span> <span class="tok-nv">s</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+<span class="tok-p">(</span><span class="tok-nf">.has</span> <span class="tok-nv">s</span> <span class="tok-mi">4</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; false</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>es6-iterator-seq</code> is an experimental function in ClojureScript core for obtaining a seq from an ES6
+iterable.</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="from-js-to-clojurescript"><a class="link" href="#from-js-to-clojurescript">From JS to ClojureScript</a></h6>
+<div class="paragraph">
+<p>Now it&#8217;s time to extend the JS set to convert to ClojureScript. As with <code>clj&#8594;js</code>, <code>js&#8594;clj</code> recursively converts
+the value of the data structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">js/Set</span>
+  <span class="tok-nv">IEncodeClojure</span>
+  <span class="tok-p">(</span><span class="tok-nf">-js-&gt;clj</span> <span class="tok-p">[</span><span class="tok-nv">s</span> <span class="tok-nv">options</span><span class="tok-p">]</span>
+    <span class="tok-p">(</span><span class="tok-nb">into </span><span class="tok-o">#</span><span class="tok-p">{}</span> <span class="tok-p">(</span><span class="tok-nb">map </span><span class="tok-nv">js-&gt;clj</span> <span class="tok-p">(</span><span class="tok-nf">es6-iterator-seq</span> <span class="tok-p">(</span><span class="tok-nf">.values</span> <span class="tok-nv">s</span><span class="tok-p">))))))</span>
+
+<span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">}</span>
+   <span class="tok-p">(</span><span class="tok-nf">js-&gt;clj</span> <span class="tok-p">(</span><span class="tok-nf">clj-&gt;js</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">})))</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nb">= </span><span class="tok-o">#</span><span class="tok-p">{[</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-mi">4</span> <span class="tok-mi">5</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-mi">6</span><span class="tok-p">]}</span>
+   <span class="tok-p">(</span><span class="tok-nf">js-&gt;clj</span> <span class="tok-p">(</span><span class="tok-nf">clj-&gt;js</span> <span class="tok-o">#</span><span class="tok-p">{[</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-mi">4</span> <span class="tok-mi">5</span><span class="tok-p">]</span> <span class="tok-p">[</span><span class="tok-mi">6</span><span class="tok-p">]})))</span>
+<span class="tok-c1">;; =&gt; true</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that there is no one-to-one mapping between ClojureScript and JavaScript values. For example, ClojureScript
+keywords are converted to JavaScript strings when passed to <code>clj&#8594;js</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="reductions"><a class="link" href="#reductions">5.5.9. Reductions</a></h4>
+<div class="paragraph">
+<p>IReduce</p>
+</div>
+<div class="paragraph">
+<p>IKVReduce</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="asynchrony"><a class="link" href="#asynchrony">5.5.10. Asynchrony</a></h4>
+<div class="paragraph">
+<p>IPending</p>
+</div>
+<div class="paragraph">
+<p>IDeref</p>
+</div>
+<div class="paragraph">
+<p>IDerefWithTimeout</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="state"><a class="link" href="#state">5.5.11. State</a></h4>
+<div class="paragraph">
+<p>IWatchable</p>
+</div>
+<div class="paragraph">
+<p>IReset</p>
+</div>
+<div class="paragraph">
+<p>ISwap</p>
+</div>
+<div class="paragraph">
+<p>IVolatile</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="mutation"><a class="link" href="#mutation">5.5.12. Mutation</a></h4>
+<div class="paragraph">
+<p>IEditableCollection</p>
+</div>
+<div class="paragraph">
+<p>ITransientCollection</p>
+</div>
+<div class="paragraph">
+<p>ITransientAssociative</p>
+</div>
+<div class="paragraph">
+<p>ITransientMap</p>
+</div>
+<div class="paragraph">
+<p>ITransientVector</p>
+</div>
+<div class="paragraph">
+<p>ITransientSet</p>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="the-reader"><a class="link" href="#the-reader">5.6. The Reader</a></h3>
-<div class="paragraph">
-<p><a id="the-reader"></a></p>
-</div>
+
 </div>
 </div>
 </div>
@@ -9045,6 +9762,9 @@ writing entire sections of the book, as well as making very valuable suggestions
 <li>
 <p>Shaun LeBron (@shaunlebron)</p>
 </li>
+<li>
+<p>Wodin (@wodin)</p>
+</li>
 </ul>
 </div>
 </div>
@@ -9072,6 +9792,9 @@ writing entire sections of the book, as well as making very valuable suggestions
 <li>
 <p><a href="http://clojurescriptmadeeasy.com/">ClojureScript made easy</a>: a collection of short articles about solving common problems in ClojureScript.</p>
 </li>
+<li>
+<p><a href="http://google.github.io/closure-library/api/">The Google Closure Library API reference</a></p>
+</li>
 </ul>
 </div>
 </div>
@@ -9079,8 +9802,8 @@ writing entire sections of the book, as well as making very valuable suggestions
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3<br/>
-Last updated 2015-08-09 15:48:43 CEST
+Version 4<br/>
+Last updated 2015-09-20 16:44:26 CEST
 </div>
 </div>
 </body>
