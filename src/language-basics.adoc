@@ -1043,6 +1043,7 @@ are the same object in memory as the `xs` list, thus `xs` and `ys` share structu
 
 
 ==== The sequence abstraction
+anchor:the-sequence-abstraction[]
 
 One of the central ClojureScript abstractions is the _sequence_ which can be thought of as a list and can be derived
 from any of the collection types. It is persistent and immutable like all collection types, and many of the

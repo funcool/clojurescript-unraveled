@@ -1199,12 +1199,701 @@ TBD
 === Core protocols
 anchor:core-protocols[]
 
+One of the greatest qualities of the core ClojureScript functions is that they are
+implemented around protocols. This makes them open to work on any type that we
+extend with such protocols, be it defined by us or a third party.
+
+
+==== Functions
+
+As we've learned in previous chapters not only functions can be invoked. Vectors are
+functions of their indexes, maps are functions of their keys and sets are functions
+of their values.
+
+We can extend types to be callable as functions implementing the `IFn` protocol. A
+collection that doesn't support calling it as a function is the queue, let's
+implement `IFn` for the `PersistentQueue` type so we're able to call queues as functions
+of their indexes:
+
+[source, clojure]
+----
+(extend-type PersistentQueue
+  IFn
+  (-invoke
+    ([this idx]
+      (nth this idx))))
+
+(def q #queue[0 1 2])
+;; => #queue [0 1 2]
+
+(q 0)
+;; => 0
+
+(q 1)
+;; => 1
+
+(q 2)
+;; => 2
+----
+
+
+==== Printing
+
+
 ////
-As clojurescript in difference with Clojure defines everything in terms of protocols and this
-subchapter intends to expain many of these protocols and how them can be used by the user.
+TODO: IWriter?
 ////
 
-TBD
+For learning about some of the core protocols we'll define a `Pair` type, which will hold a pair
+of values.
+
+[source, clojure]
+----
+(deftype Pair [fst snd])
+----
+
+If we want to customize how types are printed we can implement the `IPrintWithWriter`
+protocol. It defines a function called `-pr-writer` that receives the value to print, a writer
+object and options; this function uses the writer object's `-write` function to write the desired
+`Pair` string representation:
+
+
+[source, clojure]
+----
+(extend-type Pair
+  IPrintWithWriter
+  (-pr-writer [p writer _]
+    (-write writer (str "#<Pair " (.-fst p) "," (.-snd p) ">"))))
+----
+
+
+==== Sequences
+
+In a xref:the-sequence-abstraction[previous section] we learned about sequences, one of
+ClojureScript's main abstractions. Remember the `first` and `rest` functions for working
+with sequences? They are defined in the `ISeq` protocol, so we can extend types for
+responding to such functions:
+
+[source, clojure]
+----
+(extend-type Pair
+  ISeq
+  (-first [p]
+    (.-fst p))
+
+  (-rest [p]
+    (list (.-snd p))))
+
+(def p (Pair. 1 2))
+;; => #<Pair 1,2>
+
+(first p)
+;; => 1
+
+(rest p)
+;; => (2)
+----
+
+Another handy function for working with sequences is `next`. Although `next` works as long
+as the given argument is a sequence, we can implement it explicitly with the `INext` protocol:
+
+[source, clojure]
+----
+(def p (Pair. 1 2))
+
+(next p)
+;; => (2)
+
+(extend-type Pair
+  INext
+  (-next [p]
+    (println "Our next")
+    (list (.-snd p))))
+
+(next p)
+;; Our next
+;; => (2)
+----
+
+Finally, we can make our own types seqable implementing the `ISeqable` protocol. This means we
+can pass them to `seq` for getting a sequence back.
+
+ISeqable
+[source, clojure]
+----
+(def p (Pair. 1 2))
+
+(extend-type Pair
+  ISeqable
+  (-seq [p]
+    (list (.-fst p) (.-snd p))))
+
+(seq p)
+;; => (1 2)
+----
+
+Now our `Pair` type works with the plethora of ClojureScript functions for working with sequences:
+
+[source, clojure]
+----
+(def p (Pair. 1 2))
+;; => #<Pair 1,2>
+
+(map inc p)
+;; => (2 3)
+
+(filter odd? p)
+;; => (1)
+
+(reduce + p)
+;; => 3
+----
+
+
+==== Collections
+
+Collection functions are also defined in terms of protocols. For this section examples we will make
+the native JavaScript string act like a collection.
+
+The most important function for working with collection is `conj`, defined in the `ICollection` protocol.
+Strings are the only type which makes sense to `conj` to a string, so the `conj` operation for strings
+will be simply a concatenation:
+
+[source, clojure]
+----
+(extend-type string
+  ICollection
+  (-conj [this o]
+    (str this o)))
+
+(conj "foo" "bar")
+;; => "foobar"
+
+(conj "foo" "bar" "baz")
+;; => "foobarbaz"
+----
+
+Another handy function for working with collections is `empty`, which is part of the `IEmptyableCollection`
+protocol. Let's implement it for the string type:
+
+[source, clojure]
+----
+(extend-type string
+  IEmptyableCollection
+  (-empty [_]
+    ""))
+
+(empty "foo")
+;; => ""
+----
+
+We used the `string` special symbol for extending the native JavaScript string. If you want to learn more about
+it check the xref:extending-javascript-types[section about extending JavaScript types].
+
+
+===== Collection traits
+
+There are some qualities that not all collections have, such as being countable in constant time or being
+reversible. These traits are splitted into different protocols since not all of them make sense for every
+collection. For illustrating these protocols we'll use the `Pair` type we defined earlier.
+
+For collections that can be counted in constant time using the `count` function we can implement the `ICounted`
+protocol. It should be easy to implement it for the `Pair` type:
+
+[source, clojure]
+----
+(extend-type Pair
+  ICounted
+  (-count [_]
+    2))
+
+(def p (Pair. 1 2))
+
+(count p)
+;; => 2
+----
+
+Some collection types such as vectors and lists can be indexed by a number using the `nth` function. If our
+types are indexed we can implement the `IIndexed` protocol:
+
+[source, clojure]
+----
+(extend-type Pair
+  IIndexed
+  (-nth
+    ([p idx]
+      (case idx
+        0 (.-fst p)
+        1 (.-snd p)
+        (throw (js/Error. "Index out of bounds"))))
+    ([p idx default]
+      (case idx
+        0 (.-fst p)
+        1 (.-snd p)
+        default))))
+
+(nth p 0)
+;; => 1
+
+(nth p 1)
+;; => 2
+
+(nth p 2)
+;; Error: Index out of bounds
+
+(nth p 2 :default)
+;; => :default
+----
+
+////
+TODO: ISorted?
+////
+
+////
+TODO: IReversible?
+////
+
+
+==== Associative
+
+There are many data structures that are associative: they map keys to values. We've encountered a few of them
+already and we know many functions for working with them like `get`, `assoc` or `dissoc`. Let's explore the
+protocols that these functions build upon.
+
+First of all, we need a way to look up keys on an associative data structure. The `ILookup` protocol defines
+a function for doing so, let's add the ability to look up keys in our `Pair` type since is an associative data
+structure that maps the indices 0 and 1 to values.
+
+[source, clojure]
+----
+(extend-type Pair
+  ILookup
+  (-lookup
+    ([p k]
+      (-lookup p k nil))
+    ([p k default]
+      (case k
+        0 (.-fst p)
+        1 (.-snd p)
+        default))))
+
+(get p 0)
+;; => 1
+
+(get p 1)
+;; => 2
+
+(get p :foo)
+;; => nil
+
+(get p 2 :default)
+;; => :default
+----
+
+For using `assoc` on a data structure it must implement the `IAssociative` protocol. For our `Pair` type only
+0 and 1 will be allowed as keys for associating values. `IAssociative` also has a function for asking whether
+a key is present or not.
+
+[source, clojure]
+----
+(extend-type Pair
+  IAssociative
+  (-contains-key? [_ k]
+    (contains? #{0 1} k))
+
+  (-assoc [p k v]
+    (case k
+      0 (Pair. v (.-snd p))
+      1 (Pair. (.-fst p) v)
+      (throw (js/Error. "Can only assoc to 0 and 1 keys")))))
+
+(def p (Pair. 1 2))
+;; => #<Pair 1,2>
+
+(assoc p 0 2)
+;; => #<Pair 2,2>
+
+(assoc p 1 1)
+;; => #<Pair 1,1>
+
+(assoc p 0 0 1 1)
+;; => #<Pair 0,1>
+
+(assoc p 2 3)
+;; Error: Can only assoc to 0 and 1 keys
+----
+
+The complementary function for `assoc` is `dissoc` and it's part of the `IMap` protocol. It doesn't make much
+sense for our `Pair` type but we'll implement it nonetheless. Dissociating 0 or 1 will mean putting a `nil`
+in such position and invalid keys will be ignored.
+
+[source, clojure]
+----
+(extend-type Pair
+  IMap
+  (-dissoc [p k]
+    (case k
+      0 (Pair. nil (.-snd p))
+      1 (Pair. (.-fst p) nil)
+      p)))
+
+(def p (Pair. 1 2))
+;; => #<Pair 1,2>
+
+(dissoc p 0)
+;; => #<Pair ,2>
+
+(dissoc p 1)
+;; => #<Pair 1,>
+
+(dissoc p 2)
+;; => #<Pair 1,2>
+
+(dissoc p 0 1)
+;; => #<Pair ,>
+----
+
+Associative data structures are made of key and value pairs we can call entries. The `key` and `val` functions allow
+us to query the key and value of such entries and they are built upon the `IMapEntry` protocol. Let's see a few examples
+of `key` and `val` and how map entries can be used to build up maps:
+
+[source, clojure]
+----
+(key [:foo :bar])
+;; => :foo
+
+(val [:foo :bar])
+;; => :bar
+
+(into {} [[:foo :bar] [:baz :xyz]])
+;; => {:foo :bar, :baz :xyz}
+----
+
+Pairs can be map entries too, we treat their first element as the key and the second as the value:
+
+[source, clojure]
+----
+(extend-type Pair
+  IMapEntry
+  (-key [p]
+    (.-fst p))
+
+  (-val [p]
+    (.-snd p)))
+
+(def p (Pair. 1 2))
+;; => #<Pair 1,2>
+
+(key p)
+;; => 1
+
+(val p)
+;; => 2
+
+(into {} [p])
+;; => {1 2}
+----
+
+
+==== Comparison
+
+For checking whether two or more values are equivalent with `=` we must implement the `IEquiv`
+protocol. Let's do it for our `Pair` type:
+
+[source, clojure]
+----
+(def p  (Pair. 1 2))
+(def p' (Pair. 1 2))
+(def p'' (Pair. 1 2))
+
+(= p p')
+;; => false
+
+(= p p' p'')
+;; => false
+
+(extend-type Pair
+  IEquiv
+  (-equiv [p other]
+    (and (instance? Pair other)
+         (= (.-fst p) (.-fst other))
+         (= (.-snd p) (.-snd other)))))
+
+(= p p')
+;; => true
+
+(= p p' p'')
+;; => true
+----
+
+////
+TODO: IHash?
+////
+
+We can also make types comparable. The function `compare` takes two values and returns a negative
+number if the first is less than the second, 0 if both are equal and 1 if the first is greater than
+the second. For making our types comparable we must implement the `IComparable` protocol.
+
+For pairs, comparison will mean checking if the two first values are equal. If they are, the result
+will be the comparison of the second values. If not, we will return the result of the first comparison:
+
+[source, clojure]
+----
+(extend-type Pair
+  IComparable
+  (-compare [p other]
+    (let [fc (compare (.-fst p) (.-fst other))]
+      (if (zero? fc)
+        (compare (.-snd p) (.-snd other))
+        fc))))
+
+(compare (Pair. 0 1) (Pair. 0 1))
+;; => 0
+
+(compare (Pair. 0 1) (Pair. 0 2))
+;; => -1
+
+(compare (Pair. 1 1) (Pair. 0 2))
+;; => 1
+
+(sort [(Pair. 1 1) (Pair. 0 2) (Pair. 0 1)])
+;; => (#<Pair 0,1> #<Pair 0,2> #<Pair 1,1>)
+----
+==== Metadata
+
+The `meta` and `with-meta` functions are also based upon two protocols: `IMeta` and `IWithMeta` respectively.
+We can make our own types capable of carrying metadata adding an extra field for holding the metadata and
+implementing both protocols.
+
+Let's implement a version of `Pair` that can have metadata:
+
+[source, clojure]
+----
+(deftype Pair [fst snd meta]
+  IMeta
+  (-meta [p] meta)
+
+  IWithMeta
+  (-with-meta [p new-meta]
+    (Pair. fst snd new-meta)))
+
+
+(def p (Pair. 1 2 {:foo :bar}))
+;; => #<Pair 1,2>
+
+(meta p)
+;; => {:foo :bar}
+
+(def p' (with-meta p {:bar :baz}))
+;; => #<Pair 1,2>
+
+(meta p')
+;; => {:bar :baz}
+----
+
+
+==== Interoperability with JavaScript
+
+
+Since ClojureScript is hosted in a JavaScript VM we often need to convert ClojureScript
+data structures to JavaScript ones and viceversa. We also may want to make native JS
+types participate in an abstraction represented by a protocol.
+
+
+===== Extending JavaScript types
+anchor:extending-javascript-types[]
+
+When extending JavaScript objects instead of using JS globals like `js/String`, `js/Date`
+and such, special symbols are used. This is done for avoiding mutating global JS objects.
+
+The symbols for extending JS types are: `object`, `array`, `number`, `string`,
+`function`, `boolean` and `nil` is used for the null object. The dispatch of the
+protocol to native objects uses Google Closure's
+link:https://google.github.io/closure-library/api/namespace_goog.html#typeOf[goog.typeOf]
+function. There's a special `default` symbol that can be used for making a default
+implementation of a protocol for every type.
+
+For illustrating the extension of JS types we are going to define a `MaybeMutable` protocol
+that'll have a `mutable?` predicate as its only function. Since in JavaScript mutability
+is the default we'll extend the default JS type returning true from `mutable?`:
+
+[source, clojure]
+----
+(defprotocol MaybeMutable
+  (mutable? [this] "Returns true if the value is mutable."))
+
+(extend-type default
+  MaybeMutable
+  (mutable? [_] true))
+
+;; object
+(mutable? #js {})
+;; => true
+
+;; array
+(mutable? #js [])
+;; => true
+
+;; string
+(mutable? "")
+;; => true
+
+;; function
+(mutable? (fn [x] x))
+;; => true
+----
+
+Since fortunately not all JS object's values are mutable we can refine the implementation of
+`MaybeMutable` for returning `false` for strings and functions.
+
+[source, clojure]
+----
+(extend-protocol MaybeMutable
+  string
+  (mutable? [_] false)
+
+  function
+  (mutable? [_] false))
+
+
+;; object
+(mutable? #js {})
+;; => true
+
+;; array
+(mutable? #js [])
+;; => true
+
+;; string
+(mutable? "")
+;; => false
+
+;; function
+(mutable? (fn [x] x))
+;; => false
+----
+
+There is no special symbol for JavaScript dates so we have to extend `js/Date` directly. The same
+applies to the rest of the types found in the global `js` namespace.
+
+
+===== Converting data
+
+For converting values from ClojureScript types to JavaScript ones and viceversa we use the `clj->js`
+and `js->clj` functions, which are based in the `IEncodeJS` and `IEncodeClojure` protocols respectively.
+
+For the examples we'll use the Set type introduced in ES6. Note that is not available in every JS runtime.
+
+
+====== From ClojureScript to JS
+
+First of all we'll extend ClojureScript's set type for being able to convert it to JS. By default sets
+are converted to JavaScript arrays:
+
+[source, clojure]
+----
+(clj->js #{1 2 3})
+;; => #js [1 3 2]
+----
+
+Let's fix it, `clj->js` is supposed to convert values recursively so we'll make sure to convert all the
+set contents to JS and creating the set with the converted values:
+
+[source, clojure]
+----
+(extend-type PersistentHashSet
+  IEncodeJS
+  (-clj->js [s]
+    (js/Set. (into-array (map clj->js s)))))
+
+(def s (clj->js #{1 2 3}))
+(es6-iterator-seq (.values s))
+;; => (1 3 2)
+
+(instance? js/Set s)
+;; => true
+
+(.has s 1)
+;; => true
+(.has s 2)
+;; => true
+(.has s 3)
+;; => true
+(.has s 4)
+;; => false
+----
+
+The `es6-iterator-seq` is an experimental function in ClojureScript core for obtaining a seq from an ES6
+iterable.
+
+
+====== From JS to ClojureScript
+
+
+Now it's time to extend the JS set to convert to ClojureScript. As with `clj->js`, `js->clj` recursively converts
+the value of the data structure:
+
+[source, clojure]
+----
+(extend-type js/Set
+  IEncodeClojure
+  (-js->clj [s options]
+    (into #{} (map js->clj (es6-iterator-seq (.values s))))))
+
+(= #{1 2 3}
+   (js->clj (clj->js #{1 2 3})))
+;; => true
+
+(= #{[1 2 3] [4 5] [6]}
+   (js->clj (clj->js #{[1 2 3] [4 5] [6]})))
+;; => true
+----
+
+Note that there is no one-to-one mapping between ClojureScript and JavaScript values. For example, ClojureScript
+keywords are converted to JavaScript strings when passed to `clj->js`.
+
+
+==== Reductions
+
+IReduce
+
+IKVReduce
+
+
+==== Asynchrony
+
+IPending
+
+IDeref
+
+IDerefWithTimeout
+
+
+==== State
+
+IWatchable
+
+IReset
+
+ISwap
+
+IVolatile
+
+
+==== Mutation
+
+IEditableCollection
+
+ITransientCollection
+
+ITransientAssociative
+
+ITransientMap
+
+ITransientVector
+
+ITransientSet
+
 
 === The Reader
 anchor:the-reader[]
