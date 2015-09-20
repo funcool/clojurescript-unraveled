@@ -1041,9 +1041,8 @@ As you can see in the example, we used `cons` (construct) to prepend a value to 
 a new list `ys` with the element added. The `rest` of the `ys` list (all the values but the first)
 are the same object in memory as the `xs` list, thus `xs` and `ys` share structure.
 
-
+[[the-sequence-abstraction]]
 ==== The sequence abstraction
-anchor:the-sequence-abstraction[]
 
 One of the central ClojureScript abstractions is the _sequence_ which can be thought of as a list and can be derived
 from any of the collection types. It is persistent and immutable like all collection types, and many of the
@@ -3066,9 +3065,8 @@ b
 ;; => #js {:hour 16, :minute 22}
 ----
 
-
+[[truthiness-section]]
 === Truthiness
-anchor:truthiness-section[]
 
 This is the aspect where each language has its own semantics. The majority of languages
 consider empty collections, the integer 0, and other things like this to be false.

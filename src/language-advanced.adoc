@@ -906,9 +906,8 @@ interface although it uses mutation internally:
 ;; => [0 1 2 ... 98 99]
 ----
 
-
+[[metadata-section]]
 === Metadata
-anchor:metadata-section[]
 
 ClojureScript symbols, vars and persistent collections support attaching metadata to them. Metadata is
 a map with information about the entity it's attached to. The ClojureScript compiler uses metadata for
@@ -1184,9 +1183,8 @@ by applying a function or `reset-meta!` for replacing it with another map:
 ;; => {:foo 40}
 ----
 
-
+[[macros-section]]
 === Macros
-anchor:macros-section[]
 
 ////
 Intends to be a little explanation to macros (an extensive documentation is not a goal,
@@ -1196,8 +1194,8 @@ in respect to the clojure.
 
 TBD
 
+[[core-protocols-section]]
 === Core protocols
-anchor:core-protocols[]
 
 One of the greatest qualities of the core ClojureScript functions is that they are
 implemented around protocols. This makes them open to work on any type that we
@@ -1699,9 +1697,8 @@ Since ClojureScript is hosted in a JavaScript VM we often need to convert Clojur
 data structures to JavaScript ones and viceversa. We also may want to make native JS
 types participate in an abstraction represented by a protocol.
 
-
+[[extending-javascript-types]]
 ===== Extending JavaScript types
-anchor:extending-javascript-types[]
 
 When extending JavaScript objects instead of using JS globals like `js/String`, `js/Date`
 and such, special symbols are used. This is done for avoiding mutating global JS objects.
@@ -1894,6 +1891,5 @@ ITransientVector
 
 ITransientSet
 
-
+[[the-reader]]
 === The Reader
-anchor:the-reader[]
