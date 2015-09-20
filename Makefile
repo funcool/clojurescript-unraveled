@@ -28,7 +28,7 @@ rawpdf:
 	./asciidoctor-fopub/fopub -t docbook-xsl dist/clojurescript-unraveled.xml
 
 epub: docbook copy
-	dbtoepub -s xsl-styleshets/epub/docbook.xsl  dist/clojurescript-unraveled.xml -o dist/_clojurescript-unraveled.epub
+	./docbook-xsl/bin/dbtoepub -s xsl-styleshets/epub/docbook.xsl  dist/clojurescript-unraveled.xml -o dist/_clojurescript-unraveled.epub
 	ebook-convert dist/_clojurescript-unraveled.epub dist/clojurescript-unraveled.epub --chapter="/" --no-chapters-in-toc --cover=cover/cover.png --authors="Andrey Antukh & Alejandro Gomez"
 
 mobi: epub
