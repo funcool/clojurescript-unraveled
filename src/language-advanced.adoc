@@ -1223,17 +1223,17 @@ of their indexes:
     ([this idx]
       (nth this idx))))
 
-(def q #queue[0 1 2])
-;; => #queue [0 1 2]
+(def q #queue[:a :b :c])
+;; => #queue [:a :b :c]
 
 (q 0)
-;; => 0
+;; => :a
 
 (q 1)
-;; => 1
+;; => :b
 
 (q 2)
-;; => 2
+;; => :c
 ----
 
 
