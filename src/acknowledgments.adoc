@@ -19,3 +19,4 @@ _ClojureScript Unraveled_ book much better:
 * Jearvon Dharrie (@iamjarvo)
 * Shaun LeBron (@shaunlebron)
 * Wodin (@wodin)
+* Crocket (@crocket)
