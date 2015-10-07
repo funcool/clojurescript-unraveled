@@ -668,7 +668,7 @@ Processes are pieces of logic that run independently and use channels for commun
 and coordination. Puts and takes inside a process will stop the process until the
 operation completes. Stopping a process doesn't block the only thread we have in the
 environments where ClojureScript runs. Instead, it will be resumed at a later time when
-the operation is waiting for has been performed.
+the operation is waiting for being performed.
 
 Processes are launched using the `go` macro and puts and takes use the `<!` and `>!`
 placeholders. The `go` macro rewrites your code to use callbacks but inside `go`
@@ -705,7 +705,7 @@ Since there is a pending take the put operation succeeds and the value is delive
 the first process, then both processes terminate.
 
 Both `go` blocks run independently and, even though they are executed asynchronously, they
-look like they synchronous code. The above go blocks are fairly simple but being able to
+look like synchronous code. The above go blocks are fairly simple but being able to
 write concurrent processes that coordinate via channels is a very powerful tool for
 implementing complex asynchronous workflows. Channels also offer a great decoupling of
 producers and consumers.
