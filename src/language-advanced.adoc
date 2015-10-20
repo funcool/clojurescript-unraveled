@@ -1859,12 +1859,110 @@ IKVReduce
 
 ==== Asynchrony
 
-IPending
+There are some values that have the notion of asynchronous computation, the value they represent may not
+be realized yet. We can ask whether a value is realized using the `realized?` predicate.
 
-IDeref
+Let's ilustrate it with the `Delay` type, which takes a computation and executes it when the result is needed.
+When we deref a delay the computation is run and the delay is realized:
 
-IDerefWithTimeout
+[source, clojure]
+----
+(defn computation []
+  (println "running!")
+  42)
 
+(def d (Delay. computation nil))
+
+(realized? d)
+;; => false
+
+(deref d)
+;; running!
+;; => 42
+
+(realized? d)
+;; => true
+
+@d
+;; => 42
+----
+
+Both `realized?` and `deref` sit atop two protocols: `IPending` and `IDeref`.
+
+ES6 introduced a type that captures the notion of an asynchronous computation that might fail: the Promise.
+A Promise represents an eventual value and can be in one of three states:
+
+ - pending: there is still no value available for this computation.
+ - rejected: an error occurred and the promise contains a value that indicates the error.
+ - resolved: the computation succesfully executed and the promise contains a value with the result.
+
+
+Since the ES6 defined interface for promises doesn't support querying its state we'll use Bluebird
+library's Promise type for the examples. You can use Bluebird's promise type with the link:https://github.com/funcool/promesa[Promesa]
+library.
+
+First of all we'll add the ability to check if a promise is realized (either resolved or rejected) using the
+`realized?` predicate. We just have to implement the `IPending` protocol:
+
+[source, clojure]
+----
+(require '[promesa.core :as pro])
+
+(extend-type js/Promise
+  IPending
+  (-realized? [p]
+    (not (.isPending p))))
+
+
+(pro/promise (fn [resolve reject]))
+;; => #<Promise {:status :pending}>
+
+(realized? (pro/promise (fn [resolve reject])))
+;; => false
+
+(pro/resolved 42)
+;; => #<Promise {:status :resolved, :value 42}>
+
+(realized? (pro/resolved 42))
+;; => true
+
+(pro/rejected (js/Error. "OH NO"))
+;; => #<Promise {:status :rejected, :error #object[Error Error: OH NO]}>
+
+(realized? (pro/rejected (js/Error. "OH NO")))
+;; => true
+----
+
+Now we'll extend promises to be derefable. When a promise that is still pending is dereferenced we will return
+a special keyword: `:promise/pending`. If it's not we'll just return the value it contains, be it an error or a
+result:
+
+[source, clojure]
+----
+(require '[promesa.core :as pro])
+
+(extend-type js/Promise
+  IDeref
+  (-deref [p]
+    (cond
+      (.isPending p)
+      :promise/pending
+
+      (.isRejected p)
+      (.reason p)
+
+      :else
+      (.value p))))
+
+@(pro/promise (fn [resolve reject]))
+;; => :promise/pending
+
+@(pro/resolved 42)
+;; => 42
+
+@(pro/rejected (js/Error. "OH NO"))
+;; => #object[Error Error: OH NO]
+----
 
 ==== State
 
