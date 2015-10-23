@@ -2737,7 +2737,7 @@ This is how we can emulate an instance of the user type that plays well with the
       (str firstname " " lastname))))
 
 (def yen (user "Yennefer" "of Vengerberg"))
-(full-name user)
+(full-name yen)
 ;; => "Yennefer of Vengerberg"
 ----
 
