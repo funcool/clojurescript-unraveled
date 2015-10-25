@@ -1657,6 +1657,8 @@ will be the comparison of the second values. If not, we will return the result o
 (sort [(Pair. 1 1) (Pair. 0 2) (Pair. 0 1)])
 ;; => (#<Pair 0,1> #<Pair 0,2> #<Pair 1,1>)
 ----
+
+
 ==== Metadata
 
 The `meta` and `with-meta` functions are also based upon two protocols: `IMeta` and `IWithMeta` respectively.
@@ -1852,9 +1854,88 @@ keywords are converted to JavaScript strings when passed to `clj->js`.
 
 ==== Reductions
 
-IReduce
+The `reduce` function is based on the `IReduce` protocol, which enables us to make our own or third-party types
+reducible. Apart from using them with `reduce` they will automatically work with `transduce` too, which will allow
+us to make a reduction with a transducer.
 
-IKVReduce
+The JS array is already reducible in ClojureScript:
+
+[source, clojure]
+----
+(reduce + #js [1 2 3])
+;; => 6
+
+(transduce (map inc) conj [] [1 2 3])
+;; => [2 3 4]
+----
+
+However, the new ES6 Set type isn't so let's implement the `IReduce` protocol. We'll get an iterator using the
+Set's `values` method and convert it to a seq with the `es6-iterator-seq` function; after that we'll delegate to
+the original `reduce` function to reduce the obtained sequence.
+
+[source, clojure]
+----
+(extend-type js/Set
+  IReduce
+  (-reduce [s f]
+   (let [it (.values s)]
+     (reduce f (es6-iterator-seq it))))
+  (-reduce [s f init]
+   (let [it (.values s)]
+     (reduce f init (es6-iterator-seq it)))))
+
+(reduce + (js/Set. #js [1 2 3]))
+;; => 6
+
+(transduce (map inc) conj [] (js/Set. #js [1 2 3]))
+;; => [2 3 4]
+----
+
+Associative data structures can be reduced with the `reduce-kv` function, which is based in the `IKVReduce`
+protocol. The main difference between `reduce` and `reduce-kv` is that the latter uses a three-argument function
+as a reducer, receiving the accumulator, key and value for each item.
+
+Let's look at an example, we will reduce a map to a vector of pairs. Note that, since vectors associate indexes to
+values, they can also be reduced with `reduce-kv`.
+
+[source, clojure]
+----
+(reduce-kv (fn [acc k v]
+             (conj acc [k v]))
+           []
+           {:foo :bar
+            :baz :xyz})
+;; => [[:foo :bar] [:baz :xyz]]
+----
+
+We'll extend the new ES6 map type to support `reduce-kv`, we'll do this by getting a sequence of key-value pairs
+and calling the reducing function with accumulator, key and value as positional arguments:
+
+[source, clojure]
+----
+(extend-type js/Map
+  IKVReduce
+  (-kv-reduce [m f init]
+   (let [it (.entries m)]
+     (reduce (fn [acc [k v]]
+               (f acc k v))
+             init
+             (es6-iterator-seq it)))))
+
+(def m (js/Map.))
+(.set m "foo" "bar")
+(.set m "baz" "xyz")
+
+(reduce-kv (fn [acc k v]
+             (conj acc [k v]))
+           []
+           m)
+;; => [["foo" "bar"] ["baz" "xyz"]]
+----
+
+In both examples we ended up delegating to the `reduce` function, which is aware of reduced values and terminates
+when encountering one. Take into account that if you don't implement these protocols in terms of `reduce` you will
+have to check for reduced values for early termination.
 
 
 ==== Asynchrony
