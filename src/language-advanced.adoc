@@ -1900,7 +1900,7 @@ values, they can also be reduced with `reduce-kv`.
 ----
 
 We'll extend the new ES6 map type to support `reduce-kv`, we'll do this by getting a sequence of key-value pairs
-and calling the reducing function with accumulator, key and value as positional arguments:
+and calling the reducing function with the accumulator, key and value as positional arguments:
 
 [source, clojure]
 ----
@@ -1931,11 +1931,11 @@ have to check for reduced values for early termination.
 
 ==== Asynchrony
 
-There are some values that have the notion of asynchronous computation, the value they represent may not
+There are some types that have the notion of asynchronous computation, the value they represent may not
 be realized yet. We can ask whether a value is realized using the `realized?` predicate.
 
 Let's ilustrate it with the `Delay` type, which takes a computation and executes it when the result is needed.
-When we deref a delay the computation is run and the delay is realized:
+When we dereference a delay the computation is run and the delay is realized:
 
 [source, clojure]
 ----
@@ -2049,7 +2049,7 @@ nor metadata, but we will be able to:
 - `reset!` the value contained in the atom
 - `swap!` the atom with a function for transforming its state
 
-We know that `deref` is based on the `IDeref` protocol. `reset!` is based on the `IReset` protocol and `swap!` on
+`deref` is based on the `IDeref` protocol. `reset!` is based on the `IReset` protocol and `swap!` on
 `ISwap`. We'll start by defining a data type and a constructor for our atom implementation:
 
 [source, clojure]
@@ -2125,8 +2125,8 @@ we have to implement the `IReset` protocol and make sure we notify the watches e
       newval)))
 ----
 
-Now let's check that we got it right. We'll add a watch, change the atom's value and remove the watch making sure the
-watch gets called:
+Now let's check that we got it right. We'll add a watch, change the atom's value  making sure the watch gets called
+and then remove it:
 
 [source, clojure]
 ----
@@ -2382,7 +2382,7 @@ function, configuring a couple dynamic variables for obtaining the desired behav
 - `*print-readably*` is set to `true` for not converting non-alphanumeric characters to their escape sequences
 
 The `deserialize` function simply invokes the reader's function for reading a string into a ClojureScript data
-structure: `read-string`. It's memoized for not having to call the reader each time we deserialize string since
+structure: `read-string`. It's memoized for not having to call the reader each time we deserialize a string since
 we can assume that a repeated string always corresponds to the same data structure.
 
 Now we can start extending the browser's `Storage` type for acting like a transient data structure. Take into
