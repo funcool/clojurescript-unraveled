@@ -2047,13 +2047,252 @@ result:
 
 ==== State
 
-IWatchable
+The ClojureScript state constructs such as the Atom and the Volatile have different characteristics and semantics,
+and the operations on them like `add-watch`, `reset!` or `swap!` are backed by protocols.
 
-IReset
+===== Atom
 
-ISwap
+For ilustrating such protocols we will implement our own simplified version of an `Atom`. It won't support validators
+nor metadata, but we will be able to:
+- `deref` the atom for getting its current value
+- `reset!` the value contained in the atom
+- `swap!` the atom with a function for transforming its state
 
-IVolatile
+We know that `deref` is based on the `IDeref` protocol. `reset!` is based on the `IReset` protocol and `swap!` on
+`ISwap`. We'll start by defining a data type and a constructor for our atom implementation:
+
+[source, clojure]
+----
+(deftype MyAtom [^:mutable state ^:mutable watches]
+  IPrintWithWriter
+  (-pr-writer [p writer _]
+    (-write writer (str "#<MyAtom " (pr-str state) ">"))))
+
+(defn my-atom
+  ([]
+    (my-atom nil))
+  ([init]
+    (MyAtom. init {})))
+
+(my-atom)
+;; => #<MyAtom nil>
+
+(my-atom 42)
+;; => #<MyAtom 42>
+----
+
+Note that we've marked both the current state of the atom (`state`) and the map of watchers (`watches`) with the
+`{:mutable true}` metadata. We'll be modifying them and we're making this explicit with the annotations.
+
+Our `MyAtom` type is not very useful yet, we'll start by implementing the `IDeref` protocol so we can dereference
+its current value:
+
+[source, clojure]
+----
+(extend-type MyAtom
+  IDeref
+  (-deref [a]
+    (.-state a)))
+
+(def a (my-atom 42))
+
+@a
+;; => 42
+----
+
+Now that we can dereference it we'll implement the `IWatchable` protocol, which will let us add and remove watches
+to our custom atom. We'll store the watches in the `watches` map of `MyAtom`, associating keys to callbacks.
+
+[source, clojure]
+----
+(extend-type MyAtom
+  IWatchable
+  (-add-watch [a key f]
+    (let [ws (.-watches a)]
+      (set! (.-watches a) (assoc ws key f))))
+
+  (-remove-watch [a key]
+    (let [ws (.-watches a)]
+      (set! (.-watches a) (dissoc ws key))))
+
+  (-notify-watches [a oldval newval]
+    (doseq [[key f] (.-watches a)]
+      (f key a oldval newval))))
+----
+
+We can now add watches to our atom but is not very useful since we still can't change it. For incorporating change
+we have to implement the `IReset` protocol and make sure we notify the watches every time we reset the atom's value.
+
+[source, clojure]
+----
+(extend-type MyAtom
+  IReset
+  (-reset! [a newval]
+    (let [oldval (.-state a)]
+      (set! (.-state a) newval)
+      (-notify-watches a oldval newval)
+      newval)))
+----
+
+Now let's check that we got it right. We'll add a watch, change the atom's value and remove the watch making sure the
+watch gets called:
+
+[source, clojure]
+----
+(def a (my-atom 41))
+;; => #<MyAtom 41>
+
+(add-watch a :log (fn [key a oldval newval]
+                    (println {:key key
+                              :old oldval
+                              :new newval})))
+;; => #<MyAtom 41>
+
+(reset! a 42)
+;; {:key :log, :old 41, :new 42}
+;; => 42
+
+(remove-watch a :log)
+;; => #<MyAtom 42>
+
+(reset! a 43)
+;; => 43
+----
+
+Our atom is still missing the swapping functionality so we'll add that now, let's implement the `ISwap` protocol. There
+are four arities for the `-swap!` method of the protocol since the function passed to `swap!` may take one, two, three or
+more arguments:
+
+
+[source, clojure]
+----
+(extend-type MyAtom
+  ISwap
+  (-swap! [a f]
+    (let [oldval (.-state a)
+          newval (f oldval)]
+      (reset! a newval)))
+
+  (-swap! [a f x]
+    (let [oldval (.-state a)
+          newval (f oldval x)]
+      (reset! a newval)))
+
+  (-swap! [a f x y]
+    (let [oldval (.-state a)
+          newval (f oldval x y)]
+      (reset! a newval)))
+
+  (-swap! [a f x y more]
+    (let [oldval (.-state a)
+          newval (apply f oldval x y more)]
+      (reset! a newval))))
+----
+
+We now have a custom implementation of the atom abstraction, let's test it in the REPL and see if it behaves like we expect:
+
+[source, clojure]
+----
+(def a (my-atom 0))
+;; => #<MyAtom 0>
+
+(add-watch a :log (fn [key a oldval newval]
+                    (println {:key key
+                              :old oldval
+                              :new newval})))
+;; => #<MyAtom 0>
+
+(swap! a inc)
+;; {:key :log, :old 0, :new 1}
+;; => 1
+
+(swap! a + 2)
+;; {:key :log, :old 1, :new 3}
+;; => 3
+
+(swap! a - 2)
+;; {:key :log, :old 3, :new 1}
+;; => 1
+
+(swap! a + 2 3)
+;; {:key :log, :old 1, :new 6}
+;; => 6
+
+
+(swap! a + 4 5 6)
+;; {:key :log, :old 6, :new 21}
+;; => 21
+
+(swap! a * 2)
+;; {:key :log, :old 21, :new 42}
+;; => 42
+
+(remove-watch a :log)
+;; => #<MyAtom 42>
+----
+
+We did it! We implemented a version of ClojureScript Atom without support for metadata nor validators, extending it
+to support such features is left as an exercise for the reader. Note that you'll need to modify the `MyAtom` type for
+being able to store metadata and a validator.
+
+===== Volatile
+
+Volatiles are simpler than atoms in that they don't support watching for changes. All changes override the previous
+value much like the mutable variables present in almost every programming language. Volatiles are based on the
+`IVolatile` protocol that only defines a method for `vreset!`, since `vswap!` is implemented as a macro.
+
+Let's start by creating our own volatile type and constructor:
+
+[source, clojure]
+----
+(deftype MyVolatile [^:mutable state]
+  IPrintWithWriter
+  (-pr-writer [p writer _]
+    (-write writer (str "#<MyVolatile " (pr-str state) ">"))))
+
+(defn my-volatile
+  ([]
+    (my-volatile nil))
+  ([v]
+    (MyVolatile. v)))
+
+(my-volatile)
+;; => #<MyVolatile nil>
+
+(my-volatile 42)
+;; => #<MyVolatile 42>
+----
+
+Our `MyVolatile` still needs to support dereferencing and reseting it, let's implement `IDeref` and `IVolatile`, which
+will enable use to use `deref`, `vreset!` and `vswap!` in our custom volatile:
+
+[source, clojure]
+----
+(extend-type MyVolatile
+  IDeref
+  (-deref [v]
+    (.-state v))
+
+  IVolatile
+  (-vreset! [v newval]
+    (set! (.-state v) newval)
+    newval))
+
+(def v (my-volatile 0))
+;; => #<MyVolatile 42>
+
+(vreset! v 1)
+;; => 1
+
+@v
+;; => 1
+
+(vswap! v + 2 3)
+;; => 6
+
+@v
+;; => 6
+----
 
 
 ==== Mutation
