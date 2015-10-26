@@ -776,6 +776,7 @@ Transducible processes shouldn't expose the reducing function they generate when
 own step function since it may be stateful and unsafe to use from elsewhere.
 
 
+[[transients]]
 === Transients
 
 Although ClojureScript's immutable and persistent data structures are reasonably performant
@@ -2288,22 +2289,270 @@ will enable use to use `deref`, `vreset!` and `vswap!` in our custom volatile:
 
 ==== Mutation
 
-;; - ?
-IEditableCollection
+In the xref:transients[section about transients] we learned about the mutable counterparts of the immutable
+and persistent data structures that ClojureScript provides. These data structures are mutable, and the operations
+on them end with a bang (`!`) to make that explicit. As you may have guessed every operation on transients
+is based on protocols.
 
-- use example from hodgepodge: ITransientCollection/ITransientAssociative/ITransientMap
+===== From persistent to transient and viceversa
 
-ITransientCollection
+We've learned that we can transform a persistent data structure with the `transient` function, which is based
+on the `IEditableCollection` protocol; for transforming a transient data structure to a persistent one we
+use `persistent!`, based on `ITransientCollection`.
 
-ITransientAssociative
+Implementing immutable and persistent data structures and their transient counterparts is out of the scope of
+this book but we recommend taking a look at ClojureScript's data structure implementation if you are curious.
 
-ITransientMap
 
-;; - es6 array?
-ITransientVector
+===== Case study: the hodgepodge library
 
-;; - es6 set?
-ITransientSet
+link:https://github.com/funcool/hodgepodge[Hodgepodge] is a ClojureScript library for treating the browser's local
+and session storage as if it were a transient data structure. It allows you to insert, read and delete ClojureScript
+data structures without worrying about encoding and decoding them.
+
+Browser's storage is a simple key-value store that only supports strings. Since all of ClojureScript data structures
+can be dumped into a string and reified from a string using xref:the-reader[the reader] we can store arbitrary ClojureScript
+data in storage. We can also extend the reader for being able to read custom data types so we're able to put our
+types in storage and `hodgepodge` will handle the encoding and decoding for us.
+
+We'll start by wrapping the low-level storage methods with functions. The following operations are supported by the storage:
+- getting the value corresponding to a key
+- seting a key to a certain value
+- removing a value given its key
+- counting the number of entries
+- clearing the storage
+
+Let's wrap them in a more idiomatic API for ClojureScript:
+
+[source, clojure]
+----
+(defn contains-key?
+  [^js/Storage storage ^string key]
+  (let [ks (.keys js/Object storage)
+        idx (.indexOf ks key)]
+    (>= idx 0)))
+
+(defn get-item
+  ([^js/Storage storage ^string key]
+     (get-item storage key nil))
+  ([^js/Storage storage ^string key ^string default]
+     (if (contains-key? storage key)
+       (.getItem storage key)
+       default)))
+
+(defn set-item
+  [^js/Storage storage ^string key ^string val]
+  (.setItem storage key val)
+  storage)
+
+(defn remove-item
+  [^js/Storage storage ^string key]
+  (.removeItem storage key)
+  storage)
+
+(defn length
+  [^js/Storage storage]
+  (.-length storage))
+
+(defn clear!
+  [^js/Storage storage]
+  (.clear storage))
+----
+
+Nothing too interesting going on there, we just wrapped the storage methods in a nicer API. Now we will define a couple
+functions for serializing and deserializing ClojureScript data structures to strings:
+
+[source, clojure]
+----
+(require '[cljs.reader :as reader])
+
+(defn serialize [v]
+  (binding [*print-dup* true
+            *print-readably* true]
+    (pr-str v)))
+
+(def deserialize
+  (memoize reader/read-string))
+----
+
+The `serialize` function is used for converting a ClojureScript data structure into a string using the `pr-str`
+function, configuring a couple dynamic variables for obtaining the desired behaviour:
+
+- `*print-dup*` is set to `true` for a printed object to preserve its type when read later
+- `*print-readably*` is set to `true` for not converting non-alphanumeric characters to their escape sequences
+
+The `deserialize` function simply invokes the reader's function for reading a string into a ClojureScript data
+structure: `read-string`. It's memoized for not having to call the reader each time we deserialize string since
+we can assume that a repeated string always corresponds to the same data structure.
+
+Now we can start extending the browser's `Storage` type for acting like a transient data structure. Take into
+account that the `Storage` type is only available in browsers. We'll start by implementing the `ICounted` protocol
+for counting the items in the storage, we'll simply delegate to our previously defined `length` function:
+
+[source, clojure]
+----
+(extend-type js/Storage
+  ICounted
+  (-count [^js/Storage s]
+   (length s)))
+----
+
+We want to be able to use `assoc!` and `dissoc!` for inserting and deleting key-value pairs in the storage, as well
+as the ability to read from it. We'll implement the `ITransientAssociative` protocol for `assoc!`, `ITransientMap` for
+`dissoc!` and `ILookup` for reading storage keys.
+
+[source, clojure]
+----
+(extend-type js/Storage
+  ITransientAssociative
+  (-assoc! [^js/Storage s key val]
+    (set-item s (serialize key) (serialize val))
+    s)
+
+  ITransientMap
+  (-dissoc! [^js/Storage s key]
+    (remove-item s (serialize key))
+    s)
+
+  ILookup
+  (-lookup
+    ([^js/Storage s key]
+       (-lookup s key nil))
+    ([^js/Storage s key not-found]
+       (let [sk (serialize key)]
+         (if (contains-key? s sk)
+           (deserialize (get-item s sk))
+           not-found)))))
+----
+
+Now we're able to perform some operations on either session or local storage, let's give them a try:
+
+[source, clojure]
+----
+(def local-storage js/localStorage)
+(def session-storage js/sessionStorage)
+
+(assoc! local-storage :foo :bar)
+
+(:foo local-storage)
+;; => :bar
+
+(dissoc! local-storage :foo)
+
+(get local-storage :foo)
+;; => nil
+
+(get local-storage :foo :default)
+;; => :default
+----
+
+Finally, we want to be able to use `conj!` and `persistent!` on local storage so we must implement the `ITransientCollection`
+protocol, let's give it a go:
+
+[source, clojure]
+----
+(extend-type js/Storage
+  ITransientCollection
+  (-conj! [^js/Storage s ^IMapEntry kv]
+    (assoc! s (key kv) (val kv))
+    s)
+
+  (-persistent! [^js/Storage s]
+    (into {}
+          (for [i (range (count s))
+                :let [k (.key s i)
+                      v (get-item s k)]]
+            [(deserialize k) (deserialize v)]))))
+----
+
+`conj!` simply obtains the key and value from the map entry and delegates to `assoc!`. `persistent!` deserializes every key-value
+pair in the storage and returns an immutable snapshot of the storage as a ClojureScript map. Let's try it out:
+
+[source, clojure]
+----
+(clear! local-storage)
+
+(persistent! local-storage)
+;; => {}
+
+(conj! local-storage [:foo :bar])
+(conj! local-storage [:baz :xyz])
+
+(persistent! local-storage)
+;; => {:foo :bar, :baz :xyz}
+----
+
+
+===== Transient vectors and sets
+
+We've learned about most of the protocols for transient data structures but we're missing two: `ITransientVector` for
+using `assoc!` on transient vectors and `ITransientSet` for using `disj!` on transient sets.
+
+For illustrating the `ITransientVector` protocol we'll extend the JavaScript array type for making it an associative
+transient data structure:
+
+[source, clojure]
+----
+(extend-type array
+  ITransientAssociative
+  (-assoc! [arr key val]
+    (if (number? key)
+      (-assoc-n! arr key val)
+      (throw (js/Error. "Array's key for assoc! must be a number."))))
+
+  ITransientVector
+  (-assoc-n! [arr n val]
+    (.splice arr n 1 val)
+    arr))
+
+(def a #js [1 2 3])
+;; => #js [1 2 3]
+
+(assoc! a 0 42)
+;; => #js [42 2 3]
+
+(assoc! a 1 43)
+;; => #js [42 43 3]
+
+(assoc! a 2 44)
+;; => #js [42 43 44]
+----
+
+For illustrating the `ITransientSet` protocol we'll extend the ES6 Set type for making it a transient set, supporting
+the `conj!`, `disj!` and `persistent!` operations. Note that we've extended the Set type previously for being able to convert
+it to ClojureScript and we'll take advantage of that fact.
+
+[source, clojure]
+----
+(extend-type js/Set
+  ITransientCollection
+  (-conj! [s v]
+    (.add s v)
+    s)
+
+  (-persistent! [s]
+   (js->clj s))
+
+  ITransientSet
+  (-disjoin! [s v]
+    (.delete s v)
+    s))
+
+(def s (js/Set.))
+
+(conj! s 1)
+(conj! s 1)
+(conj! s 2)
+(conj! s 2)
+
+(persistent! s)
+;; => #{1 2}
+
+(disj! s 1)
+
+(persistent! s)
+;; => #{2}
+----
 
 [[the-reader]]
 === The Reader
