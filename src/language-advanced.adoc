@@ -1183,17 +1183,6 @@ by applying a function or `reset-meta!` for replacing it with another map:
 ;; => {:foo 40}
 ----
 
-[[macros-section]]
-=== Macros
-
-////
-Intends to be a little explanation to macros (an extensive documentation is not a goal,
-because it fits perfectly into its own book) and the peculiarities of the clojurescript
-in respect to the clojure.
-////
-
-TBD
-
 [[core-protocols-section]]
 === Core protocols
 
@@ -2299,7 +2288,10 @@ will enable use to use `deref`, `vreset!` and `vswap!` in our custom volatile:
 
 ==== Mutation
 
+;; - ?
 IEditableCollection
+
+- use example from hodgepodge: ITransientCollection/ITransientAssociative/ITransientMap
 
 ITransientCollection
 
@@ -2307,9 +2299,23 @@ ITransientAssociative
 
 ITransientMap
 
+;; - es6 array?
 ITransientVector
 
+;; - es6 set?
 ITransientSet
 
 [[the-reader]]
 === The Reader
+
+
+[[macros-section]]
+=== Macros
+
+////
+Intends to be a little explanation to macros (an extensive documentation is not a goal,
+because it fits perfectly into its own book) and the peculiarities of the clojurescript
+in respect to the clojure.
+////
+
+TBD
