@@ -1877,12 +1877,13 @@ the original `reduce` function to reduce the obtained sequence.
 ----
 (extend-type js/Set
   IReduce
-  (-reduce [s f]
-   (let [it (.values s)]
-     (reduce f (es6-iterator-seq it))))
-  (-reduce [s f init]
-   (let [it (.values s)]
-     (reduce f init (es6-iterator-seq it)))))
+  (-reduce
+   ([s f]
+     (let [it (.values s)]
+       (reduce f (es6-iterator-seq it))))
+   ([s f init]
+     (let [it (.values s)]
+       (reduce f init (es6-iterator-seq it))))))
 
 (reduce + (js/Set. #js [1 2 3]))
 ;; => 6
@@ -2168,25 +2169,26 @@ more arguments:
 ----
 (extend-type MyAtom
   ISwap
-  (-swap! [a f]
+  (-swap!
+   ([a f]
     (let [oldval (.-state a)
           newval (f oldval)]
       (reset! a newval)))
 
-  (-swap! [a f x]
-    (let [oldval (.-state a)
-          newval (f oldval x)]
-      (reset! a newval)))
+   ([a f x]
+     (let [oldval (.-state a)
+           newval (f oldval x)]
+       (reset! a newval)))
 
-  (-swap! [a f x y]
-    (let [oldval (.-state a)
-          newval (f oldval x y)]
-      (reset! a newval)))
+   ([a f x y]
+     (let [oldval (.-state a)
+           newval (f oldval x y)]
+       (reset! a newval)))
 
-  (-swap! [a f x y more]
-    (let [oldval (.-state a)
-          newval (apply f oldval x y more)]
-      (reset! a newval))))
+   ([a f x y more]
+     (let [oldval (.-state a)
+           newval (apply f oldval x y more)]
+       (reset! a newval)))))
 ----
 
 We now have a custom implementation of the atom abstraction, let's test it in the REPL and see if it behaves like we expect:
