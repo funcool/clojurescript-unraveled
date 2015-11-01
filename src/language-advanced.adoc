@@ -566,11 +566,29 @@ We encourage you to explore ClojureScript core to see what other transducers are
 
 ==== Defining our own transducers
 
-////
-TODO: rewrite section
-- Arity 0, 1 and 2 and their invariants
-- `completing` for making reducing functions transducible
-////
+There a few things to consider before writing our own transducers so in this section we will learn how to properly
+implement one. First of all, we've learned that the general structure of a transducer is the following:
+
+[source, clojure]
+----
+(fn [xf]
+  (fn
+    ([]          ;; init
+      ...)
+    ([r]         ;; completion
+      ...)
+    ([acc input] ;; step
+      ...)))
+----
+
+Usually only the code represented with `...` changes between transducers, these are the invariants that must
+be preserved in each arity of the resulting function:
+
+ * arity 0 (init): must call the arity 0 of the nested transform `xf`
+ * arity 1 (completion): used to produce a final value and potentially flush state, must call the arity 1 of the nested
+ transform `xf` *exactly once*
+ * arity 2 (step): the resulting reducing function which will call the arity 2 of the nested transform `xf` zero, one or
+more times
 
 
 ==== Transducible processes
