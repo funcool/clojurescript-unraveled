@@ -5,7 +5,7 @@
 <book lang="en">
 <bookinfo>
 <title>ClojureScript Unraveled</title>
-<date>2015-09-20</date>
+<date>2015-11-06</date>
 <authorgroup>
 <author>
 <firstname>Andrey</firstname>
@@ -20,8 +20,8 @@
 </authorgroup>
 <revhistory>
 <revision>
-<revnumber>4</revnumber>
-<date>2015-09-20</date>
+<revnumber>5</revnumber>
+<date>2015-11-06</date>
 <authorinitials>AA</authorinitials>
 </revision>
 </revhistory>
@@ -696,8 +696,8 @@ with one rather than zero, otherwise all the numbers would be multiplied by zero
 <section id="literal-for-literal-sequence-comprehensions">
 <title><literal>for</literal> sequence comprehensions</title>
 <simpara>In ClojureScript, the <literal>for</literal> construct isn&#8217;t used for iteration but for generating sequences, an operation
-also known as "sequence comprehension". It offers a small domain specific language for declaratively
-building sequences.</simpara>
+also known as "sequence comprehension". In this section we&#8217;ll learn how it works and use it to
+declaratively build sequences.</simpara>
 <simpara><literal>for</literal> takes a vector of bindings and an expression and generates a sequence of the result of evaluating the
 expression. Let&#8217;s take a look at an example:</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(for [x [1 2 3]]
@@ -774,12 +774,7 @@ discards the resulting values, and returns <literal>nil</literal>.</simpara>
 that meant.</simpara>
 <simpara>An immutable data structure, as its name suggests, is a data structure that cannot be changed. In-place
 updates are not allowed in immutable data structures.</simpara>
-<simpara>A persistent data structure is a data structure that returns a new version of itself when transforming
-it, leaving the original unmodified. ClojureScript makes this memory and time efficient using an
-implementation technique called <emphasis>structural sharing</emphasis>, where most of the data shared between two versions
-of a value is not duplicated and transformations of a value are implemented by copying the minimal amount of data
-required.</simpara>
-<simpara>Let&#8217;s see an example of appending values to a vector using the <literal>conj</literal> (conjoin) operation:</simpara>
+<simpara>Let&#8217;s illustrate that with an example: appending values to a vector using the <literal>conj</literal> (conjoin) operation.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(let [xs [1 2 3]
       ys (conj xs 4)]
   (println "xs:" xs)
@@ -790,6 +785,13 @@ required.</simpara>
 ;; =&gt; nil</programlisting>
 <simpara>As you can see, we derived a new version of the <literal>xs</literal> vector appending an element to it and got a new
 vector <literal>ys</literal> with the element added. However, the <literal>xs</literal> vector remained unchanged because it is immutable.</simpara>
+<simpara>A persistent data structure is a data structure that returns a new version of itself when transforming
+it, leaving the original unmodified. ClojureScript makes this memory and time efficient using an
+implementation technique called <emphasis>structural sharing</emphasis>, where most of the data shared between two versions
+of a value is not duplicated and transformations of a value are implemented by copying the minimal amount of data
+required.</simpara>
+<simpara>If you want to see an example of how structural sharing works, read on. If you&#8217;re not interested in more details
+you can skip over to the <link linkend="the-sequence-abstraction">next section</link>.</simpara>
 <simpara>For illustrating the structural sharing of ClojureScript data structures, let&#8217;s compare whether some parts
 of the old and new versions of a data structure are actually the same object with the <literal>identical?</literal> predicate.
 We&#8217;ll use the list data type for this purpose:</simpara>
@@ -845,7 +847,8 @@ will evaluate as false (<link linkend="truthiness-section">see the section on <e
 ;; =&gt; (2 3)</programlisting>
 <section id="nil-punning">
 <title>nil-punning</title>
-<simpara>Since <literal>seq</literal> returns <literal>nil</literal> when the collection is empty, and <literal>nil</literal> evaluates to false in boolean context, you can check to see if a collection is empty by using the <literal>seq</literal> function. The technical term for this is nil-punning.</simpara>
+<simpara>Since <literal>seq</literal> returns <literal>nil</literal> when the collection is empty, and <literal>nil</literal> evaluates to false in boolean context, you can
+check to see if a collection is empty by using the <literal>seq</literal> function. The technical term for this is nil-punning.</simpara>
 <programlisting language="clojure" linenumbering="unnumbered">(defn print-coll
   [coll]
   (when (seq coll)
@@ -1941,7 +1944,7 @@ does not have accessible fields.</simpara>
       (str firstname " " lastname))))
 
 (def yen (user "Yennefer" "of Vengerberg"))
-(full-name user)
+(full-name yen)
 ;; =&gt; "Yennefer of Vengerberg"</programlisting>
 </section>
 <section id="specify">
@@ -3573,24 +3576,31 @@ available in ClojureScript. Here is an incomplete list of some other intersting 
 </section>
 <section id="defining-our-own-transducers">
 <title>Defining our own transducers</title>
-<simpara>Since most transducers are only interesting in the reducing step implementation and often delegate to the
-reducing function in arities 0 and 1, there is a little helper called <literal>completing</literal> that fills those arities
-for you:</simpara>
-<programlisting language="clojure" linenumbering="unnumbered">;; if a completing function is not defined, identity will be used
-(def my-transducer
-  (completing
-    (fn [acc input]
-     ;; ...
-     )))
-
-(def my-transducer-with-completion
-  (completing
-    (fn [acc input]
-     ;; ...
-     )
-    (fn [result]
-     ;; ...
-    )))</programlisting>
+<simpara>There a few things to consider before writing our own transducers so in this section we will learn how to properly
+implement one. First of all, we&#8217;ve learned that the general structure of a transducer is the following:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(fn [xf]
+  (fn
+    ([]          ;; init
+      ...)
+    ([r]         ;; completion
+      ...)
+    ([acc input] ;; step
+      ...)))</programlisting>
+<simpara>Usually only the code represented with <literal>&#8230;&#8203;</literal> changes between transducers, these are the invariants that must
+be preserved in each arity of the resulting function:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>arity 0 (init): must call the arity 0 of the nested transform <literal>xf</literal></simpara>
+</listitem>
+<listitem>
+<simpara>arity 1 (completion): used to produce a final value and potentially flush state, must call the arity 1 of the nested
+transform <literal>xf</literal> <emphasis role="strong">exactly once</emphasis></simpara>
+</listitem>
+<listitem>
+<simpara>arity 2 (step): the resulting reducing function which will call the arity 2 of the nested transform <literal>xf</literal> zero, one or
+more times</simpara>
+</listitem>
+</itemizedlist>
 </section>
 <section id="transducible-processes">
 <title>Transducible processes</title>
@@ -4044,10 +4054,6 @@ by applying a function or <literal>reset-meta!</literal> for replacing it with a
 (meta map-with-metadata)
 ;; =&gt; {:foo 40}</programlisting>
 </section>
-</section>
-<section id="macros-section">
-<title>Macros</title>
-<simpara>TBD</simpara>
 </section>
 <section id="core-protocols-section">
 <title>Core protocols</title>
@@ -4551,35 +4557,593 @@ keywords are converted to JavaScript strings when passed to <literal>clj&#8594;j
 </section>
 <section id="reductions">
 <title>Reductions</title>
-<simpara>IReduce</simpara>
-<simpara>IKVReduce</simpara>
+<simpara>The <literal>reduce</literal> function is based on the <literal>IReduce</literal> protocol, which enables us to make our own or third-party types
+reducible. Apart from using them with <literal>reduce</literal> they will automatically work with <literal>transduce</literal> too, which will allow
+us to make a reduction with a transducer.</simpara>
+<simpara>The JS array is already reducible in ClojureScript:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(reduce + #js [1 2 3])
+;; =&gt; 6
+
+(transduce (map inc) conj [] [1 2 3])
+;; =&gt; [2 3 4]</programlisting>
+<simpara>However, the new ES6 Set type isn&#8217;t so let&#8217;s implement the <literal>IReduce</literal> protocol. We&#8217;ll get an iterator using the
+Set&#8217;s <literal>values</literal> method and convert it to a seq with the <literal>es6-iterator-seq</literal> function; after that we&#8217;ll delegate to
+the original <literal>reduce</literal> function to reduce the obtained sequence.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type js/Set
+  IReduce
+  (-reduce
+   ([s f]
+     (let [it (.values s)]
+       (reduce f (es6-iterator-seq it))))
+   ([s f init]
+     (let [it (.values s)]
+       (reduce f init (es6-iterator-seq it))))))
+
+(reduce + (js/Set. #js [1 2 3]))
+;; =&gt; 6
+
+(transduce (map inc) conj [] (js/Set. #js [1 2 3]))
+;; =&gt; [2 3 4]</programlisting>
+<simpara>Associative data structures can be reduced with the <literal>reduce-kv</literal> function, which is based in the <literal>IKVReduce</literal>
+protocol. The main difference between <literal>reduce</literal> and <literal>reduce-kv</literal> is that the latter uses a three-argument function
+as a reducer, receiving the accumulator, key and value for each item.</simpara>
+<simpara>Let&#8217;s look at an example, we will reduce a map to a vector of pairs. Note that, since vectors associate indexes to
+values, they can also be reduced with <literal>reduce-kv</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(reduce-kv (fn [acc k v]
+             (conj acc [k v]))
+           []
+           {:foo :bar
+            :baz :xyz})
+;; =&gt; [[:foo :bar] [:baz :xyz]]</programlisting>
+<simpara>We&#8217;ll extend the new ES6 map type to support <literal>reduce-kv</literal>, we&#8217;ll do this by getting a sequence of key-value pairs
+and calling the reducing function with the accumulator, key and value as positional arguments:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type js/Map
+  IKVReduce
+  (-kv-reduce [m f init]
+   (let [it (.entries m)]
+     (reduce (fn [acc [k v]]
+               (f acc k v))
+             init
+             (es6-iterator-seq it)))))
+
+(def m (js/Map.))
+(.set m "foo" "bar")
+(.set m "baz" "xyz")
+
+(reduce-kv (fn [acc k v]
+             (conj acc [k v]))
+           []
+           m)
+;; =&gt; [["foo" "bar"] ["baz" "xyz"]]</programlisting>
+<simpara>In both examples we ended up delegating to the <literal>reduce</literal> function, which is aware of reduced values and terminates
+when encountering one. Take into account that if you don&#8217;t implement these protocols in terms of <literal>reduce</literal> you will
+have to check for reduced values for early termination.</simpara>
 </section>
 <section id="asynchrony">
 <title>Asynchrony</title>
-<simpara>IPending</simpara>
-<simpara>IDeref</simpara>
-<simpara>IDerefWithTimeout</simpara>
+<simpara>There are some types that have the notion of asynchronous computation, the value they represent may not
+be realized yet. We can ask whether a value is realized using the <literal>realized?</literal> predicate.</simpara>
+<simpara>Let&#8217;s ilustrate it with the <literal>Delay</literal> type, which takes a computation and executes it when the result is needed.
+When we dereference a delay the computation is run and the delay is realized:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn computation []
+  (println "running!")
+  42)
+
+(def d (Delay. computation nil))
+
+(realized? d)
+;; =&gt; false
+
+(deref d)
+;; running!
+;; =&gt; 42
+
+(realized? d)
+;; =&gt; true
+
+@d
+;; =&gt; 42</programlisting>
+<simpara>Both <literal>realized?</literal> and <literal>deref</literal> sit atop two protocols: <literal>IPending</literal> and <literal>IDeref</literal>.</simpara>
+<simpara>ES6 introduced a type that captures the notion of an asynchronous computation that might fail: the Promise.
+A Promise represents an eventual value and can be in one of three states:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>pending: there is still no value available for this computation.</simpara>
+</listitem>
+<listitem>
+<simpara>rejected: an error occurred and the promise contains a value that indicates the error.</simpara>
+</listitem>
+<listitem>
+<simpara>resolved: the computation succesfully executed and the promise contains a value with the result.</simpara>
+</listitem>
+</itemizedlist>
+<simpara>Since the ES6 defined interface for promises doesn&#8217;t support querying its state we&#8217;ll use Bluebird
+library&#8217;s Promise type for the examples. You can use Bluebird&#8217;s promise type with the <ulink url="https://github.com/funcool/promesa">Promesa</ulink>
+library.</simpara>
+<simpara>First of all we&#8217;ll add the ability to check if a promise is realized (either resolved or rejected) using the
+<literal>realized?</literal> predicate. We just have to implement the <literal>IPending</literal> protocol:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[promesa.core :as pro])
+
+(extend-type js/Promise
+  IPending
+  (-realized? [p]
+    (not (.isPending p))))
+
+
+(pro/promise (fn [resolve reject]))
+;; =&gt; #&lt;Promise {:status :pending}&gt;
+
+(realized? (pro/promise (fn [resolve reject])))
+;; =&gt; false
+
+(pro/resolved 42)
+;; =&gt; #&lt;Promise {:status :resolved, :value 42}&gt;
+
+(realized? (pro/resolved 42))
+;; =&gt; true
+
+(pro/rejected (js/Error. "OH NO"))
+;; =&gt; #&lt;Promise {:status :rejected, :error #object[Error Error: OH NO]}&gt;
+
+(realized? (pro/rejected (js/Error. "OH NO")))
+;; =&gt; true</programlisting>
+<simpara>Now we&#8217;ll extend promises to be derefable. When a promise that is still pending is dereferenced we will return
+a special keyword: <literal>:promise/pending</literal>. If it&#8217;s not we&#8217;ll just return the value it contains, be it an error or a
+result:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[promesa.core :as pro])
+
+(extend-type js/Promise
+  IDeref
+  (-deref [p]
+    (cond
+      (.isPending p)
+      :promise/pending
+
+      (.isRejected p)
+      (.reason p)
+
+      :else
+      (.value p))))
+
+@(pro/promise (fn [resolve reject]))
+;; =&gt; :promise/pending
+
+@(pro/resolved 42)
+;; =&gt; 42
+
+@(pro/rejected (js/Error. "OH NO"))
+;; =&gt; #object[Error Error: OH NO]</programlisting>
 </section>
 <section id="state">
 <title>State</title>
-<simpara>IWatchable</simpara>
-<simpara>IReset</simpara>
-<simpara>ISwap</simpara>
-<simpara>IVolatile</simpara>
+<simpara>The ClojureScript state constructs such as the Atom and the Volatile have different characteristics and semantics,
+and the operations on them like <literal>add-watch</literal>, <literal>reset!</literal> or <literal>swap!</literal> are backed by protocols.</simpara>
+<section id="atom">
+<title>Atom</title>
+<simpara>For ilustrating such protocols we will implement our own simplified version of an <literal>Atom</literal>. It won&#8217;t support validators
+nor metadata, but we will be able to:
+- <literal>deref</literal> the atom for getting its current value
+- <literal>reset!</literal> the value contained in the atom
+- <literal>swap!</literal> the atom with a function for transforming its state</simpara>
+<simpara><literal>deref</literal> is based on the <literal>IDeref</literal> protocol. <literal>reset!</literal> is based on the <literal>IReset</literal> protocol and <literal>swap!</literal> on
+<literal>ISwap</literal>. We&#8217;ll start by defining a data type and a constructor for our atom implementation:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(deftype MyAtom [^:mutable state ^:mutable watches]
+  IPrintWithWriter
+  (-pr-writer [p writer _]
+    (-write writer (str "#&lt;MyAtom " (pr-str state) "&gt;"))))
+
+(defn my-atom
+  ([]
+    (my-atom nil))
+  ([init]
+    (MyAtom. init {})))
+
+(my-atom)
+;; =&gt; #&lt;MyAtom nil&gt;
+
+(my-atom 42)
+;; =&gt; #&lt;MyAtom 42&gt;</programlisting>
+<simpara>Note that we&#8217;ve marked both the current state of the atom (<literal>state</literal>) and the map of watchers (<literal>watches</literal>) with the
+<literal>{:mutable true}</literal> metadata. We&#8217;ll be modifying them and we&#8217;re making this explicit with the annotations.</simpara>
+<simpara>Our <literal>MyAtom</literal> type is not very useful yet, we&#8217;ll start by implementing the <literal>IDeref</literal> protocol so we can dereference
+its current value:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type MyAtom
+  IDeref
+  (-deref [a]
+    (.-state a)))
+
+(def a (my-atom 42))
+
+@a
+;; =&gt; 42</programlisting>
+<simpara>Now that we can dereference it we&#8217;ll implement the <literal>IWatchable</literal> protocol, which will let us add and remove watches
+to our custom atom. We&#8217;ll store the watches in the <literal>watches</literal> map of <literal>MyAtom</literal>, associating keys to callbacks.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type MyAtom
+  IWatchable
+  (-add-watch [a key f]
+    (let [ws (.-watches a)]
+      (set! (.-watches a) (assoc ws key f))))
+
+  (-remove-watch [a key]
+    (let [ws (.-watches a)]
+      (set! (.-watches a) (dissoc ws key))))
+
+  (-notify-watches [a oldval newval]
+    (doseq [[key f] (.-watches a)]
+      (f key a oldval newval))))</programlisting>
+<simpara>We can now add watches to our atom but is not very useful since we still can&#8217;t change it. For incorporating change
+we have to implement the <literal>IReset</literal> protocol and make sure we notify the watches every time we reset the atom&#8217;s value.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type MyAtom
+  IReset
+  (-reset! [a newval]
+    (let [oldval (.-state a)]
+      (set! (.-state a) newval)
+      (-notify-watches a oldval newval)
+      newval)))</programlisting>
+<simpara>Now let&#8217;s check that we got it right. We&#8217;ll add a watch, change the atom&#8217;s value  making sure the watch gets called
+and then remove it:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def a (my-atom 41))
+;; =&gt; #&lt;MyAtom 41&gt;
+
+(add-watch a :log (fn [key a oldval newval]
+                    (println {:key key
+                              :old oldval
+                              :new newval})))
+;; =&gt; #&lt;MyAtom 41&gt;
+
+(reset! a 42)
+;; {:key :log, :old 41, :new 42}
+;; =&gt; 42
+
+(remove-watch a :log)
+;; =&gt; #&lt;MyAtom 42&gt;
+
+(reset! a 43)
+;; =&gt; 43</programlisting>
+<simpara>Our atom is still missing the swapping functionality so we&#8217;ll add that now, let&#8217;s implement the <literal>ISwap</literal> protocol. There
+are four arities for the <literal>-swap!</literal> method of the protocol since the function passed to <literal>swap!</literal> may take one, two, three or
+more arguments:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type MyAtom
+  ISwap
+  (-swap!
+   ([a f]
+    (let [oldval (.-state a)
+          newval (f oldval)]
+      (reset! a newval)))
+
+   ([a f x]
+     (let [oldval (.-state a)
+           newval (f oldval x)]
+       (reset! a newval)))
+
+   ([a f x y]
+     (let [oldval (.-state a)
+           newval (f oldval x y)]
+       (reset! a newval)))
+
+   ([a f x y more]
+     (let [oldval (.-state a)
+           newval (apply f oldval x y more)]
+       (reset! a newval)))))</programlisting>
+<simpara>We now have a custom implementation of the atom abstraction, let&#8217;s test it in the REPL and see if it behaves like we expect:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def a (my-atom 0))
+;; =&gt; #&lt;MyAtom 0&gt;
+
+(add-watch a :log (fn [key a oldval newval]
+                    (println {:key key
+                              :old oldval
+                              :new newval})))
+;; =&gt; #&lt;MyAtom 0&gt;
+
+(swap! a inc)
+;; {:key :log, :old 0, :new 1}
+;; =&gt; 1
+
+(swap! a + 2)
+;; {:key :log, :old 1, :new 3}
+;; =&gt; 3
+
+(swap! a - 2)
+;; {:key :log, :old 3, :new 1}
+;; =&gt; 1
+
+(swap! a + 2 3)
+;; {:key :log, :old 1, :new 6}
+;; =&gt; 6
+
+
+(swap! a + 4 5 6)
+;; {:key :log, :old 6, :new 21}
+;; =&gt; 21
+
+(swap! a * 2)
+;; {:key :log, :old 21, :new 42}
+;; =&gt; 42
+
+(remove-watch a :log)
+;; =&gt; #&lt;MyAtom 42&gt;</programlisting>
+<simpara>We did it! We implemented a version of ClojureScript Atom without support for metadata nor validators, extending it
+to support such features is left as an exercise for the reader. Note that you&#8217;ll need to modify the <literal>MyAtom</literal> type for
+being able to store metadata and a validator.</simpara>
+</section>
+<section id="volatile">
+<title>Volatile</title>
+<simpara>Volatiles are simpler than atoms in that they don&#8217;t support watching for changes. All changes override the previous
+value much like the mutable variables present in almost every programming language. Volatiles are based on the
+<literal>IVolatile</literal> protocol that only defines a method for <literal>vreset!</literal>, since <literal>vswap!</literal> is implemented as a macro.</simpara>
+<simpara>Let&#8217;s start by creating our own volatile type and constructor:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(deftype MyVolatile [^:mutable state]
+  IPrintWithWriter
+  (-pr-writer [p writer _]
+    (-write writer (str "#&lt;MyVolatile " (pr-str state) "&gt;"))))
+
+(defn my-volatile
+  ([]
+    (my-volatile nil))
+  ([v]
+    (MyVolatile. v)))
+
+(my-volatile)
+;; =&gt; #&lt;MyVolatile nil&gt;
+
+(my-volatile 42)
+;; =&gt; #&lt;MyVolatile 42&gt;</programlisting>
+<simpara>Our <literal>MyVolatile</literal> still needs to support dereferencing and reseting it, let&#8217;s implement <literal>IDeref</literal> and <literal>IVolatile</literal>, which
+will enable use to use <literal>deref</literal>, <literal>vreset!</literal> and <literal>vswap!</literal> in our custom volatile:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type MyVolatile
+  IDeref
+  (-deref [v]
+    (.-state v))
+
+  IVolatile
+  (-vreset! [v newval]
+    (set! (.-state v) newval)
+    newval))
+
+(def v (my-volatile 0))
+;; =&gt; #&lt;MyVolatile 42&gt;
+
+(vreset! v 1)
+;; =&gt; 1
+
+@v
+;; =&gt; 1
+
+(vswap! v + 2 3)
+;; =&gt; 6
+
+@v
+;; =&gt; 6</programlisting>
+</section>
 </section>
 <section id="mutation">
 <title>Mutation</title>
-<simpara>IEditableCollection</simpara>
-<simpara>ITransientCollection</simpara>
-<simpara>ITransientAssociative</simpara>
-<simpara>ITransientMap</simpara>
-<simpara>ITransientVector</simpara>
-<simpara>ITransientSet</simpara>
+<simpara>In the <link linkend="transients">section about transients</link> we learned about the mutable counterparts of the immutable
+and persistent data structures that ClojureScript provides. These data structures are mutable, and the operations
+on them end with a bang (<literal>!</literal>) to make that explicit. As you may have guessed every operation on transients
+is based on protocols.</simpara>
+<section id="from-persistent-to-transient-and-viceversa">
+<title>From persistent to transient and viceversa</title>
+<simpara>We&#8217;ve learned that we can transform a persistent data structure with the <literal>transient</literal> function, which is based
+on the <literal>IEditableCollection</literal> protocol; for transforming a transient data structure to a persistent one we
+use <literal>persistent!</literal>, based on <literal>ITransientCollection</literal>.</simpara>
+<simpara>Implementing immutable and persistent data structures and their transient counterparts is out of the scope of
+this book but we recommend taking a look at ClojureScript&#8217;s data structure implementation if you are curious.</simpara>
+</section>
+<section id="case-study-the-hodgepodge-library">
+<title>Case study: the hodgepodge library</title>
+<simpara><ulink url="https://github.com/funcool/hodgepodge">Hodgepodge</ulink> is a ClojureScript library for treating the browser&#8217;s local
+and session storage as if it were a transient data structure. It allows you to insert, read and delete ClojureScript
+data structures without worrying about encoding and decoding them.</simpara>
+<simpara>Browser&#8217;s storage is a simple key-value store that only supports strings. Since all of ClojureScript data structures
+can be dumped into a string and reified from a string using <link linkend="the-reader">the reader</link> we can store arbitrary ClojureScript
+data in storage. We can also extend the reader for being able to read custom data types so we&#8217;re able to put our
+types in storage and <literal>hodgepodge</literal> will handle the encoding and decoding for us.</simpara>
+<simpara>We&#8217;ll start by wrapping the low-level storage methods with functions. The following operations are supported by the storage:
+- getting the value corresponding to a key
+- seting a key to a certain value
+- removing a value given its key
+- counting the number of entries
+- clearing the storage</simpara>
+<simpara>Let&#8217;s wrap them in a more idiomatic API for ClojureScript:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn contains-key?
+  [^js/Storage storage ^string key]
+  (let [ks (.keys js/Object storage)
+        idx (.indexOf ks key)]
+    (&gt;= idx 0)))
+
+(defn get-item
+  ([^js/Storage storage ^string key]
+     (get-item storage key nil))
+  ([^js/Storage storage ^string key ^string default]
+     (if (contains-key? storage key)
+       (.getItem storage key)
+       default)))
+
+(defn set-item
+  [^js/Storage storage ^string key ^string val]
+  (.setItem storage key val)
+  storage)
+
+(defn remove-item
+  [^js/Storage storage ^string key]
+  (.removeItem storage key)
+  storage)
+
+(defn length
+  [^js/Storage storage]
+  (.-length storage))
+
+(defn clear!
+  [^js/Storage storage]
+  (.clear storage))</programlisting>
+<simpara>Nothing too interesting going on there, we just wrapped the storage methods in a nicer API. Now we will define a couple
+functions for serializing and deserializing ClojureScript data structures to strings:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[cljs.reader :as reader])
+
+(defn serialize [v]
+  (binding [*print-dup* true
+            *print-readably* true]
+    (pr-str v)))
+
+(def deserialize
+  (memoize reader/read-string))</programlisting>
+<simpara>The <literal>serialize</literal> function is used for converting a ClojureScript data structure into a string using the <literal>pr-str</literal>
+function, configuring a couple dynamic variables for obtaining the desired behaviour:</simpara>
+<itemizedlist>
+<listitem>
+<simpara><literal><emphasis role="strong">print-dup</emphasis></literal> is set to <literal>true</literal> for a printed object to preserve its type when read later</simpara>
+</listitem>
+<listitem>
+<simpara><literal><emphasis role="strong">print-readably</emphasis></literal> is set to <literal>true</literal> for not converting non-alphanumeric characters to their escape sequences</simpara>
+</listitem>
+</itemizedlist>
+<simpara>The <literal>deserialize</literal> function simply invokes the reader&#8217;s function for reading a string into a ClojureScript data
+structure: <literal>read-string</literal>. It&#8217;s memoized for not having to call the reader each time we deserialize a string since
+we can assume that a repeated string always corresponds to the same data structure.</simpara>
+<simpara>Now we can start extending the browser&#8217;s <literal>Storage</literal> type for acting like a transient data structure. Take into
+account that the <literal>Storage</literal> type is only available in browsers. We&#8217;ll start by implementing the <literal>ICounted</literal> protocol
+for counting the items in the storage, we&#8217;ll simply delegate to our previously defined <literal>length</literal> function:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type js/Storage
+  ICounted
+  (-count [^js/Storage s]
+   (length s)))</programlisting>
+<simpara>We want to be able to use <literal>assoc!</literal> and <literal>dissoc!</literal> for inserting and deleting key-value pairs in the storage, as well
+as the ability to read from it. We&#8217;ll implement the <literal>ITransientAssociative</literal> protocol for <literal>assoc!</literal>, <literal>ITransientMap</literal> for
+<literal>dissoc!</literal> and <literal>ILookup</literal> for reading storage keys.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type js/Storage
+  ITransientAssociative
+  (-assoc! [^js/Storage s key val]
+    (set-item s (serialize key) (serialize val))
+    s)
+
+  ITransientMap
+  (-dissoc! [^js/Storage s key]
+    (remove-item s (serialize key))
+    s)
+
+  ILookup
+  (-lookup
+    ([^js/Storage s key]
+       (-lookup s key nil))
+    ([^js/Storage s key not-found]
+       (let [sk (serialize key)]
+         (if (contains-key? s sk)
+           (deserialize (get-item s sk))
+           not-found)))))</programlisting>
+<simpara>Now we&#8217;re able to perform some operations on either session or local storage, let&#8217;s give them a try:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def local-storage js/localStorage)
+(def session-storage js/sessionStorage)
+
+(assoc! local-storage :foo :bar)
+
+(:foo local-storage)
+;; =&gt; :bar
+
+(dissoc! local-storage :foo)
+
+(get local-storage :foo)
+;; =&gt; nil
+
+(get local-storage :foo :default)
+;; =&gt; :default</programlisting>
+<simpara>Finally, we want to be able to use <literal>conj!</literal> and <literal>persistent!</literal> on local storage so we must implement the <literal>ITransientCollection</literal>
+protocol, let&#8217;s give it a go:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type js/Storage
+  ITransientCollection
+  (-conj! [^js/Storage s ^IMapEntry kv]
+    (assoc! s (key kv) (val kv))
+    s)
+
+  (-persistent! [^js/Storage s]
+    (into {}
+          (for [i (range (count s))
+                :let [k (.key s i)
+                      v (get-item s k)]]
+            [(deserialize k) (deserialize v)]))))</programlisting>
+<simpara><literal>conj!</literal> simply obtains the key and value from the map entry and delegates to <literal>assoc!</literal>. <literal>persistent!</literal> deserializes every key-value
+pair in the storage and returns an immutable snapshot of the storage as a ClojureScript map. Let&#8217;s try it out:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(clear! local-storage)
+
+(persistent! local-storage)
+;; =&gt; {}
+
+(conj! local-storage [:foo :bar])
+(conj! local-storage [:baz :xyz])
+
+(persistent! local-storage)
+;; =&gt; {:foo :bar, :baz :xyz}</programlisting>
+</section>
+<section id="transient-vectors-and-sets">
+<title>Transient vectors and sets</title>
+<simpara>We&#8217;ve learned about most of the protocols for transient data structures but we&#8217;re missing two: <literal>ITransientVector</literal> for
+using <literal>assoc!</literal> on transient vectors and <literal>ITransientSet</literal> for using <literal>disj!</literal> on transient sets.</simpara>
+<simpara>For illustrating the <literal>ITransientVector</literal> protocol we&#8217;ll extend the JavaScript array type for making it an associative
+transient data structure:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type array
+  ITransientAssociative
+  (-assoc! [arr key val]
+    (if (number? key)
+      (-assoc-n! arr key val)
+      (throw (js/Error. "Array's key for assoc! must be a number."))))
+
+  ITransientVector
+  (-assoc-n! [arr n val]
+    (.splice arr n 1 val)
+    arr))
+
+(def a #js [1 2 3])
+;; =&gt; #js [1 2 3]
+
+(assoc! a 0 42)
+;; =&gt; #js [42 2 3]
+
+(assoc! a 1 43)
+;; =&gt; #js [42 43 3]
+
+(assoc! a 2 44)
+;; =&gt; #js [42 43 44]</programlisting>
+<simpara>For illustrating the <literal>ITransientSet</literal> protocol we&#8217;ll extend the ES6 Set type for making it a transient set, supporting
+the <literal>conj!</literal>, <literal>disj!</literal> and <literal>persistent!</literal> operations. Note that we&#8217;ve extended the Set type previously for being able to convert
+it to ClojureScript and we&#8217;ll take advantage of that fact.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type js/Set
+  ITransientCollection
+  (-conj! [s v]
+    (.add s v)
+    s)
+
+  (-persistent! [s]
+   (js-&gt;clj s))
+
+  ITransientSet
+  (-disjoin! [s v]
+    (.delete s v)
+    s))
+
+(def s (js/Set.))
+
+(conj! s 1)
+(conj! s 1)
+(conj! s 2)
+(conj! s 2)
+
+(persistent! s)
+;; =&gt; #{1 2}
+
+(disj! s 1)
+
+(persistent! s)
+;; =&gt; #{2}</programlisting>
+</section>
 </section>
 </section>
 <section id="the-reader">
 <title>The Reader</title>
 
+</section>
+<section id="macros-section">
+<title>Macros</title>
+<simpara>TBD</simpara>
 </section>
 </chapter>
 <chapter id="appendix">
@@ -4640,7 +5204,7 @@ and modify the body as follows:</simpara>
 <simpara>The <literal>core.cljs</literal> file is where all the action takes place. For now, leave it exactly
 as it is, and start the figwheel environment, which will load a large number of
 dependencies and start a server.</simpara>
-<programlisting language="bash" linenumbering="unnumbered">$ lein fighwheel
+<programlisting language="bash" linenumbering="unnumbered">$ lein figwheel
 # much output
 Prompt will show when figwheel connects to your application</programlisting>
 <simpara>If you are using Linux or Mac OS X, type the command as <literal>rlwrap lein figwheel</literal>.
@@ -5071,7 +5635,7 @@ Processes are pieces of logic that run independently and use channels for commun
 and coordination. Puts and takes inside a process will stop the process until the
 operation completes. Stopping a process doesn&#8217;t block the only thread we have in the
 environments where ClojureScript runs. Instead, it will be resumed at a later time when
-the operation is waiting for has been performed.</simpara>
+the operation is waiting for being performed.</simpara>
 <simpara>Processes are launched using the <literal>go</literal> macro and puts and takes use the <literal>&lt;!</literal> and <literal>&gt;!</literal>
 placeholders. The <literal>go</literal> macro rewrites your code to use callbacks but inside <literal>go</literal>
 everything looks like synchronous code, which makes understanding it straightforward:</simpara>
@@ -5101,7 +5665,7 @@ it can resume. After that we launch another process that puts a value on the cha
 Since there is a pending take the put operation succeeds and the value is delivered to
 the first process, then both processes terminate.</simpara>
 <simpara>Both <literal>go</literal> blocks run independently and, even though they are executed asynchronously, they
-look like they synchronous code. The above go blocks are fairly simple but being able to
+look like synchronous code. The above go blocks are fairly simple but being able to
 write concurrent processes that coordinate via channels is a very powerful tool for
 implementing complex asynchronous workflows. Channels also offer a great decoupling of
 producers and consumers.</simpara>
@@ -5872,6 +6436,9 @@ writing entire sections of the book, as well as making very valuable suggestions
 </listitem>
 <listitem>
 <simpara>Wodin (@wodin)</simpara>
+</listitem>
+<listitem>
+<simpara>Crocket (@crocket)</simpara>
 </listitem>
 </itemizedlist>
 </chapter>
