@@ -468,11 +468,6 @@ the `#()` reader macro (usually leads to one-liners). Reader macros are "special
 transformed to the appropriate language form at compile time; in this case, to some expression
 that uses the `fn` special form.
 
-////
-Changing this to a simpler function, since you did not explain "set"
-earlier (though I added an example)
-////
-
 [source, clojure]
 ----
 (def average #(/ (+ %1 %2) 2))
@@ -482,10 +477,6 @@ earlier (though I added an example)
 ----
 
 The preceding definition is shorthand for:
-
-////
-If you stay with the original example, the # should not be there
-////
 
 [source,clojure]
 ----
@@ -592,10 +583,6 @@ will apply the `=` function to the result of evaluating `(keyword code)`.
 
 ==== Branching with `case`
 
-////
-I eliminated the phrase "use case", because it is confusing when you are talking about the
-"case" expression.
-////
 The `case` branching expression has a similar use as our previous example with
 `condp`. The main differences are that `case` always uses the `=` predicate/function and its
 branching values are evaluated at compile time. This results in a more performant form
@@ -863,11 +850,8 @@ with one rather than zero, otherwise all the numbers would be multiplied by zero
 ===== `for` sequence comprehensions
 
 In ClojureScript, the `for` construct isn't used for iteration but for generating sequences, an operation
-also known as "sequence comprehension". It offers a small domain specific language for declaratively
-building sequences.
-////
-Really, that previous sentence will totally lose a beginning programmer. Please consider removing it.
-////
+also known as "sequence comprehension". In this section we'll learn how it works and use it to
+declaratively build sequences.
 
 `for` takes a vector of bindings and an expression and generates a sequence of the result of evaluating the
 expression. Let's take a look at an example:
@@ -984,24 +968,7 @@ that meant.
 An immutable data structure, as its name suggests, is a data structure that cannot be changed. In-place
 updates are not allowed in immutable data structures.
 
-A persistent data structure is a data structure that returns a new version of itself when transforming
-it, leaving the original unmodified. ClojureScript makes this memory and time efficient using an
-implementation technique called _structural sharing_, where most of the data shared between two versions
-of a value is not duplicated and transformations of a value are implemented by copying the minimal amount of data
-required.
-
-////
-I'm not sure you need to go into the following example. Remember, these are beginners.
-It's nice for them to know that there is sharing, but they don't need a proof. The example
-doesn't really advance their general knowledge of the language, either. Instead, I'd conclude
-the preceding paragraph with:
-
-We could write an example program to show this in action, but for now, just trust ClojureScript
-to use sharing to keep memory use low and speed high, and let’s move on.
-
-////
-
-Let's see an example of appending values to a vector using the `conj` (conjoin) operation:
+Let's illustrate that with an example: appending values to a vector using the `conj` (conjoin) operation.
 
 [source, clojure]
 ----
@@ -1017,6 +984,15 @@ Let's see an example of appending values to a vector using the `conj` (conjoin) 
 
 As you can see, we derived a new version of the `xs` vector appending an element to it and got a new
 vector `ys` with the element added. However, the `xs` vector remained unchanged because it is immutable.
+
+A persistent data structure is a data structure that returns a new version of itself when transforming
+it, leaving the original unmodified. ClojureScript makes this memory and time efficient using an
+implementation technique called _structural sharing_, where most of the data shared between two versions
+of a value is not duplicated and transformations of a value are implemented by copying the minimal amount of data
+required.
+
+If you want to see an example of how structural sharing works, read on. If you're not interested in more details
+you can skip over to the xref:the-sequence-abstraction[next section].
 
 For illustrating the structural sharing of ClojureScript data structures, let's compare whether some parts
 of the old and new versions of a data structure are actually the same object with the `identical?` predicate.
@@ -1043,6 +1019,7 @@ are the same object in memory as the `xs` list, thus `xs` and `ys` share structu
 
 [[the-sequence-abstraction]]
 ==== The sequence abstraction
+anchor:the-sequence-abstraction[]
 
 One of the central ClojureScript abstractions is the _sequence_ which can be thought of as a list and can be derived
 from any of the collection types. It is persistent and immutable like all collection types, and many of the
@@ -1093,18 +1070,10 @@ will evaluate as false (xref:truthiness-section[see the section on _truthiness_ 
 ;; => (2 3)
 ----
 
-////
-This seems like a very advanced concept for the first chapter.
-TODO: think about this.
-////
-
 ===== nil-punning
 
-Since `seq` returns `nil` when the collection is empty, and `nil` evaluates to false in boolean context, you can check to see if a collection is empty by using the `seq` function. The technical term for this is nil-punning.
-////
-The above behaviour of `seq` when coupled with the falsey nature of `nil` in boolean contexts make it an idiom for checking
-the emptiness of a sequence in ClojureScript which is often referred to as nil-punning.
-////
+Since `seq` returns `nil` when the collection is empty, and `nil` evaluates to false in boolean context, you can
+check to see if a collection is empty by using the `seq` function. The technical term for this is nil-punning.
 
 [source, clojure]
 ----
@@ -1313,10 +1282,6 @@ a whole new sequence. Lazy sequences generate their contents as they are request
 over them. Laziness ensures that we don't do more work than we need to and gives us the possibility of
 treating potentially infinite sequences as regular ones.
 
-////
-TODO: This needs a lot more elaboration and examples showing how lazy sequences behave & how to create them.
-////
-
 Consider the `range` function, which generates a range of integers:
 
 [source, clojure]
@@ -1450,9 +1415,6 @@ time:
 
 Another thing that differentiates lists and vectors is that vectors are indexed collections and as such support efficient
 random index access and non-destructive updates. We can use the `nth` function to retrieve values given an index:
-////
-I got rid of the "familiar" in the preceding paragraph, because you never introduced it before.
-////
 
 [source, clojure]
 ----
@@ -1737,10 +1699,6 @@ Sets have a sorted counterpart like maps do that are created using the functions
 
 
 ===== Queues
-
-////
-I'm not sure that this section is necessary for beginners, but I am OK with it.
-////
 
 ClojureScript also provides a persistent and immutable queue. Queues are not used as pervasively as other collection types.  They can be created using the `#queue []` literal syntax, but there are no convenient constructor functions for them.
 
@@ -2453,11 +2411,6 @@ As we mentioned previously, in _ClojureScript_ you also can define local hierarc
 done with the `make-hierarchy` function. Here is an example of how you can replicate the previous
 example using a local hierarchy:
 
-////
-Have you explained the -> operator?
-TODO: add chapter for explain the threading macros
-////
-
 [source, clojure]
 ----
 (def h (-> (make-hierarchy)
@@ -2740,11 +2693,6 @@ This is how we can emulate an instance of the user type that plays well with the
 (full-name yen)
 ;; => "Yennefer of Vengerberg"
 ----
-
-////
-I'm not sure what to make of the preceding example, and the next section seems to be something that is
-not at all useful. Let me give this some thought.
-////
 
 ==== Specify
 

@@ -566,31 +566,29 @@ We encourage you to explore ClojureScript core to see what other transducers are
 
 ==== Defining our own transducers
 
-Since most transducers are only interesting in the reducing step implementation and often delegate to the
-reducing function in arities 0 and 1, there is a little helper called `completing` that fills those arities
-for you:
-////
-I think this needs a bit more explanation. Why does my-transducer use completing also, and how is it different from my-transducer-with-completion?
-////
+There a few things to consider before writing our own transducers so in this section we will learn how to properly
+implement one. First of all, we've learned that the general structure of a transducer is the following:
 
 [source, clojure]
 ----
-;; if a completing function is not defined, identity will be used
-(def my-transducer
-  (completing
-    (fn [acc input]
-     ;; ...
-     )))
-
-(def my-transducer-with-completion
-  (completing
-    (fn [acc input]
-     ;; ...
-     )
-    (fn [result]
-     ;; ...
-    )))
+(fn [xf]
+  (fn
+    ([]          ;; init
+      ...)
+    ([r]         ;; completion
+      ...)
+    ([acc input] ;; step
+      ...)))
 ----
+
+Usually only the code represented with `...` changes between transducers, these are the invariants that must
+be preserved in each arity of the resulting function:
+
+ * arity 0 (init): must call the arity 0 of the nested transform `xf`
+ * arity 1 (completion): used to produce a final value and potentially flush state, must call the arity 1 of the nested
+ transform `xf` *exactly once*
+ * arity 2 (step): the resulting reducing function which will call the arity 2 of the nested transform `xf` zero, one or
+more times
 
 
 ==== Transducible processes
