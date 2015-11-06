@@ -1,5 +1,13 @@
 = Changelog
 
+== Version 5
+
+Date: 2015-11-06
+
+* Finished section about core protocols.
+* Better explanation of defining your own transducers.
+* Minor edits.
+
 == Version 4
 
 Date: 2015-09-20
