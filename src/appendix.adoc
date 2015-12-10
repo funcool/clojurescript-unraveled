@@ -59,8 +59,11 @@ and modify the body as follows:
   <body>
     <div id="app">
       <h1>Age in Days</h1>
-      <p>Enter your age in years:
-        <input type="text" size="5" id="years" /></p>
+      <p>
+        Enter your age in years:
+        <input type="text" size="5" id="years">
+        <button id="calculate">Calculate</button>
+      </p>
       <p id="feedback"></p>
     </div>
     <script src="js/compiled/age.js" type="text/javascript"></script>
