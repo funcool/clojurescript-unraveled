@@ -1295,7 +1295,7 @@ channels when there are still no taps such value will be dropped.
 (put! in 2)
 
 ;; [:a] Got 1
-;; [:b] Got 2
+;; [:b] Got 1
 ;; [:b] Resting for 3 seconds
 ;; [:a] Got 2
 ;; [:b] Got 2
