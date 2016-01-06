@@ -2586,7 +2586,7 @@ Now, look at the difference with raw types for access to its fields:
 ----
 (def person (User. "Yennefer" "of Vengerberg"))
 
-(:firstname user)
+(:firstname person)
 ;; => "Yennefer"
 
 (get person :firstname)
