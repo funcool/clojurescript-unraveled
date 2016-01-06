@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"/><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="generator" content="Asciidoctor 1.5.2"/>
+<meta name="generator" content="Asciidoctor 1.5.3"/>
 <meta name="author" content="Andrey Antukh, Alejandro Gómez"/>
 <title>ClojureScript Unraveled</title>
 <style>
@@ -3983,7 +3983,7 @@ primitive for defining types.</p>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">person</span> <span class="tok-p">(</span><span class="tok-nf">User.</span> <span class="tok-s">&quot;Yennefer&quot;</span> <span class="tok-s">&quot;of Vengerberg&quot;</span><span class="tok-p">))</span>
 
-<span class="tok-p">(</span><span class="tok-ss">:firstname</span> <span class="tok-nv">user</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-ss">:firstname</span> <span class="tok-nv">person</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; &quot;Yennefer&quot;</span>
 
 <span class="tok-p">(</span><span class="tok-nb">get </span><span class="tok-nv">person</span> <span class="tok-ss">:firstname</span><span class="tok-p">)</span>
@@ -8889,8 +8889,11 @@ and modify the body as follows:</p>
   <span class="tok-nt">&lt;body&gt;</span>
     <span class="tok-nt">&lt;div</span> <span class="tok-na">id=</span><span class="tok-s">&quot;app&quot;</span><span class="tok-nt">&gt;</span>
       <span class="tok-nt">&lt;h1&gt;</span>Age in Days<span class="tok-nt">&lt;/h1&gt;</span>
-      <span class="tok-nt">&lt;p&gt;</span>Enter your age in years:
-        <span class="tok-nt">&lt;input</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text&quot;</span> <span class="tok-na">size=</span><span class="tok-s">&quot;5&quot;</span> <span class="tok-na">id=</span><span class="tok-s">&quot;years&quot;</span> <span class="tok-nt">/&gt;&lt;/p&gt;</span>
+      <span class="tok-nt">&lt;p&gt;</span>
+        Enter your age in years:
+        <span class="tok-nt">&lt;input</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text&quot;</span> <span class="tok-na">size=</span><span class="tok-s">&quot;5&quot;</span> <span class="tok-na">id=</span><span class="tok-s">&quot;years&quot;</span><span class="tok-nt">&gt;</span>
+        <span class="tok-nt">&lt;button</span> <span class="tok-na">id=</span><span class="tok-s">&quot;calculate&quot;</span><span class="tok-nt">&gt;</span>Calculate<span class="tok-nt">&lt;/button&gt;</span>
+      <span class="tok-nt">&lt;/p&gt;</span>
       <span class="tok-nt">&lt;p</span> <span class="tok-na">id=</span><span class="tok-s">&quot;feedback&quot;</span><span class="tok-nt">&gt;&lt;/p&gt;</span>
     <span class="tok-nt">&lt;/div&gt;</span>
     <span class="tok-nt">&lt;script </span><span class="tok-na">src=</span><span class="tok-s">&quot;js/compiled/age.js&quot;</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text/javascript&quot;</span><span class="tok-nt">&gt;&lt;/script&gt;</span>
@@ -10170,7 +10173,7 @@ channels when there are still no taps such value will be dropped.</p>
 <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">in</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
 
 <span class="tok-c1">;; [:a] Got 1</span>
-<span class="tok-c1">;; [:b] Got 2</span>
+<span class="tok-c1">;; [:b] Got 1</span>
 <span class="tok-c1">;; [:b] Resting for 3 seconds</span>
 <span class="tok-c1">;; [:a] Got 2</span>
 <span class="tok-c1">;; [:b] Got 2</span>
@@ -10542,7 +10545,7 @@ writing entire sections of the book, as well as making very valuable suggestions
 <div id="footer">
 <div id="footer-text">
 Version 5<br/>
-Last updated 2015-11-06 19:30:04 CET
+Last updated 2016-01-06 21:07:22 EET
 </div>
 </div>
 </body>
