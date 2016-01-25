@@ -4693,13 +4693,12 @@ tooling is not available (such as <a href="http://leiningen.org/">leiningen</a><
 <div class="paragraph">
 <p>What is an execution environment? An execution environment is an engine where JavaScript
 can be executed. For example, the most popular execution environment is a browser (Chrome,
-Firefox, &#8230;&#8203;) followed by the second most popular - <a href="https://nodejs.org/">nodejs</a>/
-<a href="https://iojs.org/en/index.html">iojs</a>.</p>
+Firefox, &#8230;&#8203;) followed by the second most popular - <a href="https://nodejs.org/">nodejs</a>.</p>
 </div>
 <div class="paragraph">
 <p>There are others, such as Rhino (JDK 6+), Nashorn (JDK 8), QtQuick (QT),&#8230;&#8203; but none of
 them have significant differences from the first two. So, <em>ClojureScript</em> at the moment
-may compile code to run in the browser or in nodejs/iojs-like environments out of the box.</p>
+may compile code to run in the browser or in nodejs-like environments out of the box.</p>
 </div>
 </div>
 <div class="sect3">
@@ -4725,32 +4724,32 @@ to JavaScript.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="compile-for-nodejs-iojs"><a class="link" href="#compile-for-nodejs-iojs">4.1.3. Compile for nodejs/iojs</a></h4>
+<h4 id="compile-for-nodejs"><a class="link" href="#compile-for-nodejs">4.1.3. Compile for nodejs</a></h4>
 <div class="paragraph">
-<p>Let’s start with a practical example compiling code that will target <strong>nodejs</strong>/<strong>iojs</strong>. For
-this example, you should have nodejs or iojs (recommended) installed.</p>
+<p>Let’s start with a practical example compiling code that will target <strong>nodejs</strong>. For
+this example, you should have nodejs installed.</p>
 </div>
 <div class="paragraph">
-<p>There are different ways to install iojs, but the recommended way is using nvm (node
+<p>There are different ways to install nodejs, but the recommended way is using nvm (node
 version manager). You can read the instructions on how to install and use nvm on its
 <a href="https://github.com/creationix/nvm">home page</a>.</p>
 </div>
 <div class="paragraph">
-<p>When you have installed nvm, follow installing the latest version of iojs:</p>
+<p>When you have installed nvm, follow installing the latest version of nodejs:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="shell">nvm install iojs-v2.5.0
-nvm alias default iojs-v2.5.0</code></pre>
+<pre class="pygments highlight"><code data-lang="shell">nvm install v5.4.1
+nvm alias default v5.4.1</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can test if <strong>iojs</strong> is installed in your system with this command:</p>
+<p>You can test if <strong>nodejs</strong> is installed in your system with this command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="shell">$ iojs --version
-v2.5.0</code></pre>
+<pre class="pygments highlight"><code data-lang="shell">$ node --version
+v5.4.1</code></pre>
 </div>
 </div>
 <div class="sect4">
@@ -4847,7 +4846,7 @@ point of your application when it&#8217;s executed.</p>
 </li>
 <li>
 <p>The <code>:target</code> property indicates the platform where you want to execute the compiled
-code. In this case, we are going to use <strong>iojs</strong> (formerly nodejs). If you omit this
+code. In this case, we are going to use <strong>nodejs</strong>. If you omit this
 parameter, the source will be compiled to run in the browser environment.</p>
 </li>
 </ul>
@@ -4862,11 +4861,11 @@ java -cp ../cljs.jar:src clojure.main build.clj</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And when it finishes, execute the compiled file using <strong>iojs</strong>:</p>
+<p>And when it finishes, execute the compiled file using <strong>node</strong>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="shell">$ iojs main.js
+<pre class="pygments highlight"><code data-lang="shell">$ node main.js
 Hello world!</code></pre>
 </div>
 </div>
@@ -5081,9 +5080,7 @@ the final output.</p>
 <h5 id="none"><a class="link" href="#none">none</a></h5>
 <div class="paragraph">
 <p>Implies that closure compiler just writes the files as is, without any additional
-optimization applied to the source code. This optimization level is mandatory if you are
-targeting <strong>nodejs</strong> or <strong>iojs</strong> and is appropiate in development mode when your code targets
-the browser.</p>
+optimization applied to the source code.</p>
 </div>
 </div>
 <div class="sect4">
@@ -5225,17 +5222,17 @@ cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span cl
 <div class="sect3">
 <h4 id="node-repl"><a class="link" href="#node-repl">4.2.3. Node REPL</a></h4>
 <div class="paragraph">
-<p>This REPL uses nodejs/iojs as an execution environment and obviously requires that nodejs
-or iojs will be installed in your system.</p>
+<p>This REPL uses nodejs as an execution environment and obviously requires that nodejs
+to be installed in your system.</p>
 </div>
 <div class="paragraph">
 <p>Surely you are asking yourself, why do I need a repl with nodejs when we have nashorn
-that does not require any additional dependencies. The answer is very simple: node/iojs
+that does not require any additional dependencies. The answer is very simple: nodejs
 is the most used JavaScript execution environment on the backend, and it has a great
 amount of community packages around it.</p>
 </div>
 <div class="paragraph">
-<p>Well, the good news is that starting a nodejs/iojs repl is very easy once you have it
+<p>Well, the good news is that starting a nodejs repl is very easy once you have it
 installed in your system. Start writing this content to a new <code>repl.clj</code> file:</p>
 </div>
 <div class="listingblock">
@@ -5633,10 +5630,9 @@ this form (from <strong>mies</strong> template):</p>
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defproject </span><span class="tok-nv">leapyears</span> <span class="tok-s">&quot;0.1.0-SNAPSHOT&quot;</span>
   <span class="tok-ss">:description</span> <span class="tok-s">&quot;FIXME: write this!&quot;</span>
   <span class="tok-ss">:url</span> <span class="tok-s">&quot;http://example.com/FIXME&quot;</span>
-  <span class="tok-ss">:dependencies</span> <span class="tok-p">[[</span><span class="tok-nv">org.clojure/clojure</span> <span class="tok-s">&quot;1.7.0&quot;</span><span class="tok-p">]</span>
-                 <span class="tok-p">[</span><span class="tok-nv">org.clojure/clojurescript</span> <span class="tok-s">&quot;0.0-3308&quot;</span> <span class="tok-ss">:classifier</span> <span class="tok-s">&quot;aot&quot;</span>
-                  <span class="tok-ss">:exclusion</span> <span class="tok-p">[</span><span class="tok-nv">org.clojure/data.json</span><span class="tok-p">]]</span>
-                 <span class="tok-p">[</span><span class="tok-nv">org.clojure/data.json</span> <span class="tok-s">&quot;0.2.6&quot;</span> <span class="tok-ss">:classifier</span> <span class="tok-s">&quot;aot&quot;</span><span class="tok-p">]]</span>
+  <span class="tok-ss">:dependencies</span> <span class="tok-p">[[</span><span class="tok-nv">org.clojure/clojure</span> <span class="tok-s">&quot;1.8.0&quot;</span><span class="tok-p">]</span>
+                 <span class="tok-p">[</span><span class="tok-nv">org.clojure/clojurescript</span> <span class="tok-s">&quot;1.7.228&quot;</span><span class="tok-p">]</span>
+                 <span class="tok-p">[</span><span class="tok-nv">org.clojure/data.json</span> <span class="tok-s">&quot;0.2.6&quot;</span><span class="tok-p">]]</span>
   <span class="tok-ss">:jvm-opts</span> <span class="tok-o">^</span><span class="tok-ss">:replace</span> <span class="tok-p">[</span><span class="tok-s">&quot;-Xmx1g&quot;</span> <span class="tok-s">&quot;-server&quot;</span><span class="tok-p">]</span>
   <span class="tok-ss">:node-dependencies</span> <span class="tok-p">[[</span><span class="tok-nv">source-map-support</span> <span class="tok-s">&quot;0.3.2&quot;</span><span class="tok-p">]]</span>
   <span class="tok-ss">:plugins</span> <span class="tok-p">[[</span><span class="tok-nv">lein-npm</span> <span class="tok-s">&quot;0.5.0&quot;</span><span class="tok-p">]]</span>
@@ -5680,10 +5676,9 @@ library with a third party library for interacting with the DOM.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-ss">:dependencies</span> <span class="tok-p">[[</span><span class="tok-nv">org.clojure/clojure</span> <span class="tok-s">&quot;1.7.0&quot;</span><span class="tok-p">]</span>
-               <span class="tok-p">[</span><span class="tok-nv">org.clojure/clojurescript</span> <span class="tok-s">&quot;0.0-3308&quot;</span> <span class="tok-ss">:classifier</span> <span class="tok-s">&quot;aot&quot;</span>
-                <span class="tok-ss">:exclusion</span> <span class="tok-p">[</span><span class="tok-nv">org.clojure/data.json</span><span class="tok-p">]]</span>
-               <span class="tok-p">[</span><span class="tok-nv">org.clojure/data.json</span> <span class="tok-s">&quot;0.2.6&quot;</span> <span class="tok-ss">:classifier</span> <span class="tok-s">&quot;aot&quot;</span><span class="tok-p">]</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-ss">:dependencies</span> <span class="tok-p">[[</span><span class="tok-nv">org.clojure/clojure</span> <span class="tok-s">&quot;1.8.0&quot;</span><span class="tok-p">]</span>
+               <span class="tok-p">[</span><span class="tok-nv">org.clojure/clojurescript</span> <span class="tok-s">&quot;1.7.228&quot;</span><span class="tok-p">]</span>
+               <span class="tok-p">[</span><span class="tok-nv">org.clojure/data.json</span> <span class="tok-s">&quot;0.2.6&quot;</span><span class="tok-p">]</span>
                <span class="tok-p">[</span><span class="tok-nv">prismatic/dommy</span> <span class="tok-s">&quot;1.1.0&quot;</span><span class="tok-p">]]</span></code></pre>
 </div>
 </div>
@@ -5859,20 +5854,19 @@ the assert tries check that <code>(= 1 2)</code> is true.</p>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>./scripts/watch
 Building ...
-Analyzing jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/0.0-3308/clojurescript-0.0-3308-aot.jar!/cljs/core.cljs
+Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/core.cljs to out/cljs/core.cljs
+Reading analysis cache <span class="tok-k">for</span> jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/core.cljs
 Compiling out/cljs/core.cljs
-Using cached cljs.core out/cljs/core.cljs
 ... <span class="tok-k">done</span>. Elapsed 3.862126827 seconds
 Watching paths: /home/niwi/cljsbook/playground/appfortesting/test, /home/niwi/cljsbook/playground/appfortesting/src</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And when the compilation is finished, try to run the compiled file with <code>iojs</code>
-(or <code>node</code>):</p>
+<p>And when the compilation is finished, try to run the compiled file with <code>nodejs</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>iojs out/appfortesting.js
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>node out/appfortesting.js
 
 Testing appfortesting.core-tests
 
@@ -5890,7 +5884,7 @@ fix the test, just change the <code>=</code> with <code>not=</code> and run the 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>iojs out/appfortesting.js
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>node out/appfortesting.js
 
 Testing appfortesting.core-tests
 
@@ -6030,13 +6024,13 @@ to set the environment-specific exit code depending on the final test status:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>iojs out/appfortesting.js
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>node out/appfortesting.js
 <span class="tok-nv">$ </span><span class="tok-nb">echo</span> <span class="tok-nv">$?</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This code snippet obviously assumes that you are running the tests using <strong>iojs</strong> or
-<strong>nodejs</strong>. If you are running your script in another execution environment, you should be
+<p>This code snippet obviously assumes that you are running the tests using <strong>nodejs</strong>.
+If you are running your script in another execution environment, you should be
 aware of how you can set the exit code in that environment and modify the previous snippet
 accordingly.</p>
 </div>
