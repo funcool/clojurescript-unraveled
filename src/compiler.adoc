@@ -20,12 +20,11 @@ link:http://boot-clj.com/[boot]).
 
 What is an execution environment? An execution environment is an engine where JavaScript
 can be executed. For example, the most popular execution environment is a browser (Chrome,
-Firefox, ...) followed by the second most popular - link:https://nodejs.org/[nodejs]/
-link:https://iojs.org/en/index.html[iojs].
+Firefox, ...) followed by the second most popular - link:https://nodejs.org/[nodejs].
 
 There are others, such as Rhino (JDK 6+), Nashorn (JDK 8), QtQuick (QT),... but none of
 them have significant differences from the first two. So, _ClojureScript_ at the moment
-may compile code to run in the browser or in nodejs/iojs-like environments out of the box.
+may compile code to run in the browser or in nodejs-like environments out of the box.
 
 
 ==== Download the compiler
@@ -47,29 +46,29 @@ the only file (along with JDK 8) that you need to compile your _ClojureScript_ s
 to JavaScript.
 
 
-==== Compile for nodejs/iojs
+==== Compile for nodejs
 
-Let’s start with a practical example compiling code that will target *nodejs*/*iojs*. For
-this example, you should have nodejs or iojs (recommended) installed.
+Let’s start with a practical example compiling code that will target *nodejs*. For
+this example, you should have nodejs installed.
 
-There are different ways to install iojs, but the recommended way is using nvm (node
+There are different ways to install nodejs, but the recommended way is using nvm (node
 version manager). You can read the instructions on how to install and use nvm on its
 link:https://github.com/creationix/nvm[home page].
 
-When you have installed nvm, follow installing the latest version of iojs:
+When you have installed nvm, follow installing the latest version of nodejs:
 
 [source, shell]
 ----
-nvm install iojs-v2.5.0
-nvm alias default iojs-v2.5.0
+nvm install v5.4.1
+nvm alias default v5.4.1
 ----
 
-You can test if *iojs* is installed in your system with this command:
+You can test if *nodejs* is installed in your system with this command:
 
 [source, shell]
 ----
-$ iojs --version
-v2.5.0
+$ node --version
+v5.4.1
 ----
 
 
@@ -144,7 +143,7 @@ This is a brief explanation of the compiler options used in this example:
 * The `:main` property indicates to the compiler the namespace that will act as the entry
   point of your application when it's executed.
 * The `:target` property indicates the platform where you want to execute the compiled
-  code. In this case, we are going to use *iojs* (formerly nodejs). If you omit this
+  code. In this case, we are going to use *nodejs*. If you omit this
   parameter, the source will be compiled to run in the browser environment.
 
 To run the compilation, just execute the following command:
@@ -155,11 +154,11 @@ cd myapp
 java -cp ../cljs.jar:src clojure.main build.clj
 ----
 
-And when it finishes, execute the compiled file using *iojs*:
+And when it finishes, execute the compiled file using *node*:
 
 [source, shell]
 ----
-$ iojs main.js
+$ node main.js
 Hello world!
 ----
 
@@ -333,9 +332,7 @@ The final output depends strictly on the optimization level.
 ===== none
 
 Implies that closure compiler just writes the files as is, without any additional
-optimization applied to the source code. This optimization level is mandatory if you are
-targeting *nodejs* or *iojs* and is appropiate in development mode when your code targets
-the browser.
+optimization applied to the source code.
 
 
 ===== whitespace
@@ -452,15 +449,15 @@ cljs.user=> (+ 1 2)
 
 ==== Node REPL
 
-This REPL uses nodejs/iojs as an execution environment and obviously requires that nodejs
-or iojs will be installed in your system.
+This REPL uses nodejs as an execution environment and obviously requires that nodejs
+to be installed in your system.
 
 Surely you are asking yourself, why do I need a repl with nodejs when we have nashorn
-that does not require any additional dependencies. The answer is very simple: node/iojs
+that does not require any additional dependencies. The answer is very simple: nodejs
 is the most used JavaScript execution environment on the backend, and it has a great
 amount of community packages around it.
 
-Well, the good news is that starting a nodejs/iojs repl is very easy once you have it
+Well, the good news is that starting a nodejs repl is very easy once you have it
 installed in your system. Start writing this content to a new `repl.clj` file:
 
 [source, clojure]
@@ -667,6 +664,7 @@ are a Windows user, please check the instructions on the
 link:http://leiningen.org/[Leiningen homepage]. You can also get the Linux/Mac OSX/BSD
 version of the leiningen script at the web site.
 
+
 ==== First project
 
 The best way to show how a tool works is by creating a toy project with it. In this case,
@@ -779,6 +777,7 @@ You may have noticed other files in the scripts directory, like `build` and
 `release`.  These are the same build scripts mentioned in the previous section,
 but we will stick with `watch` here.
 
+
 ==== Managing dependencies
 
 The real purpose of using Leiningen for the ClojureScript compilation process is to automate
@@ -792,10 +791,9 @@ this form (from *mies* template):
 (defproject leapyears "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
-  :dependencies [[org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "0.0-3308" :classifier "aot"
-                  :exclusion [org.clojure/data.json]]
-                 [org.clojure/data.json "0.2.6" :classifier "aot"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojurescript "1.7.228"]
+                 [org.clojure/data.json "0.2.6"]]
   :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :node-dependencies [[source-map-support "0.3.2"]]
   :plugins [[lein-npm "0.5.0"]]
@@ -827,10 +825,9 @@ Let's start by adding `[prismatic/dommy "1.1.0"]` at the end of the `:dependenci
 
 [source, clojure]
 ----
-:dependencies [[org.clojure/clojure "1.7.0"]
-               [org.clojure/clojurescript "0.0-3308" :classifier "aot"
-                :exclusion [org.clojure/data.json]]
-               [org.clojure/data.json "0.2.6" :classifier "aot"]
+:dependencies [[org.clojure/clojure "1.8.0"]
+               [org.clojure/clojurescript "1.7.228"]
+               [org.clojure/data.json "0.2.6"]
                [prismatic/dommy "1.1.0"]]
 ----
 
@@ -995,19 +992,18 @@ Let's try to run this. First start the watch process:
 ----
 $ ./scripts/watch
 Building ...
-Analyzing jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/0.0-3308/clojurescript-0.0-3308-aot.jar!/cljs/core.cljs
+Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/core.cljs to out/cljs/core.cljs
+Reading analysis cache for jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/core.cljs
 Compiling out/cljs/core.cljs
-Using cached cljs.core out/cljs/core.cljs
 ... done. Elapsed 3.862126827 seconds
 Watching paths: /home/niwi/cljsbook/playground/appfortesting/test, /home/niwi/cljsbook/playground/appfortesting/src
 ----
 
-And when the compilation is finished, try to run the compiled file with `iojs`
-(or `node`):
+And when the compilation is finished, try to run the compiled file with `nodejs`:
 
 [source, bash]
 ----
-$ iojs out/appfortesting.js
+$ node out/appfortesting.js
 
 Testing appfortesting.core-tests
 
@@ -1024,7 +1020,7 @@ fix the test, just change the `=` with `not=` and run the file again:
 
 [source, bash]
 ----
-$ iojs out/appfortesting.js
+$ node out/appfortesting.js
 
 Testing appfortesting.core-tests
 
@@ -1149,11 +1145,11 @@ Now, you may check the exit code of the test script after running:
 
 [source, bash]
 ----
-$ iojs out/appfortesting.js
+$ node out/appfortesting.js
 $ echo $?
 ----
 
-This code snippet obviously assumes that you are running the tests using *iojs* or
-*nodejs*. If you are running your script in another execution environment, you should be
+This code snippet obviously assumes that you are running the tests using *nodejs*.
+If you are running your script in another execution environment, you should be
 aware of how you can set the exit code in that environment and modify the previous snippet
 accordingly.
