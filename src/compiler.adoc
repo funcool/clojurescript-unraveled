@@ -722,7 +722,7 @@ Open the `index.html` file and add the following content at the beginning of bod
 ----
 
 And the next step is adding some code to make the form interactive. Put the following
-code into the `src/leapyear/core.cljs`:
+code into the `src/leapyears/core.cljs`:
 
 [source, clojure]
 ----
