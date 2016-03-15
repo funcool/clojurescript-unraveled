@@ -1298,7 +1298,7 @@ Do *not* try this in the REPL, unless you are prepared to wait for a very, very 
 the REPL wants to fully evaluate the expression.
 
 Here is a contrived example. Let's say you are writing a graphing program and you are graphing the
-equation _y_= 2_x_^2^ + 5, and you want only those values of _x_ for which the _y_ value is less than 100.
+equation _y_= 2 _x_ ^2^ + 5, and you want only those values of _x_ for which the _y_ value is less than 100.
 You can generate all the numbers 0 through 100, which will certainly be enough, and then `take-while`
 the condition holds:
 
