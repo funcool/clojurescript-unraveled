@@ -452,12 +452,12 @@ cljs.user=> (+ 1 2)
 This REPL uses nodejs as an execution environment and obviously requires that nodejs
 to be installed in your system.
 
-Surely you are asking yourself, why do I need a repl with nodejs when we have nashorn
+Surely you are asking yourself, why do I need a REPL with nodejs when we have nashorn
 that does not require any additional dependencies. The answer is very simple: nodejs
 is the most used JavaScript execution environment on the backend, and it has a great
 amount of community packages around it.
 
-Well, the good news is that starting a nodejs repl is very easy once you have it
+Well, the good news is that starting a nodejs REPL is very easy once you have it
 installed in your system. Start writing this content to a new `repl.clj` file:
 
 [source, clojure]
@@ -576,7 +576,7 @@ cljs.user=> (+ 14 28)
 ----
 
 One of the big advantages of this REPL is that you have access to all the browser
-environment. To demonstrate it, just enter `(js/alert "hello world")` in the repl. The
+environment. To demonstrate it, just enter `(js/alert "hello world")` in the REPL. The
 result of that will be the typical browser alert dialog.
 
 
@@ -661,7 +661,7 @@ Leiningen 2.5.1 on Java 1.8.0_45 OpenJDK 64-Bit Server VM
 
 NOTE: We are supposing that you are using a Unix-like system such as Linux or BSD. If you
 are a Windows user, please check the instructions on the
-link:http://leiningen.org/[Leiningen homepage]. You can also get the Linux/Mac OSX/BSD
+link:http://leiningen.org/[Leiningen homepage]. You can also get the Linux/Mac OS X/BSD
 version of the leiningen script at the web site.
 
 
@@ -768,7 +768,7 @@ build commands from the previous section, but with our `lein` build tool:
 rlwrap lein trampoline run -m clojure.main scripts/watch.clj
 ----
 
-WARNING: you should have `rlwrap` installed on your system.
+WARNING: You should have `rlwrap` installed on your system.
 
 Finally, open the `index.html` file in a browser.  Typing a year in the textbox
 should display an indication of its leap year status.
