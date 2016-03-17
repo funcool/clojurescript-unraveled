@@ -23,7 +23,7 @@ applicable to day-to-day programming in ClojureScript.
 
 It is not an introductory book to programming in that it assumes the reader has experience
 programming in at least one language. However, it doesn't assume experience with
-_ClojureScript_ or functional programming. We'll try to include links to reference
+_Clojure_ or functional programming. We'll try to include links to reference
 material when talking about the theoretical underpinnings of ClojureScript that may not
 be familiar to everyone.
 
@@ -86,7 +86,7 @@ clear throughout the book.
   that write programs) as simple as it can be.
 
 These ideas together have a great influence in the way you design and implement software,
-even if you are not using Clojure. Functional programming, decoupling of data (which is
+even if you are not using ClojureScript. Functional programming, decoupling of data (which is
 immutable) from the operations to transform it, explicit idioms for managing change
 over time and polymorphic constructs for programming to abstractions greatly simplify the
 systems we write.
@@ -113,7 +113,7 @@ include::language-basics.adoc[]
 This chapter will cover a little introduction to existing tooling for making things easy
 when developing using ClojureScript. It will cover:
 
-* Using the repl
+* Using the REPL
 * Leiningen and cljsbuild
 * Google Closure Library
 * Modules

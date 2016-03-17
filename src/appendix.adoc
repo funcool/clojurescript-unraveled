@@ -7,7 +7,7 @@ Instead, this project will be a web page that asks you for your age in years and
 tells you how many days that is, using an approximation of 365 days per year.
 
 And for it, we will use the figwheel leiningen plugin. That plugin enables a fully
-interactive, repl based and autoreloading experience.
+interactive, REPL based and autoreloading experience.
 
 
 ==== First steps
