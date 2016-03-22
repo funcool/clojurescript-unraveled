@@ -2,15 +2,15 @@
 
 (defn leap?
   [year]
-  (and (zero? (js-mod year 4))
-       (pos? (js-mod year 100))
-       (pos? (js-mod year 400))))
+  (or (zero? (js-mod year 400))
+      (and (pos? (js-mod year 100))
+           (zero? (js-mod year 4)))))
 
 (defn async-leap?
   [year callback]
   (js/setImmediate
    (fn []
-     (let [result (and (zero? (js-mod year 4))
-                       (pos? (js-mod year 100))
-                       (pos? (js-mod year 400)))]
+     (let [result (or (zero? (js-mod year 400))
+                      (and (pos? (js-mod year 100))
+                           (zero? (js-mod year 4))))]
        (callback result)))))
