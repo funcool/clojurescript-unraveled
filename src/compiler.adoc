@@ -738,9 +738,9 @@ code into the `src/leapyears/core.cljs`:
 
 (defn leap?
   [year]
-  (and (zero? (js-mod year 4))
-       (pos? (js-mod year 100))
-       (pos? (js-mod year 400))))
+  (or (zero? (js-mod year 400))
+      (and (pos? (js-mod year 100))
+           (zero? (js-mod year 4)))))
 
 (defn on-change
   [event]
@@ -864,9 +864,9 @@ with the following content:
 
 (defn leap?
   [year]
-  (and (zero? (js-mod year 4))
-       (pos? (js-mod year 100))
-       (pos? (js-mod year 400))))
+  (or (zero? (js-mod year 400))
+      (and (pos? (js-mod year 100))
+           (zero? (js-mod year 4)))))
 
 (defn on-change
   [event]
@@ -1086,9 +1086,9 @@ asychronously return a result using a callback:
   [year callback]
   (js/setImmediate
    (fn []
-     (let [result (and (zero? (js-mod year 4))
-                       (pos? (js-mod year 100))
-                       (pos? (js-mod year 400)))]
+     (let [result (or (zero? (js-mod year 400))
+                      (and (pos? (js-mod year 100))
+                           (zero? (js-mod year 4))))]
        (callback result)))))
 ----
 
