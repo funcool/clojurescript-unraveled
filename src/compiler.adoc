@@ -46,13 +46,13 @@ the only file (along with JDK 8) that you need to compile your _ClojureScript_ s
 to JavaScript.
 
 
-==== Compile for nodejs
+==== Compile for Node.js
 
-Let’s start with a practical example compiling code that will target *nodejs*. For
-this example, you should have nodejs installed.
+Let’s start with a practical example compiling code that will target *Node.js* (hereafter simply
+"nodejs"). For this example, you should have nodejs installed.
 
-There are different ways to install nodejs, but the recommended way is using nvm (node
-version manager). You can read the instructions on how to install and use nvm on its
+There are different ways to install nodejs, but the recommended way is using nvm ("Node.js
+Version Manager"). You can read the instructions on how to install and use nvm on its
 link:https://github.com/creationix/nvm[home page].
 
 When you have installed nvm, follow installing the latest version of nodejs:
@@ -274,12 +274,12 @@ with your favorite browser and take a look in the development tools console. The
 
 ==== Watch process
 
-Surely, you have already experienced the slow startup of the _ClojureScript_ compiler. To
-solve this, the _ClojureScript_ standalone compiler also comes with tools to start a
-process that watches the changes in some directory and performs an incremental
-compilation.
+You may have already noticed the slow startup time of the _ClojureScript_ compiler. To
+solve this, the _ClojureScript_ standalone compiler comes with a tool to 
+watch for changes in your source code, and re-compile modified files as soon as they are written to
+disk
 
-Start creating another build script, but in this case, name it _watch.clj_:
+Start by creating another build script, but this time name it _watch.clj_:
 
 [source, clojure]
 ----
@@ -293,7 +293,7 @@ Start creating another build script, but in this case, name it _watch.clj_:
   :optimizations :none})
 ----
 
-Now, execute that script like any other that you have executed in previous sections:
+Now, execute the script just like you have in previous sections:
 
 [source, bash]
 ----
@@ -307,70 +307,65 @@ Using cached cljs.core out/cljs/core.cljs
 Watching paths: /home/niwi/cljsbook/playground/mywebapp/src
 ----
 
-You can observe that in the second compilation, the time is drastically reduced. Another
-advantage of this method is that it gives a little bit more output.
-
+Go back to the `mywebapp.core` namespace, and change the print text to `"Hello World, Again!"`.
+You'll see that the file `src/mywebapp/core.cljs` the file is immediately recompiled, and if 
+you reload `index.html` in your browser the new text is displayed in the developer console.
+Another advantage of this method is that it gives a little bit more output.
 
 ==== Optimization levels
 
 The _ClojureScript_ compiler has different levels of optimization. Behind the scenes,
-those compilation levels are coming from Google Closure Compiler.
+those compilation levels are coming from the Google Closure Compiler.
 
-A very simplified overview of the compilation process is:
+A simplified overview of the compilation process is:
 
-1. The reader reads the code and makes some analysis. This process can raise some warnings
+1. The reader reads the code and does some analysis. This compiler may raise some warnings
    during this phase.
 2. Then, the _ClojureScript_ compiler emits JavaScript code. The result is one JavaScript
-   file for each cljs file.
-3. The generated files passes through the Closure Compiler that, depending on the
-   optimization level and other options (sourcemaps, output dir output to, ...) generates
-   the final output.
+   output file for each ClojureScript input file.
+3. The generated JavaScript files are passed through the Google Closure Compiler which, depending on the
+   optimization level and other options (sourcemaps, output dir output to, ...), generates
+   the final output file(s).
 
-The final output depends strictly on the optimization level.
-
+The final output format depends on the optimization level chosen:
 
 ===== none
 
-Implies that closure compiler just writes the files as is, without any additional
-optimization applied to the source code.
-
+This optimization level causes the generated JavaScript to be written into separate output files for
+each namespace, without any additional transformations to the code.
 
 ===== whitespace
 
-This optimization level consists of concatenating the compiled files in an appropriate
-order, removing line breaks and other whitespace and generating the output as one large
-file.
+This optimization level causes the generated JavaScript files to be concatenated into a single
+output file, in dependency order.  Line breaks and other whitespace are removed.
 
-It also has some compilation speed penalty, resulting in slower compilations. In any case,
-it is not terribly slow and is completely usable in small/medium applications.
-
+This reduces compilation speed somewhat, resulting in a slower compilations. However,
+it is not terribly slow and it is quite usable for small-to-medium sized applications.
 
 ===== simple
 
-The simple compilation level implies (includes) all transformations from whitespace
-optimization and additionally performs optimizations within expressions and functions,
-including renaming local variables and function parameters to shorter names.
+The simple compilation level builds on the work from the `whitespace` optimization level,
+and additionally performs optimizations within expressions and functions,
+such as renaming local variables and function parameters to have shorter names.
 
 Compilation with the `:simple` optimization always preserves the functionality of
 syntactically valid JavaScript, so it does not interfere with the interaction between the
 compiled _ClojureScript_ and other JavaScript.
 
-
 ===== advanced
 
-The advanced compilation level includes all transformations from simple
-optimization and additionally performs more aggressive optimizations and dead
-code elimination. This results in significantly smaller output files.
+The advanced compilation level builds on the `simple` optimization level,
+and additionally performs more aggressive optimizations and dead
+code elimination. This results in a significantly smaller output file.
 
-The `:advanced` optimizations can only work for a strict subset of JavaScript
-code that follows the Google Closure Compiler rules.  _ClojureScript_ generates
+The `:advanced` optimizations only work for a strict subset of JavaScript
+which follows the Google Closure Compiler rules.  _ClojureScript_ generates
 valid JavaScript within this strict subset, but if you are interacting with
-third party JavaScript code, some additional tasks should be done to make
+third party JavaScript code, some additional work is required to make
 everything work as expected.
 
 This interaction with third party javascript libraries will be explained
 in later sections.
-
 
 === Working with the REPL
 
@@ -392,16 +387,14 @@ out in ClojureScript, it's easier to use the REPL. REPL stands for:
 In other words, the REPL lets you try out ClojureScript concepts and get immediate
 feedback.
 
-_ClojureScript_ comes with support for executing the REPL in different execution
-environments, each one has its own advantages or disadvantages. For example, you can run a
-REPL in nodejs but in that environment you don't have access to the DOM.
-
-In summary: everything really depends on your needs or requirements.
-
+_ClojureScript_ comes with support for executing the REPL in different execution environments, each
+of which has its own advantages and disadvantages. For example, you can run a REPL in nodejs but in
+that environment you don't have any access to the DOM.  Which REPL environment is best for you
+depends on your specific needs and requirements.
 
 ==== Nashorn REPL
 
-The Nashorn REPL is the easiest and maybe most painless REPL environment because it does
+The Nashorn REPL is the easiest and perhaps most painless REPL environment because it does
 not require any special stuff, just the JVM (JDK 8) that you have used in previous
 examples for running the _ClojureScript_ compiler.
 
@@ -430,13 +423,14 @@ cljs.user=> (+ 1 2)
 
 You may have noticed that the REPL does not have support for history and other shell-like
 facilities. This is because the default REPL does not comes with "readline" support. But
-this problem can be solved using the simple tool called `rlwrap` that you can certainly
-find with the package manager of your operating system.
+this problem can be solved using a simple tool named `rlwrap` which you should be able to find
+find with the package manager of your operating system (e.g. for Ubuntu, type 
+`sudo apt install -y rlwrap` to install).
 
-The `rlwrap` makes the REPL "readline" capable and will allow you to have command history,
+The `rlwrap` tool gives the REPL "readline" capability, and will allow you to have command history,
 code navigation, and other shell-like utilities that will make your REPL experience much
-more pleasant. To use it, just prepend it to the previous command that we have used to
-execute the REPL:
+more pleasant. To use it, just prepend it to the previous command that we used to
+start the REPL:
 
 [source, bash]
 ----
@@ -447,17 +441,16 @@ cljs.user=> (+ 1 2)
 ----
 
 
-==== Node REPL
+==== Node.js REPL
 
-This REPL uses nodejs as an execution environment and obviously requires that nodejs
-to be installed in your system.
+You must, of course, have nodejs installed on your system to use this REPL.
 
-Surely you are asking yourself, why do I need a REPL with nodejs when we have nashorn
-that does not require any additional dependencies. The answer is very simple: nodejs
+You may be wondering why we might want a nodejs REPL, when we already have the nashorn
+REPL available which doesn't have any external dependencies. The answer is very simple: nodejs
 is the most used JavaScript execution environment on the backend, and it has a great
-amount of community packages around it.
+number of community packages built around it.
 
-Well, the good news is that starting a nodejs REPL is very easy once you have it
+The good news is that starting a nodejs REPL is very easy once you have it
 installed in your system. Start writing this content to a new `repl.clj` file:
 
 [source, clojure]
@@ -511,7 +504,7 @@ Let’s start by creating a file named `brepl.clj` with the following content:
 This script builds the source, just as we did earlier, and then starts the REPL.
 
 But the browser REPL also requires that some code be executed in the browser before
-getting the REPL working. To do that, just re-create the application structure very
+the REPL gets working. To do that, just re-create the application structure very
 similar to the one that we have used in previous sections:
 
 [source, bash]
@@ -575,23 +568,22 @@ cljs.user=> (+ 14 28)
 42
 ----
 
-One of the big advantages of this REPL is that you have access to all the browser
-environment. To demonstrate it, just enter `(js/alert "hello world")` in the REPL. The
-result of that will be the typical browser alert dialog.
-
+One of the big advantages of the browser REPL is that you have access to everything in the browser
+environment. For example, type `(js/alert "hello world")` in the REPL. This will cause the browser
+to display an alert box. Nice!
 
 === The Closure Library
 
-The Google Closure Library is a javascript library developed by Google, based on a modular
-architecture and provides cross-browser functions for DOM manipulations and events, ajax
-and JSON, among other features.
+The Google Closure Library is a javascript library developed by Google. It has a modular
+architecture, and provides cross-browser functions for DOM manipulations and events, ajax
+and JSON, and other features.
 
-It's written specifically to take advantage of the Closure Compiler (that is used
-internally by the _ClojureScript_ compiler).
+The Google Closure Library is written specifically to take advantage of the Closure Compiler (which
+is used internally by the _ClojureScript_ compiler).
 
-And _ClojureScript_ is built on Closure Compiler and Closure Library. In fact,
+_ClojureScript_ is built on the Google Closure Compiler and Closure Library. In fact,
 _ClojureScript_ namespaces are Closure modules. This means that
-you can interact with the Closure Library in a very easy way:
+you can interact with the Closure Library very easily:
 
 [source, clojure]
 ----
@@ -601,11 +593,11 @@ you can interact with the Closure Library in a very easy way:
 (def element (dom/getElement "body"))
 ----
 
-With the previous snippet of code you can observe the way you can import the *dom* module of
-the closure library and use one function declared in that module.
+This code snippet shows how you can import the *dom* module of
+the Closure library and use a function declared in that module.
 
-Additionally, the closure library also exposes "special" modules that behave like a
-class or object. For importing these kinds of things you should use the `:import` directive.
+Additionally, the closure library exposes "special" modules that behave like a class or object. To
+use these features, you must use the `:import` directive in the `(ns ...)` form:
 
 [source, clojure]
 ----
@@ -615,24 +607,21 @@ class or object. For importing these kinds of things you should use the `:import
 (def instance (History.))
 ----
 
-If you are familiar with Clojure, it imports Java classes using
-the same `:import` directive. However, if you define types (classes) using _ClojureScript_
-primitives, you should not use `:import` to import them, the standard `:require`
-directives should be used.
-
+In a _Clojure_ program, the `:import` directive is used for host (Java) interop to import Java
+classes.  If, however, you define types (classes) in _ClojureScript_, you should use the standard
+`:require` directive and not the `:import` directive.
 
 === Dependency management
 
 Until now, we have used the builtin _ClojureScript_ toolchain to compile our
-sources to JavaScript.  This is the minimal setup required for working with and
-understanding the compiler, but for larger projects, we often require a larger
+source files to JavaScript.  This is the minimal setup required for working with and
+understanding the compiler. For larger projects, however, we often want to use a more powerful
 build tool that can manage a project's dependencies on other libraries.
 
-Thus, this chapter intends to explain how you can use *Leiningen*, the de facto clojure build
-and dependency management tool, to build _ClojureScript_ projects. There is another
-build tool called *boot* that is growing in popularity, but at this moment it will not be
-covered in this book.
-
+For this reason, the remainder of this chapter will explain how to use *Leiningen*, the de facto
+clojure build and dependency management tool, for building _ClojureScript_ projects. The *boot*
+build tool is also growing in popularity, but for the purposes of this book we will limit ourselves
+to Leiningen.
 
 ==== Installing leiningen
 
@@ -648,10 +637,11 @@ export PATH=$PATH:~/bin
 ----
 
 Make sure that the `~/bin` directory is always set on your path. To make it permanent,
-add the line starting with `export` to your `~/.bashrc` file (we are supposing that you
+add the line starting with `export` to your `~/.bashrc` file (assuming you
 are using the bash shell).
 
-Now, open another clean terminal and execute `lein version`:
+Now, open another clean terminal and execute `lein version`.  You should see something like the
+following:
 
 [source, bash]
 ----
@@ -659,16 +649,15 @@ $ lein version
 Leiningen 2.5.1 on Java 1.8.0_45 OpenJDK 64-Bit Server VM
 ----
 
-NOTE: We are supposing that you are using a Unix-like system such as Linux or BSD. If you
+NOTE: We assume here that you are using a Unix-like system such as Linux or BSD. If you
 are a Windows user, please check the instructions on the
 link:http://leiningen.org/[Leiningen homepage]. You can also get the Linux/Mac OS X/BSD
 version of the leiningen script at the web site.
 
-
 ==== First project
 
 The best way to show how a tool works is by creating a toy project with it. In this case,
-we will create a small application that calculates if a year is a leap year or not. To
+we will create a small application that determines if a year is a leap year or not. To
 start, we will use the *mies* leiningen template.
 
 NOTE: Templates are a facility in leiningen for creating an initial project structure.
@@ -715,13 +704,13 @@ Open the `index.html` file and add the following content at the beginning of bod
     ----
   </div>
   <form action="" method="">
-    <label for="year">Input a year</label>
+    <label for="year">Enter a year</label>
     <input id="year" name="year" />
   </form>
 </section>
 ----
 
-And the next step is adding some code to make the form interactive. Put the following
+The next step is adding some code to make the form interactive. Put the following
 code into the `src/leapyears/core.cljs`:
 
 [source, clojure]
@@ -760,15 +749,15 @@ Now, compile the clojurescript code with:
 $ ./scripts/watch
 ----
 
-This script executes the following behind the scenes, similar to the `java`
-build commands from the previous section, but with our `lein` build tool:
+Behind the scenes, the `watch` script uses the `lein` build tool to execute a command similar
+to the `java` build command from the previous sections:
 
 [source, bash]
 ----
 rlwrap lein trampoline run -m clojure.main scripts/watch.clj
 ----
 
-WARNING: You should have `rlwrap` installed on your system.
+WARNING: You must have `rlwrap` installed on your system.
 
 Finally, open the `index.html` file in a browser.  Typing a year in the textbox
 should display an indication of its leap year status.
@@ -784,7 +773,7 @@ The real purpose of using Leiningen for the ClojureScript compilation process is
 the retrieval of dependencies.  This is dramatically simpler than retrieving them manually.
 
 The dependencies, among other parameters, are declared in the `project.clj` file and have
-this form (from *mies* template):
+this form (from the *mies* template):
 
 [source, clojure]
 ----
@@ -813,8 +802,8 @@ aren't familiar with them, do not worry: a .jar file is like a plain zip file th
 the `project.clj` for the library, some metadata, and the ClojureScript sources. The
 packaging will be explained in another section.
 
-Clojure packages are often published on link:http://clojars.org[Clojars]; also you
-can find many different third party libraries on the
+Clojure packages are often published on link:http://clojars.org[Clojars]. You can also
+find many third party libraries on the
 link:https://github.com/clojure/clojurescript/wiki#libraries[ClojureScript Wiki].
 
 To understand dependencies better, we are going to replace the DOM utiltiles of the Google Closure
@@ -831,8 +820,7 @@ Let's start by adding `[prismatic/dommy "1.1.0"]` at the end of the `:dependenci
                [prismatic/dommy "1.1.0"]]
 ----
 
-At this moment you should restart the `watch` process that we had started at the beginning
-of this subchapter:
+At this point, you should restart the `watch` process from earlier:
 
 [source, bash]
 ----
@@ -844,9 +832,9 @@ Building ...
 Watching paths: /home/niwi/cljsbook/playground/leapyears/src
 ----
 
-You can observe that the dommy dependency is successfully downloaded, and then the
-watch process is started.  In fact, Leiningen will ensure all dependencies are
-downloaded before performing any tasks.
+You can see that files for the dommy dependency are first downloaded; then, the
+watch process is re-started.  Leiningen ensures that needed all dependencies are
+downloaded before performing any other tasks.
 
 Now it's time to write some code. Replace the contents of the `src/leapyear/core.cljs`
 with the following content:
@@ -879,10 +867,9 @@ with the following content:
 (dom/listen! input :keyup on-change)
 ----
 
-As you can observe, the code now looks more “Clojure-friendly.” The host
-interoperabilty calls have now been replaced by functions provided by this
+You can see that the code now looks more “Clojure-friendly.” The host
+interop calls have been replaced by functions provided by this
 third-party library.
-
 
 === Using javascript libraries
 
@@ -896,30 +883,28 @@ Ideas:
 - externs generation
 ////
 
-
 === Unit testing
 
-As you may expect, testing in _ClojureScript_ consists of the same concepts as
-you may know from any other language such as Clojure, Java, Python, JavaScript, etc.
+As you might expect, testing in _ClojureScript_ consists of the same concepts 
+widely used by other language such as Clojure, Java, Python, JavaScript, etc.
 
-Regardless of the language, the main objective of unit testing is to run some test code,
-and verify that your code behaves as expected and returns without raising unexpected
+Regardless of the language, the main objective of unit testing is to run some test cases,
+verifying that the code under test behaves as expected and returns without raising unexpected
 exceptions.
 
-The immutablity of _ClojureScript_ in fact helps your program to be less
-error prone and facilitates testing a little bit. Another advantage of _ClojureScript_
+The immutablity of _ClojureScript_ data structures helps to make programs less
+error prone, and facilitates testing a little bit. Another advantage of _ClojureScript_
 is that it tends to use plain data instead of complex objects. Building "mock" objects
-for testing is greatly simplified.
-
+for testing is thus greatly simplified.
 
 ==== First steps
 
-The "official" _ClojureScript_ testing framework is in the core library under the "cljs.test"
+The "official" _ClojureScript_ testing framework is in the "cljs.test"
 namespace. It is a very simple library, but it should be more than enough for our purposes.
 
 There are other libraries that offer additional features or directly different approaches
-for testing, such as link:https://github.com/clojure/test.check[test.check]. However, they
-will not be covered in this subchapter.
+to testing, such as link:https://github.com/clojure/test.check[test.check]. However, we 
+will not cover them here.
 
 Start creating a new project using the *mies* leiningen template for experimenting with
 tests:
@@ -956,10 +941,10 @@ test directory:
    :verbose true})
 ----
 
-This new script will compile and watch both directories "src" and "test", and
+This new script will compile and watch both directories "src" and "test", and it
 sets the new entry point to the `appfortesting.core_tests` namespace.
 
-Next, write some test code into the `core_tests.cljs` file:
+Next, put some test code in the `core_tests.cljs` file:
 
 [source, clojure]
 ----
@@ -983,8 +968,8 @@ The relevant part of that code snippet is:
 ----
 
 The `deftest` macro is a basic primitive for defining our tests. It takes a name as its first
-parameter, followed by one or multiple "asserts" using the `is` macro. In that example,
-the assert tries check that `(= 1 2)` is true.
+parameter, followed by one or multiple assertions using the `is` macro. In this example,
+we try to assert that `(= 1 2)` is true.
 
 Let's try to run this. First start the watch process:
 
@@ -999,7 +984,7 @@ Compiling out/cljs/core.cljs
 Watching paths: /home/niwi/cljsbook/playground/appfortesting/test, /home/niwi/cljsbook/playground/appfortesting/src
 ----
 
-And when the compilation is finished, try to run the compiled file with `nodejs`:
+When the compilation is finished, try to run the compiled file with `nodejs`:
 
 [source, bash]
 ----
@@ -1015,7 +1000,7 @@ Ran 1 tests containing 1 assertions.
 1 failures, 0 errors.
 ----
 
-You can observe that the expected assert failure is successfully printed in the console. To
+You can see that the expected assert failure is successfully printed in the console. To
 fix the test, just change the `=` with `not=` and run the file again:
 
 [source, bash]
@@ -1030,7 +1015,7 @@ Ran 1 tests containing 1 assertions.
 
 It is fine to test these kinds of assertions, but they are not very useful. Let's go to
 test some application code. For this, we will use a function to check if a year is a leap year
-or not. Then, write the following content to the `src/appfortesting/core.clj` file:
+or not. Write the following content to the `src/appfortesting/core.clj` file:
 
 [source, clojure]
 ----
@@ -1041,9 +1026,8 @@ or not. Then, write the following content to the `src/appfortesting/core.clj` fi
        (pos? (js-mod year 400))))
 ----
 
-Next, write a new test case to check that our new function defined in the
-`appfortesting.core` namespace works properly. This is the new content
-of the `core_tests.cljs` file:
+Next, write a new test case to check that our new `leap?` function 
+works properly. Make the `core_tests.cljs` file look like:
 
 [source, clojure]
 ----
@@ -1064,15 +1048,14 @@ of the `core_tests.cljs` file:
 ----
 
 Run the compiled file again to see that there are now two tests running.  The
-first test fails as it did before, but our leap year test passes as expected.
-
+first test passes as before, and our two new leap year tests pass as well.
 
 ==== Async Testing
 
-One of the peculiarities of _ClojureScript_ is that it runs on asynchronous,
-single-threaded execution environments, and this has its own challenges.
+One of the peculiarities of _ClojureScript_ is that it runs in an asynchronous,
+single-threaded execution environment, which has its challenges.
 
-In async execution environments, we should be able to test asynchronous
+In an async execution environment, we should be able to test asynchronous
 functions.  To this end, the _ClojureScript_ testing library offers the `async`
 macro, allowing you to create tests that play well with asynchronous code.
 
@@ -1109,9 +1092,8 @@ To test it, we should write a test case using the previously mentioned `async` m
 The `done` function exposed by the `async` macro should be called after the asynchronous
 operation is finished and all assertions have run.
 
-It is very important to execute the `done` function only once. Omitting or
+It is very important to execute the `done` function only once. Omitting it or
 executing it twice may cause strange behavior and should be avoided.
-
 
 ==== Fixtures
 
