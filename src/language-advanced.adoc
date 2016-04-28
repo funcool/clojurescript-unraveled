@@ -631,7 +631,7 @@ the transducible process on top of that interface:
 ----
 (defn unbounded-queue
   ([]
-   (queue nil))
+   (unbounded-queue nil))
   ([xform]
    (let [put! (completing put!)
          xput! (if xform (xform put!) put!)
@@ -701,7 +701,7 @@ Let's see how our queue behaves without transducers:
 
 [source, clojure]
 ----
-(def q (queue))
+(def q (unbounded-queue))
 ;; => #<[object Object]>
 
 (put! q 1)
@@ -721,7 +721,7 @@ Pretty much what we expected, let's now try with a stateless transducer:
 
 [source, clojure]
 ----
-(def incq (queue (map inc)))
+(def incq (unbounded-queue (map inc)))
 ;; => #<[object Object]>
 
 (put! incq 1)
@@ -742,9 +742,9 @@ that will accept values while they aren't equal to 4 and will partition inputs i
 
 [source, clojure]
 ----
-(def xq (queue (comp
-                 (take-while #(not= % 4))
-                 (partition-all 2))))
+(def xq (unbounded-queue (comp
+                           (take-while #(not= % 4))
+                           (partition-all 2))))
 
 (put! xq 1)
 (put! xq 2)
