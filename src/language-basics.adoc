@@ -361,7 +361,7 @@ in the following example, the function takes two parameters and returns their av
 [source, clojure]
 ----
 (fn [param1 param2]
-  (/ (+ param1 param2) 2.0)
+  (/ (+ param1 param2) 2.0))
 ----
 
 You can define a function and call it at the same time (in a single expression):
