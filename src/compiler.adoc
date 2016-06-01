@@ -872,17 +872,6 @@ You can see that the code now looks more “Clojure-friendly.” The host
 interop calls have been replaced by functions provided by this
 third-party library.
 
-=== Using javascript libraries
-
-TBD
-
-////
-Ideas:
-
-- include javascript as is
-- include javascript libraries with modules (es6 commonjs)
-- externs generation
-////
 
 === Unit testing
 
