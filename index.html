@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"/><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="generator" content="Asciidoctor 1.5.3"/>
+<meta name="generator" content="Asciidoctor 1.5.4"/>
 <meta name="author" content="Andrey Antukh, Alejandro Gómez"/>
 <title>ClojureScript Unraveled</title>
 <style>
@@ -850,7 +850,7 @@ p { margin-bottom: 1.25rem; }
 <span id="author2" class="author">Alejandro Gómez</span><br/>
 <span id="email2" class="email"><a href="mailto:alejandro@dialelo.com">alejandro@dialelo.com</a></span><br/>
 <span id="revnumber">version 5,</span>
-<span id="revdate">2015-11-06</span>
+<span id="revdate">2016-06-01</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -881,8 +881,7 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#working-with-the-repl">4.2. Working with the REPL</a></li>
 <li><a href="#the-closure-library">4.3. The Closure Library</a></li>
 <li><a href="#dependency-management">4.4. Dependency management</a></li>
-<li><a href="#using-javascript-libraries">4.5. Using javascript libraries</a></li>
-<li><a href="#unit-testing">4.6. Unit testing</a></li>
+<li><a href="#unit-testing">4.5. Unit testing</a></li>
 </ul>
 </li>
 <li><a href="#language-advanced-topics">5. Language (advanced topics)</a>
@@ -893,13 +892,13 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#core-protocols-section">5.4. Core protocols</a></li>
 <li><a href="#the-reader">5.5. The Reader</a></li>
 <li><a href="#macros-section">5.6. Macros</a></li>
+<li><a href="#csp-with-core-async">5.7. CSP (with core.async)</a></li>
 </ul>
 </li>
 <li><a href="#appendix">6. Appendix</a>
 <ul class="sectlevel2">
 <li><a href="#appendix-a-interactive-development-with-figwheel">6.1. Appendix A: Interactive development with Figwheel</a></li>
-<li><a href="#appendix-b-csp-and-core-async">6.2. Appendix B: CSP and core.async</a></li>
-<li><a href="#appendix-c-setting-up-a-clojurescript-development-environment">6.3. Appendix C: Setting up a ClojureScript development environment</a></li>
+<li><a href="#appendix-c-setting-up-a-clojurescript-development-environment">6.2. Appendix C: Setting up a ClojureScript development environment</a></li>
 </ul>
 </li>
 <li><a href="#acknowledgments">7. Acknowledgments</a></li>
@@ -919,7 +918,7 @@ applicable to day-to-day programming in ClojureScript.</p>
 <div class="paragraph">
 <p>It is not an introductory book to programming in that it assumes the reader has experience
 programming in at least one language. However, it doesn&#8217;t assume experience with
-<em>ClojureScript</em> or functional programming. We&#8217;ll try to include links to reference
+<em>Clojure</em> or functional programming. We&#8217;ll try to include links to reference
 material when talking about the theoretical underpinnings of ClojureScript that may not
 be familiar to everyone.</p>
 </div>
@@ -1019,7 +1018,7 @@ that write programs) as simple as it can be.</p>
 </div>
 <div class="paragraph">
 <p>These ideas together have a great influence in the way you design and implement software,
-even if you are not using Clojure. Functional programming, decoupling of data (which is
+even if you are not using ClojureScript. Functional programming, decoupling of data (which is
 immutable) from the operations to transform it, explicit idioms for managing change
 over time and polymorphic constructs for programming to abstractions greatly simplify the
 systems we write.</p>
@@ -1045,7 +1044,10 @@ brought to us.</p>
 <div class="paragraph">
 <p>This chapter will be a little introduction to ClojureScript without assumptions about
 previous knowledge of the Clojure language, providing a quick tour over all the things
-you will need to know about clojurescript and understand the rest of this book.</p>
+you will need to know about ClojureScript and understand the rest of this book.</p>
+</div>
+<div class="paragraph">
+<p>You can run the code snippets in the online interactive repl: <a href="http://www.clojurescript.io/" class="bare">http://www.clojurescript.io/</a></p>
 </div>
 <div class="sect2">
 <h3 id="first-steps-with-lisp-syntax"><a class="link" href="#first-steps-with-lisp-syntax">3.1. First steps with Lisp syntax</a></h3>
@@ -1472,7 +1474,7 @@ in the following example, the function takes two parameters and returns their av
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[</span><span class="tok-nv">param1</span> <span class="tok-nv">param2</span><span class="tok-p">]</span>
-  <span class="tok-p">(</span><span class="tok-nb">/ </span><span class="tok-p">(</span><span class="tok-nb">+ </span><span class="tok-nv">param1</span> <span class="tok-nv">param2</span><span class="tok-p">)</span> <span class="tok-mf">2.0</span><span class="tok-p">)</span></code></pre>
+  <span class="tok-p">(</span><span class="tok-nb">/ </span><span class="tok-p">(</span><span class="tok-nb">+ </span><span class="tok-nv">param1</span> <span class="tok-nv">param2</span><span class="tok-p">)</span> <span class="tok-mf">2.0</span><span class="tok-p">))</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2522,7 +2524,7 @@ the REPL wants to fully evaluate the expression.</p>
 </div>
 <div class="paragraph">
 <p>Here is a contrived example. Let&#8217;s say you are writing a graphing program and you are graphing the
-equation <em>y</em>= 2_x_<sup>2</sup> + 5, and you want only those values of <em>x</em> for which the <em>y</em> value is less than 100.
+equation <em>y</em>= 2 <em>x</em> <sup>2</sup> + 5, and you want only those values of <em>x</em> for which the <em>y</em> value is less than 100.
 You can generate all the numbers 0 through 100, which will certainly be enough, and then <code>take-while</code>
 the condition holds:</p>
 </div>
@@ -4639,7 +4641,7 @@ when developing using ClojureScript. It will cover:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Using the repl</p>
+<p>Using the REPL</p>
 </li>
 <li>
 <p>Leiningen and cljsbuild</p>
@@ -4704,9 +4706,10 @@ may compile code to run in the browser or in nodejs-like environments out of the
 <div class="sect3">
 <h4 id="download-the-compiler"><a class="link" href="#download-the-compiler">4.1.2. Download the compiler</a></h4>
 <div class="paragraph">
-<p>The <em>ClojureScript</em> compiler is implemented in Java. To use it, you should have jdk8
-installed. <em>ClojureScript</em> itself only requires JDK 7, but the standalone compiler that we
-are going to use in this chapter requires JDK 8, which can be found at
+<p>Although the <em>ClojureScript</em> is self hosted, the best way to use it is just using the
+JVM implementation. To use it, you should have jdk8 installed. <em>ClojureScript</em> itself only
+requires JDK 7, but the standalone compiler that we are going to use in this chapter
+requires JDK 8, which can be found at
 <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" class="bare">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a></p>
 </div>
 <div class="paragraph">
@@ -4714,7 +4717,7 @@ are going to use in this chapter requires JDK 8, which can be found at
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash">wget https://github.com/clojure/clojurescript/releases/download/r1.7.28/cljs.jar</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">wget https://github.com/clojure/clojurescript/releases/download/r1.8.51/cljs.jar</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4724,14 +4727,14 @@ to JavaScript.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="compile-for-nodejs"><a class="link" href="#compile-for-nodejs">4.1.3. Compile for nodejs</a></h4>
+<h4 id="compile-for-node-js"><a class="link" href="#compile-for-node-js">4.1.3. Compile for Node.js</a></h4>
 <div class="paragraph">
-<p>Let’s start with a practical example compiling code that will target <strong>nodejs</strong>. For
-this example, you should have nodejs installed.</p>
+<p>Let’s start with a practical example compiling code that will target <strong>Node.js</strong> (hereafter simply
+"nodejs"). For this example, you should have nodejs installed.</p>
 </div>
 <div class="paragraph">
-<p>There are different ways to install nodejs, but the recommended way is using nvm (node
-version manager). You can read the instructions on how to install and use nvm on its
+<p>There are different ways to install nodejs, but the recommended way is using nvm ("Node.js
+Version Manager"). You can read the instructions on how to install and use nvm on its
 <a href="https://github.com/creationix/nvm">home page</a>.</p>
 </div>
 <div class="paragraph">
@@ -4739,8 +4742,8 @@ version manager). You can read the instructions on how to install and use nvm on
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="shell">nvm install v5.4.1
-nvm alias default v5.4.1</code></pre>
+<pre class="pygments highlight"><code data-lang="shell">nvm install v6.2.0
+nvm alias default v6.2.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4749,7 +4752,7 @@ nvm alias default v5.4.1</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="shell">$ node --version
-v5.4.1</code></pre>
+v6.2.0</code></pre>
 </div>
 </div>
 <div class="sect4">
@@ -5007,13 +5010,13 @@ with your favorite browser and take a look in the development tools console. The
 <div class="sect3">
 <h4 id="watch-process"><a class="link" href="#watch-process">4.1.5. Watch process</a></h4>
 <div class="paragraph">
-<p>Surely, you have already experienced the slow startup of the <em>ClojureScript</em> compiler. To
-solve this, the <em>ClojureScript</em> standalone compiler also comes with tools to start a
-process that watches the changes in some directory and performs an incremental
-compilation.</p>
+<p>You may have already noticed the slow startup time of the <em>ClojureScript</em> compiler. To
+solve this, the <em>ClojureScript</em> standalone compiler comes with a tool to
+watch for changes in your source code, and re-compile modified files as soon as they are written to
+disk</p>
 </div>
 <div class="paragraph">
-<p>Start creating another build script, but in this case, name it <em>watch.clj</em>:</p>
+<p>Start by creating another build script, but this time name it <em>watch.clj</em>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5028,7 +5031,7 @@ compilation.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now, execute that script like any other that you have executed in previous sections:</p>
+<p>Now, execute the script just like you have in previous sections:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5043,64 +5046,65 @@ Watching paths: /home/niwi/cljsbook/playground/mywebapp/src</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can observe that in the second compilation, the time is drastically reduced. Another
-advantage of this method is that it gives a little bit more output.</p>
+<p>Go back to the <code>mywebapp.core</code> namespace, and change the print text to <code>"Hello World, Again!"</code>.
+You&#8217;ll see that the file <code>src/mywebapp/core.cljs</code> the file is immediately recompiled, and if
+you reload <code>index.html</code> in your browser the new text is displayed in the developer console.
+Another advantage of this method is that it gives a little bit more output.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="optimization-levels"><a class="link" href="#optimization-levels">4.1.6. Optimization levels</a></h4>
 <div class="paragraph">
 <p>The <em>ClojureScript</em> compiler has different levels of optimization. Behind the scenes,
-those compilation levels are coming from Google Closure Compiler.</p>
+those compilation levels are coming from the Google Closure Compiler.</p>
 </div>
 <div class="paragraph">
-<p>A very simplified overview of the compilation process is:</p>
+<p>A simplified overview of the compilation process is:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>The reader reads the code and makes some analysis. This process can raise some warnings
+<p>The reader reads the code and does some analysis. This compiler may raise some warnings
 during this phase.</p>
 </li>
 <li>
 <p>Then, the <em>ClojureScript</em> compiler emits JavaScript code. The result is one JavaScript
-file for each cljs file.</p>
+output file for each ClojureScript input file.</p>
 </li>
 <li>
-<p>The generated files passes through the Closure Compiler that, depending on the
-optimization level and other options (sourcemaps, output dir output to, &#8230;&#8203;) generates
-the final output.</p>
+<p>The generated JavaScript files are passed through the Google Closure Compiler which, depending on the
+optimization level and other options (sourcemaps, output dir output to, &#8230;&#8203;), generates
+the final output file(s).</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>The final output depends strictly on the optimization level.</p>
+<p>The final output format depends on the optimization level chosen:</p>
 </div>
 <div class="sect4">
 <h5 id="none"><a class="link" href="#none">none</a></h5>
 <div class="paragraph">
-<p>Implies that closure compiler just writes the files as is, without any additional
-optimization applied to the source code.</p>
+<p>This optimization level causes the generated JavaScript to be written into separate output files for
+each namespace, without any additional transformations to the code.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="whitespace"><a class="link" href="#whitespace">whitespace</a></h5>
 <div class="paragraph">
-<p>This optimization level consists of concatenating the compiled files in an appropriate
-order, removing line breaks and other whitespace and generating the output as one large
-file.</p>
+<p>This optimization level causes the generated JavaScript files to be concatenated into a single
+output file, in dependency order.  Line breaks and other whitespace are removed.</p>
 </div>
 <div class="paragraph">
-<p>It also has some compilation speed penalty, resulting in slower compilations. In any case,
-it is not terribly slow and is completely usable in small/medium applications.</p>
+<p>This reduces compilation speed somewhat, resulting in a slower compilations. However,
+it is not terribly slow and it is quite usable for small-to-medium sized applications.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="simple"><a class="link" href="#simple">simple</a></h5>
 <div class="paragraph">
-<p>The simple compilation level implies (includes) all transformations from whitespace
-optimization and additionally performs optimizations within expressions and functions,
-including renaming local variables and function parameters to shorter names.</p>
+<p>The simple compilation level builds on the work from the <code>whitespace</code> optimization level,
+and additionally performs optimizations within expressions and functions,
+such as renaming local variables and function parameters to have shorter names.</p>
 </div>
 <div class="paragraph">
 <p>Compilation with the <code>:simple</code> optimization always preserves the functionality of
@@ -5111,15 +5115,15 @@ compiled <em>ClojureScript</em> and other JavaScript.</p>
 <div class="sect4">
 <h5 id="advanced"><a class="link" href="#advanced">advanced</a></h5>
 <div class="paragraph">
-<p>The advanced compilation level includes all transformations from simple
-optimization and additionally performs more aggressive optimizations and dead
-code elimination. This results in significantly smaller output files.</p>
+<p>The advanced compilation level builds on the <code>simple</code> optimization level,
+and additionally performs more aggressive optimizations and dead
+code elimination. This results in a significantly smaller output file.</p>
 </div>
 <div class="paragraph">
-<p>The <code>:advanced</code> optimizations can only work for a strict subset of JavaScript
-code that follows the Google Closure Compiler rules.  <em>ClojureScript</em> generates
+<p>The <code>:advanced</code> optimizations only work for a strict subset of JavaScript
+which follows the Google Closure Compiler rules.  <em>ClojureScript</em> generates
 valid JavaScript within this strict subset, but if you are interacting with
-third party JavaScript code, some additional tasks should be done to make
+third party JavaScript code, some additional work is required to make
 everything work as expected.</p>
 </div>
 <div class="paragraph">
@@ -5158,18 +5162,16 @@ out in ClojureScript, it&#8217;s easier to use the REPL. REPL stands for:</p>
 feedback.</p>
 </div>
 <div class="paragraph">
-<p><em>ClojureScript</em> comes with support for executing the REPL in different execution
-environments, each one has its own advantages or disadvantages. For example, you can run a
-REPL in nodejs but in that environment you don&#8217;t have access to the DOM.</p>
-</div>
-<div class="paragraph">
-<p>In summary: everything really depends on your needs or requirements.</p>
+<p><em>ClojureScript</em> comes with support for executing the REPL in different execution environments, each
+of which has its own advantages and disadvantages. For example, you can run a REPL in nodejs but in
+that environment you don&#8217;t have any access to the DOM.  Which REPL environment is best for you
+depends on your specific needs and requirements.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="nashorn-repl"><a class="link" href="#nashorn-repl">4.2.2. Nashorn REPL</a></h4>
 <div class="paragraph">
-<p>The Nashorn REPL is the easiest and maybe most painless REPL environment because it does
+<p>The Nashorn REPL is the easiest and perhaps most painless REPL environment because it does
 not require any special stuff, just the JVM (JDK 8) that you have used in previous
 examples for running the <em>ClojureScript</em> compiler.</p>
 </div>
@@ -5201,14 +5203,15 @@ cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span cl
 <div class="paragraph">
 <p>You may have noticed that the REPL does not have support for history and other shell-like
 facilities. This is because the default REPL does not comes with "readline" support. But
-this problem can be solved using the simple tool called <code>rlwrap</code> that you can certainly
-find with the package manager of your operating system.</p>
+this problem can be solved using a simple tool named <code>rlwrap</code> which you should be able to find
+find with the package manager of your operating system (e.g. for Ubuntu, type
+<code>sudo apt install -y rlwrap</code> to install).</p>
 </div>
 <div class="paragraph">
-<p>The <code>rlwrap</code> makes the REPL "readline" capable and will allow you to have command history,
+<p>The <code>rlwrap</code> tool gives the REPL "readline" capability, and will allow you to have command history,
 code navigation, and other shell-like utilities that will make your REPL experience much
-more pleasant. To use it, just prepend it to the previous command that we have used to
-execute the REPL:</p>
+more pleasant. To use it, just prepend it to the previous command that we used to
+start the REPL:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5220,19 +5223,18 @@ cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span cl
 </div>
 </div>
 <div class="sect3">
-<h4 id="node-repl"><a class="link" href="#node-repl">4.2.3. Node REPL</a></h4>
+<h4 id="node-js-repl"><a class="link" href="#node-js-repl">4.2.3. Node.js REPL</a></h4>
 <div class="paragraph">
-<p>This REPL uses nodejs as an execution environment and obviously requires that nodejs
-to be installed in your system.</p>
+<p>You must, of course, have nodejs installed on your system to use this REPL.</p>
 </div>
 <div class="paragraph">
-<p>Surely you are asking yourself, why do I need a repl with nodejs when we have nashorn
-that does not require any additional dependencies. The answer is very simple: nodejs
+<p>You may be wondering why we might want a nodejs REPL, when we already have the nashorn
+REPL available which doesn&#8217;t have any external dependencies. The answer is very simple: nodejs
 is the most used JavaScript execution environment on the backend, and it has a great
-amount of community packages around it.</p>
+number of community packages built around it.</p>
 </div>
 <div class="paragraph">
-<p>Well, the good news is that starting a nodejs repl is very easy once you have it
+<p>The good news is that starting a nodejs REPL is very easy once you have it
 installed in your system. Start writing this content to a new <code>repl.clj</code> file:</p>
 </div>
 <div class="listingblock">
@@ -5291,7 +5293,7 @@ for its execution environment and it has additional requirements.</p>
 </div>
 <div class="paragraph">
 <p>But the browser REPL also requires that some code be executed in the browser before
-getting the REPL working. To do that, just re-create the application structure very
+the REPL gets working. To do that, just re-create the application structure very
 similar to the one that we have used in previous sections:</p>
 </div>
 <div class="listingblock">
@@ -5360,27 +5362,27 @@ cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span cl
 </div>
 </div>
 <div class="paragraph">
-<p>One of the big advantages of this REPL is that you have access to all the browser
-environment. To demonstrate it, just enter <code>(js/alert "hello world")</code> in the repl. The
-result of that will be the typical browser alert dialog.</p>
+<p>One of the big advantages of the browser REPL is that you have access to everything in the browser
+environment. For example, type <code>(js/alert "hello world")</code> in the REPL. This will cause the browser
+to display an alert box. Nice!</p>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="the-closure-library"><a class="link" href="#the-closure-library">4.3. The Closure Library</a></h3>
 <div class="paragraph">
-<p>The Google Closure Library is a javascript library developed by Google, based on a modular
-architecture and provides cross-browser functions for DOM manipulations and events, ajax
-and JSON, among other features.</p>
+<p>The Google Closure Library is a javascript library developed by Google. It has a modular
+architecture, and provides cross-browser functions for DOM manipulations and events, ajax
+and JSON, and other features.</p>
 </div>
 <div class="paragraph">
-<p>It&#8217;s written specifically to take advantage of the Closure Compiler (that is used
-internally by the <em>ClojureScript</em> compiler).</p>
+<p>The Google Closure Library is written specifically to take advantage of the Closure Compiler (which
+is used internally by the <em>ClojureScript</em> compiler).</p>
 </div>
 <div class="paragraph">
-<p>And <em>ClojureScript</em> is built on Closure Compiler and Closure Library. In fact,
+<p><em>ClojureScript</em> is built on the Google Closure Compiler and Closure Library. In fact,
 <em>ClojureScript</em> namespaces are Closure modules. This means that
-you can interact with the Closure Library in a very easy way:</p>
+you can interact with the Closure Library very easily:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5391,12 +5393,12 @@ you can interact with the Closure Library in a very easy way:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>With the previous snippet of code you can observe the way you can import the <strong>dom</strong> module of
-the closure library and use one function declared in that module.</p>
+<p>This code snippet shows how you can import the <strong>dom</strong> module of
+the Closure library and use a function declared in that module.</p>
 </div>
 <div class="paragraph">
-<p>Additionally, the closure library also exposes "special" modules that behave like a
-class or object. For importing these kinds of things you should use the <code>:import</code> directive.</p>
+<p>Additionally, the closure library exposes "special" modules that behave like a class or object. To
+use these features, you must use the <code>:import</code> directive in the <code>(ns &#8230;&#8203;)</code> form:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5407,25 +5409,24 @@ class or object. For importing these kinds of things you should use the <code>:i
 </div>
 </div>
 <div class="paragraph">
-<p>If you are familiar with Clojure, it imports Java classes using
-the same <code>:import</code> directive. However, if you define types (classes) using <em>ClojureScript</em>
-primitives, you should not use <code>:import</code> to import them, the standard <code>:require</code>
-directives should be used.</p>
+<p>In a <em>Clojure</em> program, the <code>:import</code> directive is used for host (Java) interop to import Java
+classes.  If, however, you define types (classes) in <em>ClojureScript</em>, you should use the standard
+<code>:require</code> directive and not the <code>:import</code> directive.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="dependency-management"><a class="link" href="#dependency-management">4.4. Dependency management</a></h3>
 <div class="paragraph">
 <p>Until now, we have used the builtin <em>ClojureScript</em> toolchain to compile our
-sources to JavaScript.  This is the minimal setup required for working with and
-understanding the compiler, but for larger projects, we often require a larger
+source files to JavaScript.  This is the minimal setup required for working with and
+understanding the compiler. For larger projects, however, we often want to use a more powerful
 build tool that can manage a project&#8217;s dependencies on other libraries.</p>
 </div>
 <div class="paragraph">
-<p>Thus, this chapter intends to explain how you can use <strong>Leiningen</strong>, the de facto clojure build
-and dependency management tool, to build <em>ClojureScript</em> projects. There is another
-build tool called <strong>boot</strong> that is growing in popularity, but at this moment it will not be
-covered in this book.</p>
+<p>For this reason, the remainder of this chapter will explain how to use <strong>Leiningen</strong>, the de facto
+clojure build and dependency management tool, for building <em>ClojureScript</em> projects. The <strong>boot</strong>
+build tool is also growing in popularity, but for the purposes of this book we will limit ourselves
+to Leiningen.</p>
 </div>
 <div class="sect3">
 <h4 id="installing-leiningen"><a class="link" href="#installing-leiningen">4.4.1. Installing leiningen</a></h4>
@@ -5443,11 +5444,12 @@ chmod a+x ./lein
 </div>
 <div class="paragraph">
 <p>Make sure that the <code>~/bin</code> directory is always set on your path. To make it permanent,
-add the line starting with <code>export</code> to your <code>~/.bashrc</code> file (we are supposing that you
+add the line starting with <code>export</code> to your <code>~/.bashrc</code> file (assuming you
 are using the bash shell).</p>
 </div>
 <div class="paragraph">
-<p>Now, open another clean terminal and execute <code>lein version</code>:</p>
+<p>Now, open another clean terminal and execute <code>lein version</code>.  You should see something like the
+following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5462,9 +5464,9 @@ Leiningen 2.5.1 on Java 1.8.0_45 OpenJDK 64-Bit Server VM</code></pre>
 <div class="title">Note</div>
 </td>
 <td class="content">
-We are supposing that you are using a Unix-like system such as Linux or BSD. If you
+We assume here that you are using a Unix-like system such as Linux or BSD. If you
 are a Windows user, please check the instructions on the
-<a href="http://leiningen.org/">Leiningen homepage</a>. You can also get the Linux/Mac OSX/BSD
+<a href="http://leiningen.org/">Leiningen homepage</a>. You can also get the Linux/Mac OS X/BSD
 version of the leiningen script at the web site.
 </td>
 </tr>
@@ -5475,7 +5477,7 @@ version of the leiningen script at the web site.
 <h4 id="first-project"><a class="link" href="#first-project">4.4.2. First project</a></h4>
 <div class="paragraph">
 <p>The best way to show how a tool works is by creating a toy project with it. In this case,
-we will create a small application that calculates if a year is a leap year or not. To
+we will create a small application that determines if a year is a leap year or not. To
 start, we will use the <strong>mies</strong> leiningen template.</p>
 </div>
 <div class="admonitionblock note">
@@ -5537,15 +5539,15 @@ should be.</p>
     ----
   <span class="tok-nt">&lt;/div&gt;</span>
   <span class="tok-nt">&lt;form</span> <span class="tok-na">action=</span><span class="tok-s">&quot;&quot;</span> <span class="tok-na">method=</span><span class="tok-s">&quot;&quot;</span><span class="tok-nt">&gt;</span>
-    <span class="tok-nt">&lt;label</span> <span class="tok-na">for=</span><span class="tok-s">&quot;year&quot;</span><span class="tok-nt">&gt;</span>Input a year<span class="tok-nt">&lt;/label&gt;</span>
+    <span class="tok-nt">&lt;label</span> <span class="tok-na">for=</span><span class="tok-s">&quot;year&quot;</span><span class="tok-nt">&gt;</span>Enter a year<span class="tok-nt">&lt;/label&gt;</span>
     <span class="tok-nt">&lt;input</span> <span class="tok-na">id=</span><span class="tok-s">&quot;year&quot;</span> <span class="tok-na">name=</span><span class="tok-s">&quot;year&quot;</span> <span class="tok-nt">/&gt;</span>
   <span class="tok-nt">&lt;/form&gt;</span>
 <span class="tok-nt">&lt;/section&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And the next step is adding some code to make the form interactive. Put the following
-code into the <code>src/leapyear/core.cljs</code>:</p>
+<p>The next step is adding some code to make the form interactive. Put the following
+code into the <code>src/leapyears/core.cljs</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5561,9 +5563,9 @@ code into the <code>src/leapyear/core.cljs</code>:</p>
 
 <span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">leap?</span>
   <span class="tok-p">[</span><span class="tok-nv">year</span><span class="tok-p">]</span>
-  <span class="tok-p">(</span><span class="tok-nb">and </span><span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">4</span><span class="tok-p">))</span>
-       <span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">100</span><span class="tok-p">))</span>
-       <span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">400</span><span class="tok-p">))))</span>
+  <span class="tok-p">(</span><span class="tok-nb">or </span><span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">400</span><span class="tok-p">))</span>
+      <span class="tok-p">(</span><span class="tok-nb">and </span><span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">100</span><span class="tok-p">))</span>
+           <span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">4</span><span class="tok-p">)))))</span>
 
 <span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">on-change</span>
   <span class="tok-p">[</span><span class="tok-nv">event</span><span class="tok-p">]</span>
@@ -5585,8 +5587,8 @@ code into the <code>src/leapyear/core.cljs</code>:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This script executes the following behind the scenes, similar to the <code>java</code>
-build commands from the previous section, but with our <code>lein</code> build tool:</p>
+<p>Behind the scenes, the <code>watch</code> script uses the <code>lein</code> build tool to execute a command similar
+to the <code>java</code> build command from the previous sections:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5600,7 +5602,7 @@ build commands from the previous section, but with our <code>lein</code> build t
 <div class="title">Warning</div>
 </td>
 <td class="content">
-you should have <code>rlwrap</code> installed on your system.
+You must have <code>rlwrap</code> installed on your system.
 </td>
 </tr>
 </table>
@@ -5623,7 +5625,7 @@ the retrieval of dependencies.  This is dramatically simpler than retrieving the
 </div>
 <div class="paragraph">
 <p>The dependencies, among other parameters, are declared in the <code>project.clj</code> file and have
-this form (from <strong>mies</strong> template):</p>
+this form (from the <strong>mies</strong> template):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5631,7 +5633,7 @@ this form (from <strong>mies</strong> template):</p>
   <span class="tok-ss">:description</span> <span class="tok-s">&quot;FIXME: write this!&quot;</span>
   <span class="tok-ss">:url</span> <span class="tok-s">&quot;http://example.com/FIXME&quot;</span>
   <span class="tok-ss">:dependencies</span> <span class="tok-p">[[</span><span class="tok-nv">org.clojure/clojure</span> <span class="tok-s">&quot;1.8.0&quot;</span><span class="tok-p">]</span>
-                 <span class="tok-p">[</span><span class="tok-nv">org.clojure/clojurescript</span> <span class="tok-s">&quot;1.7.228&quot;</span><span class="tok-p">]</span>
+                 <span class="tok-p">[</span><span class="tok-nv">org.clojure/clojurescript</span> <span class="tok-s">&quot;1.8.51&quot;</span><span class="tok-p">]</span>
                  <span class="tok-p">[</span><span class="tok-nv">org.clojure/data.json</span> <span class="tok-s">&quot;0.2.6&quot;</span><span class="tok-p">]]</span>
   <span class="tok-ss">:jvm-opts</span> <span class="tok-o">^</span><span class="tok-ss">:replace</span> <span class="tok-p">[</span><span class="tok-s">&quot;-Xmx1g&quot;</span> <span class="tok-s">&quot;-server&quot;</span><span class="tok-p">]</span>
   <span class="tok-ss">:node-dependencies</span> <span class="tok-p">[[</span><span class="tok-nv">source-map-support</span> <span class="tok-s">&quot;0.3.2&quot;</span><span class="tok-p">]]</span>
@@ -5662,8 +5664,8 @@ the <code>project.clj</code> for the library, some metadata, and the ClojureScri
 packaging will be explained in another section.</p>
 </div>
 <div class="paragraph">
-<p>Clojure packages are often published on <a href="http://clojars.org">Clojars</a>; also you
-can find many different third party libraries on the
+<p>Clojure packages are often published on <a href="http://clojars.org">Clojars</a>. You can also
+find many third party libraries on the
 <a href="https://github.com/clojure/clojurescript/wiki#libraries">ClojureScript Wiki</a>.</p>
 </div>
 <div class="paragraph">
@@ -5677,14 +5679,13 @@ library with a third party library for interacting with the DOM.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-ss">:dependencies</span> <span class="tok-p">[[</span><span class="tok-nv">org.clojure/clojure</span> <span class="tok-s">&quot;1.8.0&quot;</span><span class="tok-p">]</span>
-               <span class="tok-p">[</span><span class="tok-nv">org.clojure/clojurescript</span> <span class="tok-s">&quot;1.7.228&quot;</span><span class="tok-p">]</span>
+               <span class="tok-p">[</span><span class="tok-nv">org.clojure/clojurescript</span> <span class="tok-s">&quot;1.8.51&quot;</span><span class="tok-p">]</span>
                <span class="tok-p">[</span><span class="tok-nv">org.clojure/data.json</span> <span class="tok-s">&quot;0.2.6&quot;</span><span class="tok-p">]</span>
                <span class="tok-p">[</span><span class="tok-nv">prismatic/dommy</span> <span class="tok-s">&quot;1.1.0&quot;</span><span class="tok-p">]]</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>At this moment you should restart the <code>watch</code> process that we had started at the beginning
-of this subchapter:</p>
+<p>At this point, you should restart the <code>watch</code> process from earlier:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5697,9 +5698,9 @@ Watching paths: /home/niwi/cljsbook/playground/leapyears/src</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can observe that the dommy dependency is successfully downloaded, and then the
-watch process is started.  In fact, Leiningen will ensure all dependencies are
-downloaded before performing any tasks.</p>
+<p>You can see that files for the dommy dependency are first downloaded; then, the
+watch process is re-started.  Leiningen ensures that needed all dependencies are
+downloaded before performing any other tasks.</p>
 </div>
 <div class="paragraph">
 <p>Now it&#8217;s time to write some code. Replace the contents of the <code>src/leapyear/core.cljs</code>
@@ -5718,9 +5719,9 @@ with the following content:</p>
 
 <span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">leap?</span>
   <span class="tok-p">[</span><span class="tok-nv">year</span><span class="tok-p">]</span>
-  <span class="tok-p">(</span><span class="tok-nb">and </span><span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">4</span><span class="tok-p">))</span>
-       <span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">100</span><span class="tok-p">))</span>
-       <span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">400</span><span class="tok-p">))))</span>
+  <span class="tok-p">(</span><span class="tok-nb">or </span><span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">400</span><span class="tok-p">))</span>
+      <span class="tok-p">(</span><span class="tok-nb">and </span><span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">100</span><span class="tok-p">))</span>
+           <span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">4</span><span class="tok-p">)))))</span>
 
 <span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">on-change</span>
   <span class="tok-p">[</span><span class="tok-nv">event</span><span class="tok-p">]</span>
@@ -5734,45 +5735,39 @@ with the following content:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>As you can observe, the code now looks more “Clojure-friendly.” The host
-interoperabilty calls have now been replaced by functions provided by this
+<p>You can see that the code now looks more “Clojure-friendly.” The host
+interop calls have been replaced by functions provided by this
 third-party library.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="using-javascript-libraries"><a class="link" href="#using-javascript-libraries">4.5. Using javascript libraries</a></h3>
+<h3 id="unit-testing"><a class="link" href="#unit-testing">4.5. Unit testing</a></h3>
 <div class="paragraph">
-<p>TBD</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="unit-testing"><a class="link" href="#unit-testing">4.6. Unit testing</a></h3>
-<div class="paragraph">
-<p>As you may expect, testing in <em>ClojureScript</em> consists of the same concepts as
-you may know from any other language such as Clojure, Java, Python, JavaScript, etc.</p>
+<p>As you might expect, testing in <em>ClojureScript</em> consists of the same concepts
+widely used by other language such as Clojure, Java, Python, JavaScript, etc.</p>
 </div>
 <div class="paragraph">
-<p>Regardless of the language, the main objective of unit testing is to run some test code,
-and verify that your code behaves as expected and returns without raising unexpected
+<p>Regardless of the language, the main objective of unit testing is to run some test cases,
+verifying that the code under test behaves as expected and returns without raising unexpected
 exceptions.</p>
 </div>
 <div class="paragraph">
-<p>The immutablity of <em>ClojureScript</em> in fact helps your program to be less
-error prone and facilitates testing a little bit. Another advantage of <em>ClojureScript</em>
+<p>The immutablity of <em>ClojureScript</em> data structures helps to make programs less
+error prone, and facilitates testing a little bit. Another advantage of <em>ClojureScript</em>
 is that it tends to use plain data instead of complex objects. Building "mock" objects
-for testing is greatly simplified.</p>
+for testing is thus greatly simplified.</p>
 </div>
 <div class="sect3">
-<h4 id="first-steps"><a class="link" href="#first-steps">4.6.1. First steps</a></h4>
+<h4 id="first-steps"><a class="link" href="#first-steps">4.5.1. First steps</a></h4>
 <div class="paragraph">
-<p>The "official" <em>ClojureScript</em> testing framework is in the core library under the "cljs.test"
+<p>The "official" <em>ClojureScript</em> testing framework is in the "cljs.test"
 namespace. It is a very simple library, but it should be more than enough for our purposes.</p>
 </div>
 <div class="paragraph">
 <p>There are other libraries that offer additional features or directly different approaches
-for testing, such as <a href="https://github.com/clojure/test.check">test.check</a>. However, they
-will not be covered in this subchapter.</p>
+to testing, such as <a href="https://github.com/clojure/test.check">test.check</a>. However, we
+will not cover them here.</p>
 </div>
 <div class="paragraph">
 <p>Start creating a new project using the <strong>mies</strong> leiningen template for experimenting with
@@ -5814,11 +5809,11 @@ test directory:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This new script will compile and watch both directories "src" and "test", and
+<p>This new script will compile and watch both directories "src" and "test", and it
 sets the new entry point to the <code>appfortesting.core_tests</code> namespace.</p>
 </div>
 <div class="paragraph">
-<p>Next, write some test code into the <code>core_tests.cljs</code> file:</p>
+<p>Next, put some test code in the <code>core_tests.cljs</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5844,8 +5839,8 @@ sets the new entry point to the <code>appfortesting.core_tests</code> namespace.
 </div>
 <div class="paragraph">
 <p>The <code>deftest</code> macro is a basic primitive for defining our tests. It takes a name as its first
-parameter, followed by one or multiple "asserts" using the <code>is</code> macro. In that example,
-the assert tries check that <code>(= 1 2)</code> is true.</p>
+parameter, followed by one or multiple assertions using the <code>is</code> macro. In this example,
+we try to assert that <code>(= 1 2)</code> is true.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s try to run this. First start the watch process:</p>
@@ -5854,15 +5849,15 @@ the assert tries check that <code>(= 1 2)</code> is true.</p>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>./scripts/watch
 Building ...
-Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/core.cljs to out/cljs/core.cljs
-Reading analysis cache <span class="tok-k">for</span> jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/core.cljs
+Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.8.51/clojurescript-1.8.51.jar!/cljs/core.cljs to out/cljs/core.cljs
+Reading analysis cache <span class="tok-k">for</span> jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.8.51/clojurescript-1.8.51.jar!/cljs/core.cljs
 Compiling out/cljs/core.cljs
 ... <span class="tok-k">done</span>. Elapsed 3.862126827 seconds
 Watching paths: /home/niwi/cljsbook/playground/appfortesting/test, /home/niwi/cljsbook/playground/appfortesting/src</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And when the compilation is finished, try to run the compiled file with <code>nodejs</code>:</p>
+<p>When the compilation is finished, try to run the compiled file with <code>nodejs</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5879,7 +5874,7 @@ Ran <span class="tok-m">1</span> tests containing <span class="tok-m">1</span> a
 </div>
 </div>
 <div class="paragraph">
-<p>You can observe that the expected assert failure is successfully printed in the console. To
+<p>You can see that the expected assert failure is successfully printed in the console. To
 fix the test, just change the <code>=</code> with <code>not=</code> and run the file again:</p>
 </div>
 <div class="listingblock">
@@ -5895,7 +5890,7 @@ Ran <span class="tok-m">1</span> tests containing <span class="tok-m">1</span> a
 <div class="paragraph">
 <p>It is fine to test these kinds of assertions, but they are not very useful. Let&#8217;s go to
 test some application code. For this, we will use a function to check if a year is a leap year
-or not. Then, write the following content to the <code>src/appfortesting/core.clj</code> file:</p>
+or not. Write the following content to the <code>src/appfortesting/core.clj</code> file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5907,9 +5902,8 @@ or not. Then, write the following content to the <code>src/appfortesting/core.cl
 </div>
 </div>
 <div class="paragraph">
-<p>Next, write a new test case to check that our new function defined in the
-<code>appfortesting.core</code> namespace works properly. This is the new content
-of the <code>core_tests.cljs</code> file:</p>
+<p>Next, write a new test case to check that our new <code>leap?</code> function
+works properly. Make the <code>core_tests.cljs</code> file look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5931,17 +5925,17 @@ of the <code>core_tests.cljs</code> file:</p>
 </div>
 <div class="paragraph">
 <p>Run the compiled file again to see that there are now two tests running.  The
-first test fails as it did before, but our leap year test passes as expected.</p>
+first test passes as before, and our two new leap year tests pass as well.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="async-testing"><a class="link" href="#async-testing">4.6.2. Async Testing</a></h4>
+<h4 id="async-testing"><a class="link" href="#async-testing">4.5.2. Async Testing</a></h4>
 <div class="paragraph">
-<p>One of the peculiarities of <em>ClojureScript</em> is that it runs on asynchronous,
-single-threaded execution environments, and this has its own challenges.</p>
+<p>One of the peculiarities of <em>ClojureScript</em> is that it runs in an asynchronous,
+single-threaded execution environment, which has its challenges.</p>
 </div>
 <div class="paragraph">
-<p>In async execution environments, we should be able to test asynchronous
+<p>In an async execution environment, we should be able to test asynchronous
 functions.  To this end, the <em>ClojureScript</em> testing library offers the <code>async</code>
 macro, allowing you to create tests that play well with asynchronous code.</p>
 </div>
@@ -5956,9 +5950,9 @@ asychronously return a result using a callback:</p>
   <span class="tok-p">[</span><span class="tok-nv">year</span> <span class="tok-nv">callback</span><span class="tok-p">]</span>
   <span class="tok-p">(</span><span class="tok-nf">js/setImmediate</span>
    <span class="tok-p">(</span><span class="tok-k">fn </span><span class="tok-p">[]</span>
-     <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">result</span> <span class="tok-p">(</span><span class="tok-nb">and </span><span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">4</span><span class="tok-p">))</span>
-                       <span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">100</span><span class="tok-p">))</span>
-                       <span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">400</span><span class="tok-p">)))]</span>
+     <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">result</span> <span class="tok-p">(</span><span class="tok-nb">or </span><span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">400</span><span class="tok-p">))</span>
+                      <span class="tok-p">(</span><span class="tok-nb">and </span><span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">100</span><span class="tok-p">))</span>
+                           <span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-p">(</span><span class="tok-nf">js-mod</span> <span class="tok-nv">year</span> <span class="tok-mi">4</span><span class="tok-p">))))]</span>
        <span class="tok-p">(</span><span class="tok-nf">callback</span> <span class="tok-nv">result</span><span class="tok-p">)))))</span></code></pre>
 </div>
 </div>
@@ -5983,18 +5977,18 @@ is executed with the result of that predicate.</p>
 operation is finished and all assertions have run.</p>
 </div>
 <div class="paragraph">
-<p>It is very important to execute the <code>done</code> function only once. Omitting or
+<p>It is very important to execute the <code>done</code> function only once. Omitting it or
 executing it twice may cause strange behavior and should be avoided.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="fixtures"><a class="link" href="#fixtures">4.6.3. Fixtures</a></h4>
+<h4 id="fixtures"><a class="link" href="#fixtures">4.5.3. Fixtures</a></h4>
 <div class="paragraph">
 <p>TBD</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="integrating-with-ci"><a class="link" href="#integrating-with-ci">4.6.4. Integrating with CI</a></h4>
+<h4 id="integrating-with-ci"><a class="link" href="#integrating-with-ci">4.5.4. Integrating with CI</a></h4>
 <div class="paragraph">
 <p>Most continuous integration tools and services expect that test scripts you
 provide return a standard exit code. But the ClojureScript test framework
@@ -6752,7 +6746,7 @@ the transducible process on top of that interface:</p>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">unbounded-queue</span>
   <span class="tok-p">([]</span>
-   <span class="tok-p">(</span><span class="tok-nf">queue</span> <span class="tok-nv">nil</span><span class="tok-p">))</span>
+   <span class="tok-p">(</span><span class="tok-nf">unbounded-queue</span> <span class="tok-nv">nil</span><span class="tok-p">))</span>
   <span class="tok-p">([</span><span class="tok-nv">xform</span><span class="tok-p">]</span>
    <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">put!</span> <span class="tok-p">(</span><span class="tok-nf">completing</span> <span class="tok-nv">put!</span><span class="tok-p">)</span>
          <span class="tok-nv">xput!</span> <span class="tok-p">(</span><span class="tok-k">if </span><span class="tok-nv">xform</span> <span class="tok-p">(</span><span class="tok-nf">xform</span> <span class="tok-nv">put!</span><span class="tok-p">)</span> <span class="tok-nv">put!</span><span class="tok-p">)</span>
@@ -6827,7 +6821,7 @@ happily continue accepting puts.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">q</span> <span class="tok-p">(</span><span class="tok-nf">queue</span><span class="tok-p">))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">q</span> <span class="tok-p">(</span><span class="tok-nf">unbounded-queue</span><span class="tok-p">))</span>
 <span class="tok-c1">;; =&gt; #&lt;[object Object]&gt;</span>
 
 <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">q</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
@@ -6848,7 +6842,7 @@ happily continue accepting puts.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">incq</span> <span class="tok-p">(</span><span class="tok-nf">queue</span> <span class="tok-p">(</span><span class="tok-nb">map </span><span class="tok-nv">inc</span><span class="tok-p">)))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">incq</span> <span class="tok-p">(</span><span class="tok-nf">unbounded-queue</span> <span class="tok-p">(</span><span class="tok-nb">map </span><span class="tok-nv">inc</span><span class="tok-p">)))</span>
 <span class="tok-c1">;; =&gt; #&lt;[object Object]&gt;</span>
 
 <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">incq</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
@@ -6870,9 +6864,9 @@ that will accept values while they aren&#8217;t equal to 4 and will partition in
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">xq</span> <span class="tok-p">(</span><span class="tok-nf">queue</span> <span class="tok-p">(</span><span class="tok-nf">comp</span>
-                 <span class="tok-p">(</span><span class="tok-nb">take-while </span><span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">not= </span><span class="tok-nv">%</span> <span class="tok-mi">4</span><span class="tok-p">))</span>
-                 <span class="tok-p">(</span><span class="tok-nf">partition-all</span> <span class="tok-mi">2</span><span class="tok-p">))))</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">xq</span> <span class="tok-p">(</span><span class="tok-nf">unbounded-queue</span> <span class="tok-p">(</span><span class="tok-nf">comp</span>
+                           <span class="tok-p">(</span><span class="tok-nb">take-while </span><span class="tok-o">#</span><span class="tok-p">(</span><span class="tok-nb">not= </span><span class="tok-nv">%</span> <span class="tok-mi">4</span><span class="tok-p">))</span>
+                           <span class="tok-p">(</span><span class="tok-nf">partition-all</span> <span class="tok-mi">2</span><span class="tok-p">))))</span>
 
 <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">xq</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
 <span class="tok-p">(</span><span class="tok-nf">put!</span> <span class="tok-nv">xq</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
@@ -8810,306 +8804,31 @@ it to ClojureScript and we&#8217;ll take advantage of that fact.</p>
 <p>TBD</p>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="appendix"><a class="link" href="#appendix">6. Appendix</a></h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="appendix-a-interactive-development-with-figwheel"><a class="link" href="#appendix-a-interactive-development-with-figwheel">6.1. Appendix A: Interactive development with Figwheel</a></h3>
-<div class="sect3">
-<h4 id="introduction-3"><a class="link" href="#introduction-3">6.1.1. Introduction</a></h4>
+<h3 id="csp-with-core-async"><a class="link" href="#csp-with-core-async">5.7. CSP (with core.async)</a></h3>
 <div class="paragraph">
-<p>In this project, we will <strong>not</strong> do “Hello World”&#8212; that has been done to death.
-Instead, this project will be a web page that asks you for your age in years and
-tells you how many days that is, using an approximation of 365 days per year.</p>
-</div>
-<div class="paragraph">
-<p>And for it, we will use the figwheel leiningen plugin. That plugin enables a fully
-interactive, repl based and autoreloading experience.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="first-steps-2"><a class="link" href="#first-steps-2">6.1.2. First steps</a></h4>
-<div class="paragraph">
-<p>In this project, we will use the <em>figwheel</em> template to build the project structure.
-Let’s call the project <code>age</code> and create it by typing:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein new figwheel age
-Retrieving figwheel/lein-template/0.3.5/lein-template-0.3.5.pom from clojars
-Retrieving figwheel/lein-template/0.3.5/lein-template-0.3.5.jar from clojars
-Generating fresh <span class="tok-s1">&#39;lein new&#39;</span> figwheel project.
-<span class="tok-nv">$ </span><span class="tok-nb">cd </span>age <span class="tok-c"># move into newly created project directory</span></code></pre>
-</div>
+<p>CSP stands for Communicating Sequential Processes, which is a formalism for
+describing concurrent systems pioneered by C. A. R. Hoare in 1978. It is a
+concurrency model based on message passing and synchronization through channels.
+An in-depth look at the theoretical model behind CSP is beyond the scope of this
+book; instead we&#8217;ll focus on presenting the concurrency primitives that <code>core.async</code>
+offers.</p>
 </div>
 <div class="paragraph">
-<p>The project has the following structure:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>age
-├── .gitignore
-├── project.clj
-├── README.md
-├── resources
-│   └── public
-│       ├── css
-│       │   └── style.css
-│       └── index.html
-└── src
-    └── age
-        └── core.cljs</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>project.clj</code> file contains information that Leiningen uses to download
-dependencies and build the project. For now, just trust that everything in that
-file is exactly as it should be.</p>
-</div>
-<div class="paragraph">
-<p>Open the <code>index.html</code> file and add the <code>&lt;meta&gt;</code> element to the head of the document,
-and modify the body as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
-<span class="tok-nt">&lt;html&gt;</span>
-  <span class="tok-nt">&lt;head&gt;</span>
-    <span class="tok-nt">&lt;link</span> <span class="tok-na">href=</span><span class="tok-s">&quot;css/style.css&quot;</span> <span class="tok-na">rel=</span><span class="tok-s">&quot;stylesheet&quot;</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text/css&quot;</span><span class="tok-nt">&gt;</span>
-    <span class="tok-nt">&lt;meta</span> <span class="tok-na">http-equiv=</span><span class="tok-s">&quot;Content-Type&quot;</span> <span class="tok-na">content=</span><span class="tok-s">&quot;text/html;charset=utf-8&quot;</span> <span class="tok-nt">/&gt;</span>
-  <span class="tok-nt">&lt;/head&gt;</span>
-  <span class="tok-nt">&lt;body&gt;</span>
-    <span class="tok-nt">&lt;div</span> <span class="tok-na">id=</span><span class="tok-s">&quot;app&quot;</span><span class="tok-nt">&gt;</span>
-      <span class="tok-nt">&lt;h1&gt;</span>Age in Days<span class="tok-nt">&lt;/h1&gt;</span>
-      <span class="tok-nt">&lt;p&gt;</span>
-        Enter your age in years:
-        <span class="tok-nt">&lt;input</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text&quot;</span> <span class="tok-na">size=</span><span class="tok-s">&quot;5&quot;</span> <span class="tok-na">id=</span><span class="tok-s">&quot;years&quot;</span><span class="tok-nt">&gt;</span>
-        <span class="tok-nt">&lt;button</span> <span class="tok-na">id=</span><span class="tok-s">&quot;calculate&quot;</span><span class="tok-nt">&gt;</span>Calculate<span class="tok-nt">&lt;/button&gt;</span>
-      <span class="tok-nt">&lt;/p&gt;</span>
-      <span class="tok-nt">&lt;p</span> <span class="tok-na">id=</span><span class="tok-s">&quot;feedback&quot;</span><span class="tok-nt">&gt;&lt;/p&gt;</span>
-    <span class="tok-nt">&lt;/div&gt;</span>
-    <span class="tok-nt">&lt;script </span><span class="tok-na">src=</span><span class="tok-s">&quot;js/compiled/age.js&quot;</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text/javascript&quot;</span><span class="tok-nt">&gt;&lt;/script&gt;</span>
-  <span class="tok-nt">&lt;/body&gt;</span>
-<span class="tok-nt">&lt;/html&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The <code>core.cljs</code> file is where all the action takes place. For now, leave it exactly
-as it is, and start the figwheel environment, which will load a large number of
-dependencies and start a server.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein figwheel
-<span class="tok-c"># much output</span>
-Prompt will show when figwheel connects to your application</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you are using Linux or Mac OS X, type the command as <code>rlwrap lein figwheel</code>.
-In your browser, go to URL <code><a href="http://localhost:3449" class="bare">http://localhost:3449</a></code>, and you will see something
-like the following screenshot if you open up the web console.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/localhost1.png" alt="Screenshot of web page and console"/>
-</div>
-</div>
-<div class="paragraph">
-<p>The terminal will then give you a REPL prompt:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>rlwrap lein figwheel
-To quit, <span class="tok-nb">type</span>: :cljs/quit
-cljs.user<span class="tok-o">=</span>&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For now, do what it says in the <code>core.cljs</code> file&#8201;&#8212;&#8201;change the <code>(println&#8230;&#8203;)</code> and
-then save the file. When you do so, you will see the change reflected immediately
-in the browser.</p>
-</div>
-<div class="paragraph">
-<p>Then make an error by adding an extra closing parenthesis to the <code>println</code>. When
-you save the file, will see a compile error in the browser window.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/localhost2.png" alt="Screenshot of browser error message"/>
-</div>
-</div>
+<p><code>core.async</code> is not part of ClojureScript core but it&#8217;s implemented as a library.
+Even though is not part of the core language it&#8217;s widely used. Many libraries build
+on top of the <code>core.async</code> primitives, so we think is worth covering in the book.
+It&#8217;s also a good example of the syntactic abstractions that can be achieved by
+transforming code with ClojureScript macros, so we&#8217;ll jump right in. You&#8217;ll need
+to have <code>core.async</code> installed to run the examples presented in this section.</p>
 </div>
 <div class="sect3">
-<h4 id="interacting-with-javascript"><a class="link" href="#interacting-with-javascript">6.1.3. Interacting with JavaScript</a></h4>
+<h4 id="channels"><a class="link" href="#channels">5.7.1. Channels</a></h4>
 <div class="paragraph">
-<p>In the REPL window, type the following to invoke JavaScript’s <code>window.alert()</code>
-function:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.alert</span> <span class="tok-nv">js/window</span> <span class="tok-s">&quot;It works!&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; nil</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The general format for invoking a JavaScript function from ClojureScript is to
-give the function name (preceded by a dot), the object that “owns” the function,
-and any parameters to that function. You should see an alert appear in your
-browser winodw; when you dismiss the alert, the REPL will print <code>nil</code> and give
-you another prompt. You can also do it this way:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">js/alert</span> <span class="tok-s">&quot;It works!&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; nil</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>However, the first version always works, so, for consistency, we will use that
-notation throughout. You can create objects by using their class name followed by
-a dot, and you can call methods on any JavaScript objects:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">d</span> <span class="tok-p">(</span><span class="tok-nf">js/Date.</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; #inst &quot;2015-06-30T01:38:21.764-00:00&quot;</span>
-
-<span class="tok-p">(</span><span class="tok-nf">.getFullYear</span> <span class="tok-nv">d</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; 2015</span>
-
-<span class="tok-p">(</span><span class="tok-nf">.toUpperCase</span> <span class="tok-s">&quot;abc&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; &quot;ABC&quot;</span>
-
-<span class="tok-p">(</span><span class="tok-nf">.getElementById</span> <span class="tok-nv">js/document</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; #&lt;[object HTMLInputElement]&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>From that last example, you can see where we’re going. To retrieve an object’s
-property, use a <code>.-</code> before the property name. In the browser window, type a number
-into the input field (in the example, we typed <code>24</code>), then do this in the REPL.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-c1">;; for convenience define a variable</span>
-<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">year-field</span> <span class="tok-p">(</span><span class="tok-nf">.getElementById</span> <span class="tok-nv">js/document</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; #&lt;[object HTMLInputElement]&gt;</span>
-
-<span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-nv">year-field</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; &quot;24&quot;</span>
-
-<span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-nv">year-field</span><span class="tok-p">)</span> <span class="tok-s">&quot;25&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; &quot;25&quot;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This works, but it is little more than direct translation of JavaScript to
-ClojureScript. The next step is to add event handling to the button. Event handling
-is loaded with all sorts of cross-platform compatibility issues, so we’d like one
-step up from plain ClojureScript.</p>
-</div>
-<div class="paragraph">
-<p>The solution is the Google Closure library. To use it, you have to modify the
-<code>:require</code> clause at the beginning of <code>core.cljs</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">ns </span><span class="tok-o">^</span><span class="tok-ss">:figwheel-always</span> <span class="tok-nv">age.core</span>
-  <span class="tok-p">(</span><span class="tok-ss">:require</span> <span class="tok-p">[</span><span class="tok-nv">goog.dom</span> <span class="tok-ss">:as</span> <span class="tok-nv">dom</span><span class="tok-p">]</span>
-            <span class="tok-p">[</span><span class="tok-nv">goog.events</span> <span class="tok-ss">:as</span> <span class="tok-nv">events</span><span class="tok-p">]))</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Getting an element and setting its value is slightly easier. Do this in the REPL
-and see the results in the browser window.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">in-ns </span><span class="tok-ss">&#39;age.core</span><span class="tok-p">)</span>
-<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">y</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; #&lt;[object HTMLInputElement]&gt;</span>
-
-<span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-nv">y</span><span class="tok-p">)</span> <span class="tok-s">&quot;26&quot;</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; &quot;26&quot;</span>
-
-<span class="tok-p">(</span><span class="tok-nf">dom/setTextContent</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;feedback&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;This works!&quot;</span><span class="tok-p">)</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To add an event, you define a function that takes a single argument (the event to
-be handled), and then tell the appropriate HTML element to listen for it. the
-<code>events/listen</code> function takes three arguments: the element to listen to, the
-event to listen for, and the function that will handle the event.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">testing</span> <span class="tok-p">[</span><span class="tok-nv">evt</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nf">js/alert</span> <span class="tok-s">&quot;Responding to click&quot;</span><span class="tok-p">))</span>
-
-<span class="tok-p">(</span><span class="tok-nf">events/listen</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;calculate&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;click&quot;</span> <span class="tok-nv">testing</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; #&lt;[object Object]&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>After doing this, the browser should respond to a click on the button.
-If you would like to remove the listener, use <code>unlisten</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">events/unlisten</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;calculate&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;click&quot;</span> <span class="tok-nv">testing</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; true</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now, put that all together in the <code>core.cljs</code> file as follows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">ns </span><span class="tok-o">^</span><span class="tok-ss">:figwheel-always</span> <span class="tok-nv">age.core</span>
-  <span class="tok-p">(</span><span class="tok-ss">:require</span> <span class="tok-p">[</span><span class="tok-nv">goog.dom</span> <span class="tok-ss">:as</span> <span class="tok-nv">dom</span><span class="tok-p">]</span>
-            <span class="tok-p">[</span><span class="tok-nv">goog.events</span> <span class="tok-ss">:as</span> <span class="tok-nv">events</span><span class="tok-p">]))</span>
-
-<span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
-
-<span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">calculate</span>
-  <span class="tok-p">[</span><span class="tok-nv">event</span><span class="tok-p">]</span>
-  <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">years</span> <span class="tok-p">(</span><span class="tok-nf">.parseInt</span> <span class="tok-nv">js/window</span> <span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">)))</span>
-        <span class="tok-nv">days</span> <span class="tok-p">(</span><span class="tok-nb">* </span><span class="tok-mi">365</span> <span class="tok-nv">years</span><span class="tok-p">)]</span>
-    <span class="tok-p">(</span><span class="tok-nf">dom/setTextContent</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;feedback&quot;</span><span class="tok-p">)</span>
-                        <span class="tok-p">(</span><span class="tok-nb">str </span><span class="tok-s">&quot;That is &quot;</span> <span class="tok-nv">days</span> <span class="tok-s">&quot; days old.&quot;</span><span class="tok-p">))))</span>
-
-<span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">on-js-reload</span> <span class="tok-p">[])</span>
-
-<span class="tok-p">(</span><span class="tok-nf">events/listen</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;calculate&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;click&quot;</span> <span class="tok-nv">calculate</span><span class="tok-p">)</span></code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="appendix-b-csp-and-core-async"><a class="link" href="#appendix-b-csp-and-core-async">6.2. Appendix B: CSP and core.async</a></h3>
-<div class="paragraph">
-<p>CSP stands for Communicating Sequential Processes, which is a formalism for describing
-concurrent systems pioneered by C. A. R. Hoare in 1978. It is a concurrency model based
-on message passing and synchronization through channels. An in-depth look at the
-theoretical model behind CSP is out of the scope of this book, instead we&#8217;ll focus on
-presenting the concurrency primitives that <code>core.async</code> offers.</p>
-</div>
-<div class="paragraph">
-<p><code>core.async</code> is not part of ClojureScript core but it&#8217;s implemented as a library. Even
-though is not part of the core language it&#8217;s widely used and many libraries build on top
-of its primitives so we think is worth covering in the book. It&#8217;s also a good example of
-the syntactic abstractions that can be achieved transforming code with ClojureScript
-macros, so let&#8217;s jump right in. You&#8217;ll need to have <code>core.async</code> installed to run the
-examples presented in this section.</p>
-</div>
-<div class="sect3">
-<h4 id="channels"><a class="link" href="#channels">6.2.1. Channels</a></h4>
-<div class="paragraph">
-<p>Channels are like conveyor belts, we can put and take a single value at a time from them.
-They can have multiple readers and writers and are the message-passing primitive of
-<code>core.async</code>. Let&#8217;s create a channel do some operations on it:</p>
+<p>Channels are like conveyor belts, we can put and take a single value at a time
+from them. They can have multiple readers and writers, and they are the fundamental
+message-passing mechanism of <code>core.async</code>. In order to see how it works, we&#8217;ll
+create a channel perform some operations on it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9130,17 +8849,18 @@ They can have multiple readers and writers and are the message-passing primitive
 </div>
 </div>
 <div class="paragraph">
-<p>In the above example we created a channel (<code>ch</code>) using the <code>chan</code> constructor. After that
-we performed a take operation on the channel, providing a callback that will be invoked
-when the take operation succeeds. After using <code>put!</code> to put a value on the channel the
-take operation completed and the <code>"Got a value: 42"</code> string was printed. Note that <code>put!</code>
-returned the value that was just put to the channel.</p>
+<p>In the above example we created a channel <code>ch</code> using the <code>chan</code> constructor.
+After that we performed a take operation on the channel, providing a callback
+that will be invoked when the take operation succeeds. After using <code>put!</code> to put a
+value on the channel the take operation completed and the <code>"Got a value: 42"</code>
+string was printed. Note that <code>put!</code> returned the value that was just put to the
+channel.</p>
 </div>
 <div class="paragraph">
-<p>The <code>put!</code> function also accepts a callback like <code>take!</code> does but we didn&#8217;t provide any in
-the last example. For puts the callback will be called whenever the value we provided has
-been taken. Puts and takes can happen in any order, let&#8217;s do a few puts followed by
-takes to illustrate the point:</p>
+<p>The <code>put!</code> function accepts a callback like <code>take!</code> does but we didn&#8217;t provide
+any in the last example. For puts the callback will be called whenever the value we
+provided has been taken. Puts and takes can happen in any order, let&#8217;s do a few puts
+followed by takes to illustrate the point:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9165,9 +8885,9 @@ takes to illustrate the point:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>You may be asking yourself why the <code>put!</code> operations return <code>true</code>. It signals that the
-put operation could be performed, even though the value hasn&#8217;t yet been taken. Channels
-can be closed, which will cause the put operations to not succeed:</p>
+<p>You may be asking yourself why the <code>put!</code> operations return <code>true</code>. It signals that
+the put operation could be performed, even though the value hasn&#8217;t yet been taken.
+Channels can be closed, which will cause the put operations to not succeed:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9184,8 +8904,8 @@ can be closed, which will cause the put operations to not succeed:</p>
 </div>
 <div class="paragraph">
 <p>The above example was the simplest possible situation but what happens with pending
-operations when a channel is closed? Let&#8217;s do a few takes and close the channel and see
-what happens:</p>
+operations when a channel is closed? Let&#8217;s do a few takes and close the channel and
+see what happens:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9205,9 +8925,10 @@ what happens:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We see that if the channel is closed all the <code>take!</code> operations receive a <code>nil</code> value.
-<code>nil</code> in channels is a sentinel value that signals to takers that the channel has been
-closed. Because of that, putting a <code>nil</code> value on a channel is not allowed:</p>
+<p>We see that if the channel is closed all the <code>take!</code> operations receive a <code>nil</code>
+value. <code>nil</code> in channels is a sentinel value that signals to takers that the
+channel has been closed. Because of that, putting a <code>nil</code> value on a channel is
+not allowed:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9223,8 +8944,8 @@ closed. Because of that, putting a <code>nil</code> value on a channel is not al
 <h5 id="buffers"><a class="link" href="#buffers">Buffers</a></h5>
 <div class="paragraph">
 <p>We&#8217;ve seen that pending take and put operations are enqueued in a channel but, what
-happens when there are many pending take or put operations? Let&#8217;s find out by hammering a
-channel with many puts and takes:</p>
+happens when there are many pending take or put operations? Let&#8217;s find out by
+hammering a channel with many puts and takes:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9244,17 +8965,17 @@ channel with many puts and takes:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>As the example above shows there&#8217;s a limit of pending puts or takes on a channel, it&#8217;s
-currently 1024 but that is an implementation detail that may change. Note that there can&#8217;t
-be both pending puts and pending takes on a channel since puts will immediately succeed
-if there are pending takes and viceversa.</p>
+<p>As the example above shows there&#8217;s a limit of pending puts or takes on a channel,
+it&#8217;s currently 1024 but that is an implementation detail that may change. Note that
+there can&#8217;t be both pending puts and pending takes on a channel since puts will
+immediately succeed if there are pending takes and viceversa.</p>
 </div>
 <div class="paragraph">
-<p>Channels support buffering of put operations. If we create a channel with a buffer the put
-operations will succeed immediately if there&#8217;s room in the buffer and be enqueued
-otherwise. Let&#8217;s illustrate the point creating a channel with a buffer of one element. The
-<code>chan</code> constructors accepts a number as its first argument which will cause it to have
-a buffer with the given size:</p>
+<p>Channels support buffering of put operations. If we create a channel with a buffer
+the put operations will succeed immediately if there&#8217;s room in the buffer and be
+enqueued otherwise. Let&#8217;s illustrate the point creating a channel with a buffer of
+one element. The <code>chan</code> constructors accepts a number as its first argument which
+will cause it to have a buffer with the given size:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9275,27 +8996,29 @@ a buffer with the given size:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>What happened in the example above? We created a channel with a buffer of size 1 and
-performed a put operation on it that succeeded immediately because the value was buffered.
-After that we did another 1024 puts to fill the pending put queue and, when trying to put
-one value more the channel complained about not being able to enqueue more puts.</p>
+<p>What happened in the example above? We created a channel with a buffer of size 1
+and performed a put operation on it that succeeded immediately because the value
+was buffered. After that we did another 1024 puts to fill the pending put queue
+and, when trying to put one value more the channel complained about not being able
+to enqueue more puts.</p>
 </div>
 <div class="paragraph">
-<p>Now that we know about how channels work and what are buffers used for let&#8217;s explore the
-different buffers that <code>core.async</code> implements. Different buffers have different policies
-and it&#8217;s interesting to know all of them to know when to use what. Channels are unbuffered
-by default.</p>
+<p>Now that we know about how channels work and what are buffers used for let&#8217;s
+explore the different buffers that <code>core.async</code> implements. Different buffers
+have different policies and it&#8217;s interesting to know all of them to know when to
+use what. Channels are unbuffered by default.</p>
 </div>
 <div class="sect5">
 <h6 id="fixed"><a class="link" href="#fixed">Fixed</a></h6>
 <div class="paragraph">
-<p>The fixed size buffer is the one that is created when we give the <code>chan</code> constructor a
-number and it will have the size specified by the given number. It is the simplest
+<p>The fixed size buffer is the one that is created when we give the <code>chan</code> constructor
+a number and it will have the size specified by the given number. It is the simplest
 possible buffer: when full, puts will be enqueued.</p>
 </div>
 <div class="paragraph">
-<p>The <code>chan</code> constructor accepts either a number or a buffer as its first argument. The two
-channels created in the following example both use a fixed buffer of size 32:</p>
+<p>The <code>chan</code> constructor accepts either a number or a buffer as its first argument.
+The two channels created in the following example both use a fixed buffer of
+size 32:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9310,13 +9033,13 @@ channels created in the following example both use a fixed buffer of size 32:</p
 <div class="sect5">
 <h6 id="dropping"><a class="link" href="#dropping">Dropping</a></h6>
 <div class="paragraph">
-<p>The fixed buffer allows put operations to be enqueued. However, as we saw before, puts
-are still queued when the fixed buffer is full. If we wan&#8217;t to discard the put operations
-that happen when the buffer is full we can use a dropping buffer.</p>
+<p>The fixed buffer allows put operations to be enqueued. However, as we saw before,
+puts are still queued when the fixed buffer is full. If we wan&#8217;t to discard the
+put operations that happen when the buffer is full we can use a dropping buffer.</p>
 </div>
 <div class="paragraph">
-<p>Dropping buffers have a fixed size and, when they are full puts will complete but their
-value will be discarded. Let&#8217;s illustrate the point with an example:</p>
+<p>Dropping buffers have a fixed size and, when they are full puts will complete but
+their value will be discarded. Let&#8217;s illustrate the point with an example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9342,19 +9065,19 @@ value will be discarded. Let&#8217;s illustrate the point with an example:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We performed three put operations and the three of them succeded but, since the dropping
-buffer of the channel has size 2, only the first two values were delivered to the takers.
-As you can observe the third take is enqueued since there is no value available, the third
-put&#8217;s value (42) was discarded.</p>
+<p>We performed three put operations and the three of them succeded but, since the
+dropping buffer of the channel has size 2, only the first two values were delivered
+to the takers. As you can observe the third take is enqueued since there is no
+value available, the third put&#8217;s value (42) was discarded.</p>
 </div>
 </div>
 <div class="sect5">
 <h6 id="sliding"><a class="link" href="#sliding">Sliding</a></h6>
 <div class="paragraph">
-<p>The sliding buffer has the opposite policy than the dropping buffer. When full puts will
-complete and the oldest value will be discarded in favor of the new one. The sliding
-buffer is useful when we are interested in processing the last puts only and we can afford
-discarding old values.</p>
+<p>The sliding buffer has the opposite policy than the dropping buffer. When full
+puts will complete and the oldest value will be discarded in favor of the new one.
+The sliding buffer is useful when we are interested in processing the last puts
+only and we can afford discarding old values.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9380,26 +9103,26 @@ discarding old values.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We performed three put operations and the three of them succeded but, since the sliding
-buffer of the channel has size 2, only the last two values were delivered to the takers.
-As you can observe the third take is enqueued since there is no value available since the
-first put&#8217;s value was discarded.</p>
+<p>We performed three put operations and the three of them succeded but, since the
+sliding buffer of the channel has size 2, only the last two values were delivered
+to the takers. As you can observe the third take is enqueued since there is no
+value available since the first put&#8217;s value was discarded.</p>
 </div>
 </div>
 </div>
 <div class="sect4">
 <h5 id="transducers-2"><a class="link" href="#transducers-2">Transducers</a></h5>
 <div class="paragraph">
-<p>As mentioned in the section about transducers, putting values in a channel can be thought
-as a transducible process. This means that we can create channels and hand them a
-transducer, giving us the ability to transform the input values before being put in the
-channel.</p>
+<p>As mentioned in the section about transducers, putting values in a channel can be
+thought as a transducible process. This means that we can create channels and
+hand them a transducer, giving us the ability to transform the input values before
+being put in the channel.</p>
 </div>
 <div class="paragraph">
-<p>If we want to use a transducer with a channel we must supply a buffer since the reducing
-function that will be modified by the transducer will be the buffer&#8217;s add function.
-A buffer&#8217;s add function is a reducing function since it takes a buffer and an input and
-returns a buffer with such input incorporated.</p>
+<p>If we want to use a transducer with a channel we must supply a buffer since the
+reducing function that will be modified by the transducer will be the buffer&#8217;s
+add function. A buffer&#8217;s add function is a reducing function since it takes a
+buffer and an input and returns a buffer with such input incorporated.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9417,8 +9140,8 @@ returns a buffer with such input incorporated.</p>
 </div>
 <div class="paragraph">
 <p>You may be wondering what happens to a channel when the reducing function returns a
-reduced value. It turns out that the notion of termination for channels is being closed,
-so channels will be closed when a reduced value is encountered:</p>
+reduced value. It turns out that the notion of termination for channels is being
+closed, so channels will be closed when a reduced value is encountered:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9445,25 +9168,25 @@ so channels will be closed when a reduced value is encountered:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We used the <code>take</code> stateful transducer to allow maximum 2 puts into the channel. We then
-performed three take operations on the channel and we expect only two to receive a value.
-As you can see in the above example the third take got the sentinel <code>nil</code> value which
-indicates that the channel was closed. Also, the third put operation returned <code>false</code>
-indicating that it didn&#8217;t take place.</p>
+<p>We used the <code>take</code> stateful transducer to allow maximum 2 puts into the channel.
+We then performed three take operations on the channel and we expect only two to
+receive a value. As you can see in the above example the third take got the
+sentinel <code>nil</code> value which indicates that the channel was closed. Also, the third
+put operation returned <code>false</code> indicating that it didn&#8217;t take place.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="handling-exceptions"><a class="link" href="#handling-exceptions">Handling exceptions</a></h5>
 <div class="paragraph">
-<p>If adding a value to a buffer throws an exception <code>core.async</code> the operation will fail and
-the exception will be logged to the console. However, channel constructors accept a third
-argument: a function for handling exceptions.</p>
+<p>If adding a value to a buffer throws an exception <code>core.async</code> the operation will
+fail and the exception will be logged to the console. However, channel constructors
+accept a third argument: a function for handling exceptions.</p>
 </div>
 <div class="paragraph">
-<p>When creating a channel with an exception handler it will be called with the exception
-whenever an exception occurs. If the handler returns <code>nil</code> the operation will fail
-silently and if it returns another value the add operation will be retried with such
-value.</p>
+<p>When creating a channel with an exception handler it will be called with the
+exception whenever an exception occurs. If the handler returns <code>nil</code> the operation
+will fail silently and if it returns another value the add operation will be
+retried with such value.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9493,16 +9216,68 @@ value.</p>
 </div>
 </div>
 </div>
+<div class="sect4">
+<h5 id="offer-and-poll"><a class="link" href="#offer-and-poll">Offer and Poll</a></h5>
+<div class="paragraph">
+<p>We&#8217;ve learned about the two basic operations on channels so far: <code>put!</code> and <code>take!</code>.
+They  either take or put a value and are enqueued if they can&#8217;t be performed
+immediately. Both functions are asynchronous because of their nature: they can
+succeed but be completed at a later time.</p>
+</div>
+<div class="paragraph">
+<p><code>core.async</code> has two synchronous operations for putting or taking values: <code>offer!</code>
+and <code>poll!</code>. Let&#8217;s see how they work through examples.</p>
+</div>
+<div class="paragraph">
+<p><code>offer!</code> puts a value in a channel if it&#8217;s possible to do so immediately. It
+returns <code>true</code> if the channel received the value and <code>false</code> otherwise. Note that, unlike with <code>put!</code>, <code>offer!</code>
+cannot distinguish between closed and open channels.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">offer!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-mi">1</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">offer!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">offer!</span> <span class="tok-nv">ch</span> <span class="tok-mi">43</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; false</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>poll!</code> takes a value from a channel if it&#8217;s possible to do so immediately. Returns
+the value if succesful and <code>nil</code> otherwise. Unlike <code>take!</code>, <code>poll!</code> cannot
+distinguish closed and open channels.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">offer!</span> <span class="tok-nv">poll!</span><span class="tok-p">]])</span>
+
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">ch</span> <span class="tok-p">(</span><span class="tok-nf">chan</span> <span class="tok-mi">1</span><span class="tok-p">))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">poll!</span> <span class="tok-nv">ch</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; nil</span>
+
+<span class="tok-p">(</span><span class="tok-nf">offer!</span> <span class="tok-nv">ch</span> <span class="tok-mi">42</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span>
+
+<span class="tok-p">(</span><span class="tok-nf">poll!</span> <span class="tok-nv">ch</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 42</span></code></pre>
+</div>
+</div>
+</div>
 </div>
 <div class="sect3">
-<h4 id="processes"><a class="link" href="#processes">6.2.2. Processes</a></h4>
+<h4 id="processes"><a class="link" href="#processes">5.7.2. Processes</a></h4>
 <div class="paragraph">
-<p>We learned all about channels but there is still a missing piece in the puzzle: processes.
-Processes are pieces of logic that run independently and use channels for communication
-and coordination. Puts and takes inside a process will stop the process until the
-operation completes. Stopping a process doesn&#8217;t block the only thread we have in the
-environments where ClojureScript runs. Instead, it will be resumed at a later time when
-the operation is waiting for being performed.</p>
+<p>We learned all about channels but there is still a missing piece in the puzzle:
+processes.  Processes are pieces of logic that run independently and use channels
+for communication and coordination. Puts and takes inside a process will stop the
+process until the operation completes. Stopping a process doesn&#8217;t block the only
+thread we have in the environments where ClojureScript runs. Instead, it will be
+resumed at a later time when the operation is waiting for being performed.</p>
 </div>
 <div class="paragraph">
 <p>Processes are launched using the <code>go</code> macro and puts and takes use the <code>&lt;!</code> and <code>&gt;!</code>
@@ -9534,23 +9309,27 @@ everything looks like synchronous code, which makes understanding it straightfor
 </div>
 </div>
 <div class="paragraph">
-<p>In the above example we are launching a process with <code>go</code> that takes a value from <code>ch</code> and
-prints it to the console. Since the value isn&#8217;t immediately available it will park until
-it can resume. After that we launch another process that puts a value on the channel.
-Since there is a pending take the put operation succeeds and the value is delivered to
-the first process, then both processes terminate.</p>
+<p>In the above example we are launching a process with <code>go</code> that takes a value from
+<code>ch</code> and prints it to the console. Since the value isn&#8217;t immediately available it
+will park until it can resume. After that we launch another process that puts a
+value on the channel.</p>
 </div>
 <div class="paragraph">
-<p>Both <code>go</code> blocks run independently and, even though they are executed asynchronously, they
-look like synchronous code. The above go blocks are fairly simple but being able to
-write concurrent processes that coordinate via channels is a very powerful tool for
-implementing complex asynchronous workflows. Channels also offer a great decoupling of
-producers and consumers.</p>
+<p>Since there is a pending take the put operation succeeds and the value is delivered
+to the first process, then both processes terminate.</p>
 </div>
 <div class="paragraph">
-<p>Processes can wait for an arbitrary amount of time too, there is a <code>timeout</code> function
-that return a channel that will be closed after the given amount of miliseconds. Combining
-a timeout channel with a take operation inside a go block gives us the ability to sleep:</p>
+<p>Both <code>go</code> blocks run independently and, even though they are executed
+asynchronously, they look like synchronous code. The above go blocks are fairly
+simple but being able to write concurrent processes that coordinate via channels is
+a very powerful tool for implementing complex asynchronous workflows. Channels also
+offer a great decoupling of producers and consumers.</p>
+</div>
+<div class="paragraph">
+<p>Processes can wait for an arbitrary amount of time too, there is a <code>timeout</code>
+function that return a channel that will be closed after the given amount of
+miliseconds. Combining a timeout channel with a take operation inside a go block
+gives us the ability to sleep:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9579,23 +9358,23 @@ a timeout channel with a take operation inside a go block gives us the ability t
 </div>
 </div>
 <div class="paragraph">
-<p>As we can see in the messages printed, the process does nothing for one second when it
-blocks in the take operation of the timeout channel. The program continues and after one
-second the process resumes and terminates.</p>
+<p>As we can see in the messages printed, the process does nothing for one second when
+it blocks in the take operation of the timeout channel. The program continues and
+after one second the process resumes and terminates.</p>
 </div>
 <div class="sect4">
 <h5 id="choice"><a class="link" href="#choice">Choice</a></h5>
 <div class="paragraph">
-<p>Apart from putting and taking one value at a time inside a go block we can also make a
-non-deterministic choice on multiple channel operations using <code>alts!</code>. <code>alts!</code> is given
-a series of channel put or take operations (note that we can also try to put and take in
-a channel at the same time) and only performs one as soon as is ready; if multiple
-operations can be performed when calling <code>alts!</code> it will do a pseudo random choice by
-default.</p>
+<p>Apart from putting and taking one value at a time inside a go block we can also
+make a non-deterministic choice on multiple channel operations using <code>alts!</code>.
+<code>alts!</code> is given a series of channel put or take operations (note that we can also
+try to put and take in a channel at the same time) and only performs one as soon as
+is ready; if multiple operations can be performed when calling <code>alts!</code> it will do
+a pseudo random choice by default.</p>
 </div>
 <div class="paragraph">
-<p>We can easily try an operation on a channel and cancel it after a certain amount of time
-combining the <code>timeout</code> function and <code>alts!</code>. Let&#8217;s see how:</p>
+<p>We can easily try an operation on a channel and cancel it after a certain amount
+of time combining the <code>timeout</code> function and <code>alts!</code>. Let&#8217;s see how:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9628,22 +9407,28 @@ combining the <code>timeout</code> function and <code>alts!</code>. Let&#8217;s 
 </div>
 </div>
 <div class="paragraph">
-<p>In the example above we launched a go block that, after waiting for a second, puts a value
-in the <code>ch</code> channel. The other go block creates a <code>cancel</code> channel, which will be closed
-after 300 miliseconds. After that, it tries to read from both <code>ch</code> and <code>cancel</code> at the same
-time using <code>alts!</code>, which will succeed whenever it can take a value from either of those
-channels. Since <code>cancel</code> is closed after 300 miliseconds, <code>alts!</code> will succeed since takes
-from closed channel return the <code>nil</code> sentinel. Note that <code>alts!</code> returns a two-element
-vector with the returned value of the operation and the channel where it was performed.
-This is why we are able to detect whether the read operation was performed in the <code>cancel</code>
-channel or in <code>ch</code>. I suggest you copy this example and set the first process timeout to
-100 miliseconds to see how the read operation on <code>ch</code> succeeds.</p>
+<p>In the example above we launched a go block that, after waiting for a second, puts
+a value in the <code>ch</code> channel. The other go block creates a <code>cancel</code> channel, which
+will be closed after 300 miliseconds. After that, it tries to read from both <code>ch</code>
+and <code>cancel</code> at the same time using <code>alts!</code>, which will succeed whenever it can
+take a value from either of those channels. Since <code>cancel</code> is closed after 300
+miliseconds, <code>alts!</code> will succeed since takes from closed channel return the <code>nil</code>
+sentinel. Note that <code>alts!</code> returns a two-element vector with the returned value
+of the operation and the channel where it was performed.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;ve learned how to choose between read operations so let&#8217;s look at how to express a
-conditional write operation in <code>alts!</code>. Since we need to provide the channel and a value
-to try to put on it, we&#8217;ll use a two element vector with the channel and the value for
-representing write operations. Let&#8217;s see an example:</p>
+<p>This is why we are able to detect whether the read operation was performed in the
+<code>cancel</code> channel or in <code>ch</code>. I suggest you copy this example and set the first
+process timeout to 100 miliseconds to see how the read operation on <code>ch</code> succeeds.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ve learned how to choose between read operations so let&#8217;s look at how to express
+a conditional write operation in <code>alts!</code>. Since we need to provide the channel and
+a value to try to put on it, we&#8217;ll use a two element vector with the channel and
+the value for representing write operations.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s see an example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9682,18 +9467,18 @@ representing write operations. Let&#8217;s see an example:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>When running the above example only the put operation on the <code>a-ch</code> channel has succeeded.
-Since both channels are ready to take a value when the <code>alts!</code> occurs you may get
-different results when running this code.</p>
+<p>When running the above example only the put operation on the <code>a-ch</code> channel has
+succeeded. Since both channels are ready to take a value when the <code>alts!</code> occurs
+you may get different results when running this code.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="priority"><a class="link" href="#priority">Priority</a></h5>
 <div class="paragraph">
-<p><code>alts!</code> default is to make a non-deterministic choice whenever several operations are
-ready to be performed. We can instead give priority to the operations passing the
-<code>:priority</code> option to <code>alts!</code>. Whenever <code>:priority</code> is <code>true</code>, if more than one operation
-is ready they will be tried in order.</p>
+<p><code>alts!</code> default is to make a non-deterministic choice whenever several operations
+are ready to be performed. We can instead give priority to the operations passing
+the <code>:priority</code> option to <code>alts!</code>. Whenever <code>:priority</code> is <code>true</code>, if more than
+one operation is ready they will be tried in order.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9731,18 +9516,19 @@ is ready they will be tried in order.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Since both <code>a-ch</code> and <code>another-ch</code> had a value to read when the <code>alts!</code> was executed and
-we set the <code>:priority</code> option to true, <code>a-ch</code> has preference. You can try deleting the
-<code>:priority</code> option and running the example multiple times to see that, without priority,
-<code>alts!</code> makes a non-deterministic choice.</p>
+<p>Since both <code>a-ch</code> and <code>another-ch</code> had a value to read when the <code>alts!</code> was
+executed and we set the <code>:priority</code> option to true, <code>a-ch</code> has preference. You can
+try deleting the <code>:priority</code> option and running the example multiple times to see
+that, without priority, <code>alts!</code> makes a non-deterministic choice.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="defaults"><a class="link" href="#defaults">Defaults</a></h5>
 <div class="paragraph">
-<p>Another interesting bit of <code>alts!</code> is that it can return immediately if no operation is
-ready and we provide a default value. We can conditionally do a choice on the operations
-if and only if any of them is ready, returning a default value if it&#8217;s not.</p>
+<p>Another interesting bit of <code>alts!</code> is that it can return immediately if no
+operation is ready and we provide a default value. We can conditionally do a choice
+on the operations if and only if any of them is ready, returning a default value
+if it&#8217;s not.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9766,24 +9552,25 @@ if and only if any of them is ready, returning a default value if it&#8217;s not
 </div>
 <div class="paragraph">
 <p>As you can see in the above example, if no operation is ready the value returned by
-<code>alts!</code> is the one we supplied after the <code>:default</code> key when calling it and the channel is
-the <code>:default</code> keyword itself.</p>
+<code>alts!</code> is the one we supplied after the <code>:default</code> key when calling it and the
+channel is the <code>:default</code> keyword itself.</p>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="combinators"><a class="link" href="#combinators">6.2.3. Combinators</a></h4>
+<h4 id="combinators"><a class="link" href="#combinators">5.7.3. Combinators</a></h4>
 <div class="paragraph">
-<p>Now that we&#8217;re acquainted with channels and processes it&#8217;s time to explore some interesting
-combinators for working with channels that are present in <code>core.async</code>. This section
-includes a brief description of all of them together with a simple example of their usage.</p>
+<p>Now that we&#8217;re acquainted with channels and processes it&#8217;s time to explore some
+interesting combinators for working with channels that are present in <code>core.async</code>.
+This section includes a brief description of all of them together with a simple
+example of their usage.</p>
 </div>
 <div class="sect4">
 <h5 id="pipe"><a class="link" href="#pipe">pipe</a></h5>
 <div class="paragraph">
-<p><code>pipe</code> takes an input and output channels and pipes all the values put on the input channel
-to the output one. The output channel is closed whenever the source is closed unless we
-provide a <code>false</code> third argument:</p>
+<p><code>pipe</code> takes an input and output channels and pipes all the values put on the input
+channel to the output one. The output channel is closed whenever the source is
+closed unless we provide a <code>false</code> third argument:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9817,26 +9604,26 @@ provide a <code>false</code> third argument:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In the above example we used the <code>go-loop</code> macro for reading values recursively until the
-<code>out</code> channel is closed. Notice that when we close the <code>in</code> channel the <code>out</code> channel is
-closed too, making the <code>go-loop</code> terminate.</p>
+<p>In the above example we used the <code>go-loop</code> macro for reading values recursively
+until the <code>out</code> channel is closed. Notice that when we close the <code>in</code> channel the
+<code>out</code> channel is closed too, making the <code>go-loop</code> terminate.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="pipeline-async"><a class="link" href="#pipeline-async">pipeline-async</a></h5>
 <div class="paragraph">
-<p><code>pipeline-async</code> takes a number for controlling parallelism, an output channel, an
-asynchronous function and an input channel. The asynchronous function has two arguments:
-the value put in the input channel and a channel where it should put the result of its
-asynchronous operation, closing the result channel after finishing. The number controls
-the number of concurrent go blocks that will be used for calling the asynchronous function
-with the inputs.</p>
+<p><code>pipeline-async</code> takes a number for controlling parallelism, an output channel,
+an asynchronous function and an input channel. The asynchronous function has two
+arguments: the value put in the input channel and a channel where it should put the
+result of its asynchronous operation, closing the result channel after finishing.
+The number controls the number of concurrent go blocks that will be used for calling
+the asynchronous function with the inputs.</p>
 </div>
 <div class="paragraph">
 <p>The output channel will receive outputs in an order relative to the input channel,
-regardless the time each asynchronous function call takes to complete. It has an optional
-last parameter that controls whether the output channel will be closed when the input
-channel is closed, which defaults to <code>true</code>.</p>
+regardless the time each asynchronous function call takes to complete. It has an
+optional last parameter that controls whether the output channel will be closed
+when the input channel is closed, which defaults to <code>true</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9886,8 +9673,9 @@ channel is closed, which defaults to <code>true</code>.</p>
 <div class="sect4">
 <h5 id="pipeline"><a class="link" href="#pipeline">pipeline</a></h5>
 <div class="paragraph">
-<p><code>pipeline</code> is similar to <code>pipeline-async</code> but instead of taking and asynchronous function
-it takes a transducer instead. The transducer will be applied independently to each input.</p>
+<p><code>pipeline</code> is similar to <code>pipeline-async</code> but instead of taking and asynchronous
+function it takes a transducer instead. The transducer will be applied independently
+to each input.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9926,10 +9714,11 @@ it takes a transducer instead. The transducer will be applied independently to e
 <div class="sect4">
 <h5 id="split"><a class="link" href="#split">split</a></h5>
 <div class="paragraph">
-<p><code>split</code> takes a predicate and a channel and returns a vector with two channels, the first
-of which will receive the values for which the predicate is true, the second will receive
-those for which the predicate is false. We can optionally pass a buffer or number for the
-channels with the third (true channel) and fourth (false channel) arguments.</p>
+<p><code>split</code> takes a predicate and a channel and returns a vector with two channels, the
+first of which will receive the values for which the predicate is true, the second
+will receive those for which the predicate is false. We can optionally pass a buffer
+or number for the channels with the third (true channel) and fourth (false channel)
+arguments.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9980,8 +9769,8 @@ channels with the third (true channel) and fourth (false channel) arguments.</p>
 <h5 id="reduce"><a class="link" href="#reduce">reduce</a></h5>
 <div class="paragraph">
 <p><code>reduce</code> takes a reducing function, initial value and an input channel. It returns a
-channel with the result of reducing over all the values put on the input channel before
-closing it using the given initial value as the seed.</p>
+channel with the result of reducing over all the values put on the input channel
+before closing it using the given initial value as the seed.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10006,10 +9795,10 @@ closing it using the given initial value as the seed.</p>
 <div class="sect4">
 <h5 id="onto-chan"><a class="link" href="#onto-chan">onto-chan</a></h5>
 <div class="paragraph">
-<p><code>onto-chan</code> takes a channel and a collection and puts the contents of the collection into
-the channel. It closes the channel after finishing although it accepts a third argument for
-specifying if it should close it or not. Let&#8217;s rewrite the <code>reduce</code> example using
-<code>onto-chan</code>:</p>
+<p><code>onto-chan</code> takes a channel and a collection and puts the contents of the collection
+into the channel. It closes the channel after finishing although it accepts a third
+argument for specifying if it should close it or not. Let&#8217;s rewrite the <code>reduce</code>
+example using <code>onto-chan</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10030,8 +9819,8 @@ specifying if it should close it or not. Let&#8217;s rewrite the <code>reduce</c
 <div class="sect4">
 <h5 id="to-chan"><a class="link" href="#to-chan">to-chan</a></h5>
 <div class="paragraph">
-<p><code>to-chan</code> takes a collection and returns a channel where it will put every value in the
-collection, closing the channel afterwards.</p>
+<p><code>to-chan</code> takes a collection and returns a channel where it will put every value in
+the collection, closing the channel afterwards.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10061,10 +9850,10 @@ collection, closing the channel afterwards.</p>
 <div class="sect4">
 <h5 id="merge"><a class="link" href="#merge">merge</a></h5>
 <div class="paragraph">
-<p><code>merge</code> takes a collection of input channels and returns a channel where it will put every
-value that is put on the input channels. The returned channel will be closed when all the
-input channels have been closed. The returned channel will be unbuffered by default but a
-number or buffer can be provided as the last argument.</p>
+<p><code>merge</code> takes a collection of input channels and returns a channel where it will
+put every value that is put on the input channels. The returned channel will be
+closed when all the input channels have been closed. The returned channel will be
+unbuffered by default but a number or buffer can be provided as the last argument.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10104,28 +9893,31 @@ number or buffer can be provided as the last argument.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="higher-level-abstractions"><a class="link" href="#higher-level-abstractions">6.2.4. Higher-level abstractions</a></h4>
+<h4 id="higher-level-abstractions"><a class="link" href="#higher-level-abstractions">5.7.4. Higher-level abstractions</a></h4>
 <div class="paragraph">
-<p>We&#8217;ve learned the about the low-level primitives of <code>core.async</code> and the combinators that it offers
-for working with channels. <code>core.async</code> also offers some useful, higher-level abstractions on top of
-channels that can serve as building blocks for more advanced functionality.</p>
+<p>We&#8217;ve learned the about the low-level primitives of <code>core.async</code> and the combinators
+that it offers for working with channels. <code>core.async</code> also offers some useful,
+higher-level abstractions on top of channels that can serve as building blocks for
+more advanced functionality.</p>
 </div>
 <div class="sect4">
 <h5 id="mult"><a class="link" href="#mult">Mult</a></h5>
 <div class="paragraph">
-<p>Whenever we have a channel whose values have to be broadcasted to many others, we can use <code>mult</code> for
-creating a multiple of the supplied channel. Once we have a mult, we can attach channels to it using
-<code>tap</code> and dettach them using <code>untap</code>. Mults also support removing all tapped channels at once with
-<code>untap-all</code>.</p>
+<p>Whenever we have a channel whose values have to be broadcasted to many others, we
+can use <code>mult</code> for creating a multiple of the supplied channel. Once we have a mult,
+we can attach channels to it using <code>tap</code> and dettach them using <code>untap</code>. Mults also
+support removing all tapped channels at once with <code>untap-all</code>.</p>
 </div>
 <div class="paragraph">
-<p>Every value put in the source channel of a mult is broadcasted to all the tapped channels, and all of
-them must accept it before the next item is broadcasted. For preventing slow takers from blocking the
-mult&#8217;s values we must use buffering on the tapped channels judiciously.</p>
+<p>Every value put in the source channel of a mult is broadcasted to all the tapped
+channels, and all of them must accept it before the next item is broadcasted. For
+preventing slow takers from blocking the mult&#8217;s values we must use buffering on
+the tapped channels judiciously.</p>
 </div>
 <div class="paragraph">
-<p>Closed tapped channels are removed automatically from the mult. When putting a value in the source
-channels when there are still no taps such value will be dropped.</p>
+<p>Closed tapped channels are removed automatically from the mult. When putting a
+value in the source channels when there are still no taps such value will be
+dropped.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10178,19 +9970,24 @@ channels when there are still no taps such value will be dropped.</p>
 <div class="sect4">
 <h5 id="pub-sub"><a class="link" href="#pub-sub">Pub-sub</a></h5>
 <div class="paragraph">
-<p>After learning about mults you could imagine how to implement a pub-sub abstraction on top of <code>mult</code>, <code>tap</code> and
-<code>untap</code> but since it&#8217;s a widely used communication mechanism <code>core.async</code> already implements this functionality.
-Instead of creating a mult from a source channel, we create a publication with <code>pub</code> giving it a channel and a
-function that will be used for extracting the topic of the messages.</p>
+<p>After learning about mults you could imagine how to implement a pub-sub abstraction
+on top of <code>mult</code>, <code>tap</code> and  <code>untap</code> but since it&#8217;s a widely used communication
+mechanism <code>core.async</code> already implements this functionality.</p>
 </div>
 <div class="paragraph">
-<p>We can subscribe to a publication with <code>sub</code>, giving it the publication we want to subscribe to, the topic we
-are interested in and a channel to put the messages that have the given topic. Note that we can subscribe a
-channel to multiple topics.</p>
+<p>Instead of creating a mult from a source channel, we create a publication with
+<code>pub</code> giving it a channel and a function that will be used for extracting the
+topic of the messages.</p>
 </div>
 <div class="paragraph">
-<p><code>unsub</code> can be given a publication, topic and channel for unsubscribing such channel from the topic.
-<code>unsub-all</code> can be given a publication and a topic to unsubscribe every channel from the given topic.</p>
+<p>We can subscribe to a publication with <code>sub</code>, giving it the publication we want
+to subscribe to, the topic we are interested in and a channel to put the messages
+that have the given topic. Note that we can subscribe a channel to multiple topics.</p>
+</div>
+<div class="paragraph">
+<p><code>unsub</code> can be given a publication, topic and channel for unsubscribing such
+channel from the topic. <code>unsub-all</code> can be given a publication and a topic to
+unsubscribe every channel from the given topic.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10237,25 +10034,28 @@ channel to multiple topics.</p>
 <div class="sect4">
 <h5 id="mixer"><a class="link" href="#mixer">Mixer</a></h5>
 <div class="paragraph">
-<p>As we learned in the section about <code>core.async</code> combinators, we can use the <code>merge</code> function for combining
-multiple channels into one. When merging multiple channels, every value put in the input channels will end up
-in the merged channel. However, we may want more finer-grained control over which values put in the input
-channels end up in the output channel, that&#8217;s where mixers come in handy.</p>
+<p>As we learned in the section about <code>core.async</code> combinators, we can use the <code>merge</code>
+function for combining multiple channels into one. When merging multiple channels,
+every value put in the input channels will end up in the merged channel. However,
+we may want more finer-grained control over which values put in the input channels
+end up in the output channel, that&#8217;s where mixers come in handy.</p>
 </div>
 <div class="paragraph">
-<p><code>core.async</code> gives us the mixer abstraction, which we can use to combine multiple input channnels into an output
-channel. The interesting part of the mixer is that we can mute, pause and listen exclusively to certain input
-channels.</p>
+<p><code>core.async</code> gives us the mixer abstraction, which we can use to combine multiple
+input channnels into an output channel. The interesting part of the mixer is that
+we can mute, pause and listen exclusively to certain input channels.</p>
 </div>
 <div class="paragraph">
-<p>We can create a mixer given an output channel with <code>mix</code>. Once we have a mixer we can add input channels into the
-mix using <code>admix</code>, remove it using <code>unmix</code> or remove every input channel with <code>unmix-all</code>.</p>
+<p>We can create a mixer given an output channel with <code>mix</code>. Once we have a mixer we
+can add input channels into the mix using <code>admix</code>, remove it using <code>unmix</code> or remove
+every input channel with <code>unmix-all</code>.</p>
 </div>
 <div class="paragraph">
-<p>For controlling the state of the input channel we use the <code>toggle</code> function giving it the mixer and a map from
-channels to their states. Note that we can add channels to the mix using <code>toggle</code>, since the map will be merged
-with the current state of the mix. The state of a channel is a map which can have the keys <code>:mute</code>, <code>:pause</code> and
-<code>:solo</code> mapped to a boolean.</p>
+<p>For controlling the state of the input channel we use the <code>toggle</code> function giving
+it the mixer and a map from channels to their states. Note that we can add channels
+to the mix using <code>toggle</code>, since the map will be merged with the current state of
+the mix. The state of a channel is a map which can have the keys <code>:mute</code>, <code>:pause</code>
+and <code>:solo</code> mapped to a boolean.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s see what muting, pausing and soloing channels means:</p>
@@ -10263,27 +10063,32 @@ with the current state of the mix. The state of a channel is a map which can hav
 <div class="ulist">
 <ul>
 <li>
-<p>A muted input channel means that, while still taking values from it, they won&#8217;t be forwarded to the output channel.
-Thus, while a channel is muted, all the values put in it will be discarded.</p>
+<p>A muted input channel means that, while still taking values from it, they won&#8217;t
+be forwarded to the output channel. Thus, while a channel is muted, all the values
+put in it will be discarded.</p>
 </li>
 <li>
-<p>A paused input channel means that no values will be taken from it. This means that values put in the channel won&#8217;t
-be forwarded to the output channel nor discarded.</p>
+<p>A paused input channel means that no values will be taken from it. This means
+that values put in the channel won&#8217;t be forwarded to the output channel nor
+discarded.</p>
 </li>
 <li>
-<p>When soloing one or more channels the output channel will only receive the values put in soloed channels. By default
-non-soloed channels are muted but we can use <code>solo-mode</code> to decide between muting or pausing non-soloed channels.</p>
+<p>When soloing one or more channels the output channel will only receive the values
+put in soloed channels. By default non-soloed channels are muted but we can use
+<code>solo-mode</code> to decide between muting or pausing non-soloed channels.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>That was a lot of information so let&#8217;s see an example to improve our understanding. First of all, we&#8217;ll set up a mixer
-with an <code>out</code> channel and add three input channels to the mix. After that, we&#8217;ll be printing all the values received
-on the <code>out</code> channel to illustrate the control over input channels:</p>
+<p>That was a lot of information so let&#8217;s see an example to improve our understanding.
+First of all, we&#8217;ll set up a mixer with an <code>out</code> channel and add three input
+channels to the mix. After that, we&#8217;ll be printing all the values received on the
+<code>out</code> channel to illustrate the control over input channels:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span> <span class="tok-nv">mix</span> <span class="tok-nv">admix</span> <span class="tok-nv">unmix</span> <span class="tok-nv">toggle</span> <span class="tok-nv">solo-mode</span><span class="tok-p">]])</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">chan</span> <span class="tok-nv">put!</span> <span class="tok-nv">&lt;!</span> <span class="tok-nv">close!</span> <span class="tok-nv">mix</span> <span class="tok-nv">admix</span>
+                                   <span class="tok-nv">unmix</span> <span class="tok-nv">toggle</span> <span class="tok-nv">solo-mode</span><span class="tok-p">]])</span>
 <span class="tok-p">(</span><span class="tok-nf">require-macros</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.core.async.macros</span> <span class="tok-ss">:refer</span> <span class="tok-p">[</span><span class="tok-nv">go-loop</span><span class="tok-p">]])</span>
 
 <span class="tok-c1">;; Output channel and mixer</span>
@@ -10345,8 +10150,9 @@ on the <code>out</code> channel to illustrate the control over input channels:</
 </div>
 </div>
 <div class="paragraph">
-<p>As you can see in the example above, the values put in the paused channels aren&#8217;t discarded.
-For discarding values put in an input channel we have to mute it, let&#8217;s see an example:</p>
+<p>As you can see in the example above, the values put in the paused channels aren&#8217;t
+discarded. For discarding values put in an input channel we have to mute it,
+let&#8217;s see an example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10365,12 +10171,13 @@ For discarding values put in an input channel we have to mute it, let&#8217;s se
 </div>
 </div>
 <div class="paragraph">
-<p>We put a value (<code>2</code>) in the <code>in-2</code> channel and, since the channel was muted at the time, the value
-is discarded and never put into <code>out</code>. Let&#8217;s look at the third state a channel can be inside a mixer:
-solo.</p>
+<p>We put a value <code>2</code> in the <code>in-2</code> channel and, since the channel was muted at the
+time, the value is discarded and never put into <code>out</code>. Let&#8217;s look at the third
+state a channel can be inside a mixer: solo.</p>
 </div>
 <div class="paragraph">
-<p>As we mentioned before, soloing channels of a mixer implies muting the rest of them by default:</p>
+<p>As we mentioned before, soloing channels of a mixer implies muting the rest of them
+by default:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10391,8 +10198,9 @@ solo.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>However, we can set the mode the non-soloed channels will be in while there are soloed channels.
-Let&#8217;s set the default non-solo mode to pause instead of the default mute:</p>
+<p>However, we can set the mode the non-soloed channels will be in while there are
+soloed channels. Let&#8217;s set the default non-solo mode to pause instead of the
+default mute:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10419,22 +10227,303 @@ Let&#8217;s set the default non-solo mode to pause instead of the default mute:<
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="appendix"><a class="link" href="#appendix">6. Appendix</a></h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="appendix-c-setting-up-a-clojurescript-development-environment"><a class="link" href="#appendix-c-setting-up-a-clojurescript-development-environment">6.3. Appendix C: Setting up a ClojureScript development environment</a></h3>
+<h3 id="appendix-a-interactive-development-with-figwheel"><a class="link" href="#appendix-a-interactive-development-with-figwheel">6.1. Appendix A: Interactive development with Figwheel</a></h3>
 <div class="sect3">
-<h4 id="cursive"><a class="link" href="#cursive">6.3.1. Cursive</a></h4>
+<h4 id="introduction-3"><a class="link" href="#introduction-3">6.1.1. Introduction</a></h4>
+<div class="paragraph">
+<p>In this project, we will <strong>not</strong> do “Hello World”&#8212; that has been done to death.
+Instead, this project will be a web page that asks you for your age in years and
+tells you how many days that is, using an approximation of 365 days per year.</p>
+</div>
+<div class="paragraph">
+<p>For this project, we will use the <em>figwheel</em> leiningen plugin. This plugin creates a fully
+interactive, REPL-based, autoreloading environment.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="first-steps-2"><a class="link" href="#first-steps-2">6.1.2. First steps</a></h4>
+<div class="paragraph">
+<p>The first step is to create the new project using the <em>figwheel</em> lein template.
+We will name the project <code>age</code>, and create it by typing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein new figwheel age
+Retrieving figwheel/lein-template/0.3.5/lein-template-0.3.5.pom from clojars
+Retrieving figwheel/lein-template/0.3.5/lein-template-0.3.5.jar from clojars
+Generating fresh <span class="tok-s1">&#39;lein new&#39;</span> figwheel project.
+<span class="tok-nv">$ </span><span class="tok-nb">cd </span>age <span class="tok-c"># move into newly created project directory</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The project has the following structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; tree age      # the linux "tree" utility displays dir structure
+age
+├── .gitignore
+├── project.clj
+├── README.md
+├── resources
+│   └── public
+│       ├── css
+│       │   └── style.css
+│       └── index.html
+└── src
+    └── age
+        └── core.cljs</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>project.clj</code> file contains information that Leiningen uses to download
+dependencies and build the project. For now, just trust that everything in that
+file is exactly as it should be.</p>
+</div>
+<div class="paragraph">
+<p>Open the <code>index.html</code> file and make it look like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+<span class="tok-nt">&lt;html&gt;</span>
+  <span class="tok-nt">&lt;head&gt;</span>
+    <span class="tok-nt">&lt;link</span> <span class="tok-na">href=</span><span class="tok-s">&quot;css/style.css&quot;</span> <span class="tok-na">rel=</span><span class="tok-s">&quot;stylesheet&quot;</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text/css&quot;</span><span class="tok-nt">&gt;</span>
+    <span class="tok-nt">&lt;meta</span> <span class="tok-na">http-equiv=</span><span class="tok-s">&quot;Content-Type&quot;</span> <span class="tok-na">content=</span><span class="tok-s">&quot;text/html;charset=utf-8&quot;</span> <span class="tok-nt">/&gt;</span>
+  <span class="tok-nt">&lt;/head&gt;</span>
+  <span class="tok-nt">&lt;body&gt;</span>
+    <span class="tok-nt">&lt;div</span> <span class="tok-na">id=</span><span class="tok-s">&quot;app&quot;</span><span class="tok-nt">&gt;</span>
+      <span class="tok-nt">&lt;h1&gt;</span>Age in Days<span class="tok-nt">&lt;/h1&gt;</span>
+      <span class="tok-nt">&lt;p&gt;</span>
+        Enter your age in years:
+        <span class="tok-nt">&lt;input</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text&quot;</span> <span class="tok-na">size=</span><span class="tok-s">&quot;5&quot;</span> <span class="tok-na">id=</span><span class="tok-s">&quot;years&quot;</span><span class="tok-nt">&gt;</span>
+        <span class="tok-nt">&lt;button</span> <span class="tok-na">id=</span><span class="tok-s">&quot;calculate&quot;</span><span class="tok-nt">&gt;</span>Calculate<span class="tok-nt">&lt;/button&gt;</span>
+      <span class="tok-nt">&lt;/p&gt;</span>
+      <span class="tok-nt">&lt;p</span> <span class="tok-na">id=</span><span class="tok-s">&quot;feedback&quot;</span><span class="tok-nt">&gt;&lt;/p&gt;</span>
+    <span class="tok-nt">&lt;/div&gt;</span>
+    <span class="tok-nt">&lt;script </span><span class="tok-na">src=</span><span class="tok-s">&quot;js/compiled/age.js&quot;</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text/javascript&quot;</span><span class="tok-nt">&gt;&lt;/script&gt;</span>
+  <span class="tok-nt">&lt;/body&gt;</span>
+<span class="tok-nt">&lt;/html&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>core.cljs</code> file is where all the action takes place. For now, leave it exactly
+as it is, and start the figwheel environment, which will load a large number of
+dependencies and start a server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein figwheel
+Retrieving lein-figwheel/lein-figwheel/0.5.2/lein-figwheel-0.5.2.pom from clojars
+Retrieving figwheel-sidecar/figwheel-sidecar/0.5.2/figwheel-sidecar-0.5.2.pom from clojars
+Retrieving org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.pom from central
+... <span class="tok-c"># much more output</span>
+Prompt will show when Figwheel connects to your application</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are using Linux or Mac OS X, type the command as <code>rlwrap lein figwheel</code>.
+In your browser, go to URL <code><a href="http://localhost:3449" class="bare">http://localhost:3449</a></code>, and you will see something
+like the following screenshot if you open up the web console.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/localhost1.png" alt="Screenshot of web page and console"/>
+</div>
+</div>
+<div class="paragraph">
+<p>The terminal will then give you a REPL prompt:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>rlwrap lein figwheel
+To quit, <span class="tok-nb">type</span>: :cljs/quit
+cljs.user<span class="tok-o">=</span>&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For now, do what it says in the <code>core.cljs</code> file&#8201;&#8212;&#8201;change the <code>(println&#8230;&#8203;)</code> and
+then save the file. When you do so, you will see the change reflected immediately
+in the browser.</p>
+</div>
+<div class="paragraph">
+<p>Then make an error by adding an extra closing parenthesis to the <code>println</code>. When
+you save the file, will see a compile error in the browser window.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="interacting-with-javascript"><a class="link" href="#interacting-with-javascript">6.1.3. Interacting with JavaScript</a></h4>
+<div class="paragraph">
+<p>In the REPL window, type the following to invoke JavaScript’s <code>window.alert()</code>
+function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">.alert</span> <span class="tok-nv">js/window</span> <span class="tok-s">&quot;It works!&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The general format for invoking a JavaScript function from ClojureScript is to
+give the function name (preceded by a dot), the object that “owns” the function,
+and any parameters to that function. You should see an alert appear in your
+browser winodw; when you dismiss the alert, the REPL will print <code>nil</code> and give
+you another prompt. You can also do it this way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">js/alert</span> <span class="tok-s">&quot;It works!&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, the first version always works, so, for consistency, we will use that
+notation throughout this tutorial.</p>
+</div>
+<div class="paragraph">
+<p>JavaScript objects may be instanciated from ClojureScript using the same interop
+syntax as for Java/Clojure interop, using the class name followed by a dot.
+JavaScript methods may also be called using the familiar interop syntax:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-nb">&gt; </span><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">d</span> <span class="tok-p">(</span><span class="tok-nf">js/Date.</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&#39;cljs.user/d</span>
+<span class="tok-nb">&gt; </span><span class="tok-nv">d</span>
+<span class="tok-c1">;; =&gt; #inst &quot;2016-04-03T21:04:29.908-00:00&quot;</span>
+<span class="tok-nb">&gt; </span><span class="tok-p">(</span><span class="tok-nf">.getFullYear</span> <span class="tok-nv">d</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 2016</span>
+
+<span class="tok-nb">&gt; </span><span class="tok-p">(</span><span class="tok-nf">.toUpperCase</span> <span class="tok-s">&quot;doh!&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;DOH!&quot;</span>
+
+<span class="tok-nb">&gt; </span><span class="tok-p">(</span><span class="tok-nf">.getElementById</span> <span class="tok-nv">js/document</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #object[HTMLInputElement [object HTMLInputElement]]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The next example shows where we’re headed. To retrieve an object’s
+property, use the dot-dash or "access" syntax <code>.-</code> before the property name. In the browser window, type a number
+into the input field (in the example, we typed <code>24</code>), then do this in the REPL.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">year-field</span> <span class="tok-p">(</span><span class="tok-nf">.getElementById</span> <span class="tok-nv">js/document</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&#39;cljs.user/year-field</span>
+
+<span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-nv">year-field</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;24&quot;</span>
+
+<span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-nv">year-field</span><span class="tok-p">)</span> <span class="tok-s">&quot;25&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;25&quot;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This works, but it is little more than a direct translation of JavaScript to
+ClojureScript. The next step is to add event handling to the button. Event handling
+is loaded with all sorts of cross-platform compatibility issues, so we’d like a
+step up from plain ClojureScript.</p>
+</div>
+<div class="paragraph">
+<p>The solution is the Google Closure library. To use it, you have to modify the
+<code>:require</code> clause at the beginning of <code>core.cljs</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">ns </span><span class="tok-o">^</span><span class="tok-ss">:figwheel-always</span> <span class="tok-nv">age.core</span>
+  <span class="tok-p">(</span><span class="tok-ss">:require</span> <span class="tok-p">[</span><span class="tok-nv">goog.dom</span> <span class="tok-ss">:as</span> <span class="tok-nv">dom</span><span class="tok-p">]</span>
+            <span class="tok-p">[</span><span class="tok-nv">goog.events</span> <span class="tok-ss">:as</span> <span class="tok-nv">events</span><span class="tok-p">]))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Getting an element and setting its value is now slightly easier. Do this in the REPL
+and see the results in the browser window.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">in-ns </span><span class="tok-ss">&#39;age.core</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">y</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&#39;age.core/y</span>
+
+<span class="tok-p">(</span><span class="tok-nf">set!</span> <span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-nv">y</span><span class="tok-p">)</span> <span class="tok-s">&quot;26&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; &quot;26&quot;</span>
+
+<span class="tok-p">(</span><span class="tok-nf">dom/setTextContent</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;feedback&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;This works!&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To add an event, you define a function that takes a single argument (the event to
+be handled), and then tell the appropriate HTML element to listen for it. The
+<code>events/listen</code> function takes three arguments: the element to listen to, the
+event to listen for, and the function that will handle the event.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">testing</span> <span class="tok-p">[</span><span class="tok-nv">evt</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nf">js/alert</span> <span class="tok-s">&quot;Responding to click&quot;</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; #&#39;age.core/testing</span>
+
+<span class="tok-p">(</span><span class="tok-nf">events/listen</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;calculate&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;click&quot;</span> <span class="tok-nv">testing</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; #&lt;[object Object]&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After doing this, the browser should respond to a click on the button.
+If you would like to remove the listener, use <code>unlisten</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">events/unlisten</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;calculate&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;click&quot;</span> <span class="tok-nv">testing</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; true</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, put that all together in the <code>core.cljs</code> file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">ns </span><span class="tok-o">^</span><span class="tok-ss">:figwheel-always</span> <span class="tok-nv">age.core</span>
+  <span class="tok-p">(</span><span class="tok-ss">:require</span> <span class="tok-p">[</span><span class="tok-nv">goog.dom</span> <span class="tok-ss">:as</span> <span class="tok-nv">dom</span><span class="tok-p">]</span>
+            <span class="tok-p">[</span><span class="tok-nv">goog.events</span> <span class="tok-ss">:as</span> <span class="tok-nv">events</span><span class="tok-p">]))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">enable-console-print!</span><span class="tok-p">)</span>
+
+<span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">calculate</span>
+  <span class="tok-p">[</span><span class="tok-nv">event</span><span class="tok-p">]</span>
+  <span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">years</span> <span class="tok-p">(</span><span class="tok-nf">.parseInt</span> <span class="tok-nv">js/window</span> <span class="tok-p">(</span><span class="tok-nf">.-value</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;years&quot;</span><span class="tok-p">)))</span>
+        <span class="tok-nv">days</span> <span class="tok-p">(</span><span class="tok-nb">* </span><span class="tok-mi">365</span> <span class="tok-nv">years</span><span class="tok-p">)]</span>
+    <span class="tok-p">(</span><span class="tok-nf">dom/setTextContent</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;feedback&quot;</span><span class="tok-p">)</span>
+                        <span class="tok-p">(</span><span class="tok-nb">str </span><span class="tok-s">&quot;That is &quot;</span> <span class="tok-nv">days</span> <span class="tok-s">&quot; days old.&quot;</span><span class="tok-p">))))</span>
+
+<span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">on-js-reload</span> <span class="tok-p">[])</span>
+
+<span class="tok-p">(</span><span class="tok-nf">events/listen</span> <span class="tok-p">(</span><span class="tok-nf">dom/getElement</span> <span class="tok-s">&quot;calculate&quot;</span><span class="tok-p">)</span> <span class="tok-s">&quot;click&quot;</span> <span class="tok-nv">calculate</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="appendix-c-setting-up-a-clojurescript-development-environment"><a class="link" href="#appendix-c-setting-up-a-clojurescript-development-environment">6.2. Appendix C: Setting up a ClojureScript development environment</a></h3>
+<div class="sect3">
+<h4 id="cursive"><a class="link" href="#cursive">6.2.1. Cursive</a></h4>
 <div class="paragraph">
 <p>TODO</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="emacs"><a class="link" href="#emacs">6.3.2. Emacs</a></h4>
+<h4 id="emacs"><a class="link" href="#emacs">6.2.2. Emacs</a></h4>
 <div class="paragraph">
 <p>TODO</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="vim"><a class="link" href="#vim">6.3.3. Vim</a></h4>
+<h4 id="vim"><a class="link" href="#vim">6.2.3. Vim</a></h4>
 <div class="paragraph">
 <p>TODO</p>
 </div>
@@ -10539,7 +10628,7 @@ writing entire sections of the book, as well as making very valuable suggestions
 <div id="footer">
 <div id="footer-text">
 Version 5<br/>
-Last updated 2016-01-06 21:07:22 EET
+Last updated 2016-06-01 17:04:19 EEST
 </div>
 </div>
 </body>
