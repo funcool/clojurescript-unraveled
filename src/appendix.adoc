@@ -427,24 +427,27 @@ will cause it to have a buffer with the given size:
 ;; Error: Assert failed: No more than 1024 pending puts are allowed on a single channel.
 ----
 
-What happened in the example above? We created a channel with a buffer of size 1 and
-performed a put operation on it that succeeded immediately because the value was buffered.
-After that we did another 1024 puts to fill the pending put queue and, when trying to put
-one value more the channel complained about not being able to enqueue more puts.
+What happened in the example above? We created a channel with a buffer of size 1
+and performed a put operation on it that succeeded immediately because the value
+was buffered. After that we did another 1024 puts to fill the pending put queue
+and, when trying to put one value more the channel complained about not being able
+to enqueue more puts.
 
-Now that we know about how channels work and what are buffers used for let's explore the
-different buffers that `core.async` implements. Different buffers have different policies
-and it's interesting to know all of them to know when to use what. Channels are unbuffered
-by default.
+Now that we know about how channels work and what are buffers used for let's
+explore the different buffers that `core.async` implements. Different buffers
+have different policies and it's interesting to know all of them to know when to
+use what. Channels are unbuffered by default.
+
 
 ====== Fixed
 
-The fixed size buffer is the one that is created when we give the `chan` constructor a
-number and it will have the size specified by the given number. It is the simplest
+The fixed size buffer is the one that is created when we give the `chan` constructor
+a number and it will have the size specified by the given number. It is the simplest
 possible buffer: when full, puts will be enqueued.
 
-The `chan` constructor accepts either a number or a buffer as its first argument. The two
-channels created in the following example both use a fixed buffer of size 32:
+The `chan` constructor accepts either a number or a buffer as its first argument.
+The two channels created in the following example both use a fixed buffer of
+size 32:
 
 [source, clojure]
 ----
@@ -455,14 +458,15 @@ channels created in the following example both use a fixed buffer of size 32:
 (def another-ch (chan (buffer 32)))
 ----
 
+
 ====== Dropping
 
-The fixed buffer allows put operations to be enqueued. However, as we saw before, puts
-are still queued when the fixed buffer is full. If we wan't to discard the put operations
-that happen when the buffer is full we can use a dropping buffer.
+The fixed buffer allows put operations to be enqueued. However, as we saw before,
+puts are still queued when the fixed buffer is full. If we wan't to discard the
+put operations that happen when the buffer is full we can use a dropping buffer.
 
-Dropping buffers have a fixed size and, when they are full puts will complete but their
-value will be discarded. Let's illustrate the point with an example:
+Dropping buffers have a fixed size and, when they are full puts will complete but
+their value will be discarded. Let's illustrate the point with an example:
 
 [source, clojure]
 ----
@@ -487,17 +491,18 @@ value will be discarded. Let's illustrate the point with an example:
 ;; => nil
 ----
 
-We performed three put operations and the three of them succeded but, since the dropping
-buffer of the channel has size 2, only the first two values were delivered to the takers.
-As you can observe the third take is enqueued since there is no value available, the third
-put's value (42) was discarded.
+We performed three put operations and the three of them succeded but, since the
+dropping buffer of the channel has size 2, only the first two values were delivered
+to the takers. As you can observe the third take is enqueued since there is no
+value available, the third put's value (42) was discarded.
+
 
 ====== Sliding
 
-The sliding buffer has the opposite policy than the dropping buffer. When full puts will
-complete and the oldest value will be discarded in favor of the new one. The sliding
-buffer is useful when we are interested in processing the last puts only and we can afford
-discarding old values.
+The sliding buffer has the opposite policy than the dropping buffer. When full
+puts will complete and the oldest value will be discarded in favor of the new one.
+The sliding buffer is useful when we are interested in processing the last puts
+only and we can afford discarding old values.
 
 [source, clojure]
 ----
@@ -522,22 +527,23 @@ discarding old values.
 ;; => nil
 ----
 
-We performed three put operations and the three of them succeded but, since the sliding
-buffer of the channel has size 2, only the last two values were delivered to the takers.
-As you can observe the third take is enqueued since there is no value available since the
-first put's value was discarded.
+We performed three put operations and the three of them succeded but, since the
+sliding buffer of the channel has size 2, only the last two values were delivered
+to the takers. As you can observe the third take is enqueued since there is no
+value available since the first put's value was discarded.
+
 
 ===== Transducers
 
-As mentioned in the section about transducers, putting values in a channel can be thought
-as a transducible process. This means that we can create channels and hand them a
-transducer, giving us the ability to transform the input values before being put in the
-channel.
+As mentioned in the section about transducers, putting values in a channel can be
+thought as a transducible process. This means that we can create channels and
+hand them a transducer, giving us the ability to transform the input values before
+being put in the channel.
 
-If we want to use a transducer with a channel we must supply a buffer since the reducing
-function that will be modified by the transducer will be the buffer's add function.
-A buffer's add function is a reducing function since it takes a buffer and an input and
-returns a buffer with such input incorporated.
+If we want to use a transducer with a channel we must supply a buffer since the
+reducing function that will be modified by the transducer will be the buffer's
+add function. A buffer's add function is a reducing function since it takes a
+buffer and an input and returns a buffer with such input incorporated.
 
 [source, clojure]
 ----
@@ -554,8 +560,8 @@ returns a buffer with such input incorporated.
 ----
 
 You may be wondering what happens to a channel when the reducing function returns a
-reduced value. It turns out that the notion of termination for channels is being closed,
-so channels will be closed when a reduced value is encountered:
+reduced value. It turns out that the notion of termination for channels is being
+closed, so channels will be closed when a reduced value is encountered:
 
 [source, clojure]
 ----
@@ -581,22 +587,23 @@ so channels will be closed when a reduced value is encountered:
 ;; => false
 ----
 
-We used the `take` stateful transducer to allow maximum 2 puts into the channel. We then
-performed three take operations on the channel and we expect only two to receive a value.
-As you can see in the above example the third take got the sentinel `nil` value which
-indicates that the channel was closed. Also, the third put operation returned `false`
-indicating that it didn't take place.
+We used the `take` stateful transducer to allow maximum 2 puts into the channel.
+We then performed three take operations on the channel and we expect only two to
+receive a value. As you can see in the above example the third take got the
+sentinel `nil` value which indicates that the channel was closed. Also, the third
+put operation returned `false` indicating that it didn't take place.
+
 
 ===== Handling exceptions
 
-If adding a value to a buffer throws an exception `core.async` the operation will fail and
-the exception will be logged to the console. However, channel constructors accept a third
-argument: a function for handling exceptions.
+If adding a value to a buffer throws an exception `core.async` the operation will
+fail and the exception will be logged to the console. However, channel constructors
+accept a third argument: a function for handling exceptions.
 
-When creating a channel with an exception handler it will be called with the exception
-whenever an exception occurs. If the handler returns `nil` the operation will fail
-silently and if it returns another value the add operation will be retried with such
-value.
+When creating a channel with an exception handler it will be called with the
+exception whenever an exception occurs. If the handler returns `nil` the operation
+will fail silently and if it returns another value the add operation will be
+retried with such value.
 
 [source, clojure]
 ----
