@@ -2566,3 +2566,1334 @@ in respect to the clojure.
 ////
 
 TBD
+
+
+=== CSP (with core.async)
+
+CSP stands for Communicating Sequential Processes, which is a formalism for
+describing concurrent systems pioneered by C. A. R. Hoare in 1978. It is a
+concurrency model based on message passing and synchronization through channels.
+An in-depth look at the theoretical model behind CSP is beyond the scope of this
+book; instead we'll focus on presenting the concurrency primitives that `core.async`
+offers.
+
+`core.async` is not part of ClojureScript core but it's implemented as a library.
+Even though is not part of the core language it's widely used. Many libraries build
+on top of the `core.async` primitives, so we think is worth covering in the book.
+It's also a good example of the syntactic abstractions that can be achieved by
+transforming code with ClojureScript macros, so we'll jump right in. You'll need
+to have `core.async` installed to run the examples presented in this section.
+
+
+==== Channels
+
+Channels are like conveyor belts, we can put and take a single value at a time
+from them. They can have multiple readers and writers, and they are the fundamental
+message-passing mechanism of `core.async`. In order to see how it works, we'll
+create a channel perform some operations on it.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(enable-console-print!)
+
+(def ch (chan))
+
+(take! ch #(println "Got a value:" %))
+;; => nil
+
+;; there is a now a pending take operation, let's put something on the channel
+
+(put! ch 42)
+;; Got a value: 42
+;; => 42
+----
+
+In the above example we created a channel `ch` using the `chan` constructor.
+After that we performed a take operation on the channel, providing a callback
+that will be invoked when the take operation succeeds. After using `put!` to put a
+value on the channel the take operation completed and the `"Got a value: 42"`
+string was printed. Note that `put!` returned the value that was just put to the
+channel.
+
+The `put!` function accepts a callback like `take!` does but we didn't provide
+any in the last example. For puts the callback will be called whenever the value we
+provided has been taken. Puts and takes can happen in any order, let's do a few puts
+followed by takes to illustrate the point:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan))
+
+(put! ch 42 #(println "Just put 42"))
+;; => true
+(put! ch 43 #(println "Just put 43"))
+;; => true
+
+(take! ch #(println "Got" %))
+;; Got 42
+;; Just put 42
+;; => nil
+
+(take! ch #(println "Got" %))
+;; Got 43
+;; Just put 43
+;; => nil
+----
+
+You may be asking yourself why the `put!` operations return `true`. It signals that
+the put operation could be performed, even though the value hasn't yet been taken.
+Channels can be closed, which will cause the put operations to not succeed:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! close!]])
+
+(def ch (chan))
+
+(close! ch)
+;; => nil
+
+(put! ch 42)
+;; => false
+----
+
+The above example was the simplest possible situation but what happens with pending
+operations when a channel is closed? Let's do a few takes and close the channel and
+see what happens:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take! close!]])
+
+(def ch (chan))
+
+(take! ch #(println "Got value:" %))
+;; => nil
+(take! ch #(println "Got value:" %))
+;; => nil
+
+(close! ch)
+;; Got value: nil
+;; Got value: nil
+;; => nil
+----
+
+We see that if the channel is closed all the `take!` operations receive a `nil`
+value. `nil` in channels is a sentinel value that signals to takers that the
+channel has been closed. Because of that, putting a `nil` value on a channel is
+not allowed:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put!]])
+
+(def ch (chan))
+
+(put! ch nil)
+;; Error: Assert failed: Can't put nil in on a channel
+----
+
+===== Buffers
+
+We've seen that pending take and put operations are enqueued in a channel but, what
+happens when there are many pending take or put operations? Let's find out by
+hammering a channel with many puts and takes:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan))
+
+(dotimes [n 1025]
+  (put! ch n))
+;; Error: Assert failed: No more than 1024 pending puts are allowed on a single channel.
+
+(def ch (chan))
+
+(dotimes [n 1025]
+  (take! ch #(println "Got" %)))
+;; Error: Assert failed: No more than 1024 pending takes are allowed on a single channel.
+----
+
+As the example above shows there's a limit of pending puts or takes on a channel,
+it's currently 1024 but that is an implementation detail that may change. Note that
+there can't be both pending puts and pending takes on a channel since puts will
+immediately succeed if there are pending takes and viceversa.
+
+Channels support buffering of put operations. If we create a channel with a buffer
+the put operations will succeed immediately if there's room in the buffer and be
+enqueued otherwise. Let's illustrate the point creating a channel with a buffer of
+one element. The `chan` constructors accepts a number as its first argument which
+will cause it to have a buffer with the given size:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan 1))
+
+(put! ch 42 #(println "Put succeeded!"))
+;; Put succeeded!
+;; => true
+
+(dotimes [n 1024]
+  (put! ch n))
+;; => nil
+
+(put! ch 42)
+;; Error: Assert failed: No more than 1024 pending puts are allowed on a single channel.
+----
+
+What happened in the example above? We created a channel with a buffer of size 1
+and performed a put operation on it that succeeded immediately because the value
+was buffered. After that we did another 1024 puts to fill the pending put queue
+and, when trying to put one value more the channel complained about not being able
+to enqueue more puts.
+
+Now that we know about how channels work and what are buffers used for let's
+explore the different buffers that `core.async` implements. Different buffers
+have different policies and it's interesting to know all of them to know when to
+use what. Channels are unbuffered by default.
+
+
+====== Fixed
+
+The fixed size buffer is the one that is created when we give the `chan` constructor
+a number and it will have the size specified by the given number. It is the simplest
+possible buffer: when full, puts will be enqueued.
+
+The `chan` constructor accepts either a number or a buffer as its first argument.
+The two channels created in the following example both use a fixed buffer of
+size 32:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan buffer]])
+
+(def a-ch (chan 32))
+
+(def another-ch (chan (buffer 32)))
+----
+
+
+====== Dropping
+
+The fixed buffer allows put operations to be enqueued. However, as we saw before,
+puts are still queued when the fixed buffer is full. If we wan't to discard the
+put operations that happen when the buffer is full we can use a dropping buffer.
+
+Dropping buffers have a fixed size and, when they are full puts will complete but
+their value will be discarded. Let's illustrate the point with an example:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan dropping-buffer put! take!]])
+
+(def ch (chan (dropping-buffer 2)))
+
+(put! ch 40)
+;; => true
+(put! ch 41)
+;; => true
+(put! ch 42)
+;; => true
+
+(take! ch #(println "Got" %))
+;; Got 40
+;; => nil
+(take! ch #(println "Got" %))
+;; Got 41
+;; => nil
+(take! ch #(println "Got" %))
+;; => nil
+----
+
+We performed three put operations and the three of them succeded but, since the
+dropping buffer of the channel has size 2, only the first two values were delivered
+to the takers. As you can observe the third take is enqueued since there is no
+value available, the third put's value (42) was discarded.
+
+
+====== Sliding
+
+The sliding buffer has the opposite policy than the dropping buffer. When full
+puts will complete and the oldest value will be discarded in favor of the new one.
+The sliding buffer is useful when we are interested in processing the last puts
+only and we can afford discarding old values.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan sliding-buffer put! take!]])
+
+(def ch (chan (sliding-buffer 2)))
+
+(put! ch 40)
+;; => true
+(put! ch 41)
+;; => true
+(put! ch 42)
+;; => true
+
+(take! ch #(println "Got" %))
+;; Got 41
+;; => nil
+(take! ch #(println "Got" %))
+;; Got 42
+;; => nil
+(take! ch #(println "Got" %))
+;; => nil
+----
+
+We performed three put operations and the three of them succeded but, since the
+sliding buffer of the channel has size 2, only the last two values were delivered
+to the takers. As you can observe the third take is enqueued since there is no
+value available since the first put's value was discarded.
+
+
+===== Transducers
+
+As mentioned in the section about transducers, putting values in a channel can be
+thought as a transducible process. This means that we can create channels and
+hand them a transducer, giving us the ability to transform the input values before
+being put in the channel.
+
+If we want to use a transducer with a channel we must supply a buffer since the
+reducing function that will be modified by the transducer will be the buffer's
+add function. A buffer's add function is a reducing function since it takes a
+buffer and an input and returns a buffer with such input incorporated.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan 1 (map inc)))
+
+(put! ch 41)
+;; => true
+
+(take! ch #(println "Got" %))
+;; Got 42
+;; => nil
+----
+
+You may be wondering what happens to a channel when the reducing function returns a
+reduced value. It turns out that the notion of termination for channels is being
+closed, so channels will be closed when a reduced value is encountered:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(def ch (chan 1 (take 2)))
+
+(take! ch #(println "Got" %))
+;; => nil
+(take! ch #(println "Got" %))
+;; => nil
+(take! ch #(println "Got" %))
+;; => nil
+
+(put! ch 41)
+;; => true
+(put! ch 42)
+;; Got 41
+;; => true
+(put! ch 43)
+;; Got 42
+;; Got nil
+;; => false
+----
+
+We used the `take` stateful transducer to allow maximum 2 puts into the channel.
+We then performed three take operations on the channel and we expect only two to
+receive a value. As you can see in the above example the third take got the
+sentinel `nil` value which indicates that the channel was closed. Also, the third
+put operation returned `false` indicating that it didn't take place.
+
+
+===== Handling exceptions
+
+If adding a value to a buffer throws an exception `core.async` the operation will
+fail and the exception will be logged to the console. However, channel constructors
+accept a third argument: a function for handling exceptions.
+
+When creating a channel with an exception handler it will be called with the
+exception whenever an exception occurs. If the handler returns `nil` the operation
+will fail silently and if it returns another value the add operation will be
+retried with such value.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! take!]])
+
+(enable-console-print!)
+
+(defn exception-xform
+  [rfn]
+  (fn [acc input]
+    (throw (js/Error. "I fail!"))))
+
+(defn handle-exception
+  [ex]
+  (println "Exception message:" (.-message ex))
+  42)
+
+(def ch (chan 1 exception-xform handle-exception))
+
+(put! ch 0)
+;; Exception message: I fail!
+;; => true
+
+(take! ch #(println "Got:" %))
+;; Got: 42
+;; => nil
+----
+
+===== Offer and Poll
+
+We've learned about the two basic operations on channels so far: `put!` and `take!`.
+They  either take or put a value and are enqueued if they can't be performed
+immediately. Both functions are asynchronous because of their nature: they can
+succeed but be completed at a later time.
+
+`core.async` has two synchronous operations for putting or taking values: `offer!`
+and `poll!`. Let's see how they work through examples.
+
+`offer!` puts a value in a channel if it's possible to do so immediately. It
+returns `true` if the channel received the value and `false` otherwise. Note that, unlike with `put!`, `offer!`
+cannot distinguish between closed and open channels.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan offer!]])
+
+(def ch (chan 1))
+
+(offer! ch 42)
+;; => true
+
+(offer! ch 43)
+;; => false
+----
+
+`poll!` takes a value from a channel if it's possible to do so immediately. Returns
+the value if succesful and `nil` otherwise. Unlike `take!`, `poll!` cannot
+distinguish closed and open channels.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan offer! poll!]])
+
+(def ch (chan 1))
+
+(poll! ch)
+;; => nil
+
+(offer! ch 42)
+;; => true
+
+(poll! ch)
+;; => 42
+----
+
+
+==== Processes
+
+We learned all about channels but there is still a missing piece in the puzzle:
+processes.  Processes are pieces of logic that run independently and use channels
+for communication and coordination. Puts and takes inside a process will stop the
+process until the operation completes. Stopping a process doesn't block the only
+thread we have in the environments where ClojureScript runs. Instead, it will be
+resumed at a later time when the operation is waiting for being performed.
+
+Processes are launched using the `go` macro and puts and takes use the `<!` and `>!`
+placeholders. The `go` macro rewrites your code to use callbacks but inside `go`
+everything looks like synchronous code, which makes understanding it straightforward:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan <! >!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def ch (chan))
+
+(go
+  (println [:a] "Gonna take from channel")
+  (println [:a] "Got" (<! ch)))
+
+(go
+  (println [:b] "Gonna put on channel")
+  (>! ch 42)
+  (println [:b] "Just put 42"))
+
+;; [:a] Gonna take from channel
+;; [:b] Gonna put on channel
+;; [:b] Just put 42
+;; [:a] Got 42
+----
+
+In the above example we are launching a process with `go` that takes a value from
+`ch` and prints it to the console. Since the value isn't immediately available it
+will park until it can resume. After that we launch another process that puts a
+value on the channel.
+
+Since there is a pending take the put operation succeeds and the value is delivered
+to the first process, then both processes terminate.
+
+Both `go` blocks run independently and, even though they are executed
+asynchronously, they look like synchronous code. The above go blocks are fairly
+simple but being able to write concurrent processes that coordinate via channels is
+a very powerful tool for implementing complex asynchronous workflows. Channels also
+offer a great decoupling of producers and consumers.
+
+Processes can wait for an arbitrary amount of time too, there is a `timeout`
+function that return a channel that will be closed after the given amount of
+miliseconds. Combining a timeout channel with a take operation inside a go block
+gives us the ability to sleep:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [<! timeout]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(defn seconds
+  []
+  (.getSeconds (js/Date.)))
+
+(println "Launching go block")
+
+(go
+  (println [:a] "Gonna take a nap" (seconds))
+  (<! (timeout 1000))
+  (println [:a] "I slept one second, bye!" (seconds)))
+
+(println "Block launched")
+
+;; Launching go block
+;; Block launched
+;; [:a] Gonna take a nap 9
+;; [:a] I slept one second, bye! 10
+----
+
+As we can see in the messages printed, the process does nothing for one second when
+it blocks in the take operation of the timeout channel. The program continues and
+after one second the process resumes and terminates.
+
+
+===== Choice
+
+Apart from putting and taking one value at a time inside a go block we can also
+make a non-deterministic choice on multiple channel operations using `alts!`.
+`alts!` is given a series of channel put or take operations (note that we can also
+try to put and take in a channel at the same time) and only performs one as soon as
+is ready; if multiple operations can be performed when calling `alts!` it will do
+a pseudo random choice by default.
+
+We can easily try an operation on a channel and cancel it after a certain amount
+of time combining the `timeout` function and `alts!`. Let's see how:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan <! timeout alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def ch (chan))
+
+(go
+  (println [:a] "Gonna take a nap")
+  (<! (timeout 1000))
+  (println [:a] "I slept one second, trying to put a value on channel")
+  (>! ch 42)
+  (println [:a] "I'm done!"))
+
+(go
+  (println [:b] "Gonna try taking from channel")
+  (let [cancel (timeout 300)
+        [value ch] (alts! [ch cancel])]
+    (if (= ch cancel)
+      (println [:b] "Too slow, take from channel cancelled")
+      (println [:b] "Got" value))))
+
+;; [:a] Gonna take a nap
+;; [:b] Gonna try taking from channel
+;; [:b] Too slow, take from channel cancelled
+;; [:a] I slept one second, trying to put a value on channel
+----
+
+In the example above we launched a go block that, after waiting for a second, puts
+a value in the `ch` channel. The other go block creates a `cancel` channel, which
+will be closed after 300 miliseconds. After that, it tries to read from both `ch`
+and `cancel` at the same time using `alts!`, which will succeed whenever it can
+take a value from either of those channels. Since `cancel` is closed after 300
+miliseconds, `alts!` will succeed since takes from closed channel return the `nil`
+sentinel. Note that `alts!` returns a two-element vector with the returned value
+of the operation and the channel where it was performed.
+
+This is why we are able to detect whether the read operation was performed in the
+`cancel` channel or in `ch`. I suggest you copy this example and set the first
+process timeout to 100 miliseconds to see how the read operation on `ch` succeeds.
+
+We've learned how to choose between read operations so let's look at how to express
+a conditional write operation in `alts!`. Since we need to provide the channel and
+a value to try to put on it, we'll use a two element vector with the channel and
+the value for representing write operations.
+
+Let's see an example:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan <! alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def a-ch (chan))
+(def another-ch (chan))
+
+(go
+  (println [:a] "Take a value from `a-ch`")
+  (println [:a] "Got" (<! a-ch))
+  (println [:a] "I'm done!"))
+
+(go
+  (println [:b] "Take a value from `another-ch`")
+  (println [:a] "Got" (<! another-ch))
+  (println [:b] "I'm done!"))
+
+(go
+  (println [:c] "Gonna try putting in both channels simultaneously")
+  (let [[value ch] (alts! [[a-ch 42]
+                           [another-ch 99]])]
+    (if (= ch a-ch)
+      (println [:c] "Put a value in `a-ch`")
+      (println [:c] "Put a value in `another-ch`"))))
+
+;; [:a] Take a value from `a-ch`
+;; [:b] Take a value from `another-ch`
+;; [:c] Gonna try putting in both channels simultaneously
+;; [:c] Put a value in `a-ch`
+;; [:a] Got 42
+;; [:a] I'm done!
+----
+
+When running the above example only the put operation on the `a-ch` channel has
+succeeded. Since both channels are ready to take a value when the `alts!` occurs
+you may get different results when running this code.
+
+
+===== Priority
+
+`alts!` default is to make a non-deterministic choice whenever several operations
+are ready to be performed. We can instead give priority to the operations passing
+the `:priority` option to `alts!`. Whenever `:priority` is `true`, if more than
+one operation is ready they will be tried in order.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan >! alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(enable-console-print!)
+
+(def a-ch (chan))
+(def another-ch (chan))
+
+(go
+  (println [:a] "Put a value on `a-ch`")
+  (>! a-ch 42)
+  (println [:a] "I'm done!"))
+
+(go
+  (println [:b] "Put a value on `another-ch`")
+  (>! another-ch 99)
+  (println [:b] "I'm done!"))
+
+(go
+  (println [:c] "Gonna try taking from both channels with priority")
+  (let [[value ch] (alts! [a-ch another-ch] :priority true)]
+    (if (= ch a-ch)
+      (println [:c] "Got" value "from `a-ch`")
+      (println [:c] "Got" value "from `another-ch`"))))
+
+;; [:a] Put a value on `a-ch`
+;; [:a] I'm done!
+;; [:b] Put a value on `another-ch`
+;; [:b] I'm done!
+;; [:c] Gonna try taking from both channels with priority
+;; [:c] Got 42 from `a-ch`
+----
+
+Since both `a-ch` and `another-ch` had a value to read when the `alts!` was
+executed and we set the `:priority` option to true, `a-ch` has preference. You can
+try deleting the `:priority` option and running the example multiple times to see
+that, without priority, `alts!` makes a non-deterministic choice.
+
+
+===== Defaults
+
+Another interesting bit of `alts!` is that it can return immediately if no
+operation is ready and we provide a default value. We can conditionally do a choice
+on the operations if and only if any of them is ready, returning a default value
+if it's not.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan alts!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(def a-ch (chan))
+(def another-ch (chan))
+
+(go
+  (println [:a] "Gonna try taking from any of the channels without blocking")
+  (let [[value ch] (alts! [a-ch another-ch] :default :not-ready)]
+    (if (and (= value :not-ready)
+             (= ch :default))
+      (println [:a] "No operation is ready, aborting")
+      (println [:a] "Got" value))))
+
+;; [:a] Gonna try taking from any of the channels without blocking
+;; [:a] No operation is ready, aborting
+----
+
+As you can see in the above example, if no operation is ready the value returned by
+`alts!` is the one we supplied after the `:default` key when calling it and the
+channel is the `:default` keyword itself.
+
+
+==== Combinators
+
+Now that we're acquainted with channels and processes it's time to explore some
+interesting combinators for working with channels that are present in `core.async`.
+This section includes a brief description of all of them together with a simple
+example of their usage.
+
+
+===== pipe
+
+`pipe` takes an input and output channels and pipes all the values put on the input
+channel to the output one. The output channel is closed whenever the source is
+closed unless we provide a `false` third argument:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan pipe put! <! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def out (chan))
+
+(pipe in out)
+
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! out)))))
+
+(put! in 0)
+;; => true
+(put! in 1)
+;; => true
+(close! in)
+
+;; [:a] Got 0
+;; [:a] Waiting for a value
+;; [:a] Got 1
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
+
+In the above example we used the `go-loop` macro for reading values recursively
+until the `out` channel is closed. Notice that when we close the `in` channel the
+`out` channel is closed too, making the `go-loop` terminate.
+
+
+===== pipeline-async
+
+`pipeline-async` takes a number for controlling parallelism, an output channel,
+an asynchronous function and an input channel. The asynchronous function has two
+arguments: the value put in the input channel and a channel where it should put the
+result of its asynchronous operation, closing the result channel after finishing.
+The number controls the number of concurrent go blocks that will be used for calling
+the asynchronous function with the inputs.
+
+The output channel will receive outputs in an order relative to the input channel,
+regardless the time each asynchronous function call takes to complete. It has an
+optional last parameter that controls whether the output channel will be closed
+when the input channel is closed, which defaults to `true`.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan pipeline-async put! <! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def out (chan))
+(def parallelism 3)
+
+(defn wait-and-put [value ch]
+  (let [wait (rand-int 1000)]
+    (js/setTimeout (fn []
+                     (println "Waiting" wait "miliseconds for value" value)
+                     (put! ch wait)
+                     (close! ch))
+                   wait)))
+
+(pipeline-async parallelism out wait-and-put in)
+
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! out)))))
+
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; Waiting 164 miliseconds for value 3
+;; Waiting 304 miliseconds for value 2
+;; Waiting 908 miliseconds for value 1
+;; [:a] Got 908
+;; [:a] Waiting for a value
+;; [:a] Got 304
+;; [:a] Waiting for a value
+;; [:a] Got 164
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
+
+
+===== pipeline
+
+`pipeline` is similar to `pipeline-async` but instead of taking and asynchronous
+function it takes a transducer instead. The transducer will be applied independently
+to each input.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan pipeline put! <! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def out (chan))
+(def parallelism 3)
+
+(pipeline parallelism out (map inc) in)
+
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! out)))))
+
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; [:a] Got 2
+;; [:a] Waiting for a value
+;; [:a] Got 3
+;; [:a] Waiting for a value
+;; [:a] Got 4
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
+
+
+===== split
+
+`split` takes a predicate and a channel and returns a vector with two channels, the
+first of which will receive the values for which the predicate is true, the second
+will receive those for which the predicate is false. We can optionally pass a buffer
+or number for the channels with the third (true channel) and fourth (false channel)
+arguments.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan split put! <! close!]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in (chan))
+(def chans (split even? in))
+(def even-ch (first chans))
+(def odd-ch (second chans))
+
+(go-loop [value (<! even-ch)]
+  (if (nil? value)
+    (println [:evens] "I'm done!")
+    (do
+      (println [:evens] "Got" value)
+      (println [:evens] "Waiting for a value")
+      (recur (<! even-ch)))))
+
+(go-loop [value (<! odd-ch)]
+  (if (nil? value)
+    (println [:odds] "I'm done!")
+    (do
+      (println [:odds] "Got" value)
+      (println [:odds] "Waiting for a value")
+      (recur (<! odd-ch)))))
+
+(put! in 0)
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; [:evens] Got 0
+;; [:evens] Waiting for a value
+;; [:odds] Got 1
+;; [:odds] Waiting for a value
+;; [:odds] Got 3
+;; [:odds] Waiting for a value
+;; [:evens] Got 2
+;; [:evens] Waiting for a value
+;; [:evens] I'm done!
+;; [:odds] I'm done!
+----
+
+===== reduce
+
+`reduce` takes a reducing function, initial value and an input channel. It returns a
+channel with the result of reducing over all the values put on the input channel
+before closing it using the given initial value as the seed.
+
+[source, clojure]
+----
+(require '[cljs.core.async :as async :refer [chan put! <! close!]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(def in (chan))
+
+(go
+  (println "Result" (<! (async/reduce + (+) in))))
+
+(put! in 0)
+(put! in 1)
+(put! in 2)
+(put! in 3)
+(close! in)
+
+;; Result: 6
+----
+
+===== onto-chan
+
+`onto-chan` takes a channel and a collection and puts the contents of the collection
+into the channel. It closes the channel after finishing although it accepts a third
+argument for specifying if it should close it or not. Let's rewrite the `reduce`
+example using `onto-chan`:
+
+[source, clojure]
+----
+(require '[cljs.core.async :as async :refer [chan put! <! close! onto-chan]])
+(require-macros '[cljs.core.async.macros :refer [go]])
+
+(def in (chan))
+
+(go
+  (println "Result" (<! (async/reduce + (+) in))))
+
+(onto-chan in [0 1 2 3])
+
+;; Result: 6
+----
+
+
+===== to-chan
+
+`to-chan` takes a collection and returns a channel where it will put every value in
+the collection, closing the channel afterwards.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! to-chan]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def ch (to-chan (range 3)))
+
+(go-loop [value (<! ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! ch)))))
+
+;; [:a] Got 0
+;; [:a] Waiting for a value
+;; [:a] Got 1
+;; [:a] Waiting for a value
+;; [:a] Got 2
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
+
+
+===== merge
+
+`merge` takes a collection of input channels and returns a channel where it will
+put every value that is put on the input channels. The returned channel will be
+closed when all the input channels have been closed. The returned channel will be
+unbuffered by default but a number or buffer can be provided as the last argument.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! merge]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+(def in1 (chan))
+(def in2 (chan))
+(def in3 (chan))
+
+(def out (merge [in1 in2 in3]))
+
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (println [:a] "Waiting for a value")
+      (recur (<! out)))))
+
+(put! in1 1)
+(close! in1)
+(put! in2 2)
+(close! in2)
+(put! in3 3)
+(close! in3)
+
+;; [:a] Got 3
+;; [:a] Waiting for a value
+;; [:a] Got 2
+;; [:a] Waiting for a value
+;; [:a] Got 1
+;; [:a] Waiting for a value
+;; [:a] I'm done!
+----
+
+==== Higher-level abstractions
+
+We've learned the about the low-level primitives of `core.async` and the combinators
+that it offers for working with channels. `core.async` also offers some useful,
+higher-level abstractions on top of channels that can serve as building blocks for
+more advanced functionality.
+
+
+===== Mult
+
+Whenever we have a channel whose values have to be broadcasted to many others, we
+can use `mult` for creating a multiple of the supplied channel. Once we have a mult,
+we can attach channels to it using `tap` and dettach them using `untap`. Mults also
+support removing all tapped channels at once with `untap-all`.
+
+Every value put in the source channel of a mult is broadcasted to all the tapped
+channels, and all of them must accept it before the next item is broadcasted. For
+preventing slow takers from blocking the mult's values we must use buffering on
+the tapped channels judiciously.
+
+Closed tapped channels are removed automatically from the mult. When putting a
+value in the source channels when there are still no taps such value will be
+dropped.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! timeout mult tap]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Source channel and mult
+(def in (chan))
+(def m-in (mult in))
+
+;; Sink channels
+(def a-ch (chan))
+(def another-ch (chan))
+
+;; Taker for `a-ch`
+(go-loop [value (<! a-ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Got" value)
+      (recur (<! a-ch)))))
+
+;; Taker for `another-ch`, which sleeps for 3 seconds between takes
+(go-loop [value (<! another-ch)]
+  (if (nil? value)
+    (println [:b] "I'm done!")
+    (do
+      (println [:b] "Got" value)
+      (println [:b] "Resting 3 seconds")
+      (<! (timeout 3000))
+      (recur (<! another-ch)))))
+
+;; Tap the two channels to the mult
+(tap m-in a-ch)
+(tap m-in another-ch)
+
+;; See how the values are delivered to `a-ch` and `another-ch`
+(put! in 1)
+(put! in 2)
+
+;; [:a] Got 1
+;; [:b] Got 1
+;; [:b] Resting for 3 seconds
+;; [:a] Got 2
+;; [:b] Got 2
+;; [:b] Resting for 3 seconds
+----
+
+
+===== Pub-sub
+
+After learning about mults you could imagine how to implement a pub-sub abstraction
+on top of `mult`, `tap` and  `untap` but since it's a widely used communication
+mechanism `core.async` already implements this functionality.
+
+Instead of creating a mult from a source channel, we create a publication with
+`pub` giving it a channel and a function that will be used for extracting the
+topic of the messages.
+
+We can subscribe to a publication with `sub`, giving it the publication we want
+to subscribe to, the topic we are interested in and a channel to put the messages
+that have the given topic. Note that we can subscribe a channel to multiple topics.
+
+`unsub` can be given a publication, topic and channel for unsubscribing such
+channel from the topic. `unsub-all` can be given a publication and a topic to
+unsubscribe every channel from the given topic.
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! pub sub]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Source channel and publication
+(def in (chan))
+(def publication (pub in :action))
+
+;; Sink channels
+(def a-ch (chan))
+(def another-ch (chan))
+
+;; Channel with `:increment` action
+(sub publication :increment a-ch)
+
+(go-loop [value (<! a-ch)]
+  (if (nil? value)
+    (println [:a] "I'm done!")
+    (do
+      (println [:a] "Increment:" (inc (:value value)))
+      (recur (<! a-ch)))))
+
+;; Channel with `:double` action
+(sub publication :double another-ch)
+
+(go-loop [value (<! another-ch)]
+  (if (nil? value)
+    (println [:b] "I'm done!")
+    (do
+      (println [:b] "Double:" (* 2 (:value value)))
+      (recur (<! another-ch)))))
+
+;; See how values are delivered to `a-ch` and `another-ch` depending on their action
+(put! in {:action :increment :value 98})
+(put! in {:action :double :value 21})
+
+;; [:a] Increment: 99
+;; [:b] Double: 42
+----
+
+
+===== Mixer
+
+As we learned in the section about `core.async` combinators, we can use the `merge`
+function for combining multiple channels into one. When merging multiple channels,
+every value put in the input channels will end up in the merged channel. However,
+we may want more finer-grained control over which values put in the input channels
+end up in the output channel, that's where mixers come in handy.
+
+`core.async` gives us the mixer abstraction, which we can use to combine multiple
+input channnels into an output channel. The interesting part of the mixer is that
+we can mute, pause and listen exclusively to certain input channels.
+
+We can create a mixer given an output channel with `mix`. Once we have a mixer we
+can add input channels into the mix using `admix`, remove it using `unmix` or remove
+every input channel with `unmix-all`.
+
+For controlling the state of the input channel we use the `toggle` function giving
+it the mixer and a map from channels to their states. Note that we can add channels
+to the mix using `toggle`, since the map will be merged with the current state of
+the mix. The state of a channel is a map which can have the keys `:mute`, `:pause`
+and `:solo` mapped to a boolean.
+
+Let's see what muting, pausing and soloing channels means:
+
+- A muted input channel means that, while still taking values from it, they won't
+  be forwarded to the output channel. Thus, while a channel is muted, all the values
+  put in it will be discarded.
+- A paused input channel means that no values will be taken from it. This means
+  that values put in the channel won't be forwarded to the output channel nor
+  discarded.
+- When soloing one or more channels the output channel will only receive the values
+  put in soloed channels. By default non-soloed channels are muted but we can use
+  `solo-mode` to decide between muting or pausing non-soloed channels.
+
+That was a lot of information so let's see an example to improve our understanding.
+First of all, we'll set up a mixer with an `out` channel and add three input
+channels to the mix. After that, we'll be printing all the values received on the
+`out` channel to illustrate the control over input channels:
+
+[source, clojure]
+----
+(require '[cljs.core.async :refer [chan put! <! close! mix admix
+                                   unmix toggle solo-mode]])
+(require-macros '[cljs.core.async.macros :refer [go-loop]])
+
+;; Output channel and mixer
+(def out (chan))
+(def mixer (mix out))
+
+;; Input channels
+(def in-1 (chan))
+(def in-2 (chan))
+(def in-3 (chan))
+
+(admix mixer in-1)
+(admix mixer in-2)
+(admix mixer in-3)
+
+;; Let's listen to the `out` channel and print what we get from it
+(go-loop [value (<! out)]
+  (if (nil? value)
+    (println [:a] "I'm done")
+    (do
+      (println [:a] "Got" value)
+      (recur (<! out)))))
+----
+
+By default, every value put in the input channels will be put in the `out` channel:
+
+[source, clojure]
+----
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 2
+;; [:a] Got 3
+----
+
+Let's pause the `in-2` channel, put a value in every input channel and resume `in-2`:
+
+[source, clojure]
+----
+(toggle mixer {in-2 {:pause true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 3
+
+(toggle mixer {in-2 {:pause false}})
+
+;; [:a] Got 2
+----
+
+As you can see in the example above, the values put in the paused channels aren't
+discarded. For discarding values put in an input channel we have to mute it,
+let's see an example:
+
+[source, clojure]
+----
+(toggle mixer {in-2 {:mute true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)  ;; `out` will never get this value since it's discarded
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 3
+
+(toggle mixer {in-2 {:mute false}})
+----
+
+We put a value `2` in the `in-2` channel and, since the channel was muted at the
+time, the value is discarded and never put into `out`. Let's look at the third
+state a channel can be inside a mixer: solo.
+
+As we mentioned before, soloing channels of a mixer implies muting the rest of them
+by default:
+
+[source, clojure]
+----
+(toggle mixer {in-1 {:solo true}
+               in-2 {:solo true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3)) ;; `out` will never get this value since it's discarded
+
+;; [:a] Got 1
+;; [:a] Got 2
+
+(toggle mixer {in-1 {:solo false}
+               in-2 {:solo false}})
+----
+
+However, we can set the mode the non-soloed channels will be in while there are
+soloed channels. Let's set the default non-solo mode to pause instead of the
+default mute:
+
+[source, clojure]
+----
+(solo-mode mixer :pause)
+;; => true
+(toggle mixer {in-1 {:solo true}
+               in-2 {:solo true}})
+;; => true
+
+(do
+  (put! in-1 1)
+  (put! in-2 2)
+  (put! in-3 3))
+
+;; [:a] Got 1
+;; [:a] Got 2
+
+(toggle mixer {in-1 {:solo false}
+               in-2 {:solo false}})
+
+;; [:a] Got 3
+----
+
