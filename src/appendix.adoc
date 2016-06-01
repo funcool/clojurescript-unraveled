@@ -625,20 +625,18 @@ value.
 ;; => nil
 ----
 
-////
-TODO: uncomment with next core.async release, use closed? predicate for closed channels too
 ===== Offer and Poll
 
-We've learned about the two basic operations on channels so far: `put!` and `take!`. They
-either take or put a value and are enqueued if they can't be performed immediately. Both
-functions are asynchronous because of their nature: they can succeed but be completed at a
-later time.
+We've learned about the two basic operations on channels so far: `put!` and `take!`.
+They  either take or put a value and are enqueued if they can't be performed
+immediately. Both functions are asynchronous because of their nature: they can
+succeed but be completed at a later time.
 
-`core.async` has two synchronous operations for putting or taking values: `offer!` and
-`poll!`. Let's see how they work through examples.
+`core.async` has two synchronous operations for putting or taking values: `offer!`
+and `poll!`. Let's see how they work through examples.
 
-`offer!` puts a value in a channel if it's possible to do so immediately. It returns `true`
-if the channel received the value and `false` otherwise. Note that, unlike with `put!`, `offer!`
+`offer!` puts a value in a channel if it's possible to do so immediately. It
+returns `true` if the channel received the value and `false` otherwise. Note that, unlike with `put!`, `offer!`
 cannot distinguish between closed and open channels.
 
 [source, clojure]
@@ -654,8 +652,9 @@ cannot distinguish between closed and open channels.
 ;; => false
 ----
 
-`poll!` takes a value from a channel if it's possible to do so immediately. Returns the value if
-succesful and `nil` otherwise. Unlike `take!`, `poll!` cannot distinguish closed and open channels.
+`poll!` takes a value from a channel if it's possible to do so immediately. Returns
+the value if succesful and `nil` otherwise. Unlike `take!`, `poll!` cannot
+distinguish closed and open channels.
 
 [source, clojure]
 ----
@@ -672,16 +671,16 @@ succesful and `nil` otherwise. Unlike `take!`, `poll!` cannot distinguish closed
 (poll! ch)
 ;; => 42
 ----
-////
+
 
 ==== Processes
 
-We learned all about channels but there is still a missing piece in the puzzle: processes.
-Processes are pieces of logic that run independently and use channels for communication
-and coordination. Puts and takes inside a process will stop the process until the
-operation completes. Stopping a process doesn't block the only thread we have in the
-environments where ClojureScript runs. Instead, it will be resumed at a later time when
-the operation is waiting for being performed.
+We learned all about channels but there is still a missing piece in the puzzle:
+processes.  Processes are pieces of logic that run independently and use channels
+for communication and coordination. Puts and takes inside a process will stop the
+process until the operation completes. Stopping a process doesn't block the only
+thread we have in the environments where ClojureScript runs. Instead, it will be
+resumed at a later time when the operation is waiting for being performed.
 
 Processes are launched using the `go` macro and puts and takes use the `<!` and `>!`
 placeholders. The `go` macro rewrites your code to use callbacks but inside `go`
@@ -711,21 +710,24 @@ everything looks like synchronous code, which makes understanding it straightfor
 ;; [:a] Got 42
 ----
 
-In the above example we are launching a process with `go` that takes a value from `ch` and
-prints it to the console. Since the value isn't immediately available it will park until
-it can resume. After that we launch another process that puts a value on the channel.
-Since there is a pending take the put operation succeeds and the value is delivered to
-the first process, then both processes terminate.
+In the above example we are launching a process with `go` that takes a value from
+`ch` and prints it to the console. Since the value isn't immediately available it
+will park until it can resume. After that we launch another process that puts a
+value on the channel.
 
-Both `go` blocks run independently and, even though they are executed asynchronously, they
-look like synchronous code. The above go blocks are fairly simple but being able to
-write concurrent processes that coordinate via channels is a very powerful tool for
-implementing complex asynchronous workflows. Channels also offer a great decoupling of
-producers and consumers.
+Since there is a pending take the put operation succeeds and the value is delivered
+to the first process, then both processes terminate.
 
-Processes can wait for an arbitrary amount of time too, there is a `timeout` function
-that return a channel that will be closed after the given amount of miliseconds. Combining
-a timeout channel with a take operation inside a go block gives us the ability to sleep:
+Both `go` blocks run independently and, even though they are executed
+asynchronously, they look like synchronous code. The above go blocks are fairly
+simple but being able to write concurrent processes that coordinate via channels is
+a very powerful tool for implementing complex asynchronous workflows. Channels also
+offer a great decoupling of producers and consumers.
+
+Processes can wait for an arbitrary amount of time too, there is a `timeout`
+function that return a channel that will be closed after the given amount of
+miliseconds. Combining a timeout channel with a take operation inside a go block
+gives us the ability to sleep:
 
 [source, clojure]
 ----
@@ -753,21 +755,22 @@ a timeout channel with a take operation inside a go block gives us the ability t
 ;; [:a] I slept one second, bye! 10
 ----
 
-As we can see in the messages printed, the process does nothing for one second when it
-blocks in the take operation of the timeout channel. The program continues and after one
-second the process resumes and terminates.
+As we can see in the messages printed, the process does nothing for one second when
+it blocks in the take operation of the timeout channel. The program continues and
+after one second the process resumes and terminates.
+
 
 ===== Choice
 
-Apart from putting and taking one value at a time inside a go block we can also make a
-non-deterministic choice on multiple channel operations using `alts!`. `alts!` is given
-a series of channel put or take operations (note that we can also try to put and take in
-a channel at the same time) and only performs one as soon as is ready; if multiple
-operations can be performed when calling `alts!` it will do a pseudo random choice by
-default.
+Apart from putting and taking one value at a time inside a go block we can also
+make a non-deterministic choice on multiple channel operations using `alts!`.
+`alts!` is given a series of channel put or take operations (note that we can also
+try to put and take in a channel at the same time) and only performs one as soon as
+is ready; if multiple operations can be performed when calling `alts!` it will do
+a pseudo random choice by default.
 
-We can easily try an operation on a channel and cancel it after a certain amount of time
-combining the `timeout` function and `alts!`. Let's see how:
+We can easily try an operation on a channel and cancel it after a certain amount
+of time combining the `timeout` function and `alts!`. Let's see how:
 
 [source, clojure]
 ----
@@ -799,21 +802,25 @@ combining the `timeout` function and `alts!`. Let's see how:
 ;; [:a] I slept one second, trying to put a value on channel
 ----
 
-In the example above we launched a go block that, after waiting for a second, puts a value
-in the `ch` channel. The other go block creates a `cancel` channel, which will be closed
-after 300 miliseconds. After that, it tries to read from both `ch` and `cancel` at the same
-time using `alts!`, which will succeed whenever it can take a value from either of those
-channels. Since `cancel` is closed after 300 miliseconds, `alts!` will succeed since takes
-from closed channel return the `nil` sentinel. Note that `alts!` returns a two-element
-vector with the returned value of the operation and the channel where it was performed.
-This is why we are able to detect whether the read operation was performed in the `cancel`
-channel or in `ch`. I suggest you copy this example and set the first process timeout to
-100 miliseconds to see how the read operation on `ch` succeeds.
+In the example above we launched a go block that, after waiting for a second, puts
+a value in the `ch` channel. The other go block creates a `cancel` channel, which
+will be closed after 300 miliseconds. After that, it tries to read from both `ch`
+and `cancel` at the same time using `alts!`, which will succeed whenever it can
+take a value from either of those channels. Since `cancel` is closed after 300
+miliseconds, `alts!` will succeed since takes from closed channel return the `nil`
+sentinel. Note that `alts!` returns a two-element vector with the returned value
+of the operation and the channel where it was performed.
 
-We've learned how to choose between read operations so let's look at how to express a
-conditional write operation in `alts!`. Since we need to provide the channel and a value
-to try to put on it, we'll use a two element vector with the channel and the value for
-representing write operations. Let's see an example:
+This is why we are able to detect whether the read operation was performed in the
+`cancel` channel or in `ch`. I suggest you copy this example and set the first
+process timeout to 100 miliseconds to see how the read operation on `ch` succeeds.
+
+We've learned how to choose between read operations so let's look at how to express
+a conditional write operation in `alts!`. Since we need to provide the channel and
+a value to try to put on it, we'll use a two element vector with the channel and
+the value for representing write operations.
+
+Let's see an example:
 
 [source, clojure]
 ----
@@ -851,16 +858,17 @@ representing write operations. Let's see an example:
 ;; [:a] I'm done!
 ----
 
-When running the above example only the put operation on the `a-ch` channel has succeeded.
-Since both channels are ready to take a value when the `alts!` occurs you may get
-different results when running this code.
+When running the above example only the put operation on the `a-ch` channel has
+succeeded. Since both channels are ready to take a value when the `alts!` occurs
+you may get different results when running this code.
+
 
 ===== Priority
 
-`alts!` default is to make a non-deterministic choice whenever several operations are
-ready to be performed. We can instead give priority to the operations passing the
-`:priority` option to `alts!`. Whenever `:priority` is `true`, if more than one operation
-is ready they will be tried in order.
+`alts!` default is to make a non-deterministic choice whenever several operations
+are ready to be performed. We can instead give priority to the operations passing
+the `:priority` option to `alts!`. Whenever `:priority` is `true`, if more than
+one operation is ready they will be tried in order.
 
 [source, clojure]
 ----
@@ -897,16 +905,18 @@ is ready they will be tried in order.
 ;; [:c] Got 42 from `a-ch`
 ----
 
-Since both `a-ch` and `another-ch` had a value to read when the `alts!` was executed and
-we set the `:priority` option to true, `a-ch` has preference. You can try deleting the
-`:priority` option and running the example multiple times to see that, without priority,
-`alts!` makes a non-deterministic choice.
+Since both `a-ch` and `another-ch` had a value to read when the `alts!` was
+executed and we set the `:priority` option to true, `a-ch` has preference. You can
+try deleting the `:priority` option and running the example multiple times to see
+that, without priority, `alts!` makes a non-deterministic choice.
+
 
 ===== Defaults
 
-Another interesting bit of `alts!` is that it can return immediately if no operation is
-ready and we provide a default value. We can conditionally do a choice on the operations
-if and only if any of them is ready, returning a default value if it's not.
+Another interesting bit of `alts!` is that it can return immediately if no
+operation is ready and we provide a default value. We can conditionally do a choice
+on the operations if and only if any of them is ready, returning a default value
+if it's not.
 
 [source, clojure]
 ----
@@ -929,20 +939,23 @@ if and only if any of them is ready, returning a default value if it's not.
 ----
 
 As you can see in the above example, if no operation is ready the value returned by
-`alts!` is the one we supplied after the `:default` key when calling it and the channel is
-the `:default` keyword itself.
+`alts!` is the one we supplied after the `:default` key when calling it and the
+channel is the `:default` keyword itself.
+
 
 ==== Combinators
 
-Now that we're acquainted with channels and processes it's time to explore some interesting
-combinators for working with channels that are present in `core.async`. This section
-includes a brief description of all of them together with a simple example of their usage.
+Now that we're acquainted with channels and processes it's time to explore some
+interesting combinators for working with channels that are present in `core.async`.
+This section includes a brief description of all of them together with a simple
+example of their usage.
+
 
 ===== pipe
 
-`pipe` takes an input and output channels and pipes all the values put on the input channel
-to the output one. The output channel is closed whenever the source is closed unless we
-provide a `false` third argument:
+`pipe` takes an input and output channels and pipes all the values put on the input
+channel to the output one. The output channel is closed whenever the source is
+closed unless we provide a `false` third argument:
 
 [source, clojure]
 ----
@@ -975,23 +988,24 @@ provide a `false` third argument:
 ;; [:a] I'm done!
 ----
 
-In the above example we used the `go-loop` macro for reading values recursively until the
-`out` channel is closed. Notice that when we close the `in` channel the `out` channel is
-closed too, making the `go-loop` terminate.
+In the above example we used the `go-loop` macro for reading values recursively
+until the `out` channel is closed. Notice that when we close the `in` channel the
+`out` channel is closed too, making the `go-loop` terminate.
+
 
 ===== pipeline-async
 
-`pipeline-async` takes a number for controlling parallelism, an output channel, an
-asynchronous function and an input channel. The asynchronous function has two arguments:
-the value put in the input channel and a channel where it should put the result of its
-asynchronous operation, closing the result channel after finishing. The number controls
-the number of concurrent go blocks that will be used for calling the asynchronous function
-with the inputs.
+`pipeline-async` takes a number for controlling parallelism, an output channel,
+an asynchronous function and an input channel. The asynchronous function has two
+arguments: the value put in the input channel and a channel where it should put the
+result of its asynchronous operation, closing the result channel after finishing.
+The number controls the number of concurrent go blocks that will be used for calling
+the asynchronous function with the inputs.
 
 The output channel will receive outputs in an order relative to the input channel,
-regardless the time each asynchronous function call takes to complete. It has an optional
-last parameter that controls whether the output channel will be closed when the input
-channel is closed, which defaults to `true`.
+regardless the time each asynchronous function call takes to complete. It has an
+optional last parameter that controls whether the output channel will be closed
+when the input channel is closed, which defaults to `true`.
 
 [source, clojure]
 ----
@@ -1037,10 +1051,12 @@ channel is closed, which defaults to `true`.
 ;; [:a] I'm done!
 ----
 
+
 ===== pipeline
 
-`pipeline` is similar to `pipeline-async` but instead of taking and asynchronous function
-it takes a transducer instead. The transducer will be applied independently to each input.
+`pipeline` is similar to `pipeline-async` but instead of taking and asynchronous
+function it takes a transducer instead. The transducer will be applied independently
+to each input.
 
 [source, clojure]
 ----
@@ -1075,12 +1091,14 @@ it takes a transducer instead. The transducer will be applied independently to e
 ;; [:a] I'm done!
 ----
 
+
 ===== split
 
-`split` takes a predicate and a channel and returns a vector with two channels, the first
-of which will receive the values for which the predicate is true, the second will receive
-those for which the predicate is false. We can optionally pass a buffer or number for the
-channels with the third (true channel) and fourth (false channel) arguments.
+`split` takes a predicate and a channel and returns a vector with two channels, the
+first of which will receive the values for which the predicate is true, the second
+will receive those for which the predicate is false. We can optionally pass a buffer
+or number for the channels with the third (true channel) and fourth (false channel)
+arguments.
 
 [source, clojure]
 ----
@@ -1129,8 +1147,8 @@ channels with the third (true channel) and fourth (false channel) arguments.
 ===== reduce
 
 `reduce` takes a reducing function, initial value and an input channel. It returns a
-channel with the result of reducing over all the values put on the input channel before
-closing it using the given initial value as the seed.
+channel with the result of reducing over all the values put on the input channel
+before closing it using the given initial value as the seed.
 
 [source, clojure]
 ----
@@ -1153,10 +1171,10 @@ closing it using the given initial value as the seed.
 
 ===== onto-chan
 
-`onto-chan` takes a channel and a collection and puts the contents of the collection into
-the channel. It closes the channel after finishing although it accepts a third argument for
-specifying if it should close it or not. Let's rewrite the `reduce` example using
-`onto-chan`:
+`onto-chan` takes a channel and a collection and puts the contents of the collection
+into the channel. It closes the channel after finishing although it accepts a third
+argument for specifying if it should close it or not. Let's rewrite the `reduce`
+example using `onto-chan`:
 
 [source, clojure]
 ----
@@ -1173,10 +1191,11 @@ specifying if it should close it or not. Let's rewrite the `reduce` example usin
 ;; Result: 6
 ----
 
+
 ===== to-chan
 
-`to-chan` takes a collection and returns a channel where it will put every value in the
-collection, closing the channel afterwards.
+`to-chan` takes a collection and returns a channel where it will put every value in
+the collection, closing the channel afterwards.
 
 [source, clojure]
 ----
@@ -1202,12 +1221,13 @@ collection, closing the channel afterwards.
 ;; [:a] I'm done!
 ----
 
+
 ===== merge
 
-`merge` takes a collection of input channels and returns a channel where it will put every
-value that is put on the input channels. The returned channel will be closed when all the
-input channels have been closed. The returned channel will be unbuffered by default but a
-number or buffer can be provided as the last argument.
+`merge` takes a collection of input channels and returns a channel where it will
+put every value that is put on the input channels. The returned channel will be
+closed when all the input channels have been closed. The returned channel will be
+unbuffered by default but a number or buffer can be provided as the last argument.
 
 [source, clojure]
 ----
@@ -1246,24 +1266,27 @@ number or buffer can be provided as the last argument.
 
 ==== Higher-level abstractions
 
-We've learned the about the low-level primitives of `core.async` and the combinators that it offers
-for working with channels. `core.async` also offers some useful, higher-level abstractions on top of
-channels that can serve as building blocks for more advanced functionality.
+We've learned the about the low-level primitives of `core.async` and the combinators
+that it offers for working with channels. `core.async` also offers some useful,
+higher-level abstractions on top of channels that can serve as building blocks for
+more advanced functionality.
 
 
 ===== Mult
 
-Whenever we have a channel whose values have to be broadcasted to many others, we can use `mult` for
-creating a multiple of the supplied channel. Once we have a mult, we can attach channels to it using
-`tap` and dettach them using `untap`. Mults also support removing all tapped channels at once with
-`untap-all`.
+Whenever we have a channel whose values have to be broadcasted to many others, we
+can use `mult` for creating a multiple of the supplied channel. Once we have a mult,
+we can attach channels to it using `tap` and dettach them using `untap`. Mults also
+support removing all tapped channels at once with `untap-all`.
 
-Every value put in the source channel of a mult is broadcasted to all the tapped channels, and all of
-them must accept it before the next item is broadcasted. For preventing slow takers from blocking the
-mult's values we must use buffering on the tapped channels judiciously.
+Every value put in the source channel of a mult is broadcasted to all the tapped
+channels, and all of them must accept it before the next item is broadcasted. For
+preventing slow takers from blocking the mult's values we must use buffering on
+the tapped channels judiciously.
 
-Closed tapped channels are removed automatically from the mult. When putting a value in the source
-channels when there are still no taps such value will be dropped.
+Closed tapped channels are removed automatically from the mult. When putting a
+value in the source channels when there are still no taps such value will be
+dropped.
 
 [source, clojure]
 ----
@@ -1315,17 +1338,21 @@ channels when there are still no taps such value will be dropped.
 
 ===== Pub-sub
 
-After learning about mults you could imagine how to implement a pub-sub abstraction on top of `mult`, `tap` and
-`untap` but since it's a widely used communication mechanism `core.async` already implements this functionality.
-Instead of creating a mult from a source channel, we create a publication with `pub` giving it a channel and a
-function that will be used for extracting the topic of the messages.
+After learning about mults you could imagine how to implement a pub-sub abstraction
+on top of `mult`, `tap` and  `untap` but since it's a widely used communication
+mechanism `core.async` already implements this functionality.
 
-We can subscribe to a publication with `sub`, giving it the publication we want to subscribe to, the topic we
-are interested in and a channel to put the messages that have the given topic. Note that we can subscribe a
-channel to multiple topics.
+Instead of creating a mult from a source channel, we create a publication with
+`pub` giving it a channel and a function that will be used for extracting the
+topic of the messages.
 
-`unsub` can be given a publication, topic and channel for unsubscribing such channel from the topic.
-`unsub-all` can be given a publication and a topic to unsubscribe every channel from the given topic.
+We can subscribe to a publication with `sub`, giving it the publication we want
+to subscribe to, the topic we are interested in and a channel to put the messages
+that have the given topic. Note that we can subscribe a channel to multiple topics.
+
+`unsub` can be given a publication, topic and channel for unsubscribing such
+channel from the topic. `unsub-all` can be given a publication and a topic to
+unsubscribe every channel from the given topic.
 
 [source, clojure]
 ----
@@ -1371,39 +1398,47 @@ channel to multiple topics.
 
 ===== Mixer
 
-As we learned in the section about `core.async` combinators, we can use the `merge` function for combining
-multiple channels into one. When merging multiple channels, every value put in the input channels will end up
-in the merged channel. However, we may want more finer-grained control over which values put in the input
-channels end up in the output channel, that's where mixers come in handy.
+As we learned in the section about `core.async` combinators, we can use the `merge`
+function for combining multiple channels into one. When merging multiple channels,
+every value put in the input channels will end up in the merged channel. However,
+we may want more finer-grained control over which values put in the input channels
+end up in the output channel, that's where mixers come in handy.
 
-`core.async` gives us the mixer abstraction, which we can use to combine multiple input channnels into an output
-channel. The interesting part of the mixer is that we can mute, pause and listen exclusively to certain input
-channels.
+`core.async` gives us the mixer abstraction, which we can use to combine multiple
+input channnels into an output channel. The interesting part of the mixer is that
+we can mute, pause and listen exclusively to certain input channels.
 
-We can create a mixer given an output channel with `mix`. Once we have a mixer we can add input channels into the
-mix using `admix`, remove it using `unmix` or remove every input channel with `unmix-all`.
+We can create a mixer given an output channel with `mix`. Once we have a mixer we
+can add input channels into the mix using `admix`, remove it using `unmix` or remove
+every input channel with `unmix-all`.
 
-For controlling the state of the input channel we use the `toggle` function giving it the mixer and a map from
-channels to their states. Note that we can add channels to the mix using `toggle`, since the map will be merged
-with the current state of the mix. The state of a channel is a map which can have the keys `:mute`, `:pause` and
-`:solo` mapped to a boolean.
+For controlling the state of the input channel we use the `toggle` function giving
+it the mixer and a map from channels to their states. Note that we can add channels
+to the mix using `toggle`, since the map will be merged with the current state of
+the mix. The state of a channel is a map which can have the keys `:mute`, `:pause`
+and `:solo` mapped to a boolean.
 
 Let's see what muting, pausing and soloing channels means:
 
-- A muted input channel means that, while still taking values from it, they won't be forwarded to the output channel.
-  Thus, while a channel is muted, all the values put in it will be discarded.
-- A paused input channel means that no values will be taken from it. This means that values put in the channel won't
-  be forwarded to the output channel nor discarded.
-- When soloing one or more channels the output channel will only receive the values put in soloed channels. By default
-  non-soloed channels are muted but we can use `solo-mode` to decide between muting or pausing non-soloed channels.
+- A muted input channel means that, while still taking values from it, they won't
+  be forwarded to the output channel. Thus, while a channel is muted, all the values
+  put in it will be discarded.
+- A paused input channel means that no values will be taken from it. This means
+  that values put in the channel won't be forwarded to the output channel nor
+  discarded.
+- When soloing one or more channels the output channel will only receive the values
+  put in soloed channels. By default non-soloed channels are muted but we can use
+  `solo-mode` to decide between muting or pausing non-soloed channels.
 
-That was a lot of information so let's see an example to improve our understanding. First of all, we'll set up a mixer
-with an `out` channel and add three input channels to the mix. After that, we'll be printing all the values received
-on the `out` channel to illustrate the control over input channels:
+That was a lot of information so let's see an example to improve our understanding.
+First of all, we'll set up a mixer with an `out` channel and add three input
+channels to the mix. After that, we'll be printing all the values received on the
+`out` channel to illustrate the control over input channels:
 
 [source, clojure]
 ----
-(require '[cljs.core.async :refer [chan put! <! close! mix admix unmix toggle solo-mode]])
+(require '[cljs.core.async :refer [chan put! <! close! mix admix
+                                   unmix toggle solo-mode]])
 (require-macros '[cljs.core.async.macros :refer [go-loop]])
 
 ;; Output channel and mixer
@@ -1462,8 +1497,9 @@ Let's pause the `in-2` channel, put a value in every input channel and resume `i
 ;; [:a] Got 2
 ----
 
-As you can see in the example above, the values put in the paused channels aren't discarded.
-For discarding values put in an input channel we have to mute it, let's see an example:
+As you can see in the example above, the values put in the paused channels aren't
+discarded. For discarding values put in an input channel we have to mute it,
+let's see an example:
 
 [source, clojure]
 ----
@@ -1481,11 +1517,12 @@ For discarding values put in an input channel we have to mute it, let's see an e
 (toggle mixer {in-2 {:mute false}})
 ----
 
-We put a value (`2`) in the `in-2` channel and, since the channel was muted at the time, the value
-is discarded and never put into `out`. Let's look at the third state a channel can be inside a mixer:
-solo.
+We put a value `2` in the `in-2` channel and, since the channel was muted at the
+time, the value is discarded and never put into `out`. Let's look at the third
+state a channel can be inside a mixer: solo.
 
-As we mentioned before, soloing channels of a mixer implies muting the rest of them by default:
+As we mentioned before, soloing channels of a mixer implies muting the rest of them
+by default:
 
 [source, clojure]
 ----
@@ -1505,8 +1542,9 @@ As we mentioned before, soloing channels of a mixer implies muting the rest of t
                in-2 {:solo false}})
 ----
 
-However, we can set the mode the non-soloed channels will be in while there are soloed channels.
-Let's set the default non-solo mode to pause instead of the default mute:
+However, we can set the mode the non-soloed channels will be in while there are
+soloed channels. Let's set the default non-solo mode to pause instead of the
+default mute:
 
 [source, clojure]
 ----
@@ -1529,6 +1567,7 @@ Let's set the default non-solo mode to pause instead of the default mute:
 
 ;; [:a] Got 3
 ----
+
 
 === Appendix C: Setting up a ClojureScript development environment
 
