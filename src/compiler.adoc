@@ -29,16 +29,17 @@ may compile code to run in the browser or in nodejs-like environments out of the
 
 ==== Download the compiler
 
-The _ClojureScript_ compiler is implemented in Java. To use it, you should have jdk8
-installed. _ClojureScript_ itself only requires JDK 7, but the standalone compiler that we
-are going to use in this chapter requires JDK 8, which can be found at
+Although the _ClojureScript_ is self hosted, the best way to use it is just using the
+JVM implementation. To use it, you should have jdk8 installed. _ClojureScript_ itself only
+requires JDK 7, but the standalone compiler that we are going to use in this chapter
+requires JDK 8, which can be found at
 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 
 You can download the latest _ClojureScript_ compiler using `wget`:
 
 [source, bash]
 ----
-wget https://github.com/clojure/clojurescript/releases/download/r1.7.28/cljs.jar
+wget https://github.com/clojure/clojurescript/releases/download/r1.8.51/cljs.jar
 ----
 
 The _ClojureScript_ compiler is packaged in a standalone executable jar file, so this is
@@ -59,8 +60,8 @@ When you have installed nvm, follow installing the latest version of nodejs:
 
 [source, shell]
 ----
-nvm install v5.4.1
-nvm alias default v5.4.1
+nvm install v6.2.0
+nvm alias default v6.2.0
 ----
 
 You can test if *nodejs* is installed in your system with this command:
@@ -68,7 +69,7 @@ You can test if *nodejs* is installed in your system with this command:
 [source, shell]
 ----
 $ node --version
-v5.4.1
+v6.2.0
 ----
 
 
@@ -275,7 +276,7 @@ with your favorite browser and take a look in the development tools console. The
 ==== Watch process
 
 You may have already noticed the slow startup time of the _ClojureScript_ compiler. To
-solve this, the _ClojureScript_ standalone compiler comes with a tool to 
+solve this, the _ClojureScript_ standalone compiler comes with a tool to
 watch for changes in your source code, and re-compile modified files as soon as they are written to
 disk
 
@@ -308,7 +309,7 @@ Watching paths: /home/niwi/cljsbook/playground/mywebapp/src
 ----
 
 Go back to the `mywebapp.core` namespace, and change the print text to `"Hello World, Again!"`.
-You'll see that the file `src/mywebapp/core.cljs` the file is immediately recompiled, and if 
+You'll see that the file `src/mywebapp/core.cljs` the file is immediately recompiled, and if
 you reload `index.html` in your browser the new text is displayed in the developer console.
 Another advantage of this method is that it gives a little bit more output.
 
@@ -424,7 +425,7 @@ cljs.user=> (+ 1 2)
 You may have noticed that the REPL does not have support for history and other shell-like
 facilities. This is because the default REPL does not comes with "readline" support. But
 this problem can be solved using a simple tool named `rlwrap` which you should be able to find
-find with the package manager of your operating system (e.g. for Ubuntu, type 
+find with the package manager of your operating system (e.g. for Ubuntu, type
 `sudo apt install -y rlwrap` to install).
 
 The `rlwrap` tool gives the REPL "readline" capability, and will allow you to have command history,
@@ -781,7 +782,7 @@ this form (from the *mies* template):
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.7.228"]
+                 [org.clojure/clojurescript "1.8.51"]
                  [org.clojure/data.json "0.2.6"]]
   :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :node-dependencies [[source-map-support "0.3.2"]]
@@ -815,7 +816,7 @@ Let's start by adding `[prismatic/dommy "1.1.0"]` at the end of the `:dependenci
 [source, clojure]
 ----
 :dependencies [[org.clojure/clojure "1.8.0"]
-               [org.clojure/clojurescript "1.7.228"]
+               [org.clojure/clojurescript "1.8.51"]
                [org.clojure/data.json "0.2.6"]
                [prismatic/dommy "1.1.0"]]
 ----
@@ -885,7 +886,7 @@ Ideas:
 
 === Unit testing
 
-As you might expect, testing in _ClojureScript_ consists of the same concepts 
+As you might expect, testing in _ClojureScript_ consists of the same concepts
 widely used by other language such as Clojure, Java, Python, JavaScript, etc.
 
 Regardless of the language, the main objective of unit testing is to run some test cases,
@@ -903,7 +904,7 @@ The "official" _ClojureScript_ testing framework is in the "cljs.test"
 namespace. It is a very simple library, but it should be more than enough for our purposes.
 
 There are other libraries that offer additional features or directly different approaches
-to testing, such as link:https://github.com/clojure/test.check[test.check]. However, we 
+to testing, such as link:https://github.com/clojure/test.check[test.check]. However, we
 will not cover them here.
 
 Start creating a new project using the *mies* leiningen template for experimenting with
@@ -977,8 +978,8 @@ Let's try to run this. First start the watch process:
 ----
 $ ./scripts/watch
 Building ...
-Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/core.cljs to out/cljs/core.cljs
-Reading analysis cache for jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/core.cljs
+Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.8.51/clojurescript-1.8.51.jar!/cljs/core.cljs to out/cljs/core.cljs
+Reading analysis cache for jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.8.51/clojurescript-1.8.51.jar!/cljs/core.cljs
 Compiling out/cljs/core.cljs
 ... done. Elapsed 3.862126827 seconds
 Watching paths: /home/niwi/cljsbook/playground/appfortesting/test, /home/niwi/cljsbook/playground/appfortesting/src
@@ -1026,7 +1027,7 @@ or not. Write the following content to the `src/appfortesting/core.clj` file:
        (pos? (js-mod year 400))))
 ----
 
-Next, write a new test case to check that our new `leap?` function 
+Next, write a new test case to check that our new `leap?` function
 works properly. Make the `core_tests.cljs` file look like:
 
 [source, clojure]
