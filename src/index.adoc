@@ -1,6 +1,6 @@
 = ClojureScript Unraveled
 Andrey Antukh <niwi@niwi.nz>; Alejandro Gómez <alejandro@dialelo.com>
-v5, 2015-11-06
+v5, 2016-06-01
 :toc: left
 :toclevels: 2
 :doctype: book
@@ -104,6 +104,8 @@ brought to us.
 This chapter will be a little introduction to ClojureScript without assumptions about
 previous knowledge of the Clojure language, providing a quick tour over all the things
 you will need to know about ClojureScript and understand the rest of this book.
+
+You can run the code snippets in the online interactive repl: http://www.clojurescript.io/
 
 include::language-basics.adoc[]
 
