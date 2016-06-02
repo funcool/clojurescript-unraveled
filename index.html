@@ -4867,17 +4867,27 @@ values are considered as false: <code>nil</code> and <code>false</code>. Everyth
 logical <code>true</code>.</p>
 </div>
 <div class="paragraph">
-<p>Thanks to this, sets can also be considered as predicates. If a set returns a value,
-it exists; if it returns <code>nil</code>, the value does not exist:</p>
+<p>Jointly with the ability to implement the callable protocol (the <code>IFn</code>), data
+structures like sets can be used just as predicates, without need of additional
+wrapping them in a function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">s</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span><span class="tok-p">})</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">valid?</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">})</span>
 
-<span class="tok-p">(</span><span class="tok-nf">s</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">valid?</span> <span class="tok-p">(</span><span class="tok-nb">range </span><span class="tok-mi">1</span> <span class="tok-mi">10</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; (1 2 3)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is because set returns the a value if it exists or nil in case contrary:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">valid?</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; 1</span>
 
-<span class="tok-p">(</span><span class="tok-nf">s</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">valid?</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; nil</span></code></pre>
 </div>
 </div>
