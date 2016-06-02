@@ -1171,9 +1171,23 @@ executes the expression, discards the resulting values, and returns `nil`.
 ;; => nil
 ----
 
+If you want just iterate and apply some side effectfull operation (like `println`)
+over each item in the collection, you can just use the specialized function `run!`
+that internally uses fast reduction:
+
+[source, clojure]
+----
+(run! println [1 2 3])
+;; 1
+;; 2
+;; 3
+;; => nil
+----
+
+This function explicitly returns `nil`.
+
 
 === Collection types
-
 
 ==== Immutable and persistent
 
