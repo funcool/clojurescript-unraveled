@@ -3375,17 +3375,26 @@ like this to be false.  In _ClojureScript_, unlike in other languages, only two
 values are considered as false: `nil` and `false`. Everything else is treated as
 logical `true`.
 
-Thanks to this, sets can also be considered as predicates. If a set returns a value,
-it exists; if it returns `nil`, the value does not exist:
+Jointly with the ability to implement the callable protocol (the `IFn`), data
+structures like sets can be used just as predicates, without need of additional
+wrapping them in a function:
 
 [source, clojure]
 ----
-(def s #{1 2})
+(def valid? #{1 2 3})
 
-(s 1)
+(filter valid? (range 1 10))
+;; => (1 2 3)
+----
+
+This is because set returns the a value if it exists or nil in case contrary:
+
+[source, clojure]
+----
+(valid? 1)
 ;; => 1
 
-(s 3)
+(valid? 3)
 ;; => nil
 ----
 
