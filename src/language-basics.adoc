@@ -2407,36 +2407,38 @@ A protocol looks like this:
 
 (defprotocol IProtocolName
   "A docstring describing the protocol."
-  (sample-method [this] "A doc string of the function associated with the protocol."))
+  (sample-method [this] "A doc string associated with this function."))
 ----
 
-NOTE: the "I" prefix is commonly used to designate the separation of protocols and types. In the Clojure
-community, there are many different opinions about how the "I" prefix should be used. In our opinion, it is an
-acceptable solution to avoid name clashing and possible confusion.
+NOTE: the "I" prefix is commonly used to designate the separation of protocols and
+types. In the Clojure community, there are many different opinions about how the "I"
+prefix should be used. In our opinion, it is an acceptable solution to avoid name
+clashing and possible confusion. But not using the prefix is not considered bad
+practice.
 
-From the user perspective, protocol functions are simply plain functions defined in the namespace
-where the protocol is defined. As you can intuit, this namespacing of protocols allows us to avoid
-any conflict between different protocols implemented for the same type.
+From the user perspective, protocol functions are simply plain functions defined in
+the namespace where the protocol is defined. This enables an easy and simple aproach
+for avoid conflicts between different protocols implemented for the same type that
+have conflicting function names.
 
-Here is an example. Let's create a protocol called `IInvertible` for data that can be "inverted".
-It will have a single method named `invert`.
+Here is an example. Let's create a protocol called `IInvertible` for data that can
+be "inverted".  It will have a single method named `invert`.
 
 [source, clojure]
 ----
-(ns proto.testproto)
-
 (defprotocol IInvertible
   "This is a protocol for data types that are 'invertible'"
-    (invert [this] "Invert the given item."))
+  (invert [this] "Invert the given item."))
 ----
+
 
 ===== Extending existing types
 
-One of the big strengths of protocols is the ability to extend existing and maybe third party types,
-and this operation can be done in different ways. The majority of time you will tend to use
-the *extend-protocol* or the *extend-type* macros.
+One of the big strengths of protocols is the ability to extend existing and maybe
+third party types. This operation can be done in different ways.
 
-This is an example of how the *extend-type* macro can be used:
+The majority of time you will tend to use the *extend-protocol* or the *extend-type*
+macros. This is how `extend-type` syntax looks:
 
 [source, clojure]
 ----
@@ -2455,51 +2457,54 @@ This is an example of how the *extend-type* macro can be used:
     ))
 ----
 
-You can observe that with *extend-type* you are extending a single type with different protocols
-in a single expression.  Here is code that will extend the `number`, `string`, `List`, and
-`PersistentVector` types to be "invertible".  For numbers, we define the inverse to be the
-reciprocal of the number (or zero, if the number is zero). For strings, lists, and vectors,
-the inverse is defined as the reverse of the input.
+You can observe that with *extend-type* you are extending a single type with
+different protocols in a single expression.
+
+Let's play with our `IInvertible` protocol defined previously:
 
 ----
-(extend-type number
-  IInvertible
-  (invert [this] (if (zero? this) 0 (/ 1 this))))
-
 (extend-type string
   IInvertible
   (invert [this] (apply str (reverse this))))
 
-(extend-type List
+(extend-type cljs.core.List
   IInvertible
   (invert [this] (reverse this)))
 
-(extend-type PersistentVector
+(extend-type cljs.core.PersistentVector
   IInvertible
   (invert [this] (into [] (reverse this))))
 ----
 
-If you load in this code, you can see that it works:
+Yoy may note that a special symbol *string* is used instead of `js/String` for
+extend the protol for string. This is because the builtin javascript types have
+special treatmen and if you replace the `string` with `js/String` the compiler
+will emit a warning about that.
+
+So if you want extend your protocol to javascript primitive types, instead of using
+`js/Number`, `js/String`, `js/Object`, `js/Array`, `js/Boolean` and `js/Function`
+you should use the respective special symbols: `number`, `string`, `object`,
+`array`, `boolean` and `function`.
+
+Now, it's time to try our protocol implementation:
 
 [source, clojure]
 ----
-(proto.testproto/invert "abc")
+(invert "abc")
 ;; => "cba"
-(proto.testproto/invert 25)
-;; => 0.04
-(proto.testproto/invert 0)
+
+(invert 0)
 ;; => 0
-(proto.testproto/invert '(1 2 3))
+
+(invert '(1 2 3))
 ;; => (3 2 1)
-(proto.testproto/invert [1 2 3])
+
+(invert [1 2 3])
 ;; => [3 2 1]
 ----
 
-Admittedly, this is a somewhat contrived example. In xref:extend-type-section[the next section]
-you will see how to extend an existing type.
-
-In comparison, *extend-protocol* does the inverse;
-given a protocol, it adds implementations for multiple types:
+In comparison, *extend-protocol* does the inverse; given a protocol, it adds
+implementations for multiple types. This is how the syntax looks:
 
 [source, clojure]
 ----
@@ -2515,26 +2520,20 @@ given a protocol, it adds implementations for multiple types:
     ))
 ----
 
-Thus, the previous example could have been written equally well this way:
+Thus, the previous example could have been written equally well with this way:
 
 [source, clojure]
 ----
 (extend-protocol IInvertible
-  number
-  (invert [this] (if (zero? this) 0 (/ 1 this)))
-
   string
   (invert [this] (apply str (reverse this)))
 
-  List
+  cljs.core.List
   (invert [this] (reverse this))
 
-  PersistentVector
+  cljs.core.PersistentVector
   (invert [this] (into [] (reverse this))))
 ----
-
-There are other ways to extend a type with a protocol implementation, but they will be covered
-in another section of this book.
 
 
 ===== Participate in ClojureScript abstractions
