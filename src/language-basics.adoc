@@ -755,6 +755,7 @@ Let see an example:
 ;; => {:result 3 :id 1}
 ----
 
+
 ==== The thread-some macros (`some\->` and `some\->>`)
 
 Two of more specialized threading macros that _ClojureScript_ comes with. They works
@@ -802,6 +803,11 @@ the ability to conditionally skip some steps from the pipeline. Let see an examp
 
 The value threading only happens when the corresponding condition evaluates to
 logical true.
+
+==== Additional Readings
+
+- http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
+- http://clojure.org/guides/threading_macros
 
 
 === Locals, Blocks, and Loops
