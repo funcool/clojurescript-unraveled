@@ -805,7 +805,7 @@ have this form (from the *mies* template):
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.8.51"]
+                 [org.clojure/clojurescript "1.9.14"]
                  [org.clojure/data.json "0.2.6"]]
   :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :node-dependencies [[source-map-support "0.3.2"]]
@@ -839,7 +839,7 @@ vector in *project.clj*:
 [source, clojure]
 ----
 :dependencies [[org.clojure/clojure "1.8.0"]
-               [org.clojure/clojurescript "1.8.51"]
+               [org.clojure/clojurescript "1.9.14"]
                [org.clojure/data.json "0.2.6"]
                [prismatic/dommy "1.1.0"]]
 ----
@@ -991,8 +991,8 @@ Let's try to run this. First start the watch process:
 ----
 $ ./scripts/watch
 Building ...
-Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.8.51/clojurescript-1.8.51.jar!/cljs/core.cljs to out/cljs/core.cljs
-Reading analysis cache for jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.8.51/clojurescript-1.8.51.jar!/cljs/core.cljs
+Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.9.14/clojurescript-1.9.14.jar!/cljs/core.cljs to out/cljs/core.cljs
+Reading analysis cache for jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.9.14/clojurescript-1.9.14.jar!/cljs/core.cljs
 Compiling out/cljs/core.cljs
 ... done. Elapsed 3.862126827 seconds
 Watching paths: /home/niwi/cljsbook/playground/appfortesting/test, /home/niwi/cljsbook/playground/appfortesting/src
