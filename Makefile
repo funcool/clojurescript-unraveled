@@ -5,9 +5,10 @@ setup:
 
 copy: setup
 	cp -r ./images dist/
+	cp -r ./assets dist/
 
 html: setup
-	asciidoctor -b xhtml -a docinfo -a stylesheet=../assets/stylesheet.css  src/index.adoc -o dist/index.html
+	asciidoctor -b xhtml -a docinfo -a stylesheet! src/index.adoc -o dist/index.html
 
 htmlcljsinfo: setup
 	asciidoctor -b xhtml -a docinfo -a stylesheet=../assets/stylesheet.cljsinfo.css  src/index.adoc -o dist/index.html
