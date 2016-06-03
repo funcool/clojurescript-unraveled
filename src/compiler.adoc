@@ -831,6 +831,80 @@ also find many third party libraries on the
 link:https://github.com/clojure/clojurescript/wiki#libraries[ClojureScript Wiki].
 
 
+=== External dependencies
+
+In some circumstances you may found yourself that you need some library but that
+does not exists in _ClojureScript_ but it is already implemented in javascript
+and you want to use it on your project.
+
+There are many ways that you can do it mainly depending on the library that you
+want to include. Let see some ways.
+
+
+==== Closure Module compatible library
+
+If you have a library that is just writtent to be compatible with google closure
+module system and you want to include it on your project you should just put
+it in the source (classpath) and access it like any other clojure namespace.
+
+This is the most simplest case, because google closure modules are directly
+compatible and you can mix your clojure code with javascript code written using
+google closure module system without any additional steps.
+
+Let play with it creating new project using *mies* template:
+
+[source, shell]
+----
+lein new mies myextmods
+cd myextmods
+----
+
+Create a simple google closure module for experiment:
+
+.src/myextmods/myclosuremodule.js
+[source, javascript]
+----
+goog.provide("myextmods.myclosuremodule");
+
+goog.scope(function() {
+  var module = myextmods.myclosuremodule;
+  module.get_greetings = function() {
+    return "Hello from google closure module.";
+  };
+});
+----
+
+Now, open the repl, require the namespace and try to use the exposed function:
+
+[source, clojure]
+----
+(require '[myextmods.myclosuremodule :as cm])
+(cm/getGreetings)
+;; => "Hello from google closure module."
+----
+
+NOTE: you can open the nodejs repl just executing `./scripts/repl` on the
+root of the repository.
+
+
+==== CommonJS or AMD modules compatible libraries
+
+TODO
+
+
+==== Legacy, module-less (global scope) libraries
+
+Although today is very common have libraries packaged using some kind of modules,
+there are also a great amount of libraries that just exposes a global objects and
+does not uses any kind of modules; and you may want to use them from
+_ClojureScript_.
+
+The way for include this kind of modules is pretty easy because it is almos identical
+to previous methods with little differences:
+
+TODO
+
+
 === Unit testing
 
 As you might expect, testing in _ClojureScript_ consists of the same concepts widely
