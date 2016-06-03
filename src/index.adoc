@@ -17,21 +17,21 @@ v6, 2016-06-03
 
 == About this book
 
-This book covers the ClojureScript programming language, serves as a detailed guide of its
-tooling for development, and presents a series of articles about topics that are
-applicable to day-to-day programming in ClojureScript.
+This book covers the ClojureScript programming language, serves as a detailed guide
+of its tooling for development, and presents a series of articles about topics that
+are applicable to day-to-day programming in ClojureScript.
 
-It is not an introductory book to programming in that it assumes the reader has experience
-programming in at least one language. However, it doesn't assume experience with
-_Clojure_ or functional programming. We'll try to include links to reference
-material when talking about the theoretical underpinnings of ClojureScript that may not
-be familiar to everyone.
+It is not an introductory book to programming in that it assumes the reader has
+experience programming in at least one language. However, it doesn't assume
+experience with _Clojure_ or functional programming. We'll try to include links to
+reference material when talking about the theoretical underpinnings of ClojureScript
+that may not be familiar to everyone.
 
-Since the ClojureScript documentation is good but sparse, we wanted to write a compendium
-of reference information and extensive examples to serve as a ClojureScript primer as
-well as a series of practical how-to's. This document will evolve with the ClojureScript
-language, both as a reference of the language features and as a sort of cookbook with
-practical programming recipes.
+Since the ClojureScript documentation is good but sparse, we wanted to write a
+compendium of reference information and extensive examples to serve as a
+ClojureScript primer as well as a series of practical how-to's. This document will
+evolve with the ClojureScript language, both as a reference of the language features
+and as a sort of cookbook with practical programming recipes.
 
 You'll get the most out of this book if you:
 
@@ -42,10 +42,11 @@ You'll get the most out of this book if you:
 - already know some Clojure and want to learn how ClojureScript differs from it, plus
   practical topics like how to target both languages with the same code base.
 
-Don't be turned off if you don't see yourself in any of the above groups. We encourage
-you to give this book a try and to give us feedback on how we can make it more accessible.
-Our goal is to make ClojureScript more friendly to newcomers and spread the ideas about
-programming that Clojure has helped popularize, as we see a lot of value in them.
+Don't be turned off if you don't see yourself in any of the above groups. We
+encourage you to give this book a try and to give us feedback on how we can make it
+more accessible.  Our goal is to make ClojureScript more friendly to newcomers and
+spread the ideas about programming that Clojure has helped popularize, as we see a
+lot of value in them.
 
 
 == Introduction
@@ -58,62 +59,64 @@ targets JavaScript. Because of this, it can run in many different execution
 environments including web browsers, Node.js, io.js and Nashorn.
 
 Unlike other languages that intend to _compile_ to JavaScript (like TypeScript,
-FunScript, or CoffeeScript), ClojureScript is designed to use JavaScript like bytecode.
-It embraces functional programming and has very safe and consistent defaults. Its
-semantics differ significantly from those of JavaScript.
+FunScript, or CoffeeScript), ClojureScript is designed to use JavaScript like
+bytecode.  It embraces functional programming and has very safe and consistent
+defaults. Its semantics differ significantly from those of JavaScript.
 
-Another big difference (and in our opinion an advantage) over other languages is that
-Clojure is designed to be a guest. It is a language without its own virtual machine that
-can be easily adapted to the nuances of its execution environment. This has the
-benefit that Clojure (and hence ClojureScript) has access to all the existing
-libraries written for the host language.
+Another big difference (and in our opinion an advantage) over other languages is
+that Clojure is designed to be a guest. It is a language without its own virtual
+machine that can be easily adapted to the nuances of its execution environment. This
+has the benefit that Clojure (and hence ClojureScript) has access to all the
+existing libraries written for the host language.
 
 Before we jump in, let us summarize some of the core ideas that ClojureScript brings
-to the table. Don't worry if you don't understand all of them right now, they'll become
-clear throughout the book.
+to the table. Don't worry if you don't understand all of them right now, they'll
+become clear throughout the book.
 
-- ClojureScript enforces the functional programming paradigm with its design decisions
-  and idioms. Although being strongly opinionated about functional programming it's a
-  pragmatic language rather than pursuing theoretical purity.
-- Encourages programming with immutable data, offering highly performant and state of the
-  art immutable collection implementations.
+- ClojureScript enforces the functional programming paradigm with its design
+  decisions and idioms. Although being strongly opinionated about functional
+  programming it's a pragmatic language rather than pursuing theoretical purity.
+- Encourages programming with immutable data, offering highly performant and
+  state of the art immutable collection implementations.
 - It makes a clear distinction of identity and its state, with explicit constructs
   for managing change as a series of immutable values over time.
 - It has type-based and value-based polymorphism, elegantly solving the expression
   problem.
-- It is a Lisp dialect so programs are written in the programming language's own data
-  structures, a property known as _homoiconicity_ that makes metaprogramming (programs
-  that write programs) as simple as it can be.
+- It is a Lisp dialect so programs are written in the programming language's own
+  data structures, a property known as _homoiconicity_ that makes metaprogramming
+  (programs that write programs) as simple as it can be.
 
-These ideas together have a great influence in the way you design and implement software,
-even if you are not using ClojureScript. Functional programming, decoupling of data (which is
-immutable) from the operations to transform it, explicit idioms for managing change
-over time and polymorphic constructs for programming to abstractions greatly simplify the
-systems we write.
+These ideas together have a great influence in the way you design and implement
+software, even if you are not using ClojureScript. Functional programming, decoupling
+of data (which is immutable) from the operations to transform it, explicit idioms for
+managing change over time and polymorphic constructs for programming to abstractions
+greatly simplify the systems we write.
 
 [quote, Rich Hickey]
-We can make the same exact software we are making today with dramatically simpler stuff
-— dramatically simpler languages, tools, techniques, approaches.
+We can make the same exact software we are making today with dramatically simpler
+stuff — dramatically simpler languages, tools, techniques, approaches.
 
-We hope you enjoy the book and ClojureScript brings the same joy and inspiration that has
-brought to us.
+We hope you enjoy the book and ClojureScript brings the same joy and inspiration that
+has brought to us.
 
 
 == Language (the basics)
 
 This chapter will be a little introduction to ClojureScript without assumptions about
-previous knowledge of the Clojure language, providing a quick tour over all the things
-you will need to know about ClojureScript and understand the rest of this book.
+previous knowledge of the Clojure language, providing a quick tour over all the
+things you will need to know about ClojureScript and understand the rest of this
+book.
 
-You can run the code snippets in the online interactive repl: http://www.clojurescript.io/
+You can run the code snippets in the online interactive repl:
+http://www.clojurescript.io/
 
 include::language-basics.adoc[]
 
 
 == Tooling & Compiler
 
-This chapter will cover a little introduction to existing tooling for making things easy
-when developing using ClojureScript. It will cover:
+This chapter will cover a little introduction to existing tooling for making things
+easy when developing using ClojureScript. It will cover:
 
 * Using the REPL
 * Leiningen and cljsbuild
@@ -132,8 +135,8 @@ include::compiler.adoc[]
 
 == Language (advanced topics)
 
-This chapter intends to explain some advanced topics that are part of the language and
-that does not fits in the first chapter. The good candidates for this section are
+This chapter intends to explain some advanced topics that are part of the language
+and that does not fits in the first chapter. The good candidates for this section are
 transducers, core protocols, transients, metadata. In summary: topics that are not
 mandatory for understand the language.
 
