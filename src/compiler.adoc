@@ -887,9 +887,60 @@ NOTE: you can open the nodejs repl just executing `./scripts/repl` on the
 root of the repository.
 
 
-==== CommonJS or AMD modules compatible libraries
+==== CommonJS modules compatible libraries
 
-TODO
+Due to the Node.JS popularity the commonjs used in node is today the most used
+module format for javascript libraries, independently if they will be used in server
+side development using nodejs or using browser side applications.
+
+Let's play with that. Start creating a simple file using commonjs module format
+(pretty analgous to the previous example using google closure modules):
+
+
+.src/myextmods/mycommonjsmodule.js
+[source, js]
+----
+function getGreetings() {
+  return "Hello from commonjs module.";
+}
+
+exports.getGreetings = getGreetings;
+----
+
+Later, in order to use that simple pet library you should indicate to the
+_ClojureScript_ compiler the path to that file and the used module type with
+`:foreign-libs` attribute:
+
+.Open `scripts/repl.clj` and modify it to somethig like this
+[source, clojure]
+----
+(require
+  '[cljs.repl :as repl]
+  '[cljs.repl.node :as node])
+
+(repl/repl
+ (node/repl-env)
+ :language-in  :ecmascript5
+ :language-out :ecmascript5
+ :foreign-libs [{:file "myextmods/mycommonjsmodule.js"
+                 :provides ["myextmods.mycommonjsmodule"]
+                 :module-type :commonjs}]
+ :output-dir "out"
+ :cache-analysis false)
+----
+
+NOTE: Although the direct path is used to point to this pet library you can specify
+a full URI to remote resource and it will be automatically downloaded.
+
+Now, let's try to play with moment within the repl (executing the `./scripts/repl`
+script that uses the previously modified `./scripts/repl.clj file`):
+
+[source, clojure]
+----
+(require '[myextmods.mycommonjsmodule :as cm])
+(cm/getGreetings)
+;; => "Hello from commonjs module."
+----
 
 
 ==== Legacy, module-less (global scope) libraries
@@ -899,10 +950,43 @@ there are also a great amount of libraries that just exposes a global objects an
 does not uses any kind of modules; and you may want to use them from
 _ClojureScript_.
 
-The way for include this kind of modules is pretty easy because it is almos identical
-to previous methods with little differences:
+In order to  use a library that  exposes a global object, you  should follow similar
+steps  as  with  commojs  modules  with  the exception  that  you  should  omit  the
+`:module-type` attribute.
 
-TODO
+This will create a _synthetic_ namaspece that you should require in order to be able
+to access to the global object through the `js/` namespace. The namespace is called
+_synthetic_ because it does not exposes any object behind it, it just indicate
+to the compiler that you want that dependency.
+
+.Open `scripts/repl.clj` and modify it to somethig like this (it includes code from prevuous example because we are constantly reusing the same file)
+[source, clojure]
+----
+(require
+  '[cljs.repl :as repl]
+  '[cljs.repl.node :as node])
+
+(repl/repl
+ (node/repl-env)
+ :language-in  :ecmascript5
+ :language-out :ecmascript5
+ :foreign-libs [{:file "myextmods/mycommonjsmodule.js"
+                 :provides ["myextmods.mycommonjsmodule"]
+                 :module-type :commonjs}
+                {:file "myextmods/myglobalmodule.js"
+                 :provides ["myextmods.myglobalmodule"]}]
+ :output-dir "out"
+ :cache-analysis false)
+----
+
+And in the same way as in previous examples, let evaluate that in the repl:
+
+[source, clojure]
+----
+(require 'myextmods.myglobalmodule)
+(js/getGreetings)
+;; => "Hello from global scope."
+----
 
 
 === Unit testing
