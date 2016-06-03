@@ -4,8 +4,8 @@
   '[cljs.repl.browser :as browser])
 
 (b/build "src"
-  {:main 'appfortesting.core
-   :output-to "out/appfortesting.js"
+  {:main 'mytestingapp.core
+   :output-to "out/mytestingapp.js"
    :output-dir "out"
    :verbose true})
 

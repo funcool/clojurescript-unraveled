@@ -4,7 +4,7 @@
 
 (let [start (System/nanoTime)]
   (b/build "src"
-    {:output-to "release/appfortesting.js"
+    {:output-to "release/mytestingapp.js"
      :output-dir "release"
      :optimizations :advanced
      :verbose true})

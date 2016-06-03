@@ -1,4 +1,4 @@
-(ns appfortesting.core)
+(ns mytestingapp.core)
 
 (defn leap?
   [year]

@@ -1,6 +1,6 @@
-(ns appfortesting.core-tests
+(ns mytestingapp.core-tests
   (:require [cljs.test :as t]
-            [appfortesting.core :as core]))
+            [mytestingapp.core :as core]))
 
 (enable-console-print!)
 
