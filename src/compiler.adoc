@@ -42,7 +42,7 @@ You can download the latest _ClojureScript_ compiler using `wget`:
 
 [source, bash]
 ----
-wget https://github.com/clojure/clojurescript/releases/download/r1.8.51/cljs.jar
+wget https://github.com/clojure/clojurescript/releases/download/r1.9.14/cljs.jar
 ----
 
 The _ClojureScript_ compiler is packaged in a standalone executable jar file, so this
