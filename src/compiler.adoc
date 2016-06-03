@@ -896,7 +896,6 @@ side development using nodejs or using browser side applications.
 Let's play with that. Start creating a simple file using commonjs module format
 (pretty analgous to the previous example using google closure modules):
 
-
 .src/myextmods/mycommonjsmodule.js
 [source, js]
 ----
@@ -909,9 +908,10 @@ exports.getGreetings = getGreetings;
 
 Later, in order to use that simple pet library you should indicate to the
 _ClojureScript_ compiler the path to that file and the used module type with
-`:foreign-libs` attribute:
+`:foreign-libs` attribute.
 
-.Open `scripts/repl.clj` and modify it to somethig like this
+Open `scripts/repl.clj` and modify it to somethig like this:
+
 [source, clojure]
 ----
 (require
@@ -933,7 +933,7 @@ NOTE: Although the direct path is used to point to this pet library you can spec
 a full URI to remote resource and it will be automatically downloaded.
 
 Now, let's try to play with moment within the repl (executing the `./scripts/repl`
-script that uses the previously modified `./scripts/repl.clj file`):
+script that uses the previously modified `./scripts/repl.clj` file):
 
 [source, clojure]
 ----
@@ -959,7 +959,18 @@ to access to the global object through the `js/` namespace. The namespace is cal
 _synthetic_ because it does not exposes any object behind it, it just indicate
 to the compiler that you want that dependency.
 
-.Open `scripts/repl.clj` and modify it to somethig like this (it includes code from prevuous example because we are constantly reusing the same file)
+Let's play with that. Start creating a simple file declaring just a global function:
+
+.src/myextmods/myglobalmodule.js
+[source, js]
+----
+function getGreetings() {
+  return "Hello from global scope.";
+}
+----
+
+Open `scripts/repl.clj` and modify it to somethig like this:
+
 [source, clojure]
 ----
 (require
