@@ -861,8 +861,8 @@ with tests:
 
 [source, bash]
 ----
-$ lein new mies appfortesting
-$ cd appfortesting
+$ lein new mies mytestingapp
+$ cd mytestingapp
 ----
 
 This project will contain the same layout as we have seen in the *dependency
@@ -872,8 +872,8 @@ The next step is a creating a directory tree for our tests:
 
 [source, bash]
 ----
-$ mkdir -p test/appfortesting
-$ touch test/appfortesting/core_tests.cljs
+$ mkdir -p test/mytestingapp
+$ touch test/mytestingapp/core_tests.cljs
 ----
 
 Also, we should adapt the existing `watch.clj` script to work with this newly
@@ -884,21 +884,21 @@ created test directory:
 (require '[cljs.build.api :as b])
 
 (b/watch (b/inputs "test" "src")
-  {:main 'appfortesting.core_tests
+  {:main 'mytestingapp.core_tests
    :target :nodejs
-   :output-to "out/appfortesting.js"
+   :output-to "out/mytestingapp.js"
    :output-dir "out"
    :verbose true})
 ----
 
 This new script will compile and watch both directories "src" and "test", and it
-sets the new entry point to the `appfortesting.core_tests` namespace.
+sets the new entry point to the `mytestingapp.core_tests` namespace.
 
 Next, put some test code in the `core_tests.cljs` file:
 
 [source, clojure]
 ----
-(ns appfortesting.core-tests
+(ns mytestingapp.core-tests
   (:require [cljs.test :as t]))
 
 (enable-console-print!)
@@ -931,16 +931,16 @@ Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.9.14/cloj
 Reading analysis cache for jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.9.14/clojurescript-1.9.14.jar!/cljs/core.cljs
 Compiling out/cljs/core.cljs
 ... done. Elapsed 3.862126827 seconds
-Watching paths: /home/niwi/cljsbook/playground/appfortesting/test, /home/niwi/cljsbook/playground/appfortesting/src
+Watching paths: /home/niwi/cljsbook/playground/mytestingapp/test, /home/niwi/cljsbook/playground/mytestingapp/src
 ----
 
 When the compilation is finished, try to run the compiled file with `nodejs`:
 
 [source, bash]
 ----
-$ node out/appfortesting.js
+$ node out/mytestingapp.js
 
-Testing appfortesting.core-tests
+Testing mytestingapp.core-tests
 
 FAIL in (my-first-test) (cljs/test.js:374:14)
 expected: (= 1 2)
@@ -955,9 +955,9 @@ console. To fix the test, just change the `=` with `not=` and run the file again
 
 [source, bash]
 ----
-$ node out/appfortesting.js
+$ node out/mytestingapp.js
 
-Testing appfortesting.core-tests
+Testing mytestingapp.core-tests
 
 Ran 1 tests containing 1 assertions.
 0 failures, 0 errors.
@@ -966,7 +966,7 @@ Ran 1 tests containing 1 assertions.
 It is fine to test these kinds of assertions, but they are not very useful. Let's go
 to test some application code. For this, we will use a function to check if a year
 is a leap year or not. Write the following content to the
-`src/appfortesting/core.clj` file:
+`src/mytestingapp/core.clj` file:
 
 [source, clojure]
 ----
@@ -982,9 +982,9 @@ properly. Make the `core_tests.cljs` file look like:
 
 [source, clojure]
 ----
-(ns appfortesting.core-tests
+(ns mytestingapp.core-tests
   (:require [cljs.test :as t]
-            [appfortesting.core :as core]))
+            [mytestingapp.core :as core]))
 
 (enable-console-print!)
 
@@ -1080,7 +1080,7 @@ Now, you may check the exit code of the test script after running:
 
 [source, bash]
 ----
-$ node out/appfortesting.js
+$ node out/mytestingapp.js
 $ echo $?
 ----
 
