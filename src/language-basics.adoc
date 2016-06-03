@@ -650,164 +650,37 @@ Here is the previous example rewritten to use `case`:
 ----
 
 
-=== Threading Macros
+[[truthiness-section]]
+=== Truthiness
 
-Threading macros, also kwno as arrow functions, enables write more readable code
-when multiple neested function calls is performed.
+This is the aspect where each language has its own semantics (mostly wrongly). The
+majority of languages consider empty collections, the integer 0, and other things
+like this to be false.  In _ClojureScript_, unlike in other languages, only two
+values are considered as false: `nil` and `false`. Everything else is treated as
+logical `true`.
 
-Imagine you have `(f (g (h x)))` where a function `f` receives as first parameter a
-result of executing of function `g` and the same repeated multiple times. With the
-most basic `->` threading macro you can convert that in `(\-> x (h) (g) (f))` that is
-much more easy to read.
-
-The result is just a sugar syntax because the arrow functions are defined as macros
-and it does not imply any runtime performance. The `(\-> x (h) (g) (f))` is
-automatically converted to (f (g (h x))) at compile time.
-
-Take care that the parenthesis on `h`, `g` and `f` are optional, and can be ommited:
-`(\-> x h g f)`.
-
-
-==== The thread-first macro (`\->`)
-
-Is called *thread first* becaiuse it threads the first argument throught the
-diffenrent expressions as first arguments.
-
-Let see more concrete example, this is how the code looks without using threading
-macros:
+Jointly with the ability to implement the callable protocol (the `IFn`, explained
+more in detail later), data structures like sets can be used just as predicates,
+without need of additional wrapping them in a function:
 
 [source, clojure]
 ----
-(def book {:name "Lady of the Lake"
-           :readers 0})
+(def valid? #{1 2 3})
 
-(update (assoc book :age 1999) :readers inc)
-;; => {:name "Lady of the lake" :age 1999 :readers 1}
+(filter valid? (range 1 10))
+;; => (1 2 3)
 ----
 
-We can rewrite that code to use `\->` threading macro:
+This is because set returns the a value if it exists or nil in case contrary:
 
 [source, clojure]
 ----
-(-> book
-    (assoc :age 1999)
-    (update :readers inc))
-;; => {:name "Lady of the lake" :age 1999 :readers 1}
-----
+(valid? 1)
+;; => 1
 
-This threading macro is specially useful for transforming data structures, bacuase
-_ClojureScript_ (and _Clojure_) functions for data structures transformations
-consistently uses the first argument for receive the data structure.
-
-
-==== The thread-last macro (`\->>`)
-
-The main difference of this macro to the previous, is that instead of threading
-the first argument as first argument on the following expresions, it threads
-it as the last argument.
-
-Let see an example:
-
-[source, clojure]
-----
-(def numbers [1 2 3 4 5 6 7 8 9 0])
-
-(take 2 (filter odd? (map inc numbers)))
-;; => (3 5)
-----
-
-The same code written using `\->>` threading macro:
-
-[source, clojure]
-----
-(->> numbers
-     (map inc)
-     (filter odd?)
-     (take 2))
-;; => (3 5)
-----
-
-This threading macro is specially useful for transforming sequences or collections
-of data because _ClojureScript_ functions that works with sequences and collections
-consistently uses the last argument position for receive them.
-
-
-==== The thread-as macro (`as\->`)
-
-Finally, there are cases where neither `\->` nor `\->>` are applicable. In these
-cases, you’ll need to use `as\->`, the more flexible alternative, that allows thread
-into any argument position, not just first or last.
-
-It expects two fixed arguments and a arbitrary number of expressions. As with
-`\->`, the first argument is a value to be threaded through the following forms. The
-second argument is the name of a binding. In each of the subsequent forms, the bound
-name can be used for the prior expression's result.
-
-Let see an example:
-
-[source, clojure]
-----
-(as-> numbers $
-  (map inc $)
-  (filter odd? $)
-  (first $)
-  (hash-map :result $ :id 1))
-;; => {:result 3 :id 1}
-----
-
-
-==== The thread-some macros (`some\->` and `some\->>`)
-
-Two of more specialized threading macros that _ClojureScript_ comes with. They works
-in the same way as their analgous `\->` and `\->>` macros with the additional
-support for short-circuiting the expression if one of the expresions evaluates
-to `nil`.
-
-Let see an example:
-
-[source, clojure]
-----
-(some-> (rand-nth [1 nil])
-        (inc))
-;; => 2
-
-(some-> (rand-nth [1 nil])
-        (inc))
+(valid? 3)
 ;; => nil
 ----
-
-This is an easy way avoid null pointer exceptions.
-
-
-==== The thread-cond macros (`cond\->` and `cond\->>`)
-
-The `cond\->` and `cond\->>` macros are analgous to `\->` and `\->>` that offers
-the ability to conditionally skip some steps from the pipeline. Let see an example:
-
-[source, clojure]
-----
-(defn describe-number
-  [n]
-  (cond-> []
-    (odd? n) (conj "odd")
-    (even? n) (conj "even")
-    (zero? n) (conj "zero")
-    (pos? n) (conj "positive")))
-
-(describe-number 3)
-;; => ["odd" "positive"]
-
-(describe-number 4)
-;; => ["even" "positive"]
-----
-
-The value threading only happens when the corresponding condition evaluates to
-logical true.
-
-==== Additional Readings
-
-- http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
-- http://clojure.org/guides/threading_macros
 
 
 === Locals, Blocks, and Loops
@@ -2253,6 +2126,167 @@ understand, as it mimics the collection's structure:
 ;; => ["Clojure" "ClojureScript"]
 ----
 
+
+=== Threading Macros
+
+Threading macros, also kwno as arrow functions, enables write more readable code
+when multiple neested function calls is performed.
+
+Imagine you have `(f (g (h x)))` where a function `f` receives as first parameter a
+result of executing of function `g` and the same repeated multiple times. With the
+most basic `->` threading macro you can convert that in `(\-> x (h) (g) (f))` that is
+much more easy to read.
+
+The result is just a sugar syntax because the arrow functions are defined as macros
+and it does not imply any runtime performance. The `(\-> x (h) (g) (f))` is
+automatically converted to (f (g (h x))) at compile time.
+
+Take care that the parenthesis on `h`, `g` and `f` are optional, and can be ommited:
+`(\-> x h g f)`.
+
+
+==== The thread-first macro (`\->`)
+
+Is called *thread first* becaiuse it threads the first argument throught the
+diffenrent expressions as first arguments.
+
+Let see more concrete example, this is how the code looks without using threading
+macros:
+
+[source, clojure]
+----
+(def book {:name "Lady of the Lake"
+           :readers 0})
+
+(update (assoc book :age 1999) :readers inc)
+;; => {:name "Lady of the lake" :age 1999 :readers 1}
+----
+
+We can rewrite that code to use `\->` threading macro:
+
+[source, clojure]
+----
+(-> book
+    (assoc :age 1999)
+    (update :readers inc))
+;; => {:name "Lady of the lake" :age 1999 :readers 1}
+----
+
+This threading macro is specially useful for transforming data structures, bacuase
+_ClojureScript_ (and _Clojure_) functions for data structures transformations
+consistently uses the first argument for receive the data structure.
+
+
+==== The thread-last macro (`\->>`)
+
+The main difference of this macro to the previous, is that instead of threading
+the first argument as first argument on the following expresions, it threads
+it as the last argument.
+
+Let see an example:
+
+[source, clojure]
+----
+(def numbers [1 2 3 4 5 6 7 8 9 0])
+
+(take 2 (filter odd? (map inc numbers)))
+;; => (3 5)
+----
+
+The same code written using `\->>` threading macro:
+
+[source, clojure]
+----
+(->> numbers
+     (map inc)
+     (filter odd?)
+     (take 2))
+;; => (3 5)
+----
+
+This threading macro is specially useful for transforming sequences or collections
+of data because _ClojureScript_ functions that works with sequences and collections
+consistently uses the last argument position for receive them.
+
+
+==== The thread-as macro (`as\->`)
+
+Finally, there are cases where neither `\->` nor `\->>` are applicable. In these
+cases, you’ll need to use `as\->`, the more flexible alternative, that allows thread
+into any argument position, not just first or last.
+
+It expects two fixed arguments and a arbitrary number of expressions. As with
+`\->`, the first argument is a value to be threaded through the following forms. The
+second argument is the name of a binding. In each of the subsequent forms, the bound
+name can be used for the prior expression's result.
+
+Let see an example:
+
+[source, clojure]
+----
+(as-> numbers $
+  (map inc $)
+  (filter odd? $)
+  (first $)
+  (hash-map :result $ :id 1))
+;; => {:result 3 :id 1}
+----
+
+
+==== The thread-some macros (`some\->` and `some\->>`)
+
+Two of more specialized threading macros that _ClojureScript_ comes with. They works
+in the same way as their analgous `\->` and `\->>` macros with the additional
+support for short-circuiting the expression if one of the expresions evaluates
+to `nil`.
+
+Let see an example:
+
+[source, clojure]
+----
+(some-> (rand-nth [1 nil])
+        (inc))
+;; => 2
+
+(some-> (rand-nth [1 nil])
+        (inc))
+;; => nil
+----
+
+This is an easy way avoid null pointer exceptions.
+
+
+==== The thread-cond macros (`cond\->` and `cond\->>`)
+
+The `cond\->` and `cond\->>` macros are analgous to `\->` and `\->>` that offers
+the ability to conditionally skip some steps from the pipeline. Let see an example:
+
+[source, clojure]
+----
+(defn describe-number
+  [n]
+  (cond-> []
+    (odd? n) (conj "odd")
+    (even? n) (conj "even")
+    (zero? n) (conj "zero")
+    (pos? n) (conj "positive")))
+
+(describe-number 3)
+;; => ["odd" "positive"]
+
+(describe-number 4)
+;; => ["even" "positive"]
+----
+
+The value threading only happens when the corresponding condition evaluates to
+logical true.
+
+==== Additional Readings
+
+- http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
+- http://clojure.org/guides/threading_macros
+
+
 [[namespace-section]]
 === Namespaces
 
@@ -3363,39 +3397,6 @@ can use the same functions for interacting with plain objects:
 
 b
 ;; => #js {:hour 16, :minute 22}
-----
-
-
-[[truthiness-section]]
-=== Truthiness
-
-This is the aspect where each language has its own semantics (mostly wrongly). The
-majority of languages consider empty collections, the integer 0, and other things
-like this to be false.  In _ClojureScript_, unlike in other languages, only two
-values are considered as false: `nil` and `false`. Everything else is treated as
-logical `true`.
-
-Jointly with the ability to implement the callable protocol (the `IFn`), data
-structures like sets can be used just as predicates, without need of additional
-wrapping them in a function:
-
-[source, clojure]
-----
-(def valid? #{1 2 3})
-
-(filter valid? (range 1 10))
-;; => (1 2 3)
-----
-
-This is because set returns the a value if it exists or nil in case contrary:
-
-[source, clojure]
-----
-(valid? 1)
-;; => 1
-
-(valid? 3)
-;; => nil
 ----
 
 
