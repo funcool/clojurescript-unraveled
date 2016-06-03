@@ -146,23 +146,23 @@
 <h2 id="about-this-book"><a class="link" href="#about-this-book">1. About this book</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This book covers the ClojureScript programming language, serves as a detailed guide of its
-tooling for development, and presents a series of articles about topics that are
-applicable to day-to-day programming in ClojureScript.</p>
+<p>This book covers the ClojureScript programming language, serves as a detailed guide
+of its tooling for development, and presents a series of articles about topics that
+are applicable to day-to-day programming in ClojureScript.</p>
 </div>
 <div class="paragraph">
-<p>It is not an introductory book to programming in that it assumes the reader has experience
-programming in at least one language. However, it doesn&#8217;t assume experience with
-<em>Clojure</em> or functional programming. We&#8217;ll try to include links to reference
-material when talking about the theoretical underpinnings of ClojureScript that may not
-be familiar to everyone.</p>
+<p>It is not an introductory book to programming in that it assumes the reader has
+experience programming in at least one language. However, it doesn&#8217;t assume
+experience with <em>Clojure</em> or functional programming. We&#8217;ll try to include links to
+reference material when talking about the theoretical underpinnings of ClojureScript
+that may not be familiar to everyone.</p>
 </div>
 <div class="paragraph">
-<p>Since the ClojureScript documentation is good but sparse, we wanted to write a compendium
-of reference information and extensive examples to serve as a ClojureScript primer as
-well as a series of practical how-to&#8217;s. This document will evolve with the ClojureScript
-language, both as a reference of the language features and as a sort of cookbook with
-practical programming recipes.</p>
+<p>Since the ClojureScript documentation is good but sparse, we wanted to write a
+compendium of reference information and extensive examples to serve as a
+ClojureScript primer as well as a series of practical how-to&#8217;s. This document will
+evolve with the ClojureScript language, both as a reference of the language features
+and as a sort of cookbook with practical programming recipes.</p>
 </div>
 <div class="paragraph">
 <p>You&#8217;ll get the most out of this book if you:</p>
@@ -184,10 +184,11 @@ practical topics like how to target both languages with the same code base.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Don&#8217;t be turned off if you don&#8217;t see yourself in any of the above groups. We encourage
-you to give this book a try and to give us feedback on how we can make it more accessible.
-Our goal is to make ClojureScript more friendly to newcomers and spread the ideas about
-programming that Clojure has helped popularize, as we see a lot of value in them.</p>
+<p>Don&#8217;t be turned off if you don&#8217;t see yourself in any of the above groups. We
+encourage you to give this book a try and to give us feedback on how we can make it
+more accessible.  Our goal is to make ClojureScript more friendly to newcomers and
+spread the ideas about programming that Clojure has helped popularize, as we see a
+lot of value in them.</p>
 </div>
 </div>
 </div>
@@ -209,32 +210,32 @@ environments including web browsers, Node.js, io.js and Nashorn.</p>
 </div>
 <div class="paragraph">
 <p>Unlike other languages that intend to <em>compile</em> to JavaScript (like TypeScript,
-FunScript, or CoffeeScript), ClojureScript is designed to use JavaScript like bytecode.
-It embraces functional programming and has very safe and consistent defaults. Its
-semantics differ significantly from those of JavaScript.</p>
+FunScript, or CoffeeScript), ClojureScript is designed to use JavaScript like
+bytecode.  It embraces functional programming and has very safe and consistent
+defaults. Its semantics differ significantly from those of JavaScript.</p>
 </div>
 <div class="paragraph">
-<p>Another big difference (and in our opinion an advantage) over other languages is that
-Clojure is designed to be a guest. It is a language without its own virtual machine that
-can be easily adapted to the nuances of its execution environment. This has the
-benefit that Clojure (and hence ClojureScript) has access to all the existing
-libraries written for the host language.</p>
+<p>Another big difference (and in our opinion an advantage) over other languages is
+that Clojure is designed to be a guest. It is a language without its own virtual
+machine that can be easily adapted to the nuances of its execution environment. This
+has the benefit that Clojure (and hence ClojureScript) has access to all the
+existing libraries written for the host language.</p>
 </div>
 <div class="paragraph">
 <p>Before we jump in, let us summarize some of the core ideas that ClojureScript brings
-to the table. Don&#8217;t worry if you don&#8217;t understand all of them right now, they&#8217;ll become
-clear throughout the book.</p>
+to the table. Don&#8217;t worry if you don&#8217;t understand all of them right now, they&#8217;ll
+become clear throughout the book.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>ClojureScript enforces the functional programming paradigm with its design decisions
-and idioms. Although being strongly opinionated about functional programming it&#8217;s a
-pragmatic language rather than pursuing theoretical purity.</p>
+<p>ClojureScript enforces the functional programming paradigm with its design
+decisions and idioms. Although being strongly opinionated about functional
+programming it&#8217;s a pragmatic language rather than pursuing theoretical purity.</p>
 </li>
 <li>
-<p>Encourages programming with immutable data, offering highly performant and state of the
-art immutable collection implementations.</p>
+<p>Encourages programming with immutable data, offering highly performant and
+state of the art immutable collection implementations.</p>
 </li>
 <li>
 <p>It makes a clear distinction of identity and its state, with explicit constructs
@@ -245,31 +246,31 @@ for managing change as a series of immutable values over time.</p>
 problem.</p>
 </li>
 <li>
-<p>It is a Lisp dialect so programs are written in the programming language&#8217;s own data
-structures, a property known as <em>homoiconicity</em> that makes metaprogramming (programs
-that write programs) as simple as it can be.</p>
+<p>It is a Lisp dialect so programs are written in the programming language&#8217;s own
+data structures, a property known as <em>homoiconicity</em> that makes metaprogramming
+(programs that write programs) as simple as it can be.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>These ideas together have a great influence in the way you design and implement software,
-even if you are not using ClojureScript. Functional programming, decoupling of data (which is
-immutable) from the operations to transform it, explicit idioms for managing change
-over time and polymorphic constructs for programming to abstractions greatly simplify the
-systems we write.</p>
+<p>These ideas together have a great influence in the way you design and implement
+software, even if you are not using ClojureScript. Functional programming, decoupling
+of data (which is immutable) from the operations to transform it, explicit idioms for
+managing change over time and polymorphic constructs for programming to abstractions
+greatly simplify the systems we write.</p>
 </div>
 <div class="quoteblock">
 <blockquote>
-We can make the same exact software we are making today with dramatically simpler stuff
-— dramatically simpler languages, tools, techniques, approaches.
+We can make the same exact software we are making today with dramatically simpler
+stuff — dramatically simpler languages, tools, techniques, approaches.
 </blockquote>
 <div class="attribution">
 &#8212; Rich Hickey
 </div>
 </div>
 <div class="paragraph">
-<p>We hope you enjoy the book and ClojureScript brings the same joy and inspiration that has
-brought to us.</p>
+<p>We hope you enjoy the book and ClojureScript brings the same joy and inspiration that
+has brought to us.</p>
 </div>
 </div>
 </div>
@@ -278,11 +279,13 @@ brought to us.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter will be a little introduction to ClojureScript without assumptions about
-previous knowledge of the Clojure language, providing a quick tour over all the things
-you will need to know about ClojureScript and understand the rest of this book.</p>
+previous knowledge of the Clojure language, providing a quick tour over all the
+things you will need to know about ClojureScript and understand the rest of this
+book.</p>
 </div>
 <div class="paragraph">
-<p>You can run the code snippets in the online interactive repl: <a href="http://www.clojurescript.io/" class="bare">http://www.clojurescript.io/</a></p>
+<p>You can run the code snippets in the online interactive repl:
+<a href="http://www.clojurescript.io/" class="bare">http://www.clojurescript.io/</a></p>
 </div>
 <div class="sect2">
 <h3 id="first-steps-with-lisp-syntax"><a class="link" href="#first-steps-with-lisp-syntax">3.1. First steps with Lisp syntax</a></h3>
@@ -4382,8 +4385,8 @@ bang at the end. You create volatiles with <code>volatile!</code> and atoms with
 <h2 id="tooling-compiler"><a class="link" href="#tooling-compiler">4. Tooling &amp; Compiler</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter will cover a little introduction to existing tooling for making things easy
-when developing using ClojureScript. It will cover:</p>
+<p>This chapter will cover a little introduction to existing tooling for making things
+easy when developing using ClojureScript. It will cover:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -5525,10 +5528,12 @@ side development using nodejs or using browser side applications.</p>
 <div class="paragraph">
 <p>Later, in order to use that simple pet library you should indicate to the
 <em>ClojureScript</em> compiler the path to that file and the used module type with
-<code>:foreign-libs</code> attribute:</p>
+<code>:foreign-libs</code> attribute.</p>
+</div>
+<div class="paragraph">
+<p>Open <code>scripts/repl.clj</code> and modify it to somethig like this:</p>
 </div>
 <div class="listingblock">
-<div class="title">Open <code>scripts/repl.clj</code> and modify it to somethig like this</div>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span>
   <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.repl</span> <span class="tok-ss">:as</span> <span class="tok-nv">repl</span><span class="tok-p">]</span>
@@ -5560,7 +5565,7 @@ a full URI to remote resource and it will be automatically downloaded.
 </div>
 <div class="paragraph">
 <p>Now, let&#8217;s try to play with moment within the repl (executing the <code>./scripts/repl</code>
-script that uses the previously modified <code>./scripts/repl.clj file</code>):</p>
+script that uses the previously modified <code>./scripts/repl.clj</code> file):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5589,8 +5594,21 @@ to access to the global object through the <code>js/</code> namespace. The names
 <em>synthetic</em> because it does not exposes any object behind it, it just indicate
 to the compiler that you want that dependency.</p>
 </div>
+<div class="paragraph">
+<p>Let&#8217;s play with that. Start creating a simple file declaring just a global function:</p>
+</div>
 <div class="listingblock">
-<div class="title">Open <code>scripts/repl.clj</code> and modify it to somethig like this (it includes code from prevuous example because we are constantly reusing the same file)</div>
+<div class="title">src/myextmods/myglobalmodule.js</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="js"><span class="tok-kd">function</span> <span class="tok-nx">getGreetings</span><span class="tok-p">()</span> <span class="tok-p">{</span>
+  <span class="tok-k">return</span> <span class="tok-s2">&quot;Hello from global scope.&quot;</span><span class="tok-p">;</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Open <code>scripts/repl.clj</code> and modify it to somethig like this:</p>
+</div>
+<div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span>
   <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">cljs.repl</span> <span class="tok-ss">:as</span> <span class="tok-nv">repl</span><span class="tok-p">]</span>
@@ -5918,8 +5936,8 @@ accordingly.</p>
 <h2 id="language-advanced-topics"><a class="link" href="#language-advanced-topics">5. Language (advanced topics)</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This chapter intends to explain some advanced topics that are part of the language and
-that does not fits in the first chapter. The good candidates for this section are
+<p>This chapter intends to explain some advanced topics that are part of the language
+and that does not fits in the first chapter. The good candidates for this section are
 transducers, core protocols, transients, metadata. In summary: topics that are not
 mandatory for understand the language.</p>
 </div>
@@ -10650,7 +10668,7 @@ writing entire sections of the book, as well as making very valuable suggestions
 <div id="footer">
 <div id="footer-text">
 Version 6<br/>
-Last updated 2016-06-03 17:36:30 EEST
+Last updated 2016-06-03 17:39:32 EEST
 </div>
 </div>
 </body>
