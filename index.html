@@ -864,15 +864,15 @@ p { margin-bottom: 1.25rem; }
 <li><a href="#vars">3.3. Vars</a></li>
 <li><a href="#function-section">3.4. Functions</a></li>
 <li><a href="#flow-control">3.5. Flow control</a></li>
-<li><a href="#threading-macros">3.6. Threading Macros</a></li>
+<li><a href="#truthiness-section">3.6. Truthiness</a></li>
 <li><a href="#locals-blocks-and-loops">3.7. Locals, Blocks, and Loops</a></li>
 <li><a href="#collection-types">3.8. Collection types</a></li>
 <li><a href="#destructuring-section">3.9. Destructuring</a></li>
-<li><a href="#namespace-section">3.10. Namespaces</a></li>
-<li><a href="#abstractions-and-polymorphism">3.11. Abstractions and Polymorphism</a></li>
-<li><a href="#data-types">3.12. Data types</a></li>
-<li><a href="#host-interoperability">3.13. Host interoperability</a></li>
-<li><a href="#truthiness-section">3.14. Truthiness</a></li>
+<li><a href="#threading-macros">3.10. Threading Macros</a></li>
+<li><a href="#namespace-section">3.11. Namespaces</a></li>
+<li><a href="#abstractions-and-polymorphism">3.12. Abstractions and Polymorphism</a></li>
+<li><a href="#data-types">3.13. Data types</a></li>
+<li><a href="#host-interoperability">3.14. Host interoperability</a></li>
 <li><a href="#state-management">3.15. State management</a></li>
 </ul>
 </li>
@@ -1797,190 +1797,37 @@ value must be static.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="threading-macros"><a class="link" href="#threading-macros">3.6. Threading Macros</a></h3>
+<h3 id="truthiness-section"><a class="link" href="#truthiness-section">3.6. Truthiness</a></h3>
 <div class="paragraph">
-<p>Threading macros, also kwno as arrow functions, enables write more readable code
-when multiple neested function calls is performed.</p>
+<p>This is the aspect where each language has its own semantics (mostly wrongly). The
+majority of languages consider empty collections, the integer 0, and other things
+like this to be false.  In <em>ClojureScript</em>, unlike in other languages, only two
+values are considered as false: <code>nil</code> and <code>false</code>. Everything else is treated as
+logical <code>true</code>.</p>
 </div>
 <div class="paragraph">
-<p>Imagine you have <code>(f (g (h x)))</code> where a function <code>f</code> receives as first parameter a
-result of executing of function <code>g</code> and the same repeated multiple times. With the
-most basic <code>&#8594;</code> threading macro you can convert that in <code>(-&gt; x (h) (g) (f))</code> that is
-much more easy to read.</p>
-</div>
-<div class="paragraph">
-<p>The result is just a sugar syntax because the arrow functions are defined as macros
-and it does not imply any runtime performance. The <code>(-&gt; x (h) (g) (f))</code> is
-automatically converted to (f (g (h x))) at compile time.</p>
-</div>
-<div class="paragraph">
-<p>Take care that the parenthesis on <code>h</code>, <code>g</code> and <code>f</code> are optional, and can be ommited:
-<code>(-&gt; x h g f)</code>.</p>
-</div>
-<div class="sect3">
-<h4 id="the-thread-first-macro-code-code"><a class="link" href="#the-thread-first-macro-code-code">3.6.1. The thread-first macro (<code>-&gt;</code>)</a></h4>
-<div class="paragraph">
-<p>Is called <strong>thread first</strong> becaiuse it threads the first argument throught the
-diffenrent expressions as first arguments.</p>
-</div>
-<div class="paragraph">
-<p>Let see more concrete example, this is how the code looks without using threading
-macros:</p>
+<p>Jointly with the ability to implement the callable protocol (the <code>IFn</code>, explained
+more in detail later), data structures like sets can be used just as predicates,
+without need of additional wrapping them in a function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">book</span> <span class="tok-p">{</span><span class="tok-ss">:name</span> <span class="tok-s">&quot;Lady of the Lake&quot;</span>
-           <span class="tok-ss">:readers</span> <span class="tok-mi">0</span><span class="tok-p">})</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">valid?</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">})</span>
 
-<span class="tok-p">(</span><span class="tok-nf">update</span> <span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-nv">book</span> <span class="tok-ss">:age</span> <span class="tok-mi">1999</span><span class="tok-p">)</span> <span class="tok-ss">:readers</span> <span class="tok-nv">inc</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; {:name &quot;Lady of the lake&quot; :age 1999 :readers 1}</span></code></pre>
+<span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">valid?</span> <span class="tok-p">(</span><span class="tok-nb">range </span><span class="tok-mi">1</span> <span class="tok-mi">10</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; (1 2 3)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We can rewrite that code to use <code>-&gt;</code> threading macro:</p>
+<p>This is because set returns the a value if it exists or nil in case contrary:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">-&gt; </span><span class="tok-nv">book</span>
-    <span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-ss">:age</span> <span class="tok-mi">1999</span><span class="tok-p">)</span>
-    <span class="tok-p">(</span><span class="tok-nf">update</span> <span class="tok-ss">:readers</span> <span class="tok-nv">inc</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; {:name &quot;Lady of the lake&quot; :age 1999 :readers 1}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This threading macro is specially useful for transforming data structures, bacuase
-<em>ClojureScript</em> (and <em>Clojure</em>) functions for data structures transformations
-consistently uses the first argument for receive the data structure.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="the-thread-last-macro-code-code"><a class="link" href="#the-thread-last-macro-code-code">3.6.2. The thread-last macro (<code>-&gt;&gt;</code>)</a></h4>
-<div class="paragraph">
-<p>The main difference of this macro to the previous, is that instead of threading
-the first argument as first argument on the following expresions, it threads
-it as the last argument.</p>
-</div>
-<div class="paragraph">
-<p>Let see an example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">numbers</span> <span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span> <span class="tok-mi">4</span> <span class="tok-mi">5</span> <span class="tok-mi">6</span> <span class="tok-mi">7</span> <span class="tok-mi">8</span> <span class="tok-mi">9</span> <span class="tok-mi">0</span><span class="tok-p">])</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">valid?</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; 1</span>
 
-<span class="tok-p">(</span><span class="tok-nb">take </span><span class="tok-mi">2</span> <span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">odd?</span> <span class="tok-p">(</span><span class="tok-nb">map inc </span><span class="tok-nv">numbers</span><span class="tok-p">)))</span>
-<span class="tok-c1">;; =&gt; (3 5)</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The same code written using <code>-&gt;&gt;</code> threading macro:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">-&gt;&gt;</span> <span class="tok-nv">numbers</span>
-     <span class="tok-p">(</span><span class="tok-nb">map </span><span class="tok-nv">inc</span><span class="tok-p">)</span>
-     <span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">odd?</span><span class="tok-p">)</span>
-     <span class="tok-p">(</span><span class="tok-nb">take </span><span class="tok-mi">2</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; (3 5)</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This threading macro is specially useful for transforming sequences or collections
-of data because <em>ClojureScript</em> functions that works with sequences and collections
-consistently uses the last argument position for receive them.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="the-thread-as-macro-code-as-code"><a class="link" href="#the-thread-as-macro-code-as-code">3.6.3. The thread-as macro (<code>as-&gt;</code>)</a></h4>
-<div class="paragraph">
-<p>Finally, there are cases where neither <code>-&gt;</code> nor <code>-&gt;&gt;</code> are applicable. In these
-cases, you’ll need to use <code>as-&gt;</code>, the more flexible alternative, that allows thread
-into any argument position, not just first or last.</p>
-</div>
-<div class="paragraph">
-<p>It expects two fixed arguments and a arbitrary number of expressions. As with
-<code>-&gt;</code>, the first argument is a value to be threaded through the following forms. The
-second argument is the name of a binding. In each of the subsequent forms, the bound
-name can be used for the prior expression&#8217;s result.</p>
-</div>
-<div class="paragraph">
-<p>Let see an example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">as-&gt;</span> <span class="tok-nv">numbers</span> <span class="tok-nv">$</span>
-  <span class="tok-p">(</span><span class="tok-nb">map inc </span><span class="tok-nv">$</span><span class="tok-p">)</span>
-  <span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">odd?</span> <span class="tok-nv">$</span><span class="tok-p">)</span>
-  <span class="tok-p">(</span><span class="tok-nb">first </span><span class="tok-nv">$</span><span class="tok-p">)</span>
-  <span class="tok-p">(</span><span class="tok-nb">hash-map </span><span class="tok-ss">:result</span> <span class="tok-nv">$</span> <span class="tok-ss">:id</span> <span class="tok-mi">1</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; {:result 3 :id 1}</span></code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="the-thread-some-macros-code-some-code-and-code-some-code"><a class="link" href="#the-thread-some-macros-code-some-code-and-code-some-code">3.6.4. The thread-some macros (<code>some-&gt;</code> and <code>some-&gt;&gt;</code>)</a></h4>
-<div class="paragraph">
-<p>Two of more specialized threading macros that <em>ClojureScript</em> comes with. They works
-in the same way as their analgous <code>-&gt;</code> and <code>-&gt;&gt;</code> macros with the additional
-support for short-circuiting the expression if one of the expresions evaluates
-to <code>nil</code>.</p>
-</div>
-<div class="paragraph">
-<p>Let see an example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">some-&gt;</span> <span class="tok-p">(</span><span class="tok-nf">rand-nth</span> <span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-nv">nil</span><span class="tok-p">])</span>
-        <span class="tok-p">(</span><span class="tok-nf">inc</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; 2</span>
-
-<span class="tok-p">(</span><span class="tok-nf">some-&gt;</span> <span class="tok-p">(</span><span class="tok-nf">rand-nth</span> <span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-nv">nil</span><span class="tok-p">])</span>
-        <span class="tok-p">(</span><span class="tok-nf">inc</span><span class="tok-p">))</span>
+<span class="tok-p">(</span><span class="tok-nf">valid?</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; nil</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This is an easy way avoid null pointer exceptions.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="the-thread-cond-macros-code-cond-code-and-code-cond-code"><a class="link" href="#the-thread-cond-macros-code-cond-code-and-code-cond-code">3.6.5. The thread-cond macros (<code>cond-&gt;</code> and <code>cond-&gt;&gt;</code>)</a></h4>
-<div class="paragraph">
-<p>The <code>cond-&gt;</code> and <code>cond-&gt;&gt;</code> macros are analgous to <code>-&gt;</code> and <code>-&gt;&gt;</code> that offers
-the ability to conditionally skip some steps from the pipeline. Let see an example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">describe-number</span>
-  <span class="tok-p">[</span><span class="tok-nv">n</span><span class="tok-p">]</span>
-  <span class="tok-p">(</span><span class="tok-nf">cond-&gt;</span> <span class="tok-p">[]</span>
-    <span class="tok-p">(</span><span class="tok-nf">odd?</span> <span class="tok-nv">n</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;odd&quot;</span><span class="tok-p">)</span>
-    <span class="tok-p">(</span><span class="tok-nf">even?</span> <span class="tok-nv">n</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;even&quot;</span><span class="tok-p">)</span>
-    <span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-nv">n</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;zero&quot;</span><span class="tok-p">)</span>
-    <span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-nv">n</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;positive&quot;</span><span class="tok-p">)))</span>
-
-<span class="tok-p">(</span><span class="tok-nf">describe-number</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; [&quot;odd&quot; &quot;positive&quot;]</span>
-
-<span class="tok-p">(</span><span class="tok-nf">describe-number</span> <span class="tok-mi">4</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; [&quot;even&quot; &quot;positive&quot;]</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The value threading only happens when the corresponding condition evaluates to
-logical true.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="additional-readings"><a class="link" href="#additional-readings">3.6.6. Additional Readings</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/" class="bare">http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/</a></p>
-</li>
-<li>
-<p><a href="http://clojure.org/guides/threading_macros" class="bare">http://clojure.org/guides/threading_macros</a></p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -3573,9 +3420,197 @@ understand, as it mimics the collection&#8217;s structure:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="namespace-section"><a class="link" href="#namespace-section">3.10. Namespaces</a></h3>
+<h3 id="threading-macros"><a class="link" href="#threading-macros">3.10. Threading Macros</a></h3>
+<div class="paragraph">
+<p>Threading macros, also kwno as arrow functions, enables write more readable code
+when multiple neested function calls is performed.</p>
+</div>
+<div class="paragraph">
+<p>Imagine you have <code>(f (g (h x)))</code> where a function <code>f</code> receives as first parameter a
+result of executing of function <code>g</code> and the same repeated multiple times. With the
+most basic <code>&#8594;</code> threading macro you can convert that in <code>(-&gt; x (h) (g) (f))</code> that is
+much more easy to read.</p>
+</div>
+<div class="paragraph">
+<p>The result is just a sugar syntax because the arrow functions are defined as macros
+and it does not imply any runtime performance. The <code>(-&gt; x (h) (g) (f))</code> is
+automatically converted to (f (g (h x))) at compile time.</p>
+</div>
+<div class="paragraph">
+<p>Take care that the parenthesis on <code>h</code>, <code>g</code> and <code>f</code> are optional, and can be ommited:
+<code>(-&gt; x h g f)</code>.</p>
+</div>
 <div class="sect3">
-<h4 id="defining-a-namespace"><a class="link" href="#defining-a-namespace">3.10.1. Defining a namespace</a></h4>
+<h4 id="the-thread-first-macro-code-code"><a class="link" href="#the-thread-first-macro-code-code">3.10.1. The thread-first macro (<code>-&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>Is called <strong>thread first</strong> becaiuse it threads the first argument throught the
+diffenrent expressions as first arguments.</p>
+</div>
+<div class="paragraph">
+<p>Let see more concrete example, this is how the code looks without using threading
+macros:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">book</span> <span class="tok-p">{</span><span class="tok-ss">:name</span> <span class="tok-s">&quot;Lady of the Lake&quot;</span>
+           <span class="tok-ss">:readers</span> <span class="tok-mi">0</span><span class="tok-p">})</span>
+
+<span class="tok-p">(</span><span class="tok-nf">update</span> <span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-nv">book</span> <span class="tok-ss">:age</span> <span class="tok-mi">1999</span><span class="tok-p">)</span> <span class="tok-ss">:readers</span> <span class="tok-nv">inc</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; {:name &quot;Lady of the lake&quot; :age 1999 :readers 1}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can rewrite that code to use <code>-&gt;</code> threading macro:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">-&gt; </span><span class="tok-nv">book</span>
+    <span class="tok-p">(</span><span class="tok-nb">assoc </span><span class="tok-ss">:age</span> <span class="tok-mi">1999</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">update</span> <span class="tok-ss">:readers</span> <span class="tok-nv">inc</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; {:name &quot;Lady of the lake&quot; :age 1999 :readers 1}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This threading macro is specially useful for transforming data structures, bacuase
+<em>ClojureScript</em> (and <em>Clojure</em>) functions for data structures transformations
+consistently uses the first argument for receive the data structure.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-thread-last-macro-code-code"><a class="link" href="#the-thread-last-macro-code-code">3.10.2. The thread-last macro (<code>-&gt;&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>The main difference of this macro to the previous, is that instead of threading
+the first argument as first argument on the following expresions, it threads
+it as the last argument.</p>
+</div>
+<div class="paragraph">
+<p>Let see an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">numbers</span> <span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span> <span class="tok-mi">4</span> <span class="tok-mi">5</span> <span class="tok-mi">6</span> <span class="tok-mi">7</span> <span class="tok-mi">8</span> <span class="tok-mi">9</span> <span class="tok-mi">0</span><span class="tok-p">])</span>
+
+<span class="tok-p">(</span><span class="tok-nb">take </span><span class="tok-mi">2</span> <span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">odd?</span> <span class="tok-p">(</span><span class="tok-nb">map inc </span><span class="tok-nv">numbers</span><span class="tok-p">)))</span>
+<span class="tok-c1">;; =&gt; (3 5)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The same code written using <code>-&gt;&gt;</code> threading macro:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">-&gt;&gt;</span> <span class="tok-nv">numbers</span>
+     <span class="tok-p">(</span><span class="tok-nb">map </span><span class="tok-nv">inc</span><span class="tok-p">)</span>
+     <span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">odd?</span><span class="tok-p">)</span>
+     <span class="tok-p">(</span><span class="tok-nb">take </span><span class="tok-mi">2</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; (3 5)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This threading macro is specially useful for transforming sequences or collections
+of data because <em>ClojureScript</em> functions that works with sequences and collections
+consistently uses the last argument position for receive them.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-thread-as-macro-code-as-code"><a class="link" href="#the-thread-as-macro-code-as-code">3.10.3. The thread-as macro (<code>as-&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>Finally, there are cases where neither <code>-&gt;</code> nor <code>-&gt;&gt;</code> are applicable. In these
+cases, you’ll need to use <code>as-&gt;</code>, the more flexible alternative, that allows thread
+into any argument position, not just first or last.</p>
+</div>
+<div class="paragraph">
+<p>It expects two fixed arguments and a arbitrary number of expressions. As with
+<code>-&gt;</code>, the first argument is a value to be threaded through the following forms. The
+second argument is the name of a binding. In each of the subsequent forms, the bound
+name can be used for the prior expression&#8217;s result.</p>
+</div>
+<div class="paragraph">
+<p>Let see an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">as-&gt;</span> <span class="tok-nv">numbers</span> <span class="tok-nv">$</span>
+  <span class="tok-p">(</span><span class="tok-nb">map inc </span><span class="tok-nv">$</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">odd?</span> <span class="tok-nv">$</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">first </span><span class="tok-nv">$</span><span class="tok-p">)</span>
+  <span class="tok-p">(</span><span class="tok-nb">hash-map </span><span class="tok-ss">:result</span> <span class="tok-nv">$</span> <span class="tok-ss">:id</span> <span class="tok-mi">1</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; {:result 3 :id 1}</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-thread-some-macros-code-some-code-and-code-some-code"><a class="link" href="#the-thread-some-macros-code-some-code-and-code-some-code">3.10.4. The thread-some macros (<code>some-&gt;</code> and <code>some-&gt;&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>Two of more specialized threading macros that <em>ClojureScript</em> comes with. They works
+in the same way as their analgous <code>-&gt;</code> and <code>-&gt;&gt;</code> macros with the additional
+support for short-circuiting the expression if one of the expresions evaluates
+to <code>nil</code>.</p>
+</div>
+<div class="paragraph">
+<p>Let see an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">some-&gt;</span> <span class="tok-p">(</span><span class="tok-nf">rand-nth</span> <span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-nv">nil</span><span class="tok-p">])</span>
+        <span class="tok-p">(</span><span class="tok-nf">inc</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; 2</span>
+
+<span class="tok-p">(</span><span class="tok-nf">some-&gt;</span> <span class="tok-p">(</span><span class="tok-nf">rand-nth</span> <span class="tok-p">[</span><span class="tok-mi">1</span> <span class="tok-nv">nil</span><span class="tok-p">])</span>
+        <span class="tok-p">(</span><span class="tok-nf">inc</span><span class="tok-p">))</span>
+<span class="tok-c1">;; =&gt; nil</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is an easy way avoid null pointer exceptions.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-thread-cond-macros-code-cond-code-and-code-cond-code"><a class="link" href="#the-thread-cond-macros-code-cond-code-and-code-cond-code">3.10.5. The thread-cond macros (<code>cond-&gt;</code> and <code>cond-&gt;&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>The <code>cond-&gt;</code> and <code>cond-&gt;&gt;</code> macros are analgous to <code>-&gt;</code> and <code>-&gt;&gt;</code> that offers
+the ability to conditionally skip some steps from the pipeline. Let see an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-kd">defn </span><span class="tok-nv">describe-number</span>
+  <span class="tok-p">[</span><span class="tok-nv">n</span><span class="tok-p">]</span>
+  <span class="tok-p">(</span><span class="tok-nf">cond-&gt;</span> <span class="tok-p">[]</span>
+    <span class="tok-p">(</span><span class="tok-nf">odd?</span> <span class="tok-nv">n</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;odd&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nf">even?</span> <span class="tok-nv">n</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;even&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">zero? </span><span class="tok-nv">n</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;zero&quot;</span><span class="tok-p">)</span>
+    <span class="tok-p">(</span><span class="tok-nb">pos? </span><span class="tok-nv">n</span><span class="tok-p">)</span> <span class="tok-p">(</span><span class="tok-nb">conj </span><span class="tok-s">&quot;positive&quot;</span><span class="tok-p">)))</span>
+
+<span class="tok-p">(</span><span class="tok-nf">describe-number</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; [&quot;odd&quot; &quot;positive&quot;]</span>
+
+<span class="tok-p">(</span><span class="tok-nf">describe-number</span> <span class="tok-mi">4</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; [&quot;even&quot; &quot;positive&quot;]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The value threading only happens when the corresponding condition evaluates to
+logical true.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="additional-readings"><a class="link" href="#additional-readings">3.10.6. Additional Readings</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/" class="bare">http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/</a></p>
+</li>
+<li>
+<p><a href="http://clojure.org/guides/threading_macros" class="bare">http://clojure.org/guides/threading_macros</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="namespace-section"><a class="link" href="#namespace-section">3.11. Namespaces</a></h3>
+<div class="sect3">
+<h4 id="defining-a-namespace"><a class="link" href="#defining-a-namespace">3.11.1. Defining a namespace</a></h4>
 <div class="paragraph">
 <p>The <em>namespace</em> is ClojureScript&#8217;s fundamental unit of code modularity. Namespaces
 are analogous to Java packages or Ruby and Python modules and can be defined with
@@ -3608,7 +3643,7 @@ default one called "cljs.user" will be used:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="loading-other-namespaces"><a class="link" href="#loading-other-namespaces">3.10.2. Loading other namespaces</a></h4>
+<h4 id="loading-other-namespaces"><a class="link" href="#loading-other-namespaces">3.11.2. Loading other namespaces</a></h4>
 <div class="paragraph">
 <p>Defining a namespace and the vars in it is really easy, but it&#8217;s not very useful if
 we can&#8217;t use symbols from other namespaces. For this purpose, the <code>ns</code> macro offers
@@ -3690,7 +3725,7 @@ and macros (with <code>:refer-macros</code>), but these are explained in other s
 </div>
 </div>
 <div class="sect3">
-<h4 id="namespaces-and-file-names"><a class="link" href="#namespaces-and-file-names">3.10.3. Namespaces and File Names</a></h4>
+<h4 id="namespaces-and-file-names"><a class="link" href="#namespaces-and-file-names">3.11.3. Namespaces and File Names</a></h4>
 <div class="paragraph">
 <p>When you have a namespace like <code>myapp.core</code>, the code must be in a file named
 <em>core.cljs</em> inside the <em>myapp</em> directory.  So, the preceding examples with
@@ -3709,7 +3744,7 @@ structure like this:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="abstractions-and-polymorphism"><a class="link" href="#abstractions-and-polymorphism">3.11. Abstractions and Polymorphism</a></h3>
+<h3 id="abstractions-and-polymorphism"><a class="link" href="#abstractions-and-polymorphism">3.12. Abstractions and Polymorphism</a></h3>
 <div class="paragraph">
 <p>I&#8217;m sure that at more than one time you have found yourself in this situation: you
 have defined a great abstraction (using interfaces or something similar) for your
@@ -3732,7 +3767,7 @@ when this happens.</p>
 see <a href="http://en.wikipedia.org/wiki/Expression_problem" class="bare">http://en.wikipedia.org/wiki/Expression_problem</a> for more details</p>
 </div>
 <div class="sect3">
-<h4 id="protocols"><a class="link" href="#protocols">3.11.1. Protocols</a></h4>
+<h4 id="protocols"><a class="link" href="#protocols">3.12.1. Protocols</a></h4>
 <div class="paragraph">
 <p>The <em>ClojureScript</em> primitive for defining "interfaces" is called a protocol. A
 protocol consists of a name and set of functions. All the functions have at least
@@ -3984,7 +4019,7 @@ protocol, it should return <code>true</code>:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="multimethods"><a class="link" href="#multimethods">3.11.2. Multimethods</a></h4>
+<h4 id="multimethods"><a class="link" href="#multimethods">3.12.2. Multimethods</a></h4>
 <div class="paragraph">
 <p>We have previously talked about protocols which solve a very common use case of
 polymorphism: dispatch by type. But in some circumstances, the protocol approach can
@@ -4056,7 +4091,7 @@ notifying you that some value does not have an implementation for that multimeth
 </div>
 </div>
 <div class="sect3">
-<h4 id="hierarchies"><a class="link" href="#hierarchies">3.11.3. Hierarchies</a></h4>
+<h4 id="hierarchies"><a class="link" href="#hierarchies">3.12.3. Hierarchies</a></h4>
 <div class="paragraph">
 <p>Hierarchies are <em>ClojureScript</em>’s way to let you build whatever relations that your
 domain may require. Hierarchies are defined in term of relations between named
@@ -4244,7 +4279,7 @@ have the direct matching dispatch value:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="data-types"><a class="link" href="#data-types">3.12. Data types</a></h3>
+<h3 id="data-types"><a class="link" href="#data-types">3.13. Data types</a></h3>
 <div class="paragraph">
 <p>Until now, we have used maps, sets, lists, and vectors to represent our data. And in
 most cases, this is a really great approach. But sometimes we need to define our own
@@ -4270,7 +4305,7 @@ types, and in this book we will call them <strong>data types</strong>.</p>
 </ul>
 </div>
 <div class="sect3">
-<h4 id="deftype"><a class="link" href="#deftype">3.12.1. Deftype</a></h4>
+<h4 id="deftype"><a class="link" href="#deftype">3.13.1. Deftype</a></h4>
 <div class="paragraph">
 <p>The most low-level construction in <em>ClojureScript</em> for creating your own types is
 the <code>deftype</code> macro. As a demonstration, we will define a type called <code>User</code>:</p>
@@ -4320,7 +4355,7 @@ constructors with more idiomatic names:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="defrecord"><a class="link" href="#defrecord">3.12.2. Defrecord</a></h4>
+<h4 id="defrecord"><a class="link" href="#defrecord">3.13.2. Defrecord</a></h4>
 <div class="paragraph">
 <p>The record is a slightly higher-level abstraction for defining types in
 <em>ClojureScript</em> and should be the preferred way to do it.</p>
@@ -4422,7 +4457,7 @@ used:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="implementing-protocols"><a class="link" href="#implementing-protocols">3.12.3. Implementing protocols</a></h4>
+<h4 id="implementing-protocols"><a class="link" href="#implementing-protocols">3.13.3. Implementing protocols</a></h4>
 <div class="paragraph">
 <p>Both type definition primitives that we have seen so far allow inline
 implementations for protocols (explained in a previous section). Let&#8217;s define one
@@ -4455,7 +4490,7 @@ case the <code>IUser</code>:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="reify"><a class="link" href="#reify">3.12.4. Reify</a></h4>
+<h4 id="reify"><a class="link" href="#reify">3.13.4. Reify</a></h4>
 <div class="paragraph">
 <p>The <code>reify</code> macro is an <em>ad hoc constructor</em> you can use to create objects without
 pre-defining a type.  Protocol implementations are supplied the same as <code>deftype</code>
@@ -4481,7 +4516,7 @@ and <code>defrecord</code>, but in contrast, <code>reify</code> does not have ac
 </div>
 </div>
 <div class="sect3">
-<h4 id="specify"><a class="link" href="#specify">3.12.5. Specify</a></h4>
+<h4 id="specify"><a class="link" href="#specify">3.13.5. Specify</a></h4>
 <div class="paragraph">
 <p><code>specify!</code> is an advanced alternative to <code>reify</code>, allowing you to add protocol
 implementations to an existing JavaScript object.  This can be useful if you want to
@@ -4523,14 +4558,14 @@ copyable values implementing <code>ICloneable</code> (e.g. ClojureScript collect
 </div>
 </div>
 <div class="sect2">
-<h3 id="host-interoperability"><a class="link" href="#host-interoperability">3.13. Host interoperability</a></h3>
+<h3 id="host-interoperability"><a class="link" href="#host-interoperability">3.14. Host interoperability</a></h3>
 <div class="paragraph">
 <p><em>ClojureScript</em>, in the same way as its brother Clojure, is designed to be a "guest"
 language. This means that the design of the language works well on top of an
 existing ecosystem such as JavaScript for <em>ClojureScript</em> and the JVM for <em>Clojure</em>.</p>
 </div>
 <div class="sect3">
-<h4 id="the-types"><a class="link" href="#the-types">3.13.1. The types</a></h4>
+<h4 id="the-types"><a class="link" href="#the-types">3.14.1. The types</a></h4>
 <div class="paragraph">
 <p><em>ClojureScript</em>, unlike what you might expect, tries to take advantage of every type
 that the platform provides. This is a (perhaps incomplete) list of things that
@@ -4568,7 +4603,7 @@ preceding sections of this chapter.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="interacting-with-platform-types"><a class="link" href="#interacting-with-platform-types">3.13.2. Interacting with platform types</a></h4>
+<h4 id="interacting-with-platform-types"><a class="link" href="#interacting-with-platform-types">3.14.2. Interacting with platform types</a></h4>
 <div class="paragraph">
 <p><em>ClojureScript</em> comes with a little set of special forms that allows it to interact
 with platform types such as calling object methods, creating new instances, and
@@ -4854,41 +4889,6 @@ can use the same functions for interacting with plain objects:</p>
 <span class="tok-c1">;; =&gt; #js {:hour 16, :minute 22}</span></code></pre>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="truthiness-section"><a class="link" href="#truthiness-section">3.14. Truthiness</a></h3>
-<div class="paragraph">
-<p>This is the aspect where each language has its own semantics (mostly wrongly). The
-majority of languages consider empty collections, the integer 0, and other things
-like this to be false.  In <em>ClojureScript</em>, unlike in other languages, only two
-values are considered as false: <code>nil</code> and <code>false</code>. Everything else is treated as
-logical <code>true</code>.</p>
-</div>
-<div class="paragraph">
-<p>Jointly with the ability to implement the callable protocol (the <code>IFn</code>), data
-structures like sets can be used just as predicates, without need of additional
-wrapping them in a function:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">def </span><span class="tok-nv">valid?</span> <span class="tok-o">#</span><span class="tok-p">{</span><span class="tok-mi">1</span> <span class="tok-mi">2</span> <span class="tok-mi">3</span><span class="tok-p">})</span>
-
-<span class="tok-p">(</span><span class="tok-nb">filter </span><span class="tok-nv">valid?</span> <span class="tok-p">(</span><span class="tok-nb">range </span><span class="tok-mi">1</span> <span class="tok-mi">10</span><span class="tok-p">))</span>
-<span class="tok-c1">;; =&gt; (1 2 3)</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This is because set returns the a value if it exists or nil in case contrary:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">valid?</span> <span class="tok-mi">1</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; 1</span>
-
-<span class="tok-p">(</span><span class="tok-nf">valid?</span> <span class="tok-mi">3</span><span class="tok-p">)</span>
-<span class="tok-c1">;; =&gt; nil</span></code></pre>
 </div>
 </div>
 </div>
