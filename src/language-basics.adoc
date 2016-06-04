@@ -678,7 +678,7 @@ This is because set returns the a value if it exists or nil in case contrary:
 (valid? 1)
 ;; => 1
 
-(valid? 3)
+(valid? 4)
 ;; => nil
 ----
 
