@@ -3577,7 +3577,7 @@ the watch from the atom.
 
 (swap! a inc)
 ;; Key: :logger Old: 42 New: 43
-;; => 4
+;; => 43
 
 (remove-watch a :logger)
 ----
