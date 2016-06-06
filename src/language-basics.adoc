@@ -2293,9 +2293,9 @@ logical true.
 This language feature allows different dialects of Clojure to share common code that
 is mostly platform independent but need some platform dependent code.
 
-To use reader conditionals, all you need is you need to rename your source file with
-`.cljs` extension to one with `.cljc`, because reader conditionals only works if
-them are placed in files with `.cljc` extension.
+To use reader conditionals, all you need is to rename your source file with
+`.cljs` extension to one with `.cljc`, because reader conditionals only work if
+they are placed in files with `.cljc` extension.
 
 ==== Standard (`#?`)
 
