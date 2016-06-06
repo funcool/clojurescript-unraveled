@@ -39,7 +39,7 @@ Please, maintain the commit size small for easy commits picking.
 **Rules for text formatting**:
 
 - Use correct asciidoctor syntax.
-- Max line width should be 89 chars.
+- Max line width should be 84 chars.
 
 **General note**:
 
