@@ -2293,9 +2293,9 @@ logical true.
 This language feature allows different dialects of Clojure to share common code that
 is mostly platform independent but need some platform dependent code.
 
-To use reader conditionals, all you need is you need to rename your source file with
-`.cljs` extension to one with `.cljc`, because reader conditionals only works if
-them are placed in files with `.cljc` extension.
+To use reader conditionals, all you need is to rename your source file with
+`.cljs` extension to one with `.cljc`, because reader conditionals only work if
+they are placed in files with `.cljc` extension.
 
 ==== Standard (`#?`)
 
@@ -2609,7 +2609,7 @@ Let's play with our `IInvertible` protocol defined previously:
 
 Yoy may note that a special symbol *string* is used instead of `js/String` for
 extend the protol for string. This is because the builtin javascript types have
-special treatmen and if you replace the `string` with `js/String` the compiler
+special treatment and if you replace the `string` with `js/String` the compiler
 will emit a warning about that.
 
 So if you want extend your protocol to javascript primitive types, instead of using
@@ -3577,7 +3577,7 @@ the watch from the atom.
 
 (swap! a inc)
 ;; Key: :logger Old: 42 New: 43
-;; => 4
+;; => 43
 
 (remove-watch a :logger)
 ----
