@@ -2593,6 +2593,7 @@ different protocols in a single expression.
 
 Let's play with our `IInvertible` protocol defined previously:
 
+[source, clojure]
 ----
 (extend-type string
   IInvertible
@@ -2607,7 +2608,7 @@ Let's play with our `IInvertible` protocol defined previously:
   (invert [this] (into [] (reverse this))))
 ----
 
-Yoy may note that a special symbol *string* is used instead of `js/String` for
+You may note that a special symbol *string* is used instead of `js/String` for
 extend the protol for string. This is because the builtin javascript types have
 special treatment and if you replace the `string` with `js/String` the compiler
 will emit a warning about that.
