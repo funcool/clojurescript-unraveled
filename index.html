@@ -2853,9 +2853,9 @@ logical true.</p>
 is mostly platform independent but need some platform dependent code.</p>
 </div>
 <div class="paragraph">
-<p>To use reader conditionals, all you need is you need to rename your source file with
-<code>.cljs</code> extension to one with <code>.cljc</code>, because reader conditionals only works if
-them are placed in files with <code>.cljc</code> extension.</p>
+<p>To use reader conditionals, all you need is to rename your source file with
+<code>.cljs</code> extension to one with <code>.cljc</code>, because reader conditionals only work if
+they are placed in files with <code>.cljc</code> extension.</p>
 </div>
 <div class="sect3">
 <h4 id="standard-code-code"><a class="link" href="#standard-code-code">3.11.1. Standard (<code>#?</code>)</a></h4>
@@ -3207,23 +3207,23 @@ different protocols in a single expression.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>(extend-type string
-  IInvertible
-  (invert [this] (apply str (reverse this))))
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">string</span>
+  <span class="tok-nv">IInvertible</span>
+  <span class="tok-p">(</span><span class="tok-nf">invert</span> <span class="tok-p">[</span><span class="tok-nv">this</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nb">apply str </span><span class="tok-p">(</span><span class="tok-nb">reverse </span><span class="tok-nv">this</span><span class="tok-p">))))</span>
 
-(extend-type cljs.core.List
-  IInvertible
-  (invert [this] (reverse this)))
+<span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">cljs.core.List</span>
+  <span class="tok-nv">IInvertible</span>
+  <span class="tok-p">(</span><span class="tok-nf">invert</span> <span class="tok-p">[</span><span class="tok-nv">this</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nb">reverse </span><span class="tok-nv">this</span><span class="tok-p">)))</span>
 
-(extend-type cljs.core.PersistentVector
-  IInvertible
-  (invert [this] (into [] (reverse this))))</pre>
+<span class="tok-p">(</span><span class="tok-nf">extend-type</span> <span class="tok-nv">cljs.core.PersistentVector</span>
+  <span class="tok-nv">IInvertible</span>
+  <span class="tok-p">(</span><span class="tok-nf">invert</span> <span class="tok-p">[</span><span class="tok-nv">this</span><span class="tok-p">]</span> <span class="tok-p">(</span><span class="tok-nb">into </span><span class="tok-p">[]</span> <span class="tok-p">(</span><span class="tok-nb">reverse </span><span class="tok-nv">this</span><span class="tok-p">))))</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Yoy may note that a special symbol <strong>string</strong> is used instead of <code>js/String</code> for
+<p>You may note that a special symbol <strong>string</strong> is used instead of <code>js/String</code> for
 extend the protol for string. This is because the builtin javascript types have
-special treatmen and if you replace the <code>string</code> with <code>js/String</code> the compiler
+special treatment and if you replace the <code>string</code> with <code>js/String</code> the compiler
 will emit a warning about that.</p>
 </div>
 <div class="paragraph">
@@ -4334,7 +4334,7 @@ the watch from the atom.</p>
 
 <span class="tok-p">(</span><span class="tok-nf">swap!</span> <span class="tok-nv">a</span> <span class="tok-nv">inc</span><span class="tok-p">)</span>
 <span class="tok-c1">;; Key: :logger Old: 42 New: 43</span>
-<span class="tok-c1">;; =&gt; 4</span>
+<span class="tok-c1">;; =&gt; 43</span>
 
 <span class="tok-p">(</span><span class="tok-nf">remove-watch</span> <span class="tok-nv">a</span> <span class="tok-ss">:logger</span><span class="tok-p">)</span></code></pre>
 </div>
