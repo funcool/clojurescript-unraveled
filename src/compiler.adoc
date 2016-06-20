@@ -879,7 +879,7 @@ Now, open the repl, require the namespace and try to use the exposed function:
 [source, clojure]
 ----
 (require '[myextmods.myclosuremodule :as cm])
-(cm/getGreetings)
+(cm/get_greetings)
 ;; => "Hello from google closure module."
 ----
 
