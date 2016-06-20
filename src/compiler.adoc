@@ -954,9 +954,9 @@ In order to  use a library that  exposes a global object, you  should follow sim
 steps  as  with  commojs  modules  with  the exception  that  you  should  omit  the
 `:module-type` attribute.
 
-This will create a _synthetic_ namaspece that you should require in order to be able
+This will create a _synthetic_ namespace that you should require in order to be able
 to access to the global object through the `js/` namespace. The namespace is called
-_synthetic_ because it does not exposes any object behind it, it just indicate
+_synthetic_ because it does not expose any object behind it, it just indicates
 to the compiler that you want that dependency.
 
 Let's play with that. Start creating a simple file declaring just a global function:
