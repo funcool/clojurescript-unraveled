@@ -78,7 +78,7 @@ implementations depending on the type.
 
 ==== Generalizing to process transformations
 
-The process of mapping, filtering or mapcatting isn't necesarily tied to a concrete
+The process of mapping, filtering or mapcatting isn't necessarily tied to a concrete
 type, but we keep reimplementing them for different types. Let's see how we can
 generalize such processes to be context independent. We'll start by implementing
 naive versions of `map` and `filter` first to see how they work internally:
@@ -897,7 +897,7 @@ example using `conj!` on a transient:
 ;; => 4
 ----
 
-As you can see, the transient version of the vector is neither immutable or
+As you can see, the transient version of the vector is neither immutable nor
 persistent. Instead, the vector is mutated in place. Although we could transform `tv`
 repeatedly using `conj!` on it we shouldn't abandon the idioms used with the
 persistent data structures: when transforming a transient, use the returned version
@@ -2447,7 +2447,7 @@ We'll start by wrapping the low-level storage methods with functions. The follow
 operations are supported by the storage:
 
 - getting the value corresponding to a key
-- seting a key to a certain value
+- setting a key to a certain value
 - removing a value given its key
 - counting the number of entries
 - clearing the storage
@@ -2705,8 +2705,8 @@ instead we'll focus on presenting the concurrency primitives that `core.async`
 offers.
 
 `core.async` is not part of ClojureScript core but it's implemented as a library.
-Even though is not part of the core language it's widely used. Many libraries build
-on top of the `core.async` primitives, so we think is worth covering in the book.
+Even though it is not part of the core language it's widely used. Many libraries build
+on top of the `core.async` primitives, so we think it is worth covering in the book.
 It's also a good example of the syntactic abstractions that can be achieved by
 transforming code with ClojureScript macros, so we'll jump right in. You'll need to
 have `core.async` installed to run the examples presented in this section.
@@ -2717,7 +2717,7 @@ have `core.async` installed to run the examples presented in this section.
 Channels are like conveyor belts, we can put and take a single value at a time from
 them. They can have multiple readers and writers, and they are the fundamental
 message-passing mechanism of `core.async`. In order to see how it works, we'll
-create a channel perform some operations on it.
+create a channel to perform some operations on it.
 
 [source, clojure]
 ----
