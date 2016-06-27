@@ -2129,28 +2129,27 @@ understand, as it mimics the collection's structure:
 
 === Threading Macros
 
-Threading macros, also kwno as arrow functions, enables write more readable code
-when multiple neested function calls is performed.
+Threading macros, also known as arrow functions, enables one to write more readable code
+when multiple nested function calls are performed.
 
-Imagine you have `(f (g (h x)))` where a function `f` receives as first parameter a
-result of executing of function `g` and the same repeated multiple times. With the
-most basic `->` threading macro you can convert that in `(\-> x (h) (g) (f))` that is
-much more easy to read.
+Imagine you have `(f (g (h x)))` where a function `f` receives as its first parameter the
+result of executing function `g`, repeated multiple times. With the most basic `->` threading
+macro you can convert that into `(\-> x (h) (g) (f))` which is easier to read.
 
-The result is just a sugar syntax because the arrow functions are defined as macros
+The result is syntactic sugar, because the arrow functions are defined as macros
 and it does not imply any runtime performance. The `(\-> x (h) (g) (f))` is
 automatically converted to (f (g (h x))) at compile time.
 
-Take care that the parenthesis on `h`, `g` and `f` are optional, and can be ommited:
-`(\-> x h g f)`.
+Take note that the parenthesis on `h`, `g` and `f` are optional, and can be ommited:
+`(f (g (h x)))` is the same as `(\-> x h g f)`.
 
 
 ==== The thread-first macro (`\->`)
 
-Is called *thread first* becaiuse it threads the first argument throught the
-diffenrent expressions as first arguments.
+This is called *thread first* because it threads the first argument throught the
+different expressions as first arguments.
 
-Let see more concrete example, this is how the code looks without using threading
+Using a more concrete example, this is how the code looks without using threading
 macros:
 
 [source, clojure]
@@ -2162,7 +2161,7 @@ macros:
 ;; => {:name "Lady of the lake" :age 1999 :readers 1}
 ----
 
-We can rewrite that code to use `\->` threading macro:
+We can rewrite that code to use the `\->` threading macro:
 
 [source, clojure]
 ----
@@ -2172,18 +2171,18 @@ We can rewrite that code to use `\->` threading macro:
 ;; => {:name "Lady of the lake" :age 1999 :readers 1}
 ----
 
-This threading macro is specially useful for transforming data structures, bacuase
+This threading macro is especially useful for transforming data structures, because
 _ClojureScript_ (and _Clojure_) functions for data structures transformations
 consistently uses the first argument for receive the data structure.
 
 
 ==== The thread-last macro (`\->>`)
 
-The main difference of this macro to the previous, is that instead of threading
-the first argument as first argument on the following expresions, it threads
-it as the last argument.
+The main difference between the thread-last and thread-first macros is that instead
+of threading the first argument given as the first argument on the following expresions,
+it threads it as the last argument.
 
-Let see an example:
+Let's look at an example:
 
 [source, clojure]
 ----
@@ -2204,23 +2203,23 @@ The same code written using `\->>` threading macro:
 ;; => (3 5)
 ----
 
-This threading macro is specially useful for transforming sequences or collections
-of data because _ClojureScript_ functions that works with sequences and collections
-consistently uses the last argument position for receive them.
+This threading macro is especially useful for transforming sequences or collections
+of data because _ClojureScript_ functions that work with sequences and collections
+consistently use the last argument position to receive them.
 
 
 ==== The thread-as macro (`as\->`)
 
 Finally, there are cases where neither `\->` nor `\->>` are applicable. In these
-cases, you’ll need to use `as\->`, the more flexible alternative, that allows thread
-into any argument position, not just first or last.
+cases, you’ll need to use `as\->`, the more flexible alternative, that allows you to
+thread into any argument position, not just the first or last.
 
-It expects two fixed arguments and a arbitrary number of expressions. As with
+It expects two fixed arguments and an arbitrary number of expressions. As with
 `\->`, the first argument is a value to be threaded through the following forms. The
 second argument is the name of a binding. In each of the subsequent forms, the bound
 name can be used for the prior expression's result.
 
-Let see an example:
+Let's see an example:
 
 [source, clojure]
 ----
@@ -2235,12 +2234,12 @@ Let see an example:
 
 ==== The thread-some macros (`some\->` and `some\->>`)
 
-Two of more specialized threading macros that _ClojureScript_ comes with. They works
-in the same way as their analgous `\->` and `\->>` macros with the additional
+Two of the more specialized threading macros that _ClojureScript_ comes with. They work
+in the same way as their analagous `\->` and `\->>` macros with the additional
 support for short-circuiting the expression if one of the expresions evaluates
 to `nil`.
 
-Let see an example:
+Let's see another example:
 
 [source, clojure]
 ----
