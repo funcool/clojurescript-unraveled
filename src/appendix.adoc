@@ -121,7 +121,7 @@ function:
 
 The general format for invoking a JavaScript function from ClojureScript is to give
 the function name (preceded by a dot), the object that “owns” the function, and any
-parameters to that function. You should see an alert appear in your browser winodw;
+parameters to that function. You should see an alert appear in your browser window;
 when you dismiss the alert, the REPL will print `nil` and give you another
 prompt. You can also do it this way:
 
