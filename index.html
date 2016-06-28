@@ -2661,32 +2661,31 @@ understand, as it mimics the collection&#8217;s structure:</p>
 <div class="sect2">
 <h3 id="threading-macros"><a class="link" href="#threading-macros">3.10. Threading Macros</a></h3>
 <div class="paragraph">
-<p>Threading macros, also kwno as arrow functions, enables write more readable code
-when multiple neested function calls is performed.</p>
+<p>Threading macros, also known as arrow functions, enables one to write more readable code
+when multiple nested function calls are performed.</p>
 </div>
 <div class="paragraph">
-<p>Imagine you have <code>(f (g (h x)))</code> where a function <code>f</code> receives as first parameter a
-result of executing of function <code>g</code> and the same repeated multiple times. With the
-most basic <code>&#8594;</code> threading macro you can convert that in <code>(-&gt; x (h) (g) (f))</code> that is
-much more easy to read.</p>
+<p>Imagine you have <code>(f (g (h x)))</code> where a function <code>f</code> receives as its first parameter the
+result of executing function <code>g</code>, repeated multiple times. With the most basic <code>&#8594;</code> threading
+macro you can convert that into <code>(-&gt; x (h) (g) (f))</code> which is easier to read.</p>
 </div>
 <div class="paragraph">
-<p>The result is just a sugar syntax because the arrow functions are defined as macros
+<p>The result is syntactic sugar, because the arrow functions are defined as macros
 and it does not imply any runtime performance. The <code>(-&gt; x (h) (g) (f))</code> is
 automatically converted to (f (g (h x))) at compile time.</p>
 </div>
 <div class="paragraph">
-<p>Take care that the parenthesis on <code>h</code>, <code>g</code> and <code>f</code> are optional, and can be ommited:
-<code>(-&gt; x h g f)</code>.</p>
+<p>Take note that the parenthesis on <code>h</code>, <code>g</code> and <code>f</code> are optional, and can be ommited:
+<code>(f (g (h x)))</code> is the same as <code>(-&gt; x h g f)</code>.</p>
 </div>
 <div class="sect3">
 <h4 id="the-thread-first-macro-code-code"><a class="link" href="#the-thread-first-macro-code-code">3.10.1. The thread-first macro (<code>-&gt;</code>)</a></h4>
 <div class="paragraph">
-<p>Is called <strong>thread first</strong> becaiuse it threads the first argument throught the
-diffenrent expressions as first arguments.</p>
+<p>This is called <strong>thread first</strong> because it threads the first argument throught the
+different expressions as first arguments.</p>
 </div>
 <div class="paragraph">
-<p>Let see more concrete example, this is how the code looks without using threading
+<p>Using a more concrete example, this is how the code looks without using threading
 macros:</p>
 </div>
 <div class="listingblock">
@@ -2699,7 +2698,7 @@ macros:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We can rewrite that code to use <code>-&gt;</code> threading macro:</p>
+<p>We can rewrite that code to use the <code>-&gt;</code> threading macro:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2710,7 +2709,7 @@ macros:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This threading macro is specially useful for transforming data structures, bacuase
+<p>This threading macro is especially useful for transforming data structures, because
 <em>ClojureScript</em> (and <em>Clojure</em>) functions for data structures transformations
 consistently uses the first argument for receive the data structure.</p>
 </div>
@@ -2718,12 +2717,12 @@ consistently uses the first argument for receive the data structure.</p>
 <div class="sect3">
 <h4 id="the-thread-last-macro-code-code"><a class="link" href="#the-thread-last-macro-code-code">3.10.2. The thread-last macro (<code>-&gt;&gt;</code>)</a></h4>
 <div class="paragraph">
-<p>The main difference of this macro to the previous, is that instead of threading
-the first argument as first argument on the following expresions, it threads
-it as the last argument.</p>
+<p>The main difference between the thread-last and thread-first macros is that instead
+of threading the first argument given as the first argument on the following expresions,
+it threads it as the last argument.</p>
 </div>
 <div class="paragraph">
-<p>Let see an example:</p>
+<p>Let&#8217;s look at an example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2746,26 +2745,26 @@ it as the last argument.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This threading macro is specially useful for transforming sequences or collections
-of data because <em>ClojureScript</em> functions that works with sequences and collections
-consistently uses the last argument position for receive them.</p>
+<p>This threading macro is especially useful for transforming sequences or collections
+of data because <em>ClojureScript</em> functions that work with sequences and collections
+consistently use the last argument position to receive them.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="the-thread-as-macro-code-as-code"><a class="link" href="#the-thread-as-macro-code-as-code">3.10.3. The thread-as macro (<code>as-&gt;</code>)</a></h4>
 <div class="paragraph">
 <p>Finally, there are cases where neither <code>-&gt;</code> nor <code>-&gt;&gt;</code> are applicable. In these
-cases, you’ll need to use <code>as-&gt;</code>, the more flexible alternative, that allows thread
-into any argument position, not just first or last.</p>
+cases, you’ll need to use <code>as-&gt;</code>, the more flexible alternative, that allows you to
+thread into any argument position, not just the first or last.</p>
 </div>
 <div class="paragraph">
-<p>It expects two fixed arguments and a arbitrary number of expressions. As with
+<p>It expects two fixed arguments and an arbitrary number of expressions. As with
 <code>-&gt;</code>, the first argument is a value to be threaded through the following forms. The
 second argument is the name of a binding. In each of the subsequent forms, the bound
 name can be used for the prior expression&#8217;s result.</p>
 </div>
 <div class="paragraph">
-<p>Let see an example:</p>
+<p>Let&#8217;s see an example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2781,13 +2780,13 @@ name can be used for the prior expression&#8217;s result.</p>
 <div class="sect3">
 <h4 id="the-thread-some-macros-code-some-code-and-code-some-code"><a class="link" href="#the-thread-some-macros-code-some-code-and-code-some-code">3.10.4. The thread-some macros (<code>some-&gt;</code> and <code>some-&gt;&gt;</code>)</a></h4>
 <div class="paragraph">
-<p>Two of more specialized threading macros that <em>ClojureScript</em> comes with. They works
-in the same way as their analgous <code>-&gt;</code> and <code>-&gt;&gt;</code> macros with the additional
+<p>Two of the more specialized threading macros that <em>ClojureScript</em> comes with. They work
+in the same way as their analagous <code>-&gt;</code> and <code>-&gt;&gt;</code> macros with the additional
 support for short-circuiting the expression if one of the expresions evaluates
 to <code>nil</code>.</p>
 </div>
 <div class="paragraph">
-<p>Let see an example:</p>
+<p>Let&#8217;s see another example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5486,7 +5485,7 @@ cd myextmods</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">myextmods.myclosuremodule</span> <span class="tok-ss">:as</span> <span class="tok-nv">cm</span><span class="tok-p">])</span>
-<span class="tok-p">(</span><span class="tok-nf">cm/getGreetings</span><span class="tok-p">)</span>
+<span class="tok-p">(</span><span class="tok-nf">cm/get_greetings</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; &quot;Hello from google closure module.&quot;</span></code></pre>
 </div>
 </div>
@@ -5589,9 +5588,9 @@ steps  as  with  commojs  modules  with  the exception  that  you  should  omit 
 <code>:module-type</code> attribute.</p>
 </div>
 <div class="paragraph">
-<p>This will create a <em>synthetic</em> namaspece that you should require in order to be able
+<p>This will create a <em>synthetic</em> namespace that you should require in order to be able
 to access to the global object through the <code>js/</code> namespace. The namespace is called
-<em>synthetic</em> because it does not exposes any object behind it, it just indicate
+<em>synthetic</em> because it does not expose any object behind it, it just indicates
 to the compiler that you want that dependency.</p>
 </div>
 <div class="paragraph">
@@ -5937,7 +5936,7 @@ accordingly.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter intends to explain some advanced topics that are part of the language
-and that does not fits in the first chapter. The good candidates for this section are
+and that does not fit in the first chapter. The good candidates for this section are
 transducers, core protocols, transients, metadata. In summary: topics that are not
 mandatory for understand the language.</p>
 </div>
@@ -6027,7 +6026,7 @@ implementations depending on the type.</p>
 <div class="sect3">
 <h4 id="generalizing-to-process-transformations"><a class="link" href="#generalizing-to-process-transformations">5.1.2. Generalizing to process transformations</a></h4>
 <div class="paragraph">
-<p>The process of mapping, filtering or mapcatting isn&#8217;t necesarily tied to a concrete
+<p>The process of mapping, filtering or mapcatting isn&#8217;t necessarily tied to a concrete
 type, but we keep reimplementing them for different types. Let&#8217;s see how we can
 generalize such processes to be context independent. We&#8217;ll start by implementing
 naive versions of <code>map</code> and <code>filter</code> first to see how they work internally:</p>
@@ -6923,7 +6922,7 @@ example using <code>conj!</code> on a transient:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>As you can see, the transient version of the vector is neither immutable or
+<p>As you can see, the transient version of the vector is neither immutable nor
 persistent. Instead, the vector is mutated in place. Although we could transform <code>tv</code>
 repeatedly using <code>conj!</code> on it we shouldn&#8217;t abandon the idioms used with the
 persistent data structures: when transforming a transient, use the returned version
@@ -8567,7 +8566,7 @@ operations are supported by the storage:</p>
 <p>getting the value corresponding to a key</p>
 </li>
 <li>
-<p>seting a key to a certain value</p>
+<p>setting a key to a certain value</p>
 </li>
 <li>
 <p>removing a value given its key</p>
@@ -8857,8 +8856,8 @@ offers.</p>
 </div>
 <div class="paragraph">
 <p><code>core.async</code> is not part of ClojureScript core but it&#8217;s implemented as a library.
-Even though is not part of the core language it&#8217;s widely used. Many libraries build
-on top of the <code>core.async</code> primitives, so we think is worth covering in the book.
+Even though it is not part of the core language it&#8217;s widely used. Many libraries build
+on top of the <code>core.async</code> primitives, so we think it is worth covering in the book.
 It&#8217;s also a good example of the syntactic abstractions that can be achieved by
 transforming code with ClojureScript macros, so we&#8217;ll jump right in. You&#8217;ll need to
 have <code>core.async</code> installed to run the examples presented in this section.</p>
@@ -8869,7 +8868,7 @@ have <code>core.async</code> installed to run the examples presented in this sec
 <p>Channels are like conveyor belts, we can put and take a single value at a time from
 them. They can have multiple readers and writers, and they are the fundamental
 message-passing mechanism of <code>core.async</code>. In order to see how it works, we&#8217;ll
-create a channel perform some operations on it.</p>
+create a channel to perform some operations on it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10411,7 +10410,7 @@ function:</p>
 <div class="paragraph">
 <p>The general format for invoking a JavaScript function from ClojureScript is to give
 the function name (preceded by a dot), the object that “owns” the function, and any
-parameters to that function. You should see an alert appear in your browser winodw;
+parameters to that function. You should see an alert appear in your browser window;
 when you dismiss the alert, the REPL will print <code>nil</code> and give you another
 prompt. You can also do it this way:</p>
 </div>
@@ -10668,7 +10667,7 @@ writing entire sections of the book, as well as making very valuable suggestions
 <div id="footer">
 <div id="footer-text">
 Version 6<br/>
-Last updated 2016-06-03 17:39:32 EEST
+Last updated 2016-06-28 08:39:08 EEST
 </div>
 </div>
 </body>
