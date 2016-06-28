@@ -1529,7 +1529,7 @@ build upon.
 
 First of all, we need a way to look up keys on an associative data structure. The
 `ILookup` protocol defines a function for doing so, let's add the ability to look up
-keys in our `Pair` type since is an associative data structure that maps the indices
+keys in our `Pair` type since it is an associative data structure that maps the indices
 0 and 1 to values.
 
 [source, clojure]
