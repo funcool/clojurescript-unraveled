@@ -1,5 +1,15 @@
 = Changelog
 
+== Version 6
+
+Date: 2016-07-25
+
+- Many fixes and resctructure.
+- Reader conditionals chapter.
+- Integration with third party js libraries chapter.
+- Threading macros chapter.
+
+
 == Version 5
 
 Date: 2015-11-06
