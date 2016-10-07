@@ -160,6 +160,6 @@ Here is a list of more resources about ClojureScript.
 * https://github.com/clojure/clojurescript/wiki[ClojureScript wiki]: a community-mantained wiki about ClojureScript.
 * https://github.com/cljsinfo/cljs-api-docs/blob/catalog/INDEX.md[API Reference]: a community-maintained complete language api reference.
 * http://cljs.info/cheatsheet/[ClojureScript Cheatsheet]: a comprehensive reference of the ClojureScript language.
-* http://catcode.com/etudes-for-clojurescript/toc01.html[Études for ClojureScript]: a collection of exercises for learning ClojureScript.
+* http://catcode.com/etudes-for-clojurescript/toc.html[Études for ClojureScript]: a collection of exercises for learning ClojureScript.
 * http://clojurescriptmadeeasy.com/[ClojureScript made easy]: a collection of short articles about solving common problems in ClojureScript.
 * http://google.github.io/closure-library/api/[The Google Closure Library API reference]
