@@ -221,7 +221,7 @@ _mywebapp/build.clj_ file with the following content:
 (b/build "src"
  {:output-to "main.js"
   :output-dir "out/"
-  :source-map "main.js.map"
+  :source-map true
   :main 'mywebapp.core
   :verbose true
   :optimizations :none})
