@@ -295,7 +295,7 @@ Start by creating another build script, but this time name it _watch.clj_:
 (b/watch "src"
  {:output-to "main.js"
   :output-dir "out/"
-  :source-map "main.js.map"
+  :source-map true
   :main 'mywebapp.core
   :optimizations :none})
 ----
