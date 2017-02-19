@@ -104,7 +104,6 @@ keys.
 :foobar
 :2
 :?
-:foo/bar
 ----
 
 As you can see, the keywords are all prefixed with `:`, but this character is only
@@ -119,6 +118,37 @@ don't understand or are unclear about anything in the following example;
 (keyword "foo")
 ;; => :foo
 ----
+
+===== Namespaced keywords
+
+When prefixing keywords with a double colon `::`, the keyword will be prepended by the name of the current namespace.
+Note that namespacing keywords affects equality comparisons.
+
+[source, clojure]
+---
+::foo
+;; => :cljs.user/foo
+
+(= ::foo :foo)
+;; => false
+---
+
+Another alternative is to include the namespace in the keyword literal, this is useful when creating namespaced keywords
+for other namespaces:
+
+[source, clojure]
+---
+:cljs.unraveled/foo
+;; => :cljs.unraveled/foo
+---
+
+The `keyword` function has an arity-2 variant where we can specify the namespace as the first parameter:
+
+[source, clojure]
+---
+(keyword "cljs.unraveled" "foo")
+;; => :cljs.unraveled/foo
+---
 
 
 ==== Symbols
