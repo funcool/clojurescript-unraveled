@@ -107,7 +107,7 @@ or are unclear about anything in the following example; <<function-section,funct
 ;; => :foo
 ----
 
-===== Namespaced keywods
+===== Namespaced keywords
 
 When prefixing keywords with a double colon `::`, the keyword will be prepended by the name of the current namespace.
 Note that namespacing keywords affects equality comparisons.
