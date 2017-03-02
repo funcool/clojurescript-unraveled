@@ -4,18 +4,20 @@
 <meta charset="UTF-8"/>
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"/><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="generator" content="Asciidoctor 1.5.4"/>
+<meta name="generator" content="Asciidoctor 1.5.5"/>
 <meta name="author" content="Andrey Antukh, Alejandro Gómez"/>
 <title>ClojureScript Unraveled</title>
 <style>
 .listingblock .pygments .hll { background-color: #ffffcc }
-.listingblock .pygments  { background: #f0f0f0; }
+.listingblock .pygments, .listingblock .pygments code { background: #f0f0f0; }
 .listingblock .pygments .tok-c { color: #60a0b0; font-style: italic } /* Comment */
 .listingblock .pygments .tok-err { border: 1px solid #FF0000 } /* Error */
 .listingblock .pygments .tok-k { color: #007020; font-weight: bold } /* Keyword */
 .listingblock .pygments .tok-o { color: #666666 } /* Operator */
+.listingblock .pygments .tok-ch { color: #60a0b0; font-style: italic } /* Comment.Hashbang */
 .listingblock .pygments .tok-cm { color: #60a0b0; font-style: italic } /* Comment.Multiline */
 .listingblock .pygments .tok-cp { color: #007020 } /* Comment.Preproc */
+.listingblock .pygments .tok-cpf { color: #60a0b0; font-style: italic } /* Comment.PreprocFile */
 .listingblock .pygments .tok-c1 { color: #60a0b0; font-style: italic } /* Comment.Single */
 .listingblock .pygments .tok-cs { color: #60a0b0; background-color: #fff0f0 } /* Comment.Special */
 .listingblock .pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
@@ -55,8 +57,10 @@
 .listingblock .pygments .tok-mh { color: #40a070 } /* Literal.Number.Hex */
 .listingblock .pygments .tok-mi { color: #40a070 } /* Literal.Number.Integer */
 .listingblock .pygments .tok-mo { color: #40a070 } /* Literal.Number.Oct */
+.listingblock .pygments .tok-sa { color: #4070a0 } /* Literal.String.Affix */
 .listingblock .pygments .tok-sb { color: #4070a0 } /* Literal.String.Backtick */
 .listingblock .pygments .tok-sc { color: #4070a0 } /* Literal.String.Char */
+.listingblock .pygments .tok-dl { color: #4070a0 } /* Literal.String.Delimiter */
 .listingblock .pygments .tok-sd { color: #4070a0; font-style: italic } /* Literal.String.Doc */
 .listingblock .pygments .tok-s2 { color: #4070a0 } /* Literal.String.Double */
 .listingblock .pygments .tok-se { color: #4070a0; font-weight: bold } /* Literal.String.Escape */
@@ -67,9 +71,11 @@
 .listingblock .pygments .tok-s1 { color: #4070a0 } /* Literal.String.Single */
 .listingblock .pygments .tok-ss { color: #517918 } /* Literal.String.Symbol */
 .listingblock .pygments .tok-bp { color: #007020 } /* Name.Builtin.Pseudo */
+.listingblock .pygments .tok-fm { color: #06287e } /* Name.Function.Magic */
 .listingblock .pygments .tok-vc { color: #bb60d5 } /* Name.Variable.Class */
 .listingblock .pygments .tok-vg { color: #bb60d5 } /* Name.Variable.Global */
 .listingblock .pygments .tok-vi { color: #bb60d5 } /* Name.Variable.Instance */
+.listingblock .pygments .tok-vm { color: #bb60d5 } /* Name.Variable.Magic */
 .listingblock .pygments .tok-il { color: #40a070 } /* Literal.Number.Integer.Long */
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic|Roboto+Mono:400|Roboto+Slab:400,700"/>
@@ -189,6 +195,16 @@ encourage you to give this book a try and to give us feedback on how we can make
 more accessible.  Our goal is to make ClojureScript more friendly to newcomers and
 spread the ideas about programming that Clojure has helped popularize, as we see a
 lot of value in them.</p>
+</div>
+<div class="paragraph">
+<p>This is a list of translations of the book:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ukrainian: <a href="https://lambdabooks.github.io/clojurescript-unraveled/" class="bare">https://lambdabooks.github.io/clojurescript-unraveled/</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -402,8 +418,7 @@ keys.</p>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-ss">:foobar</span>
 <span class="tok-ss">:2</span>
-<span class="tok-ss">:?</span>
-<span class="tok-ss">:foo/bar</span></code></pre>
+<span class="tok-ss">:?</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -419,6 +434,48 @@ don&#8217;t understand or are unclear about anything in the following example;
 <div class="content">
 <pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">keyword </span><span class="tok-s">&quot;foo&quot;</span><span class="tok-p">)</span>
 <span class="tok-c1">;; =&gt; :foo</span></code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="namespaced-keywords"><a class="link" href="#namespaced-keywords">Namespaced keywords</a></h5>
+<div class="paragraph">
+<p>When prefixing keywords with a double colon <code>::</code>, the keyword will be prepended by the name of the current namespace.
+Note that namespacing keywords affects equality comparisons.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-nv">---</span>
+<span class="tok-ss">::foo</span>
+<span class="tok-c1">;; =&gt; :cljs.user/foo</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(= ::foo :foo)
+;; &#8658; false
+---</p>
+</div>
+<div class="paragraph">
+<p>Another alternative is to include the namespace in the keyword literal, this is useful when creating namespaced keywords
+for other namespaces:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-nv">---</span>
+<span class="tok-ss">:cljs.unraveled/foo</span>
+<span class="tok-c1">;; =&gt; :cljs.unraveled/foo</span>
+<span class="tok-nv">---</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>keyword</code> function has an arity-2 variant where we can specify the namespace as the first parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-nv">---</span>
+<span class="tok-p">(</span><span class="tok-nb">keyword </span><span class="tok-s">&quot;cljs.unraveled&quot;</span> <span class="tok-s">&quot;foo&quot;</span><span class="tok-p">)</span>
+<span class="tok-c1">;; =&gt; :cljs.unraveled/foo</span>
+<span class="tok-nv">---</span></code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -4612,7 +4669,7 @@ parameter, the source will be compiled to run in the browser environment.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nb">cd </span>myapp
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nb">cd</span> myapp
 java -cp ../cljs.jar:src clojure.main build.clj</code></pre>
 </div>
 </div>
@@ -4726,7 +4783,7 @@ more detail.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nb">cd </span>mywebapp<span class="tok-p">;</span>
+<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nb">cd</span> mywebapp<span class="tok-p">;</span>
 java -cp ../cljs.jar:src clojure.main build.clj</code></pre>
 </div>
 </div>
@@ -4744,15 +4801,15 @@ following content; it goes in the main <em>mywebapp</em> directory.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
-<span class="tok-nt">&lt;html&gt;</span>
-  <span class="tok-nt">&lt;header&gt;</span>
-    <span class="tok-nt">&lt;meta</span> <span class="tok-na">charset=</span><span class="tok-s">&quot;utf-8&quot;</span> <span class="tok-nt">/&gt;</span>
-    <span class="tok-nt">&lt;title&gt;</span>Hello World from ClojureScript<span class="tok-nt">&lt;/title&gt;</span>
-  <span class="tok-nt">&lt;/header&gt;</span>
-  <span class="tok-nt">&lt;body&gt;</span>
-    <span class="tok-nt">&lt;script </span><span class="tok-na">src=</span><span class="tok-s">&quot;main.js&quot;</span><span class="tok-nt">&gt;&lt;/script&gt;</span>
-  <span class="tok-nt">&lt;/body&gt;</span>
-<span class="tok-nt">&lt;/html&gt;</span></code></pre>
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;</span><span class="tok-nt">header</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">meta</span> <span class="tok-na">charset</span><span class="tok-o">=</span><span class="tok-s">&quot;utf-8&quot;</span> <span class="tok-p">/&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>Hello World from ClojureScript<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;/</span><span class="tok-nt">header</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">script</span> <span class="tok-na">src</span><span class="tok-o">=</span><span class="tok-s">&quot;main.js&quot;</span><span class="tok-p">&gt;&lt;/</span><span class="tok-nt">script</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4780,7 +4837,7 @@ are written to disk</p>
 <span class="tok-p">(</span><span class="tok-nf">b/watch</span> <span class="tok-s">&quot;src&quot;</span>
  <span class="tok-p">{</span><span class="tok-ss">:output-to</span> <span class="tok-s">&quot;main.js&quot;</span>
   <span class="tok-ss">:output-dir</span> <span class="tok-s">&quot;out/&quot;</span>
-  <span class="tok-ss">:source-map</span> <span class="tok-s">&quot;main.js.map&quot;</span>
+  <span class="tok-ss">:source-map</span> <span class="tok-nv">true</span>
   <span class="tok-ss">:main</span> <span class="tok-ss">&#39;mywebapp.core</span>
   <span class="tok-ss">:optimizations</span> <span class="tok-ss">:none</span><span class="tok-p">})</span></code></pre>
 </div>
@@ -4790,13 +4847,13 @@ are written to disk</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>java -cp ../cljs.jar:src clojure.main watch.clj
+<pre class="pygments highlight"><code data-lang="bash">$ java -cp ../cljs.jar:src clojure.main watch.clj
 Building ...
 Reading analysis cache <span class="tok-k">for</span> jar:file:/home/niwi/cljsbook/playground/cljs.jar!/cljs/core.cljs
 Compiling src/mywebapp/core.cljs
 Compiling out/cljs/core.cljs
 Using cached cljs.core out/cljs/core.cljs
-... <span class="tok-k">done</span>. Elapsed 0.754487937 seconds
+... <span class="tok-k">done</span>. Elapsed <span class="tok-m">0</span>.754487937 seconds
 Watching paths: /home/niwi/cljsbook/playground/mywebapp/src</code></pre>
 </div>
 </div>
@@ -4953,10 +5010,10 @@ previous examples for running the <em>ClojureScript</em> compiler.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>java -cp cljs.jar:src clojure.main repl.clj
-To quit, <span class="tok-nb">type</span>: :cljs/quit
-cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">1</span> 2<span class="tok-o">)</span>
-3</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">$ java -cp cljs.jar:src clojure.main repl.clj
+To quit, type: :cljs/quit
+cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">1</span> <span class="tok-m">2</span><span class="tok-o">)</span>
+<span class="tok-m">3</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4974,10 +5031,10 @@ command that we used to start the REPL:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>rlwrap java -cp cljs.jar:src clojure.main repl.clj
-To quit, <span class="tok-nb">type</span>: :cljs/quit
-cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">1</span> 2<span class="tok-o">)</span>
-3</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">$ rlwrap java -cp cljs.jar:src clojure.main repl.clj
+To quit, type: :cljs/quit
+cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">1</span> <span class="tok-m">2</span><span class="tok-o">)</span>
+<span class="tok-m">3</span></code></pre>
 </div>
 </div>
 </div>
@@ -5012,10 +5069,10 @@ in your system. Start writing this content to a new <code>repl.clj</code> file:<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>rlwrap java -cp cljs.jar:src clojure.main repl.clj
-To quit, <span class="tok-nb">type</span>: :cljs/quit
-cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">1</span> 2<span class="tok-o">)</span>
-3</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">$ rlwrap java -cp cljs.jar:src clojure.main repl.clj
+To quit, type: :cljs/quit
+cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">1</span> <span class="tok-m">2</span><span class="tok-o">)</span>
+<span class="tok-m">3</span></code></pre>
 </div>
 </div>
 </div>
@@ -5038,7 +5095,7 @@ browser for its execution environment and it has additional requirements.</p>
 <span class="tok-p">(</span><span class="tok-nf">b/build</span> <span class="tok-s">&quot;src&quot;</span>
  <span class="tok-p">{</span><span class="tok-ss">:output-to</span> <span class="tok-s">&quot;main.js&quot;</span>
   <span class="tok-ss">:output-dir</span> <span class="tok-s">&quot;out/&quot;</span>
-  <span class="tok-ss">:source-map</span> <span class="tok-s">&quot;main.js.map&quot;</span>
+  <span class="tok-ss">:source-map</span> <span class="tok-nv">true</span>
   <span class="tok-ss">:main</span> <span class="tok-ss">&#39;myapp.core</span>
   <span class="tok-ss">:verbose</span> <span class="tok-nv">true</span>
   <span class="tok-ss">:optimizations</span> <span class="tok-ss">:none</span><span class="tok-p">})</span>
@@ -5084,15 +5141,15 @@ entry point for running the browser side code of the REPL:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
-<span class="tok-nt">&lt;html&gt;</span>
-  <span class="tok-nt">&lt;header&gt;</span>
-    <span class="tok-nt">&lt;meta</span> <span class="tok-na">charset=</span><span class="tok-s">&quot;utf-8&quot;</span> <span class="tok-nt">/&gt;</span>
-    <span class="tok-nt">&lt;title&gt;</span>Hello World from ClojureScript<span class="tok-nt">&lt;/title&gt;</span>
-  <span class="tok-nt">&lt;/header&gt;</span>
-  <span class="tok-nt">&lt;body&gt;</span>
-    <span class="tok-nt">&lt;script </span><span class="tok-na">src=</span><span class="tok-s">&quot;main.js&quot;</span><span class="tok-nt">&gt;&lt;/script&gt;</span>
-  <span class="tok-nt">&lt;/body&gt;</span>
-<span class="tok-nt">&lt;/html&gt;</span></code></pre>
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;</span><span class="tok-nt">header</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">meta</span> <span class="tok-na">charset</span><span class="tok-o">=</span><span class="tok-s">&quot;utf-8&quot;</span> <span class="tok-p">/&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>Hello World from ClojureScript<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;/</span><span class="tok-nt">header</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">script</span> <span class="tok-na">src</span><span class="tok-o">=</span><span class="tok-s">&quot;main.js&quot;</span><span class="tok-p">&gt;&lt;/</span><span class="tok-nt">script</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5102,7 +5159,7 @@ it in previous examples:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>rlwrap java -cp cljs.jar:src clojure.main brepl.clj
+<pre class="pygments highlight"><code data-lang="bash">$ rlwrap java -cp cljs.jar:src clojure.main brepl.clj
 Compiling client js ...
 Waiting <span class="tok-k">for</span> browser to connect ...</code></pre>
 </div>
@@ -5115,9 +5172,9 @@ run the REPL and you will see that it is up and running:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="bash"><span class="tok-o">[</span>...<span class="tok-o">]</span>
-To quit, <span class="tok-nb">type</span>: :cljs/quit
-cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">14</span> 28<span class="tok-o">)</span>
-42</code></pre>
+To quit, type: :cljs/quit
+cljs.user<span class="tok-o">=</span>&gt; <span class="tok-o">(</span>+ <span class="tok-m">14</span> <span class="tok-m">28</span><span class="tok-o">)</span>
+<span class="tok-m">42</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5199,7 +5256,7 @@ for the purposes of this book we will limit ourselves to Leiningen.</p>
 <span class="tok-nb">cd</span> ~/bin
 wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 chmod a+x ./lein
-<span class="tok-nb">export </span><span class="tok-nv">PATH</span><span class="tok-o">=</span><span class="tok-nv">$PATH</span>:~/bin</code></pre>
+<span class="tok-nb">export</span> <span class="tok-nv">PATH</span><span class="tok-o">=</span><span class="tok-nv">$PATH</span>:~/bin</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5213,8 +5270,8 @@ something like the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein version
-Leiningen 2.5.1 on Java 1.8.0_45 OpenJDK 64-Bit Server VM</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">$ lein version
+Leiningen <span class="tok-m">2</span>.5.1 on Java <span class="tok-m">1</span>.8.0_45 OpenJDK <span class="tok-m">64</span>-Bit Server VM</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -5260,8 +5317,8 @@ the leiningen docs to learn more about templates.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein new mies leapyears
-<span class="tok-nv">$ </span><span class="tok-nb">cd </span>leapyears <span class="tok-c"># move into newly created project directory</span></code></pre>
+<pre class="pygments highlight"><code data-lang="bash">$ lein new mies leapyears
+$ <span class="tok-nb">cd</span> leapyears <span class="tok-c1"># move into newly created project directory</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5294,15 +5351,15 @@ is exactly as it should be.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="html"><span class="tok-nt">&lt;section</span> <span class="tok-na">class=</span><span class="tok-s">&quot;viewport&quot;</span><span class="tok-nt">&gt;</span>
-  <span class="tok-nt">&lt;div</span> <span class="tok-na">id=</span><span class="tok-s">&quot;result&quot;</span><span class="tok-nt">&gt;</span>
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-p">&lt;</span><span class="tok-nt">section</span> <span class="tok-na">class</span><span class="tok-o">=</span><span class="tok-s">&quot;viewport&quot;</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;result&quot;</span><span class="tok-p">&gt;</span>
     ----
-  <span class="tok-nt">&lt;/div&gt;</span>
-  <span class="tok-nt">&lt;form</span> <span class="tok-na">action=</span><span class="tok-s">&quot;&quot;</span> <span class="tok-na">method=</span><span class="tok-s">&quot;&quot;</span><span class="tok-nt">&gt;</span>
-    <span class="tok-nt">&lt;label</span> <span class="tok-na">for=</span><span class="tok-s">&quot;year&quot;</span><span class="tok-nt">&gt;</span>Enter a year<span class="tok-nt">&lt;/label&gt;</span>
-    <span class="tok-nt">&lt;input</span> <span class="tok-na">id=</span><span class="tok-s">&quot;year&quot;</span> <span class="tok-na">name=</span><span class="tok-s">&quot;year&quot;</span> <span class="tok-nt">/&gt;</span>
-  <span class="tok-nt">&lt;/form&gt;</span>
-<span class="tok-nt">&lt;/section&gt;</span></code></pre>
+  <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;</span><span class="tok-nt">form</span> <span class="tok-na">action</span><span class="tok-o">=</span><span class="tok-s">&quot;&quot;</span> <span class="tok-na">method</span><span class="tok-o">=</span><span class="tok-s">&quot;&quot;</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">label</span> <span class="tok-na">for</span><span class="tok-o">=</span><span class="tok-s">&quot;year&quot;</span><span class="tok-p">&gt;</span>Enter a year<span class="tok-p">&lt;/</span><span class="tok-nt">label</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">input</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;year&quot;</span> <span class="tok-na">name</span><span class="tok-o">=</span><span class="tok-s">&quot;year&quot;</span> <span class="tok-p">/&gt;</span>
+  <span class="tok-p">&lt;/</span><span class="tok-nt">form</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">section</span><span class="tok-p">&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5343,7 +5400,7 @@ code into the <code>src/leapyears/core.cljs</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>./scripts/watch</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">$ ./scripts/watch</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5673,8 +5730,8 @@ with tests:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein new mies mytestingapp
-<span class="tok-nv">$ </span><span class="tok-nb">cd </span>mytestingapp</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">$ lein new mies mytestingapp
+$ <span class="tok-nb">cd</span> mytestingapp</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5686,8 +5743,8 @@ management</strong> subchapter, so we won’t explain it again.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>mkdir -p <span class="tok-nb">test</span>/mytestingapp
-<span class="tok-nv">$ </span>touch <span class="tok-nb">test</span>/mytestingapp/core_tests.cljs</code></pre>
+<pre class="pygments highlight"><code data-lang="bash">$ mkdir -p test/mytestingapp
+$ touch test/mytestingapp/core_tests.cljs</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5745,12 +5802,12 @@ this example, we try to assert that <code>(= 1 2)</code> is true.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>./scripts/watch
+<pre class="pygments highlight"><code data-lang="bash">$ ./scripts/watch
 Building ...
 Copying jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.9.36/clojurescript-1.9.36.jar!/cljs/core.cljs to out/cljs/core.cljs
 Reading analysis cache <span class="tok-k">for</span> jar:file:/home/niwi/.m2/repository/org/clojure/clojurescript/1.9.36/clojurescript-1.9.36.jar!/cljs/core.cljs
 Compiling out/cljs/core.cljs
-... <span class="tok-k">done</span>. Elapsed 3.862126827 seconds
+... <span class="tok-k">done</span>. Elapsed <span class="tok-m">3</span>.862126827 seconds
 Watching paths: /home/niwi/cljsbook/playground/mytestingapp/test, /home/niwi/cljsbook/playground/mytestingapp/src</code></pre>
 </div>
 </div>
@@ -5759,13 +5816,13 @@ Watching paths: /home/niwi/cljsbook/playground/mytestingapp/test, /home/niwi/clj
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>node out/mytestingapp.js
+<pre class="pygments highlight"><code data-lang="bash">$ node out/mytestingapp.js
 
 Testing mytestingapp.core-tests
 
 FAIL in <span class="tok-o">(</span>my-first-test<span class="tok-o">)</span> <span class="tok-o">(</span>cljs/test.js:374:14<span class="tok-o">)</span>
-expected: <span class="tok-o">(=</span> <span class="tok-m">1</span> 2<span class="tok-o">)</span>
-  actual: <span class="tok-o">(</span>not <span class="tok-o">(=</span> <span class="tok-m">1</span> 2<span class="tok-o">))</span>
+expected: <span class="tok-o">(=</span> <span class="tok-m">1</span> <span class="tok-m">2</span><span class="tok-o">)</span>
+  actual: <span class="tok-o">(</span>not <span class="tok-o">(=</span> <span class="tok-m">1</span> <span class="tok-m">2</span><span class="tok-o">))</span>
 
 Ran <span class="tok-m">1</span> tests containing <span class="tok-m">1</span> assertions.
 <span class="tok-m">1</span> failures, <span class="tok-m">0</span> errors.</code></pre>
@@ -5777,7 +5834,7 @@ console. To fix the test, just change the <code>=</code> with <code>not=</code> 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>node out/mytestingapp.js
+<pre class="pygments highlight"><code data-lang="bash">$ node out/mytestingapp.js
 
 Testing mytestingapp.core-tests
 
@@ -5917,8 +5974,8 @@ environment-specific exit code depending on the final test status: <code>0</code
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>node out/mytestingapp.js
-<span class="tok-nv">$ </span><span class="tok-nb">echo</span> <span class="tok-nv">$?</span></code></pre>
+<pre class="pygments highlight"><code data-lang="bash">$ node out/mytestingapp.js
+$ <span class="tok-nb">echo</span> <span class="tok-nv">$?</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -10292,11 +10349,11 @@ will name the project <code>age</code>, and create it by typing:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein new figwheel age
+<pre class="pygments highlight"><code data-lang="bash">$ lein new figwheel age
 Retrieving figwheel/lein-template/0.3.5/lein-template-0.3.5.pom from clojars
 Retrieving figwheel/lein-template/0.3.5/lein-template-0.3.5.jar from clojars
 Generating fresh <span class="tok-s1">&#39;lein new&#39;</span> figwheel project.
-<span class="tok-nv">$ </span><span class="tok-nb">cd </span>age <span class="tok-c"># move into newly created project directory</span></code></pre>
+$ <span class="tok-nb">cd</span> age <span class="tok-c1"># move into newly created project directory</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -10330,24 +10387,24 @@ is exactly as it should be.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
-<span class="tok-nt">&lt;html&gt;</span>
-  <span class="tok-nt">&lt;head&gt;</span>
-    <span class="tok-nt">&lt;link</span> <span class="tok-na">href=</span><span class="tok-s">&quot;css/style.css&quot;</span> <span class="tok-na">rel=</span><span class="tok-s">&quot;stylesheet&quot;</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text/css&quot;</span><span class="tok-nt">&gt;</span>
-    <span class="tok-nt">&lt;meta</span> <span class="tok-na">http-equiv=</span><span class="tok-s">&quot;Content-Type&quot;</span> <span class="tok-na">content=</span><span class="tok-s">&quot;text/html;charset=utf-8&quot;</span> <span class="tok-nt">/&gt;</span>
-  <span class="tok-nt">&lt;/head&gt;</span>
-  <span class="tok-nt">&lt;body&gt;</span>
-    <span class="tok-nt">&lt;div</span> <span class="tok-na">id=</span><span class="tok-s">&quot;app&quot;</span><span class="tok-nt">&gt;</span>
-      <span class="tok-nt">&lt;h1&gt;</span>Age in Days<span class="tok-nt">&lt;/h1&gt;</span>
-      <span class="tok-nt">&lt;p&gt;</span>
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">link</span> <span class="tok-na">href</span><span class="tok-o">=</span><span class="tok-s">&quot;css/style.css&quot;</span> <span class="tok-na">rel</span><span class="tok-o">=</span><span class="tok-s">&quot;stylesheet&quot;</span> <span class="tok-na">type</span><span class="tok-o">=</span><span class="tok-s">&quot;text/css&quot;</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">meta</span> <span class="tok-na">http-equiv</span><span class="tok-o">=</span><span class="tok-s">&quot;Content-Type&quot;</span> <span class="tok-na">content</span><span class="tok-o">=</span><span class="tok-s">&quot;text/html;charset=utf-8&quot;</span> <span class="tok-p">/&gt;</span>
+  <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;app&quot;</span><span class="tok-p">&gt;</span>
+      <span class="tok-p">&lt;</span><span class="tok-nt">h1</span><span class="tok-p">&gt;</span>Age in Days<span class="tok-p">&lt;/</span><span class="tok-nt">h1</span><span class="tok-p">&gt;</span>
+      <span class="tok-p">&lt;</span><span class="tok-nt">p</span><span class="tok-p">&gt;</span>
         Enter your age in years:
-        <span class="tok-nt">&lt;input</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text&quot;</span> <span class="tok-na">size=</span><span class="tok-s">&quot;5&quot;</span> <span class="tok-na">id=</span><span class="tok-s">&quot;years&quot;</span><span class="tok-nt">&gt;</span>
-        <span class="tok-nt">&lt;button</span> <span class="tok-na">id=</span><span class="tok-s">&quot;calculate&quot;</span><span class="tok-nt">&gt;</span>Calculate<span class="tok-nt">&lt;/button&gt;</span>
-      <span class="tok-nt">&lt;/p&gt;</span>
-      <span class="tok-nt">&lt;p</span> <span class="tok-na">id=</span><span class="tok-s">&quot;feedback&quot;</span><span class="tok-nt">&gt;&lt;/p&gt;</span>
-    <span class="tok-nt">&lt;/div&gt;</span>
-    <span class="tok-nt">&lt;script </span><span class="tok-na">src=</span><span class="tok-s">&quot;js/compiled/age.js&quot;</span> <span class="tok-na">type=</span><span class="tok-s">&quot;text/javascript&quot;</span><span class="tok-nt">&gt;&lt;/script&gt;</span>
-  <span class="tok-nt">&lt;/body&gt;</span>
-<span class="tok-nt">&lt;/html&gt;</span></code></pre>
+        <span class="tok-p">&lt;</span><span class="tok-nt">input</span> <span class="tok-na">type</span><span class="tok-o">=</span><span class="tok-s">&quot;text&quot;</span> <span class="tok-na">size</span><span class="tok-o">=</span><span class="tok-s">&quot;5&quot;</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;years&quot;</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">button</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;calculate&quot;</span><span class="tok-p">&gt;</span>Calculate<span class="tok-p">&lt;/</span><span class="tok-nt">button</span><span class="tok-p">&gt;</span>
+      <span class="tok-p">&lt;/</span><span class="tok-nt">p</span><span class="tok-p">&gt;</span>
+      <span class="tok-p">&lt;</span><span class="tok-nt">p</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;feedback&quot;</span><span class="tok-p">&gt;&lt;/</span><span class="tok-nt">p</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">script</span> <span class="tok-na">src</span><span class="tok-o">=</span><span class="tok-s">&quot;js/compiled/age.js&quot;</span> <span class="tok-na">type</span><span class="tok-o">=</span><span class="tok-s">&quot;text/javascript&quot;</span><span class="tok-p">&gt;&lt;/</span><span class="tok-nt">script</span><span class="tok-p">&gt;</span>
+  <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -10357,11 +10414,11 @@ dependencies and start a server.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>lein figwheel
+<pre class="pygments highlight"><code data-lang="bash">$ lein figwheel
 Retrieving lein-figwheel/lein-figwheel/0.5.2/lein-figwheel-0.5.2.pom from clojars
 Retrieving figwheel-sidecar/figwheel-sidecar/0.5.2/figwheel-sidecar-0.5.2.pom from clojars
 Retrieving org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.pom from central
-... <span class="tok-c"># much more output</span>
+... <span class="tok-c1"># much more output</span>
 Prompt will show when Figwheel connects to your application</code></pre>
 </div>
 </div>
@@ -10380,8 +10437,8 @@ like the following screenshot if you open up the web console.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="bash"><span class="tok-nv">$ </span>rlwrap lein figwheel
-To quit, <span class="tok-nb">type</span>: :cljs/quit
+<pre class="pygments highlight"><code data-lang="bash">$ rlwrap lein figwheel
+To quit, type: :cljs/quit
 cljs.user<span class="tok-o">=</span>&gt;</code></pre>
 </div>
 </div>
@@ -10667,7 +10724,7 @@ writing entire sections of the book, as well as making very valuable suggestions
 <div id="footer">
 <div id="footer-text">
 Version 6<br/>
-Last updated 2016-10-07 09:11:16 CEST
+Last updated 2017-03-02 13:15:01 CET
 </div>
 </div>
 </body>
