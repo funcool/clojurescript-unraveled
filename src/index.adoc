@@ -48,6 +48,10 @@ more accessible.  Our goal is to make ClojureScript more friendly to newcomers a
 spread the ideas about programming that Clojure has helped popularize, as we see a
 lot of value in them.
 
+This is a list of translations of the book:
+
+- Ukrainian: https://lambdabooks.github.io/clojurescript-unraveled/
+
 
 == Introduction
 
