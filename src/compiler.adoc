@@ -843,7 +843,7 @@ want to include. Let see some ways.
 
 ==== Closure Module compatible library
 
-If you have a library that is just writtent to be compatible with google closure
+If you have a library that is just written to be compatible with google closure
 module system and you want to include it on your project you should just put
 it in the source (classpath) and access it like any other clojure namespace.
 
