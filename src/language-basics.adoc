@@ -701,7 +701,8 @@ without need of additional wrapping them in a function:
 ;; => (1 2 3)
 ----
 
-This is because set returns the a value if it exists or nil in case contrary:
+This works because a set returns either the value itself for all contained elements
+or `nil`:
 
 [source, clojure]
 ----
