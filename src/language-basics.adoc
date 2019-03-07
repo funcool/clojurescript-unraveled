@@ -2337,8 +2337,8 @@ like this:
 ----
 (defn parse-int
   [v]
-  #?(:clj  (Integer/parseInt s)
-     :cljs (js/parseInt s)))
+  #?(:clj  (Integer/parseInt v)
+     :cljs (js/parseInt v)))
 ----
 
 As you can observe, `#?` reading macro looks very similar to cond, the difference is
