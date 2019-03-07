@@ -3429,7 +3429,7 @@ similar one with JavaScript objects:
 ----
 (def clj-map {:country {:code "FR" :name "France"}})
 ;; => {:country {:code "FR", :name "France"}}
-(:code (:country clj-map)
+(:code (:country clj-map))
 ;; => "FR"
 
 (def js-obj #js {:country {:code "FR" :name "France"}})
