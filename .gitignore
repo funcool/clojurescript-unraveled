@@ -3,3 +3,5 @@
 /playground/cljs.jar
 /playground/nashorn_code_cache
 /playground/main.js*
+xsl-styleshets/*
+.DS_Store

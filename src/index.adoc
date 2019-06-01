@@ -15,15 +15,13 @@ v6, 2016-07-25
 //^:listing-caption: Listing
 
 
-== About this book
+== 本書籍について
 
-This book covers the ClojureScript programming language, serves as a detailed guide
-of its tooling for development, and presents a series of articles about topics that
-are applicable to day-to-day programming in ClojureScript.
+本書はプログラミング言語のClojureScriptを扱います。開発ツールの詳しい案内として利用することができます。また、日常的なClojureScriptでの開発において役立つ情報を紹介します。
 
-It is not an introductory book to programming in that it assumes the reader has
-experience programming in at least one language. However, it doesn't assume
-experience with _Clojure_ or functional programming. We'll try to include links to
+本書はプログラミングの入門書ではありません。少なくとも1つ以上プログラミング言語の経験がある読者を想定しています。ただし、Clojureや関数型言語の経験は想定していません。
+
+We'll try to include links to
 reference material when talking about the theoretical underpinnings of ClojureScript
 that may not be familiar to everyone.
 
