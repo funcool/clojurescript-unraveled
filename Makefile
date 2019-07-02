@@ -18,7 +18,7 @@ git:
 	git submodule update
 
 docbook: setup
-	asciidoctor -b docbook45 -a numbered -d book -a data-uri!  src/index.adoc -o dist/clojurescript-unraveled.xml
+	asciidoctor -b docbook -a numbered -d book -a data-uri!  src/index.adoc -o dist/clojurescript-unraveled.xml
 
 pdf: docbook
 	./asciidoctor-fopub/fopub -t docbook-xsl dist/clojurescript-unraveled.xml
