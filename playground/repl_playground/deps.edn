@@ -1,0 +1,5 @@
+{:deps {org.clojure/clojurescript {:mvn/version "1.10.520"}
+        org.clojure/clojure {:mvn/version "1.10.1"}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+        com.bhauman/rebel-readline {:mvn/version "0.1.4"}}
+ :paths ["src"]}

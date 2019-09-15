@@ -106,11 +106,11 @@ keys.
 :?
 ----
 
-As you can see, the keywords are all prefixed with `:`, but this character is only
-part of the literal syntax and is not part of the name of the object.
+As you can see, the keywords are all prefixed with `:`, but this character is
+only part of the literal syntax and is not part of the name of the object.
 
-You can also create a keyword by calling the `keyword` function. Don't worry if you
-don't understand or are unclear about anything in the following example;
+You can also create a keyword by calling the `keyword` function. Don't worry if
+you don't understand or are unclear about anything in the following example;
 <<function-section,functions>> are discussed in a later section.
 
 [source, clojure]
@@ -121,34 +121,36 @@ don't understand or are unclear about anything in the following example;
 
 ===== Namespaced keywords
 
-When prefixing keywords with a double colon `::`, the keyword will be prepended by the name of the current namespace.
-Note that namespacing keywords affects equality comparisons.
+When prefixing keywords with a double colon `::`, the keyword will be prepended
+by the name of the current namespace.  Note that namespacing keywords affects
+equality comparisons.
 
 [source, clojure]
----
+----
 ::foo
 ;; => :cljs.user/foo
 
 (= ::foo :foo)
 ;; => false
----
+----
 
-Another alternative is to include the namespace in the keyword literal, this is useful when creating namespaced keywords
-for other namespaces:
+Another alternative is to include the namespace in the keyword
+literal, this is useful when creating namespaced keywords for other
+namespaces:
 
 [source, clojure]
----
+----
 :cljs.unraveled/foo
 ;; => :cljs.unraveled/foo
----
+----
 
 The `keyword` function has an arity-2 variant where we can specify the namespace as the first parameter:
 
 [source, clojure]
----
+----
 (keyword "cljs.unraveled" "foo")
 ;; => :cljs.unraveled/foo
----
+----
 
 
 ==== Symbols
@@ -2146,6 +2148,16 @@ The string and symbol shorthand syntax works exactly like `:keys`, but using the
 ;; => ["Cirilla" "Fiona"]
 ----
 
+If the map you want to destructure has namespaced keywords as keys, you also can
+do it using the keyword syntax inside `:keys` vector:
+
+[source, clojure]
+----
+(let [{:keys [::name ::surname]} {::name "Cirilla" ::surname "Fiona"}]
+  [name surname])
+;; => ["Cirilla" "Fiona"]
+----
+
 An interesting property of destructuring is that we can nest destructuring forms
 arbitrarily, which makes code that accesses nested data on a collection very easy to
 understand, as it mimics the collection's structure:
@@ -2160,28 +2172,29 @@ understand, as it mimics the collection's structure:
 
 === Threading Macros
 
-Threading macros, also known as arrow functions, enables one to write more readable code
-when multiple nested function calls are performed.
+Threading macros, also known as arrow functions, enables one to write
+more readable code when multiple nested function calls are performed.
 
-Imagine you have `(f (g (h x)))` where a function `f` receives as its first parameter the
-result of executing function `g`, repeated multiple times. With the most basic `->` threading
-macro you can convert that into `(\-> x (h) (g) (f))` which is easier to read.
+Imagine you have `(f (g (h x)))` where a function `f` receives as its first
+parameter the result of executing function `g`, repeated multiple times. With
+the most basic `->` threading macro you can convert that into `(\-> x (h) (g)
+(f))` which is easier to read.
 
 The result is syntactic sugar, because the arrow functions are defined as macros
 and it does not imply any runtime performance. The `(\-> x (h) (g) (f))` is
 automatically converted to (f (g (h x))) at compile time.
 
-Take note that the parenthesis on `h`, `g` and `f` are optional, and can be ommited:
-`(f (g (h x)))` is the same as `(\-> x h g f)`.
+Take note that the parenthesis on `h`, `g` and `f` are optional, and can be
+ommited: `(f (g (h x)))` is the same as `(\-> x h g f)`.
 
 
-==== The thread-first macro (`\->`)
+==== `\->` (thread-first macro)
 
 This is called *thread first* because it threads the first argument throught the
 different expressions as first arguments.
 
-Using a more concrete example, this is how the code looks without using threading
-macros:
+Using a more concrete example, this is how the code looks without using
+threading macros:
 
 [source, clojure]
 ----
@@ -2202,12 +2215,13 @@ We can rewrite that code to use the `\->` threading macro:
 ;; => {:name "Lady of the lake" :age 1999 :readers 1}
 ----
 
-This threading macro is especially useful for transforming data structures, because
-_ClojureScript_ (and _Clojure_) functions for data structures transformations
-consistently uses the first argument for receive the data structure.
+This threading macro is especially useful for transforming data structures,
+because _ClojureScript_ (and _Clojure_) functions for data structures
+transformations consistently uses the first argument for receive the data
+structure.
 
 
-==== The thread-last macro (`\->>`)
+==== `\->>` (thread-last macro)
 
 The main difference between the thread-last and thread-first macros is that instead
 of threading the first argument given as the first argument on the following expresions,
@@ -2239,16 +2253,16 @@ of data because _ClojureScript_ functions that work with sequences and collectio
 consistently use the last argument position to receive them.
 
 
-==== The thread-as macro (`as\->`)
+==== `as\->` (thread-as macro)
 
 Finally, there are cases where neither `\->` nor `\->>` are applicable. In these
-cases, you’ll need to use `as\->`, the more flexible alternative, that allows you to
-thread into any argument position, not just the first or last.
+cases, you’ll need to use `as\->`, the more flexible alternative, that allows
+you to thread into any argument position, not just the first or last.
 
 It expects two fixed arguments and an arbitrary number of expressions. As with
-`\->`, the first argument is a value to be threaded through the following forms. The
-second argument is the name of a binding. In each of the subsequent forms, the bound
-name can be used for the prior expression's result.
+`\->`, the first argument is a value to be threaded through the following
+forms. The second argument is the name of a binding. In each of the subsequent
+forms, the bound name can be used for the prior expression's result.
 
 Let's see an example:
 
@@ -2263,7 +2277,7 @@ Let's see an example:
 ----
 
 
-==== The thread-some macros (`some\->` and `some\->>`)
+==== `some\->`, `some\->>` (thread-some macros)
 
 Two of the more specialized threading macros that _ClojureScript_ comes with. They work
 in the same way as their analagous `\->` and `\->>` macros with the additional
@@ -2286,7 +2300,7 @@ Let's see another example:
 This is an easy way avoid null pointer exceptions.
 
 
-==== The thread-cond macros (`cond\->` and `cond\->>`)
+==== `cond\->`, `cond\->>` (thread-cond macros)
 
 The `cond\->` and `cond\->>` macros are analgous to `\->` and `\->>` that offers
 the ability to conditionally skip some steps from the pipeline. Let see an example:
@@ -2311,6 +2325,7 @@ the ability to conditionally skip some steps from the pipeline. Let see an examp
 The value threading only happens when the corresponding condition evaluates to
 logical true.
 
+
 ==== Additional Readings
 
 - http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
@@ -2326,6 +2341,7 @@ is mostly platform independent but need some platform dependent code.
 To use reader conditionals, all you need is to rename your source file with
 `.cljs` extension to one with `.cljc`, because reader conditionals only work if
 they are placed in files with `.cljc` extension.
+
 
 ==== Standard (`#?`)
 
@@ -2476,6 +2492,33 @@ long. To solve that, you can use the `:as` directive to create an additional
 (str/upper-case core/x)
 ;; => "HELLO"
 ----
+
+One peculiarity of the namespace aliases, is that they can be used to obtain
+namespaced keywords from a specific namespace:
+
+[source, clojure]
+----
+(ns myapp.main
+  (:require [myapp.core :as c]))
+
+::c/foo
+;; => :myapp.core/foo
+----
+
+In the same way, you can namespace all the keys on the moment of creation of a
+map:
+
+[source, clojure]
+----
+(def x #::c {:a 1})
+
+x
+;; => #:myapp.core{:a 1}
+
+(::c/a x)
+;; => 1
+----
+
 
 Additionally, _ClojureScript_ offers a simple way to refer to specific vars or
 functions from a concrete namespace using the `:refer` directive, followed by a

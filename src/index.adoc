@@ -1,8 +1,8 @@
-= ClojureScript Unraveled
+= ClojureScript Unraveled (2nd edition)
 Andrey Antukh <niwi@niwi.nz>; Alejandro Gómez <alejandro@dialelo.com>
-v6, 2016-07-25
+v6, 2019-07-16
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :doctype: book
 :numbered:
 :source-highlighter: pygments
@@ -60,7 +60,7 @@ Why are we doing this? Because Clojure _rocks_, and JavaScript _reaches_.
 
 _ClojureScript_ is an implementation of the Clojure programming language that
 targets JavaScript. Because of this, it can run in many different execution
-environments including web browsers, Node.js, io.js and Nashorn.
+environments including web browsers, Node.js, Nashorn (and many other).
 
 Unlike other languages that intend to _compile_ to JavaScript (like TypeScript,
 FunScript, or CoffeeScript), ClojureScript is designed to use JavaScript like
@@ -68,14 +68,14 @@ bytecode.  It embraces functional programming and has very safe and consistent
 defaults. Its semantics differ significantly from those of JavaScript.
 
 Another big difference (and in our opinion an advantage) over other languages is
-that Clojure is designed to be a guest. It is a language without its own virtual
-machine that can be easily adapted to the nuances of its execution environment. This
-has the benefit that Clojure (and hence ClojureScript) has access to all the
-existing libraries written for the host language.
+that Clojure(Script) is designed to be a guest. It is a language without its own
+virtual machine that can be easily adapted to the nuances of its execution
+environment. This has the benefit that Clojure (and hence ClojureScript) has
+access to all the existing libraries written for the host language.
 
-Before we jump in, let us summarize some of the core ideas that ClojureScript brings
-to the table. Don't worry if you don't understand all of them right now, they'll
-become clear throughout the book.
+Before we jump in, let us summarize some of the core ideas that ClojureScript
+brings to the table. Don't worry if you don't understand all of them right now,
+they'll become clear throughout the book.
 
 - ClojureScript enforces the functional programming paradigm with its design
   decisions and idioms. Although being strongly opinionated about functional
@@ -91,14 +91,14 @@ become clear throughout the book.
   (programs that write programs) as simple as it can be.
 
 These ideas together have a great influence in the way you design and implement
-software, even if you are not using ClojureScript. Functional programming, decoupling
-of data (which is immutable) from the operations to transform it, explicit idioms for
-managing change over time and polymorphic constructs for programming to abstractions
-greatly simplify the systems we write.
+software, even if you are not using ClojureScript. Functional programming,
+decoupling of data (which is immutable) from the operations to transform it,
+explicit idioms for managing change over time and polymorphic constructs for
+programming to abstractions greatly simplify the systems we write.
 
 [quote, Rich Hickey]
-We can make the same exact software we are making today with dramatically simpler
-stuff — dramatically simpler languages, tools, techniques, approaches.
+We can make the same exact software we are making today with dramatically
+simpler stuff — dramatically simpler languages, tools, techniques, approaches.
 
 We hope you enjoy the book and ClojureScript brings the same joy and inspiration that
 has brought to us.
@@ -119,20 +119,9 @@ include::language-basics.adoc[]
 
 == Tooling & Compiler
 
-This chapter will cover a little introduction to existing tooling for making things
-easy when developing using ClojureScript. It will cover:
-
-* Using the REPL
-* Leiningen and cljsbuild
-* Google Closure Library
-* Modules
-* Unit testing
-* Library development
-* Browser based development
-* Server based development
-
-Unlike the previous chapter, this chapter intends to tell different stories each
-independent of the other.
+This chapter will cover a little introduction to existing tooling for making
+things easy when developing using ClojureScript. Unlike the previous chapter,
+this chapter intends to tell different stories each independent of the other.
 
 include::compiler.adoc[]
 
@@ -145,11 +134,6 @@ transducers, core protocols, transients, metadata. In summary: topics that are n
 mandatory for understand the language.
 
 include::language-advanced.adoc[]
-
-
-== Appendix
-
-include::appendix.adoc[]
 
 
 == Acknowledgments

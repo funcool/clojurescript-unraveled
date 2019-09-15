@@ -181,12 +181,12 @@ result they are building. Let's give it a shot:
 ----
 
 That's a lot of higher-order functions so let's break it down for a better
-understanding of what's going on. We'll examine how `my-mapt` works step by step. The
-mechanics are similar for `my-filtert`, so we'll leave it out for now.
+understanding of what's going on. We'll examine how `my-mapt` works step by
+step. The mechanics are similar for `my-filtert`, so we'll leave it out for now.
 
-First of all, `my-mapt` takes a mapping function; in the example we are giving it
-`inc` and getting another function back. Let's replace `f` with `inc` to see what we
-are building:
+First of all, `my-mapt` takes a mapping function; in the example we are giving
+it `inc` and getting another function back. Let's replace `f` with `inc` to see
+what we are building:
 
 [source, clojure]
 ----
@@ -197,8 +197,8 @@ are building:
 ;;               ^^^
 ----
 
-The resulting function is still parameterised to receive a reducing function to which
-it will delegate, let's see what happens when we call it with `conj`:
+The resulting function is still parameterised to receive a reducing function to
+which it will delegate, let's see what happens when we call it with `conj`:
 
 [source, clojure]
 ----
@@ -209,9 +209,9 @@ it will delegate, let's see what happens when we call it with `conj`:
 ----
 
 We get back a reducing function which uses `inc` to transform the inputs and the
-`conj` reducing function to accumulate the results. In essence, we have defined map
-as the transformation of a reducing function.  The functions that transform one
-reducing function into another are called transducers in ClojureScript.
+`conj` reducing function to accumulate the results. In essence, we have defined
+map as the transformation of a reducing function.  The functions that transform
+one reducing function into another are called transducers in ClojureScript.
 
 To ilustrate the generality of transducers, let's use different sources and
 destinations in our call to `reduce`:
@@ -225,15 +225,16 @@ destinations in our call to `reduce`:
 ;; => "1"
 ----
 
-The transducer versions of `map` and `filter` transform a process that carries inputs
-from a source to a destination but don't know anything about where the inputs come
-from and where they end up. In their implementation they contain the _essence_ of
-what they accomplish, independent of context.
+The transducer versions of `map` and `filter` transform a process that carries
+inputs from a source to a destination but don't know anything about where the
+inputs come from and where they end up. In their implementation they contain the
+_essence_ of what they accomplish, independent of context.
 
-Now that we know more about transducers we can try to implement our own version of
-`mapcat`. We already have a fundamental piece of it: the `map` transducer. What
-`mapcat` does is map a function over an input and flatten the resulting structure one
-level. Let's try to implement the catenation part as a transducer:
+Now that we know more about transducers we can try to implement our own version
+of `mapcat`. We already have a fundamental piece of it: the `map`
+transducer. What `mapcat` does is map a function over an input and flatten the
+resulting structure one level. Let's try to implement the catenation part as a
+transducer:
 
 [source, clojure]
 ----
@@ -246,11 +247,12 @@ level. Let's try to implement the catenation part as a transducer:
 ;; => [0 1 2 3 4 5]
 ----
 
-The `my-cat` transducer returns a reducing function that catenates its inputs into
-the accumulator. It does so reducing the `input` reducible with the `rfn` reducing
-function and using the accumulator (`acc`) as the initial value for such
-reduction. `mapcat` is simply the composition of `map` and `cat`. The order in which
-transducers are composed may seem backwards but it'll become clear in a moment.
+The `my-cat` transducer returns a reducing function that catenates its inputs
+into the accumulator. It does so reducing the `input` reducible with the `rfn`
+reducing function and using the accumulator (`acc`) as the initial value for
+such reduction. `mapcat` is simply the composition of `map` and `cat`. The order
+in which transducers are composed may seem backwards but it'll become clear in a
+moment.
 
 [source, clojure]
 ----
@@ -268,11 +270,12 @@ transducers are composed may seem backwards but it'll become clear in a moment.
 ;; => [0 0 1 1 2 2]
 ----
 
+
 ==== Transducers in ClojureScript core
 
-Some of the ClojureScript core functions like `map`, `filter` and `mapcat` support an
-arity 1 version that returns a transducer. Let's revisit our definition of
-`process-cluster` and define it in terms of transducers:
+Some of the ClojureScript core functions like `map`, `filter` and `mapcat`
+support an arity 1 version that returns a transducer. Let's revisit our
+definition of `process-cluster` and define it in terms of transducers:
 
 [source, clojure]
 ----
@@ -283,21 +286,22 @@ arity 1 version that returns a transducer. Let's revisit our definition of
     (map clean-grape)))
 ----
 
-A few things changed since our previous definition `process-clusters`. First of all,
-we are using the transducer-returning versions of `mapcat`, `filter` and `map`
-instead of partially applying them for working on sequences.
+A few things changed since our previous definition `process-clusters`. First of
+all, we are using the transducer-returning versions of `mapcat`, `filter` and
+`map` instead of partially applying them for working on sequences.
 
-Also you may have noticed that the order in which they are composed is reversed, they
-appear in the order they are executed. Note that all `map`, `filter` and `mapcat`
-return a transducer. `filter` transforms the reducing function returned by `map`,
-applying the filtering before proceeding; `mapcat` transforms the reducing function
-returned by `filter`, applying the mapping and catenation before proceeding.
+Also you may have noticed that the order in which they are composed is reversed,
+they appear in the order they are executed. Note that all `map`, `filter` and
+`mapcat` return a transducer. `filter` transforms the reducing function returned
+by `map`, applying the filtering before proceeding; `mapcat` transforms the
+reducing function returned by `filter`, applying the mapping and catenation
+before proceeding.
 
-One of the powerful properties of transducers is that they are combined using regular
-function composition.  What's even more elegant is that the composition of various
-transducers is itself a transducer! This means that our `process-cluster` is a
-transducer too, so we have defined a composable and context-independent algorithmic
-transformation.
+One of the powerful properties of transducers is that they are combined using
+regular function composition.  What's even more elegant is that the composition
+of various transducers is itself a transducer! This means that our
+`process-cluster` is a transducer too, so we have defined a composable and
+context-independent algorithmic transformation.
 
 Many of the core ClojureScript functions accept a transducer, let's look at some
 examples with our newly created `process-cluster`:
@@ -315,8 +319,8 @@ examples with our newly created `process-cluster`:
 ----
 
 Since using `reduce` with the reducing function returned from a transducer is so
-common, there is a function for reducing with a transformation called `transduce`. We
-can now rewrite the previous call to `reduce` using `transduce`:
+common, there is a function for reducing with a transformation called
+`transduce`. We can now rewrite the previous call to `reduce` using `transduce`:
 
 [source, clojure]
 ----
@@ -327,8 +331,8 @@ can now rewrite the previous call to `reduce` using `transduce`:
 
 ==== Initialisation
 
-In the last example we provided an initial value to the `transduce` function (`[]`)
-but we can omit it and get the same result:
+In the last example we provided an initial value to the `transduce` function
+(`[]`) but we can omit it and get the same result:
 
 [source, clojure]
 ----
@@ -346,8 +350,8 @@ and see what happens:
 ;; => []
 ----
 
-The `conj` function has a arity 0 version that returns an empty vector but is not the
-only reducing function that supports arity 0. Let's explore some others:
+The `conj` function has a arity 0 version that returns an empty vector but is
+not the only reducing function that supports arity 0. Let's explore some others:
 
 [source, clojure]
 ----
@@ -364,11 +368,11 @@ only reducing function that supports arity 0. Let's explore some others:
 ;; => true
 ----
 
-The reducing function returned by transducers must support the arity 0 as well, which
-will typically delegate to the transformed reducing function. There is no sensible
-implementation of the arity 0 for the transducers we have implemented so far, so
-we'll simply call the reducing function without arguments. Here's how our modified
-`my-mapt` could look like:
+The reducing function returned by transducers must support the arity 0 as well,
+which will typically delegate to the transformed reducing function. There is no
+sensible implementation of the arity 0 for the transducers we have implemented
+so far, so we'll simply call the reducing function without arguments. Here's how
+our modified `my-mapt` could look like:
 
 [source, clojure]
 ----
@@ -381,9 +385,9 @@ we'll simply call the reducing function without arguments. Here's how our modifi
         (rfn acc (f input))))))
 ----
 
-The call to the arity 0 of the reducing function returned by a transducer will call
-the arity 0 version of every nested reducing function, eventually calling the
-outermost reducing function. Let's see an example with our already defined
+The call to the arity 0 of the reducing function returned by a transducer will
+call the arity 0 version of every nested reducing function, eventually calling
+the outermost reducing function. Let's see an example with our already defined
 `process-clusters` transducer:
 
 [source, clojure]
@@ -398,10 +402,11 @@ The call to the arity 0 flows through the transducer stack, eventually calling
 
 ==== Stateful transducers
 
-So far we've only seen purely functional transducer; they don't have any implicit
-state and are very predictable. However, there are many data transformation functions
-that are inherently stateful, like `take`. `take` receives a number `n` of elements
-to keep and a collection and returns a collection with at most `n` elements.
+So far we've only seen purely functional transducer; they don't have any
+implicit state and are very predictable. However, there are many data
+transformation functions that are inherently stateful, like `take`. `take`
+receives a number `n` of elements to keep and a collection and returns a
+collection with at most `n` elements.
 
 [source, clojure]
 ----
@@ -410,10 +415,10 @@ to keep and a collection and returns a collection with at most `n` elements.
 ----
 
 Let's step back for a bit and learn about the early termination of the `reduce`
-function. We can wrap an accumulator in a type called `reduced` for telling `reduce`
-that the reduction process should terminate immediately. Let's see an example of a
-reduction that aggregates the inputs in a collection and finishes as soon as there
-are 10 elements in the accumulator:
+function. We can wrap an accumulator in a type called `reduced` for telling
+`reduce` that the reduction process should terminate immediately. Let's see an
+example of a reduction that aggregates the inputs in a collection and finishes
+as soon as there are 10 elements in the accumulator:
 
 [source, clojure]
 ----
@@ -426,15 +431,16 @@ are 10 elements in the accumulator:
 ;; => [0 1 2 3 4 5 6 7 8 9]
 ----
 
-Since transducers are modifications of reducing functions they also use `reduced` for
-early termination.  Note that stateful transducers may need to do some cleanup before
-the process terminates, so they must support an arity 1 as a "completion"
-step. Usually, like with arity 0, this arity will simply delegate to the transformed
-reducing function's arity 1.
+Since transducers are modifications of reducing functions they also use
+`reduced` for early termination.  Note that stateful transducers may need to do
+some cleanup before the process terminates, so they must support an arity 1 as a
+"completion" step. Usually, like with arity 0, this arity will simply delegate
+to the transformed reducing function's arity 1.
 
-Knowing this we are able to write stateful transducers like `take`. We'll be using
-mutable state internally for tracking the number of inputs we have seen so far, and
-wrap the accumulator in a `reduced` as soon as we've seen enough elements:
+Knowing this we are able to write stateful transducers like `take`. We'll be
+using mutable state internally for tracking the number of inputs we have seen so
+far, and wrap the accumulator in a `reduced` as soon as we've seen enough
+elements:
 
 [source, clojure]
 ----
@@ -462,10 +468,10 @@ understand it better.
 
 The first thing to notice is that we are creating a mutable value inside the
 transducer. Note that we don't create it until we receive a reducing function to
-transform. If we created it before returning the transducer we couldn't use `my-take`
-more than once. Since the transducer is handed a reducing function to transform each
-time it is used, we can use it multiple times and the mutable variable will be
-created in every use.
+transform. If we created it before returning the transducer we couldn't use
+`my-take` more than once. Since the transducer is handed a reducing function to
+transform each time it is used, we can use it multiple times and the mutable
+variable will be created in every use.
 
 [source, clojure]
 ----
@@ -484,11 +490,11 @@ created in every use.
 ;; => [0 1 2 3 4]
 ----
 
-Let's now dig into the reducing function returned from `my-take`. First of all we
-`deref` the volatile to get the number of elements that remain to be taken and
-decrement it to get the next remaining value.  If there are still remaining items to
-take, we call `rfn` passing the accumulator and input; if not, we already have the
-final result.
+Let's now dig into the reducing function returned from `my-take`. First of all
+we `deref` the volatile to get the number of elements that remain to be taken
+and decrement it to get the next remaining value.  If there are still remaining
+items to take, we call `rfn` passing the accumulator and input; if not, we
+already have the final result.
 
 [source, clojure]
 ----
@@ -503,11 +509,11 @@ final result.
 ----
 
 The body of `my-take` should be obvious by now. We check whether there are still
-items to be processed using the next remainder (`nr`) and, if not, wrap the result in
-a `reduced` using the `ensure-reduced` function. `ensure-reduced` will wrap the value
-in a `reduced` if it's not reduced already or simply return the value if it's already
-reduced. In case we are not done yet, we return the accumulated `result` for further
-processing.
+items to be processed using the next remainder (`nr`) and, if not, wrap the
+result in a `reduced` using the `ensure-reduced` function. `ensure-reduced` will
+wrap the value in a `reduced` if it's not reduced already or simply return the
+value if it's already reduced. In case we are not done yet, we return the
+accumulated `result` for further processing.
 
 [source, clojure]
 ----
@@ -517,11 +523,11 @@ processing.
 ----
 
 We've seen an example of a stateful transducer but it didn't do anything in its
-completion step. Let's see an example of a transducer that uses the completion step
-to flush an accumulated value. We'll implement a simplified version of
-`partition-all`, which given a `n` number of elements converts the inputs in vectors
-of size `n`. For understanding its purpose better let's see what the arity 2 version
-gives us when providing a number and a collection:
+completion step. Let's see an example of a transducer that uses the completion
+step to flush an accumulated value. We'll implement a simplified version of
+`partition-all`, which given a `n` number of elements converts the inputs in
+vectors of size `n`. For understanding its purpose better let's see what the
+arity 2 version gives us when providing a number and a collection:
 
 [source, clojure]
 ----
@@ -530,10 +536,10 @@ gives us when providing a number and a collection:
 ----
 
 The transducer returning function of `partition-all` will take a number `n` and
-return a transducer that groups inputs in vectors of size `n`. In the completion step
-it will check if there is an accumulated result and, if so, add it to the
-result. Here's a simplified version of ClojureScript core `partition-all` function,
-where `array-list` is a wrapper for a mutable JavaScript array:
+return a transducer that groups inputs in vectors of size `n`. In the completion
+step it will check if there is an accumulated result and, if so, add it to the
+result. Here's a simplified version of ClojureScript core `partition-all`
+function, where `array-list` is a wrapper for a mutable JavaScript array:
 
 [source, clojure]
 ----
@@ -567,12 +573,12 @@ where `array-list` is a wrapper for a mutable JavaScript array:
 
 ==== Eductions
 
-Eductions are a way to combine a collection and one or more transformations that can
-be reduced and iterated over, and that apply the transformations every time we do
-so. If we have a collection that we want to process and a transformation over it that
-we want others to extend, we can hand them a eduction, encapsulating the source
-collection and our transformation. We can create an eduction with the `eduction`
-function:
+Eductions are a way to combine a collection and one or more transformations that
+can be reduced and iterated over, and that apply the transformations every time
+we do so. If we have a collection that we want to process and a transformation
+over it that we want others to extend, we can hand them a eduction,
+encapsulating the source collection and our transformation. We can create an
+eduction with the `eduction` function:
 
 [source, clojure]
 ----
@@ -600,11 +606,12 @@ other intersting ones:
 We encourage you to explore ClojureScript core to see what other transducers are out
 there.
 
+
 ==== Defining our own transducers
 
-There a few things to consider before writing our own transducers so in this section
-we will learn how to properly implement one. First of all, we've learned that the
-general structure of a transducer is the following:
+There a few things to consider before writing our own transducers so in this
+section we will learn how to properly implement one. First of all, we've learned
+that the general structure of a transducer is the following:
 
 [source, clojure]
 ----
@@ -630,18 +637,19 @@ the invariants that must be preserved in each arity of the resulting function:
 
 ==== Transducible processes
 
-A transducible process is any process that is defined in terms of a succession of
-steps ingesting input values.  The source of input varies from one process to
-another. Most of our examples dealt with inputs from a collection or a lazy sequence,
-but it could be an asynchronous stream of values or a `core.async` channel. The
-outputs produced by each step are also different for every process; `into` creates a
-collection with every output of the transducer, `sequence` yields a lazy sequence,
-and asynchronous streams would probably push the outputs to their listeners.
+A transducible process is any process that is defined in terms of a succession
+of steps ingesting input values.  The source of input varies from one process to
+another. Most of our examples dealt with inputs from a collection or a lazy
+sequence, but it could be an asynchronous stream of values or a `core.async`
+channel. The outputs produced by each step are also different for every process;
+`into` creates a collection with every output of the transducer, `sequence`
+yields a lazy sequence, and asynchronous streams would probably push the outputs
+to their listeners.
 
 In order to improve our understanding of transducible processes, we're going to
-implement an unbounded queue, since adding values to a queue can be thought in terms
-of a succession of steps ingesting input. First of all we'll define a protocol and a
-data type that implements the unbounded queue:
+implement an unbounded queue, since adding values to a queue can be thought in
+terms of a succession of steps ingesting input. First of all we'll define a
+protocol and a data type that implements the unbounded queue:
 
 [source, clojure]
 ----
@@ -663,10 +671,10 @@ data type that implements the unbounded queue:
     (set! closed true)))
 ----
 
-We defined the `Queue` protocol and as you may have noticed the implementation of
-`UnboundedQueue` doesn't know about transducers at all. It has a `put!` operation as
-its step function and we're going to implement the transducible process on top of
-that interface:
+We defined the `Queue` protocol and as you may have noticed the implementation
+of `UnboundedQueue` doesn't know about transducers at all. It has a `put!`
+operation as its step function and we're going to implement the transducible
+process on top of that interface:
 
 [source, clojure]
 ----
@@ -694,10 +702,10 @@ that interface:
          (shutdown! q))))))
 ----
 
-As you can see, the `unbounded-queue` constructor uses an `UnboundedQueue` instance
-internally, proxying the `take!` and `shutdown!` calls and implementing the
-transducible process logic in the `put!` function. Let's deconstruct it to understand
-what's going on.
+As you can see, the `unbounded-queue` constructor uses an `UnboundedQueue`
+instance internally, proxying the `take!` and `shutdown!` calls and implementing
+the transducible process logic in the `put!` function. Let's deconstruct it to
+understand what's going on.
 
 [source, clojure]
 ----
@@ -708,12 +716,12 @@ what's going on.
 )
 ----
 
-First of all, we use `completing` for adding the arity 0 and arity 1 to the `Queue`
-protocol's `put!` function.  This will make it play nicely with transducers in case
-we give this reducing function to `xform` to derive another.  After that, if a
-transducer (`xform`) was provided, we derive a reducing function applying the
-transducer to `put!`.  If we're not handed a transducer we will just use `put!`. `q`
-is the internal instance of `UnboundedQueue`.
+First of all, we use `completing` for adding the arity 0 and arity 1 to the
+`Queue` protocol's `put!` function.  This will make it play nicely with
+transducers in case we give this reducing function to `xform` to derive another.
+After that, if a transducer (`xform`) was provided, we derive a reducing
+function applying the transducer to `put!`.  If we're not handed a transducer we
+will just use `put!`. `q` is the internal instance of `UnboundedQueue`.
 
 [source, clojure]
 ----
@@ -732,16 +740,16 @@ is the internal instance of `UnboundedQueue`.
 )
 ----
 
-The exposed `put!` operation will only be performed if the queue hasn't been shut
-down. Notice that the `put!` implementation of `UnboundedQueue` uses an assert to
-verify that we can still put values to it and we don't want to break that
-invariant. If the queue isn't closed we can put values into it, we use the possibly
-transformed `xput!` for doing so.
+The exposed `put!` operation will only be performed if the queue hasn't been
+shut down. Notice that the `put!` implementation of `UnboundedQueue` uses an
+assert to verify that we can still put values to it and we don't want to break
+that invariant. If the queue isn't closed we can put values into it, we use the
+possibly transformed `xput!` for doing so.
 
 If the put operation gives back a reduced value it's telling us that we should
-terminate the transducible process.  In this case that means shutting down the queue
-to not accept more values. If we didn't get a reduced value we can happily continue
-accepting puts.
+terminate the transducible process.  In this case that means shutting down the
+queue to not accept more values. If we didn't get a reduced value we can happily
+continue accepting puts.
 
 Let's see how our queue behaves without transducers:
 
@@ -784,8 +792,8 @@ Pretty much what we expected, let's now try with a stateless transducer:
 ----
 
 To check that we've implemented the transducible process, let's use a stateful
-transducer. We'll use a transducer that will accept values while they aren't equal to
-4 and will partition inputs in chunks of 2 elements:
+transducer. We'll use a transducer that will accept values while they aren't
+equal to 4 and will partition inputs in chunks of 2 elements:
 
 [source, clojure]
 ----
@@ -814,10 +822,10 @@ transducers in their internal step. We'll discuss channels and their usage with
 transducers in a later section.
 
 Transducible processes must respect `reduced` as a way for signaling early
-termination. For example, building a collection stops when encountering a `reduced`
-and `core.async` channels with transducers are closed.  The `reduced` value must be
-unwrapped with `deref` and passed to the completion step, which must be called
-exactly once.
+termination. For example, building a collection stops when encountering a
+`reduced` and `core.async` channels with transducers are closed.  The `reduced`
+value must be unwrapped with `deref` and passed to the completion step, which
+must be called exactly once.
 
 Transducible processes shouldn't expose the reducing function they generate when
 calling the transducer with their own step function since it may be stateful and
@@ -828,9 +836,10 @@ unsafe to use from elsewhere.
 === Transients
 
 Although ClojureScript's immutable and persistent data structures are reasonably
-performant there are situations in which we are transforming large data structures
-using multiple steps to only share the final result. For example, the core `into`
-function takes a collection and eagerly populates it with the contents of a sequence:
+performant there are situations in which we are transforming large data
+structures using multiple steps to only share the final result. For example, the
+core `into` function takes a collection and eagerly populates it with the
+contents of a sequence:
 
 [source, clojure]
 ----
@@ -881,10 +890,10 @@ Transients support the read API of their persistent counterparts:
 ;; => :a
 ----
 
-Since transients don't have persistent and immutable semantics for updates they can't
-be transformed using the already familiar `conj` or `assoc` functions. Instead, the
-transforming functions that work on transients end with a bang. Let's look at an
-example using `conj!` on a transient:
+Since transients don't have persistent and immutable semantics for updates they
+can't be transformed using the already familiar `conj` or `assoc`
+functions. Instead, the transforming functions that work on transients end with
+a bang. Let's look at an example using `conj!` on a transient:
 
 [source, clojure]
 ----
@@ -898,10 +907,10 @@ example using `conj!` on a transient:
 ----
 
 As you can see, the transient version of the vector is neither immutable nor
-persistent. Instead, the vector is mutated in place. Although we could transform `tv`
-repeatedly using `conj!` on it we shouldn't abandon the idioms used with the
-persistent data structures: when transforming a transient, use the returned version
-of it for further modifications like in the following example:
+persistent. Instead, the vector is mutated in place. Although we could transform
+`tv` repeatedly using `conj!` on it we shouldn't abandon the idioms used with
+the persistent data structures: when transforming a transient, use the returned
+version of it for further modifications like in the following example:
 
 [source, clojure]
 ----
@@ -927,10 +936,10 @@ persistent data structure, is done in constant time.
 ----
 
 A peculiarity of transforming transients into persistent structures is that the
-transient version is invalidated after being converted to a persistent data structure
-and we can't do further transformations to it. This happens because the derived
-persistent data structure uses the transient's internal nodes and mutating them would
-break the immutability and persistent guarantees:
+transient version is invalidated after being converted to a persistent data
+structure and we can't do further transformations to it. This happens because
+the derived persistent data structure uses the transient's internal nodes and
+mutating them would break the immutability and persistent guarantees:
 
 [source, clojure]
 ----
@@ -948,9 +957,9 @@ break the immutability and persistent guarantees:
 ----
 
 Going back to our initial example with `into`, here's a very simplified
-implementation of it that uses a transient for performance, returning a persistent
-data structure and thus exposing a purely functional interface although it uses
-mutation internally:
+implementation of it that uses a transient for performance, returning a
+persistent data structure and thus exposing a purely functional interface
+although it uses mutation internally:
 
 [source, clojure]
 ----
@@ -966,22 +975,24 @@ mutation internally:
 [[metadata-section]]
 === Metadata
 
-ClojureScript symbols, vars and persistent collections support attaching metadata to
-them. Metadata is a map with information about the entity it's attached to. The
-ClojureScript compiler uses metadata for several purposes such as type hints, and the
-metadata system can be used by tooling, library and application developers too.
+ClojureScript symbols, vars and persistent collections support attaching
+metadata to them. Metadata is a map with information about the entity it's
+attached to. The ClojureScript compiler uses metadata for several purposes such
+as type hints, and the metadata system can be used by tooling, library and
+application developers too.
 
-There may not be many cases in day-to-day ClojureScript programming where you need
-metadata, but it is a nice language feature to have and know about; it may come in
-handy at some point. It makes things like runtime code introspection and
+There may not be many cases in day-to-day ClojureScript programming where you
+need metadata, but it is a nice language feature to have and know about; it may
+come in handy at some point. It makes things like runtime code introspection and
 documentation generation very easy. You'll see why throughout this section.
 
 
 ==== Vars
 
-Let's define a var and see what metadata is attached to it by default. Note that this
-code is executed in a REPL, and thus the metadata of a var defined in a source file
-may vary. We'll use the `meta` function to retrieve the metadata of the given value:
+Let's define a var and see what metadata is attached to it by default. Note that
+this code is executed in a REPL, and thus the metadata of a var defined in a
+source file may vary. We'll use the `meta` function to retrieve the metadata of
+the given value:
 
 [source, clojure]
 ----
@@ -1005,12 +1016,13 @@ may vary. We'll use the `meta` function to retrieve the metadata of the given va
 ;;     :test nil}
 ----
 
-Few things to note here. First of all, `#'answer-to-everything` gives us a reference
-to the `Var` that holds the value of the `answer-to-everything` symbol. We see that
-it includes information about the namespace (`:ns`) in which it was defined, its
-name, file (although, since it was defined at a REPL doesn't have a source file),
-source, position in the file where it was defined, argument list (which only makes
-sense for functions), documentation string and test function.
+Few things to note here. First of all, `#'answer-to-everything` gives us a
+reference to the `Var` that holds the value of the `answer-to-everything`
+symbol. We see that it includes information about the namespace (`:ns`) in which
+it was defined, its name, file (although, since it was defined at a REPL doesn't
+have a source file), source, position in the file where it was defined, argument
+list (which only makes sense for functions), documentation string and test
+function.
 
 Let's take a look at a function var's metadata:
 
@@ -1036,8 +1048,8 @@ Let's take a look at a function var's metadata:
 ----
 
 We see that the argument lists are stored in the `:arglists` field of the var's
-metadata and its documentation in the `:doc` field. We'll now define a test function
-to learn about what `:test` is used for:
+metadata and its documentation in the `:doc` field. We'll now define a test
+function to learn about what `:test` is used for:
 
 [source, clojure]
 ----
@@ -1060,18 +1072,18 @@ to learn about what `:test` is used for:
 ;;     :test #<function (){ ... }>}
 ----
 
-The `:test` attribute (truncated for brevity) in the `i-pass` var's metadata is a
-test function. This is used by the `cljs.test` library for discovering and running
-tests in the namespaces you tell it to.
+The `:test` attribute (truncated for brevity) in the `i-pass` var's metadata is
+a test function. This is used by the `cljs.test` library for discovering and
+running tests in the namespaces you tell it to.
 
 
 ==== Values
 
-We learned that vars can have metadata and what kind of metadata is added to them for
-consumption by the compiler and the `cljs.test` testing library. Persistent
-collections can have metadata too, although they don't have any by default. We can
-use the `with-meta` function to derive an object with the same value and type with
-the given metadata attached. Let's see how:
+We learned that vars can have metadata and what kind of metadata is added to
+them for consumption by the compiler and the `cljs.test` testing
+library. Persistent collections can have metadata too, although they don't have
+any by default. We can use the `with-meta` function to derive an object with the
+same value and type with the given metadata attached. Let's see how:
 
 [source, clojure]
 ----
@@ -1097,13 +1109,13 @@ the given metadata attached. Let's see how:
 ;; => false
 ----
 
-It shouldn't come as a surprise that metadata doesn't affect equality between two
-data structures since equality in ClojureScript is based on value. Another
-interesting thing is that `with-meta` creates another object of the same type and
-value as the given one and attaches the given metadata to it.
+It shouldn't come as a surprise that metadata doesn't affect equality between
+two data structures since equality in ClojureScript is based on value. Another
+interesting thing is that `with-meta` creates another object of the same type
+and value as the given one and attaches the given metadata to it.
 
-Another open question is what happens with metadata when deriving new values from a
-persistent data structure.  Let's find out:
+Another open question is what happens with metadata when deriving new values
+from a persistent data structure.  Let's find out:
 
 [source, clojure]
 ----
@@ -1114,12 +1126,12 @@ persistent data structure.  Let's find out:
 ;; => {:answer-to-everything 42}
 ----
 
-As you can see in the example above, metadata is preserved in derived versions of
-persistent data structures. There are some subtleties, though. As long as the
+As you can see in the example above, metadata is preserved in derived versions
+of persistent data structures. There are some subtleties, though. As long as the
 functions that derive new data structures return collections with the same type,
 metadata will be preserved; this is not true if the types change due to the
-transformation. To ilustrate this point, let's see what happens when we derive a seq
-or a subvector from a vector:
+transformation. To ilustrate this point, let's see what happens when we derive a
+seq or a subvector from a vector:
 
 [source, clojure]
 ----
@@ -1139,9 +1151,10 @@ or a subvector from a vector:
 
 ==== Syntax for metadata
 
-The ClojureScript reader has syntactic support for metadata annotations, which can be
-written in different ways. We can prepend var definitions or collections with a caret
-(`^`) followed by a map for annotating it with the given metadata map:
+The ClojureScript reader has syntactic support for metadata annotations, which
+can be written in different ways. We can prepend var definitions or collections
+with a caret (`^`) followed by a map for annotating it with the given metadata
+map:
 
 [source, clojure]
 ----
@@ -1168,8 +1181,8 @@ written in different ways. We can prepend var definitions or collections with a 
 ;; => {:answer-to-everything 42}
 ----
 
-Notice how the metadata given in the `answer-to-everything` var definition is merged
-with the var metadata.
+Notice how the metadata given in the `answer-to-everything` var definition is
+merged with the var metadata.
 
 A very common use of metadata is to set certain keys to a `true` value. For example
 we may want to add to a var's metadata that the variable is dynamic or a
@@ -1193,8 +1206,8 @@ a keyword. Here are some examples:
 
 There is another shorthand notation for attaching metadata. If we use a caret
 followed by a symbol it will be added to the metadata map under the `:tag`
-key. Using tags such as `^boolean` gives the ClojureScript compiler hints about the
-type of expressions or function return types.
+key. Using tags such as `^boolean` gives the ClojureScript compiler hints about
+the type of expressions or function return types.
 
 [source, clojure]
 ----
@@ -1213,9 +1226,9 @@ type of expressions or function return types.
 We've learned about `meta` and `with-meta` so far but ClojureScript offers a few
 functions for transforming metadata. There is `vary-meta` which is similar to
 `with-meta` in that it derives a new object with the same type and value as the
-original but it doesn't take the metadata to attach directly. Instead, it takes a
-function to apply to the metadata of the given object to transform it for deriving
-new metadata. This is how it works:
+original but it doesn't take the metadata to attach directly. Instead, it takes
+a function to apply to the metadata of the given object to transform it for
+deriving new metadata. This is how it works:
 
 [source, clojure]
 ----
@@ -1233,8 +1246,8 @@ new metadata. This is how it works:
 ----
 
 If instead we want to change the metadata of an existing var or value we can use
-`alter-meta!` for changing it by applying a function or `reset-meta!` for replacing
-it with another map:
+`alter-meta!` for changing it by applying a function or `reset-meta!` for
+replacing it with another map:
 
 [source, clojure]
 ----
@@ -1256,6 +1269,11 @@ it with another map:
 (meta map-with-metadata)
 ;; => {:foo 40}
 ----
+
+
+////
+TODO: metadata on functions and multiarity functions
+////
 
 
 [[core-protocols-section]]
@@ -2029,7 +2047,7 @@ don't implement these protocols in terms of `reduce` you will have to check for
 reduced values for early termination.
 
 
-==== Asynchrony
+==== Delayed computation
 
 There are some types that have the notion of asynchronous computation, the value
 they represent may not be realized yet. We can ask whether a value is realized using
@@ -2045,7 +2063,7 @@ the delay is realized:
   (println "running!")
   42)
 
-(def d (Delay. computation nil))
+(def d (delay (computation)))
 
 (realized? d)
 ;; => false
@@ -2062,85 +2080,6 @@ the delay is realized:
 ----
 
 Both `realized?` and `deref` sit atop two protocols: `IPending` and `IDeref`.
-
-ES6 introduced a type that captures the notion of an asynchronous computation that
-might fail: the Promise.  A Promise represents an eventual value and can be in one
-of three states:
-
- - pending: there is still no value available for this computation.
- - rejected: an error occurred and the promise contains a value that indicates
-   the error.
- - resolved: the computation succesfully executed and the promise contains a
-   value with the result.
-
-
-Since the ES6 defined interface for promises doesn't support querying its state
-we'll use Bluebird library's Promise type for the examples. You can use Bluebird's
-promise type with the link:https://github.com/funcool/promesa[Promesa] library.
-
-First of all we'll add the ability to check if a promise is realized (either
-resolved or rejected) using the `realized?` predicate. We just have to implement the
-`IPending` protocol:
-
-[source, clojure]
-----
-(require '[promesa.core :as p])
-
-(extend-type js/Promise
-  IPending
-  (-realized? [p]
-    (not (.isPending p))))
-
-
-(p/promise (fn [resolve reject]))
-;; => #<Promise {:status :pending}>
-
-(realized? (p/promise (fn [resolve reject])))
-;; => false
-
-(p/resolved 42)
-;; => #<Promise {:status :resolved, :value 42}>
-
-(realized? (p/resolved 42))
-;; => true
-
-(p/rejected (js/Error. "OH NO"))
-;; => #<Promise {:status :rejected, :error #object[Error Error: OH NO]}>
-
-(realized? (p/rejected (js/Error. "OH NO")))
-;; => true
-----
-
-Now we'll extend promises to be derefable. When a promise that is still pending is
-dereferenced we will return a special keyword: `:promise/pending`. If it's not we'll
-just return the value it contains, be it an error or a result:
-
-[source, clojure]
-----
-(require '[promesa.core :as pro])
-
-(extend-type js/Promise
-  IDeref
-  (-deref [p]
-    (cond
-      (.isPending p)
-      :promise/pending
-
-      (.isRejected p)
-      (.reason p)
-
-      :else
-      (.value p))))
-
-@(p/promise (fn [resolve reject]))
-;; => :promise/pending
-
-@(p/resolved 42)
-;; => 42
-
-@(p/rejected (js/Error. "OH NO"))
-;; => #object[Error Error: OH NO]
-----
 
 
 ==== State
@@ -2427,199 +2366,6 @@ transient data structure to a persistent one we use `persistent!`, based on
 Implementing immutable and persistent data structures and their transient
 counterparts is out of the scope of this book but we recommend taking a look at
 ClojureScript's data structure implementation if you are curious.
-
-
-===== Case study: the hodgepodge library
-
-link:https://github.com/funcool/hodgepodge[Hodgepodge] is a ClojureScript library
-for treating the browser's local and session storage as if it were a transient data
-structure. It allows you to insert, read and delete ClojureScript data structures
-without worrying about encoding and decoding them.
-
-Browser's storage is a simple key-value store that only supports strings. Since all
-of ClojureScript data structures can be dumped into a string and reified from a
-string using xref:the-reader[the reader] we can store arbitrary ClojureScript data
-in storage. We can also extend the reader for being able to read custom data types
-so we're able to put our types in storage and `hodgepodge` will handle the encoding
-and decoding for us.
-
-We'll start by wrapping the low-level storage methods with functions. The following
-operations are supported by the storage:
-
-- getting the value corresponding to a key
-- setting a key to a certain value
-- removing a value given its key
-- counting the number of entries
-- clearing the storage
-
-Let's wrap them in a more idiomatic API for ClojureScript:
-
-[source, clojure]
-----
-(defn contains-key?
-  [^js/Storage storage ^string key]
-  (let [ks (.keys js/Object storage)
-        idx (.indexOf ks key)]
-    (>= idx 0)))
-
-(defn get-item
-  ([^js/Storage storage ^string key]
-     (get-item storage key nil))
-  ([^js/Storage storage ^string key ^string default]
-     (if (contains-key? storage key)
-       (.getItem storage key)
-       default)))
-
-(defn set-item
-  [^js/Storage storage ^string key ^string val]
-  (.setItem storage key val)
-  storage)
-
-(defn remove-item
-  [^js/Storage storage ^string key]
-  (.removeItem storage key)
-  storage)
-
-(defn length
-  [^js/Storage storage]
-  (.-length storage))
-
-(defn clear!
-  [^js/Storage storage]
-  (.clear storage))
-----
-
-Nothing too interesting going on there, we just wrapped the storage methods in a
-nicer API. Now we will define a couple functions for serializing and deserializing
-ClojureScript data structures to strings:
-
-[source, clojure]
-----
-(require '[cljs.reader :as reader])
-
-(defn serialize [v]
-  (binding [*print-dup* true
-            *print-readably* true]
-    (pr-str v)))
-
-(def deserialize
-  (memoize reader/read-string))
-----
-
-The `serialize` function is used for converting a ClojureScript data structure into
-a string using the `pr-str` function, configuring a couple dynamic variables for
-obtaining the desired behaviour:
-
-- `*print-dup*` is set to `true` for a printed object to preserve its type 
-  when read later 
-- `*print-readably*` is set to `true` for not converting non-alphanumeric 
-  characters to their escape sequences
-
-The `deserialize` function simply invokes the reader's function for reading a string
-into a ClojureScript data structure: `read-string`. It's memoized for not having to
-call the reader each time we deserialize a string since we can assume that a
-repeated string always corresponds to the same data structure.
-
-Now we can start extending the browser's `Storage` type for acting like a transient
-data structure. Take into account that the `Storage` type is only available in
-browsers. We'll start by implementing the `ICounted` protocol for counting the items
-in the storage, we'll simply delegate to our previously defined `length` function:
-
-[source, clojure]
-----
-(extend-type js/Storage
-  ICounted
-  (-count [^js/Storage s]
-   (length s)))
-----
-
-We want to be able to use `assoc!` and `dissoc!` for inserting and deleting
-key-value pairs in the storage, as well as the ability to read from it. We'll
-implement the `ITransientAssociative` protocol for `assoc!`, `ITransientMap` for
-`dissoc!` and `ILookup` for reading storage keys.
-
-[source, clojure]
-----
-(extend-type js/Storage
-  ITransientAssociative
-  (-assoc! [^js/Storage s key val]
-    (set-item s (serialize key) (serialize val))
-    s)
-
-  ITransientMap
-  (-dissoc! [^js/Storage s key]
-    (remove-item s (serialize key))
-    s)
-
-  ILookup
-  (-lookup
-    ([^js/Storage s key]
-       (-lookup s key nil))
-    ([^js/Storage s key not-found]
-       (let [sk (serialize key)]
-         (if (contains-key? s sk)
-           (deserialize (get-item s sk))
-           not-found)))))
-----
-
-Now we're able to perform some operations on either session or local storage, let's
-give them a try:
-
-[source, clojure]
-----
-(def local-storage js/localStorage)
-(def session-storage js/sessionStorage)
-
-(assoc! local-storage :foo :bar)
-
-(:foo local-storage)
-;; => :bar
-
-(dissoc! local-storage :foo)
-
-(get local-storage :foo)
-;; => nil
-
-(get local-storage :foo :default)
-;; => :default
-----
-
-Finally, we want to be able to use `conj!` and `persistent!` on local storage so we
-must implement the `ITransientCollection` protocol, let's give it a go:
-
-[source, clojure]
-----
-(extend-type js/Storage
-  ITransientCollection
-  (-conj! [^js/Storage s ^IMapEntry kv]
-    (assoc! s (key kv) (val kv))
-    s)
-
-  (-persistent! [^js/Storage s]
-    (into {}
-          (for [i (range (count s))
-                :let [k (.key s i)
-                      v (get-item s k)]]
-            [(deserialize k) (deserialize v)]))))
-----
-
-`conj!` simply obtains the key and value from the map entry and delegates to
-`assoc!`. `persistent!` deserializes every key-value pair in the storage and returns
-an immutable snapshot of the storage as a ClojureScript map. Let's try it out:
-
-[source, clojure]
-----
-(clear! local-storage)
-
-(persistent! local-storage)
-;; => {}
-
-(conj! local-storage [:foo :bar])
-(conj! local-storage [:baz :xyz])
-
-(persistent! local-storage)
-;; => {:foo :bar, :baz :xyz}
-----
 
 
 ===== Transient vectors and sets
