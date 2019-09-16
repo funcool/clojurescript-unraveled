@@ -2288,7 +2288,7 @@ This is an easy way avoid null pointer exceptions.
 
 ==== The thread-cond macros (`cond\->` and `cond\->>`)
 
-The `cond\->` and `cond\->>` macros are analgous to `\->` and `\->>` that offers
+The `cond\->` and `cond\->>` macros are analogous to `\->` and `\->>` that offers
 the ability to conditionally skip some steps from the pipeline. Let see an example:
 
 [source, clojure]

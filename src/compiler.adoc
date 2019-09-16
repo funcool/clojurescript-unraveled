@@ -894,7 +894,7 @@ module format for javascript libraries, independently if they will be used in se
 side development using nodejs or using browser side applications.
 
 Let's play with that. Start creating a simple file using commonjs module format
-(pretty analgous to the previous example using google closure modules):
+(pretty analogous to the previous example using google closure modules):
 
 .src/myextmods/mycommonjsmodule.js
 [source, js]
