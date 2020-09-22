@@ -18,14 +18,6 @@ As such, it is divided into three main sections: Language, Tooling & Compiler,
 and Mixed Bag.
 
 
-## Status ##
-
-At this moment the book is still being written and is mostly incomplete.
-
-We are not native English speakers, so language improvements and typo fixes are
-very, very welcome!
-
-
 ## How to Contribute ##
 
 This is a quick and dirty FAQ:
