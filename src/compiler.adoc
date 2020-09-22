@@ -1058,6 +1058,9 @@ ClojureScript
 This is the most extended and the most reliable way to consume external
 javascript libraries from ClojureScript and it has many facilities.
 
+Let's play with that. Start creating a simple file using commonjs module format
+(pretty analogous to the previous example using google closure modules):
+
 The fastest way to include a javascript library is looking if it is available in
 link:http://cljsjs.github.io/[CLJSJS]. If it is available, just include the
 dependency in the `deps.edn` file and use it.
