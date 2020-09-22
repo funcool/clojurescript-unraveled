@@ -3,10 +3,10 @@
 [![](https://licensebuttons.net/l/by-sa/4.0/80x15.png "License")](http://creativecommons.org/licenses/by-sa/4.0/)
 
 An open source ClojureScript book. Read an HTML version
-[here](http://funcool.github.io/clojurescript-unraveled/).  A version for ebook
-readers (epub, mobi) is available
-[on Leanpub](http://leanpub.com/clojurescript-unraveled), where you have the
-opportunity to make a donation and buy us a beer.
+[here](http://funcool.github.io/clojurescript-unraveled/).
+
+**If you found this book useful, consider sponsoring my work on it.**
+
 
 This books aims to serve as:
 - A comprehensive introduction to the ClojureScript language and its idiomatic
