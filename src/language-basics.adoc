@@ -2217,7 +2217,7 @@ We can rewrite that code to use the `\->` threading macro:
 
 This threading macro is especially useful for transforming data structures,
 because _ClojureScript_ (and _Clojure_) functions for data structures
-transformations consistently uses the first argument for receive the data
+transformations consistently uses the first argument to receive the data
 structure.
 
 
@@ -2360,13 +2360,13 @@ like this:
 As you can observe, `#?` reading macro looks very similar to cond, the difference is
 that the condition is just a keyword that identifies the platform, where `:cljs` is
 for _ClojureScript_ and `:clj` is for _Clojure_. The advantage of this approach, is
-that it is evaluated at compile time so no runtime performance overhead exists for
+that it is evaluated at compile time so no runtime performance overhead introduced for
 using this.
 
 ==== Splicing (`#?@`)
 
-The splicing reader conditional works in the same way as the standard and allows
-splice lists into the containing form. The `#?@` reader macro is used for that
+The splicing reader conditional works in the same way as the standard but also allows
+splicing lists into the containing form. The `#?@` reader macro is used for that
 and the code looks like this:
 
 [source, clojure]
@@ -2391,7 +2391,7 @@ The _ClojureScript_ compiler will read that code as this:
 ----
 
 The splicing reader conditional can't be used to splice multiple top level forms,
-so the following code is ilegal:
+so the following code is illegal:
 
 [source, clojure]
 ----
@@ -2400,7 +2400,7 @@ so the following code is ilegal:
 ;; => #error "Reader conditional splicing not allowed at the top level."
 ----
 
-If you need so, you can use multiple forms or just use `do` block for group
+If you need so, you can use multiple forms or just use `do` block to group
 multiple forms together:
 
 [source, clojure]
@@ -2475,8 +2475,8 @@ Observe the following:
 ;; => "HELLO"
 ----
 
-As you can observe, we are using fully qualified names (namespace + var name) for
-access to vars and functions from different namespaces.
+As you can observe, we are using fully qualified names (namespace + var name) to
+access vars and functions from different namespaces.
 
 While this will let you access other namespaces, it's also repetitive and overly
 verbose. It will be especially uncomfortable if the name of a namespace is very
@@ -2522,7 +2522,7 @@ x
 
 Additionally, _ClojureScript_ offers a simple way to refer to specific vars or
 functions from a concrete namespace using the `:refer` directive, followed by a
-sequence of symbols that will refer to vars in the namespace. Effectively, it is as
+sequence of symbols that will refer to vars in the namespace. Effectively, it's as
 if those vars and functions are now part of your namespace, and you do not need to
 qualify them at all.
 
@@ -2586,7 +2586,7 @@ Some dynamic languages allow "monkey-patching"; languages where the classes are 
 and any method can be defined and redefined at any time. Also, it is well known that
 this technique is a very bad practice.
 
-We can not trust languages that allow you to silently overwrite methods that you are
+You can't trust languages that allow you to silently overwrite methods that you're
 using when you import third party libraries; you cannot expect consistent behavior
 when this happens.
 
@@ -2617,15 +2617,15 @@ A protocol looks like this:
 NOTE: the "I" prefix is commonly used to designate the separation of protocols and
 types. In the Clojure community, there are many different opinions about how the "I"
 prefix should be used. In our opinion, it is an acceptable solution to avoid name
-clashing and possible confusion. But not using the prefix is not considered bad
+clashing and possible confusion. But omitting the prefix is not considered bad
 practice.
 
 From the user perspective, protocol functions are simply plain functions defined in
-the namespace where the protocol is defined. This enables an easy and simple aproach
-for avoid conflicts between different protocols implemented for the same type that
+the namespace where the protocol is defined. This enables an easy and simple approach
+for avoiding conflicts between different protocols implemented for the same type that
 have conflicting function names.
 
-Here is an example. Let's create a protocol called `IInvertible` for data that can
+Here's an example. Let's create a protocol called `IInvertible` for data that can
 be "inverted".  It will have a single method named `invert`.
 
 [source, clojure]
@@ -2638,11 +2638,11 @@ be "inverted".  It will have a single method named `invert`.
 
 ===== Extending existing types
 
-One of the big strengths of protocols is the ability to extend existing and maybe
+One of the big strengths of protocols is the ability to extend existing, and possibly,
 third party types. This operation can be done in different ways.
 
-The majority of time you will tend to use the *extend-protocol* or the *extend-type*
-macros. This is how `extend-type` syntax looks:
+Most of the time you will tend to use the *extend-protocol* or the *extend-type*
+macros to do this. This is how `extend-type` syntax looks:
 
 [source, clojure]
 ----
@@ -2681,12 +2681,12 @@ Let's play with our `IInvertible` protocol defined previously:
   (invert [this] (into [] (reverse this))))
 ----
 
-You may note that a special symbol *string* is used instead of `js/String` for
-extend the protol for string. This is because the builtin javascript types have
+You may note that a special symbol *string* is used instead of `js/String` to
+extend the protocol for string. This is because the built-in javascript types have
 special treatment and if you replace the `string` with `js/String` the compiler
 will emit a warning about that.
 
-So if you want extend your protocol to javascript primitive types, instead of using
+So, if you want to extend your protocol to javascript primitive types, instead of using
 `js/Number`, `js/String`, `js/Object`, `js/Array`, `js/Boolean` and `js/Function`
 you should use the respective special symbols: `number`, `string`, `object`,
 `array`, `boolean` and `function`.
@@ -2970,7 +2970,7 @@ parameter, it returns `false` as expected.
 ===== Hierarchies in multimethods
 
 One of the big advantages of hierarchies is that they work very well together with
-multimethods.  This is because multimethods by default use the `isa?` function for
+multimethods. This is because multimethods by default use the `isa?` function for
 the last step of dispatching.
 
 Let's see an example to clearly understand what that means. First, we define the
@@ -3153,7 +3153,7 @@ And like maps, they support extra fields that are not initially defined:
 ----
 
 As we can see, the `assoc` function works as expected and returns a new instance of
-the same type but with new key value pair. But take care with `dissoc`! Its behavior
+the same type but with new key-value pair. But take care with `dissoc`! Its behavior
 with records is slightly different than with maps; it will return a new record if
 the field being dissociated is an optional field, but it will return a plain map if
 you dissociate a mandatory field.
@@ -3313,7 +3313,7 @@ accessing object properties.
 
 ===== Access to the platform
 
-_ClojureScript_ has a special syntax for access to the entire platform environment
+_ClojureScript_ has a special syntax to access the entire platform environment
 through the `js/` special namespace. This is an example of an expression to execute
 JavaScript's built-in `parseInt` function:
 
@@ -3465,7 +3465,7 @@ using the `set!` function:
 
 The inconvenience of the previously explained forms is that they do not make
 recursive transformations, so if you have nested objects, the nested objects will
-not be converted.  Consider this example that uses Clojurescript maps, then a
+not be converted. Consider this example that uses Clojurescript maps, then a
 similar one with JavaScript objects:
 
 [source, clojure]
@@ -3479,7 +3479,7 @@ similar one with JavaScript objects:
 ;; => #js {:country {:code "FR", :name "France"}
 (.-country js-obj)
 ;; => {:code "FR", :name "France"}
-(.-code (.-country js-obj)
+(.-code (.-country js-obj))
 ;; => nil
 ----
 
@@ -3491,7 +3491,7 @@ that the conversion to ClojureScript changes the `:country` keyword to a string.
 ----
 (clj->js {:foo {:bar "baz"}})
 ;; => #js {:foo #js {:bar "baz"}}
-(js->clj #js {:country {:code "FR" :name "France"}}))
+(js->clj #js {:country {:code "FR" :name "France"}})
 ;; => {"country" {:code "FR", :name "France"}}
 ----
 
