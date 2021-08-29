@@ -540,7 +540,7 @@ in your system. Start adding the following content into `tools.clj` script:
 ----
 (require '[cljs.repl.node :as node])
 
-(defmethod task "node:repl"
+(defmethod task "repl:node"
   [args]
   (repl/repl (node/repl-env)
              :output-dir "out/nodejs"
