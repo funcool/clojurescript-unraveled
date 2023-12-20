@@ -3524,6 +3524,12 @@ expected:
 ;; => #js ["France" "Korea" "Peru"]
 ----
 
+Keep in mind that `clj->js` is not the canonical way to transform data from
+clojurescript to js, that function is for debugging, because it is not exactly
+the most efficient way to do this operation. It is recommended that you build
+the transformation data structures specific to your domain rather than using the
+generic `clj->js`.
+
 
 ===== Arrays
 
