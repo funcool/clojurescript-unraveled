@@ -612,6 +612,51 @@ In the function parameters you can apply
 <<destructuring-section,destructuring>>, which is explained in detail later.
 
 
+==== Named Parameters
+
+Parameters by name in ClojureScript is nothing more than a special case of
+destructuring. See the <<destructuring-section,destructuring section>> to better
+understand all the concepts.
+
+There are times when we want to pass optional parameters to a function,
+something like options and it is better to give those options a name to be
+concise:
+
+[source, clojure]
+----
+(defn my-prefix
+  [value & {:keys [default] :or {default "foo-"}}]
+  (str default value))
+----
+
+When you call this function, you just can omit the options, and the default will
+be used:
+
+[source, clojure]
+----
+(my-prefix "hello")
+;; => "foo-hello"
+----
+
+Then, provide a different prefix using named parameters:
+
+[source, clojure]
+----
+(my-prefix "hello" :default "bar-")
+;; => "bar-hello"
+----
+
+The good part is that the name parameters do not impose a fixed calling
+convention. Nothing really prevents you from calling that function with a map as
+a second parameter with all the options you want to pass.
+
+[source, clojure]
+----
+(my-prefix "hello" {:default "bar-"})
+;; => "bar-hello"
+----
+
+
 ==== Short syntax for anonymous functions
 
 _ClojureScript_ provides a shorter syntax for defining anonymous functions using the
