@@ -664,7 +664,7 @@ As you can observe, the require entry is indistinguible from any other, because 
 integrates 100% with the cljs build process.
 
 
-==== ESM
+==== ESM Modules
 
 This is other way to define an companion modules using JS language; is the recommended way
 to do it on shadow-cljs and the main advantage of it is the familiar ESM syntax.
@@ -672,8 +672,6 @@ to do it on shadow-cljs and the main advantage of it is the familiar ESM syntax.
 So, lets proceed to define/overwrite the same module used in previous example to use the
 ESM syntax.
 
-
-.src/mywebapp/util.js
 [source, js]
 ----
 export function isLeapYear (val) {
@@ -729,7 +727,7 @@ We will reuse the `mywebapp` project structure and we will add testing to it. Le
 the test file `src/mywebapp/util_test.cljs`:
 
 [source, bash]
----
+----
 (ns mywebapp.util-test
   (:require
    [cljs.test :as t]
@@ -778,13 +776,12 @@ shadow-cljs - nREPL server started on port 40217
 shadow-cljs - watching build :test
 [:test] Configuring build.
 [:test] Compiling ...
-========= Running Tests =======================
 
 Testing mywebapp.util-test
 
 Ran 1 tests containing 1 assertions.
 0 failures, 0 errors.
-===============================================
+
 [:test] Build completed. (52 files, 2 compiled, 0 warnings, 2.38s)
 ~~~~
 
