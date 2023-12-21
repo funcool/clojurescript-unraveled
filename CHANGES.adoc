@@ -1,5 +1,20 @@
 = Changelog
 
+== Version 8
+
+Date: 2023-12-21
+
+- Update compiler & tooling section
+- Add minor fixes and improvements
+
+
+== Version 7
+
+Date: 2019-07-16
+
+- General update
+
+
 == Version 6
 
 Date: 2016-07-25
@@ -18,11 +33,13 @@ Date: 2015-11-06
 * Better explanation of defining your own transducers.
 * Minor edits.
 
+
 == Version 4
 
 Date: 2015-09-20
 
 * Unfinished section about core protocols.
+
 
 == Version 3
 

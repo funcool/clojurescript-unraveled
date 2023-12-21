@@ -90,6 +90,8 @@ following ways:
 33e8
 12e-14
 3.2e-4
+##Inf
+##-Inf
 ----
 
 
@@ -118,6 +120,9 @@ you don't understand or are unclear about anything in the following example;
 (keyword "foo")
 ;; => :foo
 ----
+
+In the end, keywords are a special case of Symbols which will be explained later.
+
 
 ===== Namespaced keywords
 
@@ -152,6 +157,10 @@ The `keyword` function has an arity-2 variant where we can specify the namespace
 ;; => :cljs.unraveled/foo
 ----
 
+Just as keywords are usually used to define keys on a map, namespaced
+keywords allow defining attributes dedicated to a specific domain
+without colliding with other keywords that may have the same name.
+
 
 ==== Symbols
 
@@ -170,8 +179,24 @@ f1
 my-special-swap!
 ----
 
-Don't worry if you don't understand right away; symbols are used in almost all of
-our examples, which will give you the opportunity to learn more as we go on.
+The symbols themselves are not usually used as data but are used by
+the language to resolve function calls. In other words, let's use this
+example:
+
+[source, clojure]
+----
+(println hello-world)
+----
+
+
+In this case, the `println` symbol is telling the compiler to look in
+its resolution table to see if it has a bound implementation of a
+function that prints data to standard output.
+
+And by wrapping the symbol in parentheses, you are telling the
+compiler that what you want is to execute that function. All elements
+other than the `println` symbol, which is in the first place, are
+considered parameters.
 
 
 ==== Strings
@@ -211,6 +236,35 @@ Since the host language doesn't contain character literals, _ClojureScript_
 characters are transformed behind the scenes into single character JavaScript
 strings.
 
+[[truthiness-section]]
+==== Booleans
+
+The same for booleans:
+
+[source, clojure]
+----
+true
+false
+----
+
+The really interesting part of the booleans is the concepts of *logical
+booleans*. Is a concept in which we assign a boolean meaning to an expression
+(if it is `falsy` or `truthy` even if it is not of boolean type).
+
+This is the aspect where each language has its own semantics (mostly wrongly in
+my opinion). The majority of languages consider empty collections, the integer
+0, and other things like this to be false.  In _ClojureScript_, unlike in other
+languages, only two values are considered as logical false: `nil` and
+`false`. Everything else is treated as logical `true`.
+
+[source, clojure]
+----
+(boolean nil)     ;; => false
+(boolean 0)       ;; => true
+(boolean [])      ;; => true
+(boolean :false)  ;; => true
+----
+
 
 ==== Collections
 
@@ -239,12 +293,13 @@ Lists in _ClojureScript_ are represented by items enclosed between parentheses:
 '(:foo :bar 2)
 ----
 
-As you can see, all list examples are prefixed with the `'` char. This is because
-lists in Lisp-like languages are often used to express things like function or macro
-calls. In that case, the first item should be a symbol that will evaluate to
-something callable, and the rest of the list elements will be function
-arguments. However, in the preceding examples, we don't want the first item as a
-symbol; we just want a list of items.
+As you can see, all list examples are prefixed with the `'` char. This is
+because lists in Lisp-like languages are often used to express things like
+function or macro calls (just as we have seen before). In that case, the first
+item should be a symbol that will evaluate to something callable, and the rest
+of the list elements will be function arguments. However, in the preceding
+examples, we don't want the first item as a symbol; we just want a list of
+items.
 
 The following example shows the difference between a list without and with the
 preceding single quote mark:
@@ -400,7 +455,8 @@ function:
 ----
 
 In the example above, `inc` is a function and is part of the _ClojureScript_
-runtime, and `1` is the first argument for the `inc` function.
+runtime (standard library), and `1` is the first argument for the `inc`
+function.
 
 [source, clojure]
 ----
@@ -510,6 +566,7 @@ NOTE: Explaining the concept of "arity" is out of the scope of this book, howeve
 you can read about that in this link:http://en.wikipedia.org/wiki/Arity[Wikipedia
 article].
 
+
 ==== Variadic functions
 
 Another way to accept multiple parameters is defining variadic functions. Variadic
@@ -527,6 +584,77 @@ functions are functions that accept an arbitrary number of arguments:
 
 The way to denote a variadic function is using the `&` symbol prefix on its
 arguments vector.
+
+The variadic function can also be combined with multiple arities:
+
+[source, clojure]
+----
+(defn max
+  ([a] a)
+  ([a b] (special-max a b))
+  ([a b c] (special-max a b c))
+  ([a b c d] (special-max a b c d))
+  ([a b c d e] (special-max a b c d e))
+  ([a b c d e f] (special-max a b c d e f))
+  ([a b c d e f & other]
+   (reduce max (special-max a b c d e f) other)))
+----
+
+You may wonder why I really need this syntax and define all that arities. Well,
+sometimes it is for documentation, since it prefers to name the first required
+parameters and leave the rest in a sequence. It is also a performance issue,
+since calling an arity with fixed variables will always be faster than calling a
+variadic function.
+
+NOTE: `special-max` is an invented function, just for make an example.
+
+In the function parameters you can apply
+<<destructuring-section,destructuring>>, which is explained in detail later.
+
+
+==== Named Parameters
+
+Parameters by name in ClojureScript is nothing more than a special case of
+destructuring. See the <<destructuring-section,destructuring section>> to better
+understand all the concepts.
+
+There are times when we want to pass optional parameters to a function,
+something like options and it is better to give those options a name to be
+concise:
+
+[source, clojure]
+----
+(defn my-prefix
+  [value & {:keys [default] :or {default "foo-"}}]
+  (str default value))
+----
+
+When you call this function, you just can omit the options, and the default will
+be used:
+
+[source, clojure]
+----
+(my-prefix "hello")
+;; => "foo-hello"
+----
+
+Then, provide a different prefix using named parameters:
+
+[source, clojure]
+----
+(my-prefix "hello" :default "bar-")
+;; => "bar-hello"
+----
+
+The good part is that the name parameters do not impose a fixed calling
+convention. Nothing really prevents you from calling that function with a map as
+a second parameter with all the options you want to pass.
+
+[source, clojure]
+----
+(my-prefix "hello" {:default "bar-"})
+;; => "bar-hello"
+----
 
 
 ==== Short syntax for anonymous functions
@@ -572,11 +700,16 @@ Additionally, this syntax also supports the variadic form with the `%&` symbol:
 ;; => #{1 2}
 ----
 
+This way of defining functions is generally useful for defining single line
+functions.
+
+
 
 === Flow control
 
-_ClojureScript_ has a very different approach to flow control than languages like
-JavaScript, C, etc.
+_ClojureScript_ has a very different approach to flow control than languages
+like JavaScript, C, etc. In an expression based language as it is CLJS, flow
+control structures also returns values.
 
 
 ==== Branching with `if`
@@ -585,7 +718,7 @@ Let's start with a basic one: `if`. In _ClojureScript_, the `if` is an expressio
 and not a statement, and it has three parameters: the first one is the condition
 expression, the second one is an expression that will be evaluated if the condition
 expression evaluates to logical true, and the third expression will be evaluated
-otherwise.
+otherwise. The else part is optional.
 
 [source, clojure]
 ----
@@ -629,6 +762,10 @@ With the `cond` expression, you can define multiple conditions:
 (mypos? -2)
 ;; => "negative"
 ----
+
+The `:else` keyword has no special meaning in `cond`. It just a truthy value
+and in reallity can be any keyword os anything that evaluates to a logical
+true.
 
 Also, `cond` has another form, called `condp`, that works very similarly to the
 simple `cond` but looks cleaner when the condition (also called a predicate) is the
@@ -682,69 +819,7 @@ Here is the previous example rewritten to use `case`:
 ----
 
 
-[[truthiness-section]]
-=== Truthiness
-
-This is the aspect where each language has its own semantics (mostly wrongly). The
-majority of languages consider empty collections, the integer 0, and other things
-like this to be false.  In _ClojureScript_, unlike in other languages, only two
-values are considered as false: `nil` and `false`. Everything else is treated as
-logical `true`.
-
-Jointly with the ability to implement the callable protocol (the `IFn`, explained
-more in detail later), data structures like sets can be used just as predicates,
-without need of additional wrapping them in a function:
-
-[source, clojure]
-----
-(def valid? #{1 2 3})
-
-(filter valid? (range 1 10))
-;; => (1 2 3)
-----
-
-This works because a set returns either the value itself for all contained elements
-or `nil`:
-
-[source, clojure]
-----
-(valid? 1)
-;; => 1
-
-(valid? 4)
-;; => nil
-----
-
-
 === Locals, Blocks, and Loops
-
-==== Locals
-
-_ClojureScript_ does not have the concept of variables as in ALGOL-like languages,
-but it does have locals. Locals, as per usual, are immutable, and if you try to
-mutate them, the compiler will throw an error.
-
-Locals are defined with the `let` expression. The expression starts with a vector as
-the first parameter followed by an arbitrary number of expressions. The first
-parameter (the vector) should contain an arbitrary number of pairs that give a
-_binding form_ (usually a symbol) followed by an expression whose value will be
-bound to this new local for the remainder of the `let` expression.
-
-[source, clojure]
-----
-(let [x (inc 1)
-      y (+ x 1)]
-  (println "Simple message from the body of a let")
-  (* x y))
-;; Simple message from the body of a let
-;; => 6
-----
-
-In the preceding example, the symbol `x` is bound to the value `(inc 1)`, which
-comes out to 2, and the symbol `y` is bound to the sum of `x` and 1, which comes out
-to 3. Given those bindings, the expressions `(println "Simple message from the body
-of a let")` and `(* x y)` are evaluated.
-
 
 ==== Blocks
 
@@ -771,9 +846,35 @@ expressions, but it returns the return value only from the last one:
 ;; => 3
 ----
 
-The body of the `let` expression, explained in the previous section, is very similar
-to the `do` expression in that it allows multiple expressions. In fact, the `let`
-has an implicit `do`.
+==== Locals
+
+_ClojureScript_ does not have the concept of variables as in ALGOL-like languages,
+but it does have locals. Locals, as per usual, are immutable, and if you try to
+mutate them, the compiler will throw an error.
+
+Locals are defined with the `let` expression. The expression starts with a vector as
+the first parameter followed by an arbitrary number of expressions. The first
+parameter (the vector) should contain an arbitrary number of pairs that give a
+_binding form_ (usually a symbol) followed by an expression whose value will be
+bound to this new local for the remainder of the `let` expression.
+
+[source, clojure]
+----
+(let [x (inc 1)
+      y (+ x 1)]
+  (println "Simple message from the body of a let")
+  (* x y))
+;; Simple message from the body of a let
+;; => 6
+----
+
+In the preceding example, the symbol `x` is bound to the value of executing the
+`(inc 1)` expression, which comes out to 2, and the symbol `y` is bound to the
+sum of `x` and 1, which comes out to 3. Given those bindings, the expressions
+`(println "Simple message from the body of a let")` and `(* x y)` are evaluated.
+
+The body of the `let` expression has an implicit `do`, so you can put there
+multiple expressions, where the last one will be used as return value.
 
 
 ==== Loops
@@ -1203,7 +1304,7 @@ in that it yields a `nil` value when called with a sequence with one or zero
 elements. Note that, when given one of the aforementioned sequences, the empty
 sequence returned by `rest` will evaluate as a boolean true whereas the `nil`
 value returned by `next` will evaluate as false
-(xref:truthiness-section[see the section on _truthiness_ later in this chapter]).
+(xref:truthiness-section[see the section on _booleans_ and _truthiness_]).
 
 [source, clojure]
 ----
@@ -1393,6 +1494,12 @@ they are not collections, sequences, or seqable.
 ;; => 13
 ----
 
+It must be taken into account that there are data types such as lists or lazy
+lists that do not have a defined size, in this case when calling `count` on
+them, it will linearly traverse the list to know how many elements it has and
+this can have an impact on the performance.
+
+
 We can also get an empty variant of a given collection with the `empty` function:
 
 [source, clojure]
@@ -1485,6 +1592,11 @@ for which the _y_ value is less than 100. You can generate all the numbers 0 thr
             (range 0 100))
 ;; => (0 1 2 3 4 5 6)
 ----
+
+When we have used `map` and `filter` in the previous examples, the result when
+printed on the screen is evaluated to see the return value, but if we save the
+content without printing it, no operation will be executed until we request the
+first element of the sequence.
 
 ==== Collections in depth
 
@@ -2332,99 +2444,6 @@ logical true.
 - http://clojure.org/guides/threading_macros
 
 
-[[reader-conditionals]]
-=== Reader Conditionals
-
-This language feature allows different dialects of Clojure to share common code that
-is mostly platform independent but need some platform dependent code.
-
-To use reader conditionals, all you need is to rename your source file with
-`.cljs` extension to one with `.cljc`, because reader conditionals only work if
-they are placed in files with `.cljc` extension.
-
-
-==== Standard (`#?`)
-
-There are two types of reader conditionals, standard and splicing. The standard
-reader conditional behaves similarly to a traditional cond and the syntax looks
-like this:
-
-[source, clojure]
-----
-(defn parse-int
-  [v]
-  #?(:clj  (Integer/parseInt v)
-     :cljs (js/parseInt v)))
-----
-
-As you can observe, `#?` reading macro looks very similar to cond, the difference is
-that the condition is just a keyword that identifies the platform, where `:cljs` is
-for _ClojureScript_ and `:clj` is for _Clojure_. The advantage of this approach, is
-that it is evaluated at compile time so no runtime performance overhead introduced for
-using this.
-
-==== Splicing (`#?@`)
-
-The splicing reader conditional works in the same way as the standard but also allows
-splicing lists into the containing form. The `#?@` reader macro is used for that
-and the code looks like this:
-
-[source, clojure]
-----
-(defn make-list
-  []
-  (list #?@(:clj  [5 6 7 8]
-            :cljs [1 2 3 4])))
-
-;; On ClojureScript
-(make-list)
-;; => (1 2 3 4)
-----
-
-The _ClojureScript_ compiler will read that code as this:
-
-[source, clojure]
-----
-(defn make-list
-  []
-  (list 1 2 3 4))
-----
-
-The splicing reader conditional can't be used to splice multiple top level forms,
-so the following code is illegal:
-
-[source, clojure]
-----
-#?@(:cljs [(defn func-a [] :a)
-           (defn func-b [] :b)])
-;; => #error "Reader conditional splicing not allowed at the top level."
-----
-
-If you need so, you can use multiple forms or just use `do` block to group
-multiple forms together:
-
-[source, clojure]
-----
-#?(:cljs (defn func-a [] :a))
-#?(:cljs (defn func-b [] :b))
-
-;; Or
-
-#?(:cljs
-   (do
-     (defn func-a [] :a)
-     (defn func-b [] :b)))
-----
-
-
-==== More readings
-
-- http://clojure.org/guides/reader_conditionals
-- https://danielcompton.net/2015/06/10/clojure-reader-conditionals-by-example
-- https://github.com/funcool/cuerdas (example small project that uses
-  reader conditionals)
-
-[[namespace-section]]
 === Namespaces
 
 ==== Defining a namespace
@@ -3503,6 +3522,12 @@ expected:
 (into-array ["France" "Korea" "Peru"])
 ;; => #js ["France" "Korea" "Peru"]
 ----
+
+Keep in mind that `clj->js` is not the canonical way to transform data from
+clojurescript to js, that function is for debugging, because it is not exactly
+the most efficient way to do this operation. It is recommended that you build
+the transformation data structures specific to your domain rather than using the
+generic `clj->js`.
 
 
 ===== Arrays

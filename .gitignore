@@ -1,8 +1,4 @@
 /dist
-/playground/out
-/playground/cljs.jar
-/playground/nashorn_code_cache
-/playground/main.js*
-nashorn_code_cache
+/playground/
 .cpcache
 .rebel_readline_history

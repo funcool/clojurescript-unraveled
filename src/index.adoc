@@ -1,6 +1,6 @@
-= ClojureScript Unraveled (2nd edition)
+= ClojureScript Unraveled (3nd edition)
 Andrey Antukh <niwi@niwi.nz>; Alejandro Gómez <alejandro@dialelo.com>
-v6, 2019-07-16
+v8, 2023-12-21
 :toc: left
 :toclevels: 3
 :doctype: book
