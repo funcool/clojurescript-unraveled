@@ -1,4 +1,4 @@
-= ClojureScript Unraveled (3nd edition)
+= ClojureScript Unraveled (3rd edition)
 Andrey Antukh <niwi@niwi.nz>; Alejandro Gómez <alejandro@dialelo.com>
 v8, 2023-12-21
 :toc: left
